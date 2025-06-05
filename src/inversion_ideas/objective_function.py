@@ -14,10 +14,13 @@ class Objective(ABC):
     Abstract representation of an objective function.
     """
 
+    _base_str = "φ"
+    _base_latex = r"\phi"
+    name = None
+
     @abstractmethod
     def __init__(self):
-        self.name = "φ"
-        self.name_latex = r"\phi"
+        pass
 
     @property
     @abstractmethod
@@ -44,11 +47,29 @@ class Objective(ABC):
         Evaluate the hessian of the objective function for a given model.
         """
 
-    def __repr__(self):  # noqa: D105
-        return f"{self.name}(m)"
+    def set_name(self, value):
+        """
+        Set name for the objective function.
+        """
+        if not (isinstance(value, str) or isinstance(value, None)):
+            msg = (
+                f"Invalid name '{value}' of type {type(value)}. "
+                "Please provide a string or None."
+            )
+            raise TypeError(msg)
+        self.name = value
 
-    def _latex_repr_(self):
-        return f"${self.name_latex}(m)$"
+    def __repr__(self):  # noqa: D105
+        repr_ = f"{self._base_str}"
+        if self.name is not None:
+            repr_ += f"{self.name}"
+        return f"{repr_}(m)"
+
+    def _repr_latex_(self):
+        repr_ = f"{self._base_latex}"
+        if self.name is not None:
+            repr_ += rf"_{{{self.name}}}"
+        return f"${repr_} (m)$"
 
     def __add__(self, other) -> "Combo":  # noqa: D105
         return Combo([self, other])
@@ -110,14 +131,19 @@ class Scaled(Objective):
             phi_repr = f"[{phi_repr}]"
         return f"{self.multiplier:{fmt}} {phi_repr}"
 
-    def _latex_repr_(self):
+    def _repr_latex_(self):
         fmt = ".2e" if np.abs(self.multiplier) > 1e3 else ".2f"
         multiplier_str = f"{self.multiplier:{fmt}}"
         if "e" in multiplier_str:
             base, exp = multiplier_str.split("e")
+            exp = exp.replace("+", "")
             exp = str(int(exp))
-            multiplier_str = rf"{base} \cdot 10^{{exp}}"
-        return f"${self.multiplier:{fmt}} {self.name_latex}(m)$"
+            multiplier_str = rf"{base} \cdot 10^{{{exp}}}"
+        phi_str = self.function._repr_latex_().strip("$")
+        # Add parenthesis in case that the function is a collection
+        if isinstance(self.function, Iterable):
+            phi_str = f"[ {phi_str} ]"
+        return rf"${multiplier_str} \, {phi_str}$"
 
 
 class Combo(Objective):
@@ -173,8 +199,8 @@ class Combo(Objective):
     def __repr__(self):  # noqa: D105
         return " + ".join(repr(f) for f in self.functions)
 
-    def _latex_repr_(self):
-        return " + ".join(repr(f) for f in self.functions)
+    def _repr_latex_(self):
+        return " + ".join(f._repr_latex_() for f in self.functions)
 
 
 def _unpack_combo(functions: list) -> list:

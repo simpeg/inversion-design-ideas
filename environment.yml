@@ -1,0 +1,15 @@
+name: inversion_ideas
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.11
+  - pip
+  - numpy>=2.0.0
+  - scipy
+  - simpeg==0.24
+  - discretize==0.11
+  # Jupyter
+  - jupyter
+  # Dev
+  - pytest
+  - ruff

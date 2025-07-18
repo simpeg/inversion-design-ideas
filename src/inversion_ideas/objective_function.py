@@ -51,7 +51,7 @@ class Objective(ABC):
         """
         Set name for the objective function.
         """
-        if not (isinstance(value, str) or isinstance(value, None)):
+        if not (isinstance(value, str) or value is None):
             msg = (
                 f"Invalid name '{value}' of type {type(value)}. "
                 "Please provide a string or None."

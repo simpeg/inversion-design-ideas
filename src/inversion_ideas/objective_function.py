@@ -156,12 +156,7 @@ class Combo(Objective):
     """
 
     def __init__(self, functions):
-        # Check if functions have the same n_params
-        n_params_list = [f.n_params for f in functions]
-        if not all(p == n_params_list[0] for p in n_params_list):
-            msg = "Invalid objective functions with different n_params."
-            raise ValueError(msg)
-
+        _get_n_params(functions)  # check if functions have the same n_params
         self._functions = functions
 
     def __iter__(self):  # noqa: D105
@@ -182,12 +177,7 @@ class Combo(Objective):
         """
         Number of model parameters.
         """
-        n_params_list = [f.n_params for f in self.functions]
-        n_params = n_params_list[0]
-        if not all(p == n_params for p in n_params_list):
-            msg = "Invalid objective functions with different n_params."
-            raise ValueError(msg)
-        return n_params
+        return _get_n_params(self.functions)
 
     def __call__(self, model):
         """
@@ -225,3 +215,31 @@ def _unpack_combo(functions: list) -> list:
         else:
             unpacked.append(f)
     return unpacked
+
+
+def _get_n_params(functions: list) -> int:
+    """
+    Get number of parameters of a list of objective functions.
+
+    Parameters
+    ----------
+    functions : list of Objective
+        List of objective functions.
+
+    Returns
+    -------
+    int
+        Number of parameters of every objective function in the list.
+
+    Raises
+    ------
+    ValueError
+        If any of the objective functions in the list have different number of
+        parameters.
+    """
+    n_params_list = [f.n_params for f in functions]
+    n_params = n_params_list[0]
+    if not all(p == n_params for p in n_params_list):
+        msg = "Invalid objective functions with different n_params."
+        raise ValueError(msg)
+    return n_params

@@ -27,7 +27,7 @@ class DataMisfit(Objective):
         """
         weights_sq = diags_array(self.uncertainty)  # W.T @ W
         jac = self.simulation.jacobian(model)
-        return -2 * jac.T @ weights_sq @ self.residual
+        return -2 * jac.T @ weights_sq @ self.residual(model)
 
     def hessian(self, model):
         """

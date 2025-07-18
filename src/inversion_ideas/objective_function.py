@@ -132,7 +132,11 @@ class Scaled(Objective):
         return f"{self.multiplier:{fmt}} {phi_repr}"
 
     def _repr_latex_(self):
-        fmt = ".2e" if np.abs(self.multiplier) > 1e3 else ".2f"
+        fmt = (
+            ".2e"
+            if np.abs(self.multiplier) > 1e2 or np.abs(self.multiplier) < 1e-2
+            else ".2f"
+        )
         multiplier_str = f"{self.multiplier:{fmt}}"
         if "e" in multiplier_str:
             base, exp = multiplier_str.split("e")

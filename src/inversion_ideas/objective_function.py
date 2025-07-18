@@ -158,13 +158,20 @@ class Combo(Objective):
             msg = "Invalid objective functions with different n_params."
             raise ValueError(msg)
 
-        self.functions = functions
+        self._functions = functions
 
     def __iter__(self):  # noqa: D105
         return (f for f in self.functions)
 
     def __getitem__(self, index):  # noqa: D105
         return self.functions[index]
+
+    @property
+    def functions(self) -> list[Objective]:
+        """
+        List of objective functions in the sum.
+        """
+        return self._functions
 
     @property
     def n_params(self) -> int:

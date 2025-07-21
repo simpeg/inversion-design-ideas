@@ -93,7 +93,7 @@ class ConjugateGradient(Minimizer):
         # functions for the ones that generate a linear problem.
         gradient = objective.gradient(initial_model)
         hessian = objective.hessian(initial_model)
-        inverted_model, info = cg(hessian, -gradient, **self.cg_kwargs)
+        model_step, info = cg(hessian, -gradient, **self.cg_kwargs)
         if info != 0:
             warnings.warn(
                 "Conjugate gradient convergence to tolerance not achieved after "
@@ -101,4 +101,5 @@ class ConjugateGradient(Minimizer):
                 ConvergenceWarning,
                 stacklevel=2,
             )
+        inverted_model = initial_model + model_step
         return inverted_model

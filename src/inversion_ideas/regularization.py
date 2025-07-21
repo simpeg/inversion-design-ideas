@@ -26,7 +26,7 @@ class TikhonovZero(Objective):
     def __call__(self, model) -> float:  # noqa: D102
         model_diff = model - self.reference_model
         weights = diags_array(self.weights)
-        return model_diff.T @ weights.T * weights @ model_diff
+        return model_diff.T @ weights.T @ weights @ model_diff
 
     def gradient(self, model):
         """

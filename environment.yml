@@ -9,6 +9,7 @@ dependencies:
   - simpeg==0.24
   - discretize==0.11
   - rich
+  - pandas
   # Jupyter
   - jupyter
   # Dev

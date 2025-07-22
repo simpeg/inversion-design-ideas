@@ -6,8 +6,8 @@ inversion, given an objective function, an optimizer, a set of directives that c
 modify the objective function after each iteration and optionally a logger.
 """
 
-import typing
 import numbers
+import typing
 from collections.abc import Callable
 
 import numpy as np
@@ -53,7 +53,7 @@ class Inversion:
         objective_function,
         initial_model,
         optimizer,
-        directives: list[Directive],
+        directives: typing.Sequence[Directive],
         stopping_criteria: Callable | list[Callable],
         max_iterations: int | None = None,
         cache_models=False,

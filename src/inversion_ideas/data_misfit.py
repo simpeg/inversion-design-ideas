@@ -1,6 +1,7 @@
 """
 Class to represent a data misfit term.
 """
+
 from scipy.sparse import diags_array
 
 from .objective_function import Objective
@@ -17,25 +18,22 @@ class DataMisfit(Objective):
         self.simulation = simulation
 
     def __call__(self, model) -> float:  # noqa: D102
-        weights_sq = diags_array(self.uncertainty)  # W.T @ W
         residual = self.residual(model)
-        return residual.T @ weights_sq @ residual
+        return residual.T @ self.weights_squared @ residual
 
     def gradient(self, model):
         """
         Gradient vector.
         """
-        weights_sq = diags_array(self.uncertainty)  # W.T @ W
         jac = self.simulation.jacobian(model)
-        return -2 * jac.T @ weights_sq @ self.residual(model)
+        return -2 * jac.T @ self.weights_squared @ self.residual(model)
 
     def hessian(self, model):
         """
         Hessian matrix.
         """
-        weights_sq = diags_array(self.uncertainty)  # W.T @ W
         jac = self.simulation.jacobian(model)
-        return 2 * jac.T @ weights_sq @ jac
+        return 2 * jac.T @ self.weights_squared @ jac
 
     @property
     def n_params(self):
@@ -77,3 +75,11 @@ class DataMisfit(Objective):
         is the forward model, and :math:`\mathbf{m}` is the model vector.
         """
         return self.data - self.simulation(model)
+
+    @property
+    def weights_squared(self):
+        """
+        Diagonal sparse matrix with weights squared.
+        """
+        # Return the W.T @ W matrix
+        return diags_array(1 / self.uncertainty)

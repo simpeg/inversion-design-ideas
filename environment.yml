@@ -8,6 +8,7 @@ dependencies:
   - scipy
   - simpeg==0.24
   - discretize==0.11
+  - rich
   # Jupyter
   - jupyter
   # Dev

@@ -2,6 +2,7 @@
 Ideas for inversion framework.
 """
 
+from . import utils
 from ._version import __version__
 from .conditions import ChiTarget
 from .constructors import create_inversion
@@ -31,4 +32,5 @@ __all__ = [
     "TikhonovZero",
     "__version__",
     "create_inversion",
+    "utils",
 ]

@@ -153,15 +153,15 @@ class Inversion:
         """
         Cached inverted models.
 
-        The first model in the list is the one obtained after the first iteration,
-        not the initial model.
+        The first model in the list is the initial model, the one that corresponds to
+        the zeroth iteration.
         """
         if not self.cache_models:
             raise AttributeError("")
         if not hasattr(self, "_counter"):
             raise AttributeError("")
         if not hasattr(self, "_models"):
-            self._models = []
+            self._models = [self.initial_model]
         return self._models
 
     def _is_stopping_criteria_met(self, model):

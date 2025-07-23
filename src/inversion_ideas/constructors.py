@@ -55,8 +55,8 @@ def create_inversion(
         objective_function,
         initial_model,
         optimizer,
-        directives,
-        stopping_criteria,
+        directives=directives,
+        stopping_criteria=stopping_criteria,
         cache_models=cache_models,
         log=inversion_log,
     )

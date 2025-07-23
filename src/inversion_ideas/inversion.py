@@ -53,6 +53,7 @@ class Inversion:
         objective_function,
         initial_model,
         optimizer,
+        *,
         directives: typing.Sequence[Directive],
         stopping_criteria: Callable | list[Callable],
         max_iterations: int | None = None,

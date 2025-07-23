@@ -23,7 +23,7 @@ class TikhonovZero(Objective):
             else np.zeros(n_params, dtype=np.float64)
         )
 
-    def __call__(self, model) -> float:  # noqa: D102
+    def __call__(self, model) -> float:
         model_diff = model - self.reference_model
         weights = diags_array(self.weights)
         return model_diff.T @ weights.T @ weights @ model_diff

@@ -59,7 +59,7 @@ class Objective(ABC):
             raise TypeError(msg)
         self.name = value
 
-    def __repr__(self):  # noqa: D105
+    def __repr__(self):
         repr_ = f"{self._base_str}"
         if self.name is not None:
             repr_ += f"{self.name}"
@@ -71,22 +71,22 @@ class Objective(ABC):
             repr_ += rf"_{{{self.name}}}"
         return f"${repr_} (m)$"
 
-    def __add__(self, other) -> "Combo":  # noqa: D105
+    def __add__(self, other) -> "Combo":
         return Combo([self, other])
 
-    def __radd__(self, other) -> "Combo":  # noqa: D105
+    def __radd__(self, other) -> "Combo":
         return Combo([other, self])
 
-    def __mul__(self, value) -> "Scaled":  # noqa: D105
+    def __mul__(self, value) -> "Scaled":
         return Scaled(value, self)
 
-    def __rmul__(self, value):  # noqa: D105
+    def __rmul__(self, value):
         return self.__mul__(value)
 
-    def __div__(self, denominator):  # noqa: D105
+    def __div__(self, denominator):
         return self * (1.0 / denominator)
 
-    def __truediv__(self, denominator):  # noqa: D105
+    def __truediv__(self, denominator):
         return self * (1.0 / denominator)
 
 
@@ -124,7 +124,7 @@ class Scaled(Objective):
         """
         return self.multiplier * self.function.hessian(model)
 
-    def __repr__(self):  # noqa: D105
+    def __repr__(self):
         fmt = ".2e" if np.abs(self.multiplier) > 1e3 else ".2f"
         phi_repr = f"{self.function}"
         if isinstance(self.function, Iterable):
@@ -159,10 +159,10 @@ class Combo(Objective):
         _get_n_params(functions)  # check if functions have the same n_params
         self._functions = functions
 
-    def __iter__(self):  # noqa: D105
+    def __iter__(self):
         return (f for f in self.functions)
 
-    def __getitem__(self, index):  # noqa: D105
+    def __getitem__(self, index):
         return self.functions[index]
 
     @property
@@ -197,7 +197,7 @@ class Combo(Objective):
         """
         return sum(f.hessian(model) for f in self.functions)
 
-    def __repr__(self):  # noqa: D105
+    def __repr__(self):
         return " + ".join(repr(f) for f in self.functions)
 
     def _repr_latex_(self):

@@ -17,7 +17,7 @@ class DataMisfit(Objective):
         self.uncertainty = uncertainty
         self.simulation = simulation
 
-    def __call__(self, model) -> float:  # noqa: D102
+    def __call__(self, model) -> float:
         residual = self.residual(model)
         return residual.T @ self.weights_squared @ residual
 

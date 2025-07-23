@@ -23,7 +23,7 @@ class Directive(ABC):
         """
 
     @abstractmethod
-    def __call__(self):  # noqa: D102
+    def __call__(self):
         pass
 
 
@@ -52,9 +52,8 @@ class MultiplierCooler(Directive):
         self, scaled_objective: Scaled, cooling_factor: float, cooling_rate: int = 1
     ):
         if not hasattr(scaled_objective, "multiplier"):
-            raise TypeError(
-                "Invalid 'scaled_objective': it must have a `multiplier` attribute."
-            )
+            msg = "Invalid 'scaled_objective': it must have a `multiplier` attribute."
+            raise TypeError(msg)
         self.regularization = scaled_objective
         self.cooling_factor = cooling_factor
         self.cooling_rate = cooling_rate

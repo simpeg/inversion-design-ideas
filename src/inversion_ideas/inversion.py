@@ -157,9 +157,8 @@ class Inversion:
         the zeroth iteration.
         """
         if not self.cache_models:
-            raise AttributeError("")
-        if not hasattr(self, "_counter"):
-            raise AttributeError("")
+            msg = "Inversion doesn't have cached models since `cache_model` is `False`."
+            raise AttributeError(msg)
         if not hasattr(self, "_models"):
             self._models = [self.initial_model]
         return self._models

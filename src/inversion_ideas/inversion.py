@@ -215,7 +215,7 @@ class InversionLog:
         Inversion log.
         """
         if not hasattr(self, "_log"):
-            self._log = {col: [] for col in self.columns}
+            self._log: dict[str, list] = {col: [] for col in self.columns}
         return self._log
 
     def _update_log(self, iteration: int, model: npt.NDArray[np.float64]):

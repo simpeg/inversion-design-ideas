@@ -253,7 +253,9 @@ def _get_n_params(functions: list) -> int:
     return n_params
 
 
-def _sum(operators: Iterator[npt.NDArray | sparray | LinearOperator]):
+def _sum(
+    operators: Iterator[npt.NDArray | sparray | LinearOperator],
+) -> npt.NDArray | sparray | LinearOperator:
     """
     Sum objects within an iterator.
 

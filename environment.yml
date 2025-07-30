@@ -15,3 +15,5 @@ dependencies:
   # Dev
   - pytest
   - ruff
+  - mypy
+  - scipy-stubs

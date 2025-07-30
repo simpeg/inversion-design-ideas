@@ -7,8 +7,8 @@ import numpy as np
 from numpy.typing import NDArray
 from scipy.sparse.linalg import cg
 
+from .base import Minimizer, Objective
 from .errors import ConvergenceWarning
-from .base import Objective, Minimizer
 
 
 class ConjugateGradient(Minimizer):

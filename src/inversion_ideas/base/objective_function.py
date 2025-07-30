@@ -1,9 +1,9 @@
 """
 Classes to represent objective functions.
 """
-from copy import copy
 from abc import ABC, abstractmethod
-from collections.abc import Iterator, Iterable
+from collections.abc import Iterable, Iterator
+from copy import copy
 
 import numpy as np
 import numpy.typing as npt

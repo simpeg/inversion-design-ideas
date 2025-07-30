@@ -2,8 +2,7 @@
 Ideas for inversion framework.
 """
 
-from . import base
-from . import utils
+from . import base, utils
 from ._version import __version__
 from .conditions import ChiTarget
 from .constructors import create_inversion

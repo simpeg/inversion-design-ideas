@@ -5,7 +5,7 @@ import numpy as np
 from numpy.typing import NDArray
 from scipy.sparse.linalg import LinearOperator
 
-from inversion_ideas import Simulation
+from inversion_ideas.base import Simulation
 
 
 class LinearRegressor(Simulation):

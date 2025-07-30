@@ -2,29 +2,7 @@
 Directives to modify the objective function between iterations of an inversion.
 """
 
-from abc import ABC, abstractmethod
-
-from .objective_function import Scaled
-
-
-class Directive(ABC):
-    """
-    Abstract class for directives.
-    """
-
-    @abstractmethod
-    def __init__(self):
-        pass
-
-    @abstractmethod
-    def initialize(self):
-        """
-        Initialize the directive.
-        """
-
-    @abstractmethod
-    def __call__(self):
-        pass
+from .base import Directive, Scaled
 
 
 class MultiplierCooler(Directive):

@@ -9,6 +9,7 @@ select = [
   "EXE",      # flake8-executable
   "FURB",     # refurb
   "G",        # flake8-logging-format
+  "I",        # isort
   "ICN",      # flake8-import-conventions
   "NPY",      # NumPy specific rules
   "PD",       # pandas-vet

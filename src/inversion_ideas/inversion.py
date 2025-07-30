@@ -15,7 +15,7 @@ import numpy.typing as npt
 from rich.live import Live
 from rich.table import Table
 
-from .directives import Directive
+from .base import Directive
 
 
 class Inversion:

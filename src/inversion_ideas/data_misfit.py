@@ -3,11 +3,10 @@ Class to represent a data misfit term.
 """
 import numpy as np
 import numpy.typing as npt
-
 from scipy.sparse import diags_array, sparray
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
-from .objective_function import Objective
+from .base import Objective
 from .utils import cache_on_model
 
 

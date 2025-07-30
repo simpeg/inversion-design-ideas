@@ -212,7 +212,7 @@ class Combo(Objective):
         return " + ".join(f._repr_latex_() for f in self.functions)
 
 
-def _unpack_combo(functions: list) -> list:
+def _unpack_combo(functions: Iterable) -> list:
     """
     Unpack combo objective functions.
     """

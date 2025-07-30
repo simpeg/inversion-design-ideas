@@ -29,7 +29,7 @@ SimPEG that:
 * Simplifies the inheritance tree by lowering the amount of inheritance levels.
 
 > [!NOTE]
-> These goals are not set in store and are flexible. We are free to add,
+> These goals are not set in stone and are flexible. We are free to add,
 > remove, and edit them at any point.
 
 ## License

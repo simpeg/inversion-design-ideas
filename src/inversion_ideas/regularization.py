@@ -4,7 +4,7 @@ Regularization classes.
 import numpy as np
 from scipy.sparse import diags_array
 
-from .objective_function import Objective
+from .base import Objective
 
 
 class TikhonovZero(Objective):

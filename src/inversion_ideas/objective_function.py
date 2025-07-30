@@ -1,12 +1,14 @@
 """
 Classes to represent objective functions.
 """
-
+from copy import copy
 from abc import ABC, abstractmethod
-from collections.abc import Iterable
+from collections.abc import Iterator, Iterable
 
 import numpy as np
-from numpy.typing import NDArray
+import numpy.typing as npt
+from scipy.sparse import sparray
+from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 
 class Objective(ABC):
@@ -30,19 +32,21 @@ class Objective(ABC):
         """
 
     @abstractmethod
-    def __call__(self, model: NDArray) -> float:
+    def __call__(self, model: npt.NDArray) -> float:
         """
         Evaluate the objective function for a given model.
         """
 
     @abstractmethod
-    def gradient(self, model: NDArray) -> NDArray[np.float64]:
+    def gradient(self, model: npt.NDArray) -> npt.NDArray[np.float64]:
         """
         Evaluate the gradient of the objective function for a given model.
         """
 
     @abstractmethod
-    def hessian(self, model: NDArray) -> NDArray[np.float64]:
+    def hessian(
+        self, model: npt.NDArray
+    ) -> npt.NDArray[np.float64] | sparray | LinearOperator:
         """
         Evaluate the hessian of the objective function for a given model.
         """
@@ -112,13 +116,13 @@ class Scaled(Objective):
         """
         return self.multiplier * self.function(model)
 
-    def gradient(self, model: NDArray) -> NDArray[np.float64]:
+    def gradient(self, model: npt.NDArray) -> npt.NDArray[np.float64]:
         """
         Evaluate the gradient of the objective function for a given model.
         """
         return self.multiplier * self.function.gradient(model)
 
-    def hessian(self, model: NDArray) -> NDArray[np.float64]:
+    def hessian(self, model: npt.NDArray) -> npt.NDArray[np.float64] | sparray:
         """
         Evaluate the hessian of the objective function for a given model.
         """
@@ -185,17 +189,19 @@ class Combo(Objective):
         """
         return sum(f(model) for f in self.functions)
 
-    def gradient(self, model: NDArray) -> NDArray[np.float64]:
+    def gradient(self, model: npt.NDArray) -> npt.NDArray[np.float64]:
         """
         Evaluate the gradient of the objective function for a given model.
         """
         return sum(f.gradient(model) for f in self.functions)
 
-    def hessian(self, model: NDArray) -> NDArray[np.float64]:
+    def hessian(
+        self, model: npt.NDArray
+    ) -> npt.NDArray[np.float64] | sparray | LinearOperator:
         """
         Evaluate the hessian of the objective function for a given model.
         """
-        return sum(f.hessian(model) for f in self.functions)
+        return _sum(f.hessian(model) for f in self.functions)
 
     def __repr__(self):
         return " + ".join(repr(f) for f in self.functions)
@@ -243,3 +249,24 @@ def _get_n_params(functions: list) -> int:
         msg = "Invalid objective functions with different n_params."
         raise ValueError(msg)
     return n_params
+
+
+def _sum(operators: Iterator[npt.NDArray | sparray | LinearOperator]):
+    """
+    Sum objects within an iterator.
+
+    This function supports summing together ``LinearOperators`` with Numpy arrays and
+    sparse arrays.
+    """
+    if not operators:
+        msg = "Invalid empty 'operators' array when summing."
+        raise ValueError(msg)
+
+    result = copy(next(operators))
+    for operator in operators:
+        if isinstance(operator, LinearOperator) or isinstance(result, LinearOperator):
+            result = aslinearoperator(result)
+            result += aslinearoperator(operator)
+        else:
+            result += operator
+    return result

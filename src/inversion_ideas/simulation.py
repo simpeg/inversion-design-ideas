@@ -5,6 +5,7 @@ from abc import ABC, abstractmethod
 
 import numpy as np
 from numpy.typing import NDArray
+from scipy.sparse.linalg import LinearOperator
 
 
 class Simulation(ABC):
@@ -37,7 +38,7 @@ class Simulation(ABC):
         """
 
     @abstractmethod
-    def jacobian(self, model):
+    def jacobian(self, model) -> NDArray[np.float64] | LinearOperator:
         """
         Jacobian matrix for a given model.
         """

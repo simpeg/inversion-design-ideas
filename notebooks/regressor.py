@@ -41,7 +41,7 @@ class LinearRegressor(Simulation):
         """
         return self.X @ model
 
-    def jacobian(self, model):  # noqa: ARG002
+    def jacobian(self, model) -> NDArray[np.float64] | LinearOperator:  # noqa: ARG002
         """
         Jacobian matrix for a given model.
         """

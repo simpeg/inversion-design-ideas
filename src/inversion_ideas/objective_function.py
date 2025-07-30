@@ -122,7 +122,9 @@ class Scaled(Objective):
         """
         return self.multiplier * self.function.gradient(model)
 
-    def hessian(self, model: npt.NDArray) -> npt.NDArray[np.float64] | sparray:
+    def hessian(
+        self, model: npt.NDArray
+    ) -> npt.NDArray[np.float64] | sparray | LinearOperator:
         """
         Evaluate the hessian of the objective function for a given model.
         """

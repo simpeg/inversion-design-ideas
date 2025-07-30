@@ -42,7 +42,7 @@ class DataMisfit(Objective):
         Gradient vector.
         """
         jac = self.simulation.jacobian(model)
-        return -2 * jac.T @ self.weights_squared @ self.residual(model)
+        return -2 * jac.T @ (self.weights_squared @ self.residual(model))
 
     def hessian(self, model):
         """

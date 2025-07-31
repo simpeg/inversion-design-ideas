@@ -142,7 +142,8 @@ class Scaled(Objective):
     def __repr__(self):
         fmt = ".2e" if np.abs(self.multiplier) > 1e3 else ".2f"
         phi_repr = f"{self.function}"
-        if isinstance(self.function, Iterable) or hasattr(self.function, "multiplier"):
+        # Add brackets in case that the function has a multiplier
+        if hasattr(self.function, "multiplier"):
             phi_repr = f"[{phi_repr}]"
         return f"{self.multiplier:{fmt}} {phi_repr}"
 
@@ -159,8 +160,8 @@ class Scaled(Objective):
             exp = str(int(exp))
             multiplier_str = rf"{base} \cdot 10^{{{exp}}}"
         phi_str = self.function._repr_latex_().strip("$")
-        # Add parenthesis in case that the function is a collection
-        if isinstance(self.function, Iterable) or hasattr(self.function, "multiplier"):
+        # Add brackets in case that the function has a multiplier
+        if hasattr(self.function, "multiplier"):
             phi_str = f"[ {phi_str} ]"
         return rf"${multiplier_str} \, {phi_str}$"
 
@@ -221,11 +222,20 @@ class Combo(Objective):
         """
         return _sum(f.hessian(model) for f in self.functions)
 
+    def flatten(self) -> "Combo":
+        """
+        Create a new flattened combo.
+
+        Create a new ``Combo`` object by unpacking nested ``Combo``s in the current one.
+        """
+        return Combo(_unpack_combo(self.functions))
+
     def __repr__(self):
-        return " + ".join(repr(f) for f in self.functions)
+        return "[" + " + ".join(repr(f) for f in self.functions) + "]"
 
     def _repr_latex_(self):
-        return " + ".join(f._repr_latex_() for f in self.functions)
+        phi_str = " + ".join(f._repr_latex_().strip("$") for f in self.functions)
+        return f"$[ {phi_str} ]$"
 
     def __iadd__(self, other) -> Self:
         if other.n_params != self.n_params:

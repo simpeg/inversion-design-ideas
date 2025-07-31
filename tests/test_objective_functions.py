@@ -156,20 +156,36 @@ class TestObjectiveOperations:
         assert combo[0] is a
         assert combo[1] is b
 
-    @pytest.mark.skip(reason="Combos are not unpacked, so this fails for now.")
     def test_add_n(self):
+        """
+        Test addition of multiple objective functions into nested Combos.
+
+        Since Combos are not unpacked by default, adding together more than 2 objective
+        functions create a nested structure of Combos.
+        """
         a, b, c, d = tuple(Dummy(self.n_params) for _ in range(4))
-        combo = a + b + c + d
+        full_combo = a + b + c + d
+        assert isinstance(full_combo, Combo)
+        assert len(full_combo) == 2  # combo with (a + b + c) and d
+        assert a not in full_combo
+        assert b not in full_combo
+        assert c not in full_combo
+        assert full_combo[1] is d
+
+        # First level
+        combo = full_combo[0]  # combo with (a + b) and c
         assert isinstance(combo, Combo)
-        assert len(combo) == 4
-        assert a in combo
-        assert b in combo
-        assert c in combo
-        assert d in combo
+        assert len(combo) == 2
+        assert a not in combo
+        assert b not in combo
+        assert combo[1] is c
+
+        # Second level
+        combo = full_combo[0][0]  # combo with a and b
+        assert isinstance(combo, Combo)
+        assert len(combo) == 2
         assert combo[0] is a
         assert combo[1] is b
-        assert combo[2] is c
-        assert combo[3] is d
 
     def test_mul(self):
         a = Dummy(self.n_params)
@@ -243,6 +259,30 @@ class TestObjectiveOperations:
             phi = phi + other
         with pytest.raises(TypeError):
             phi *= 2.71
+
+
+def test_combo_flatten():
+    """
+    Test flatenning of a Combo.
+    """
+    a, b, c, d, e = tuple(Dummy(3) for _ in range(5))
+    f = 2.5 * c
+    g = d + e
+
+    # build combo: (((a + b) + 2.5 * c) + (d + e))
+    combo = a + b + f + g
+    assert len(combo) == 2
+
+    # Flatten it into: a + b + 2.5 * c + d + e
+    flat_combo = combo.flatten()
+
+    # Check the result of the operation
+    assert len(flat_combo) == 5
+    assert flat_combo[0] is a
+    assert flat_combo[1] is b
+    assert flat_combo[2] is f
+    assert flat_combo[3] is d
+    assert flat_combo[4] is e
 
 
 class TestComboMethods:

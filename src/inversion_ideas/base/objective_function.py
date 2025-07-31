@@ -133,7 +133,7 @@ class Scaled(Objective):
     def __repr__(self):
         fmt = ".2e" if np.abs(self.multiplier) > 1e3 else ".2f"
         phi_repr = f"{self.function}"
-        if isinstance(self.function, Iterable):
+        if isinstance(self.function, Iterable) or hasattr(self.function, "multiplier"):
             phi_repr = f"[{phi_repr}]"
         return f"{self.multiplier:{fmt}} {phi_repr}"
 
@@ -151,7 +151,7 @@ class Scaled(Objective):
             multiplier_str = rf"{base} \cdot 10^{{{exp}}}"
         phi_str = self.function._repr_latex_().strip("$")
         # Add parenthesis in case that the function is a collection
-        if isinstance(self.function, Iterable):
+        if isinstance(self.function, Iterable) or hasattr(self.function, "multiplier"):
             phi_str = f"[ {phi_str} ]"
         return rf"${multiplier_str} \, {phi_str}$"
 

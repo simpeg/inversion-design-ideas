@@ -4,11 +4,15 @@ channels:
 dependencies:
   - python>=3.11
   - pip
+  # Requirements
   - numpy>=2.0.0
   - scipy
+  - rich
+  # Required by notebooks
   - simpeg==0.24
   - discretize==0.11
-  - rich
+  - harmonica
+  - verde
   - pandas
   # Jupyter
   - jupyter

@@ -113,4 +113,4 @@ class DataMisfit(Objective):
         Diagonal sparse matrix with weights squared.
         """
         # Return the W.T @ W matrix
-        return diags_array(1 / self.uncertainty)
+        return diags_array(1 / self.uncertainty**2)

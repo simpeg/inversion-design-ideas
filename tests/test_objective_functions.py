@@ -265,16 +265,24 @@ def test_combo_flatten():
     """
     Test flatenning of a Combo.
     """
-    a, b, c, d = tuple(Dummy(3) for _ in range(4))
-    combo = a + b + c + d
+    a, b, c, d, e = tuple(Dummy(3) for _ in range(5))
+    f = 2.5 * c
+    g = d + e
+
+    # build combo: (((a + b) + 2.5 * c) + (d + e))
+    combo = a + b + f + g
     assert len(combo) == 2
 
+    # Flatten it into: a + b + 2.5 * c + d + e
     flat_combo = combo.flatten()
-    assert len(flat_combo) == 4
+
+    # Check the result of the operation
+    assert len(flat_combo) == 5
     assert flat_combo[0] is a
     assert flat_combo[1] is b
-    assert flat_combo[2] is c
+    assert flat_combo[2] is f
     assert flat_combo[3] is d
+    assert flat_combo[4] is e
 
 
 class TestComboMethods:

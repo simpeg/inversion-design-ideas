@@ -4,6 +4,7 @@ Classes to represent objective functions.
 from abc import ABC, abstractmethod
 from collections.abc import Iterable, Iterator
 from copy import copy
+from typing import Self
 
 import numpy as np
 import numpy.typing as npt
@@ -93,6 +94,14 @@ class Objective(ABC):
     def __truediv__(self, denominator):
         return self * (1.0 / denominator)
 
+    def __iadd__(self, other) -> "Combo":  # noqa: PYI034
+        msg = "Inplace addition is not implemented for this class."
+        raise TypeError(msg)
+
+    def __imul__(self, other) -> "Scaled":  # noqa: PYI034
+        msg = "Inplace multiplication is not implemented for this class."
+        raise TypeError(msg)
+
 
 class Scaled(Objective):
     """
@@ -155,6 +164,10 @@ class Scaled(Objective):
             phi_str = f"[ {phi_str} ]"
         return rf"${multiplier_str} \, {phi_str}$"
 
+    def __imul__(self, value) -> Self:
+        self.multiplier *= value
+        return self
+
 
 class Combo(Objective):
     """
@@ -167,6 +180,9 @@ class Combo(Objective):
 
     def __iter__(self):
         return (f for f in self.functions)
+
+    def __len__(self):
+        return len(self._functions)
 
     def __getitem__(self, index):
         return self.functions[index]
@@ -210,6 +226,17 @@ class Combo(Objective):
 
     def _repr_latex_(self):
         return " + ".join(f._repr_latex_() for f in self.functions)
+
+    def __iadd__(self, other) -> Self:
+        if other.n_params != self.n_params:
+            msg = (
+                f"Trying to add objective function '{other}' with invalid "
+                f"n_params ({other.n_params}) different from the one of "
+                f"'{self}' ({self.n_params})."
+            )
+            raise ValueError(msg)
+        self._functions.append(other)
+        return self
 
 
 def _unpack_combo(functions: Iterable) -> list:

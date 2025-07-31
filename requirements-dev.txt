@@ -1,0 +1,7 @@
+numpy>=2.0.0
+scipy
+rich
+pytest
+ruff
+mypy
+scipy-stubs

@@ -221,11 +221,19 @@ class Combo(Objective):
         """
         return _sum(f.hessian(model) for f in self.functions)
 
+    def flatten(self) -> "Combo":
+        """
+        Create a new flattened combo.
+
+        Create a new ``Combo`` object by unpacking nested ``Combo``s in the current one.
+        """
+        return Combo(_unpack_combo(self.functions))
+
     def __repr__(self):
-        return " + ".join(repr(f) for f in self.functions)
+        return "[" + " + ".join(repr(f) for f in self.functions) + "]"
 
     def _repr_latex_(self):
-        return " + ".join(f._repr_latex_() for f in self.functions)
+        return "[" + " + ".join(f._repr_latex_() for f in self.functions) + "]"
 
     def __iadd__(self, other) -> Self:
         if other.n_params != self.n_params:

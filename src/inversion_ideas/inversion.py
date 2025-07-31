@@ -87,7 +87,7 @@ class Inversion:
             raise StopIteration
 
         # Initialize directives in the first iteration
-        if self._counter == 0:
+        if self.counter == 0:
             for directive in self.directives:
                 directive.initialize()
             self._initialized = True

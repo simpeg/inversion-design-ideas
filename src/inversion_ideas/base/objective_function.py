@@ -230,6 +230,12 @@ class Combo(Objective):
         """
         return Combo(_unpack_combo(self.functions))
 
+    def contains(self, objective) -> bool:
+        """
+        Check if the ``Combo`` contains the given objective function, recursively.
+        """
+        return _contains(self, objective)
+
     def __repr__(self):
         functions = []
         for function in self.functions:
@@ -272,6 +278,23 @@ def _unpack_combo(functions: Iterable) -> list:
         else:
             unpacked.append(f)
     return unpacked
+
+
+def _contains(combo: Combo, objective: Objective) -> bool:
+    """
+    Check if combo contains a given objective function, recursively.
+    """
+    for f in combo.functions:
+        if f is objective:
+            return True
+        if isinstance(f, Combo) and _contains(f, objective):
+            return True
+        if isinstance(f, Scaled):
+            if f.function is objective:
+                return True
+            if isinstance(f.function, Combo) and _contains(f.function, objective):
+                return True
+    return False
 
 
 def _get_n_params(functions: list) -> int:

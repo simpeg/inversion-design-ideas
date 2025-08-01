@@ -12,6 +12,7 @@ from collections.abc import Callable
 
 import numpy as np
 import numpy.typing as npt
+from rich.console import Console
 from rich.live import Live
 from rich.table import Table
 
@@ -208,6 +209,19 @@ class InversionLog:
             for title in self.columns:
                 self._table.add_column(title)
         return self._table
+
+    def show(self):
+        """
+        Show table.
+        """
+        console = Console()
+        console.print(self.table)
+
+    def show_live(self, **kwargs):
+        """
+        Context manager for live update of the table.
+        """
+        return Live(self.table, **kwargs)
 
     @property
     def log(self) -> dict[str, list]:

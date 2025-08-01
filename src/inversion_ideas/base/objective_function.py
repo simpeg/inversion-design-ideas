@@ -142,7 +142,7 @@ class Scaled(Objective):
     def __repr__(self):
         fmt = ".2e" if np.abs(self.multiplier) > 1e3 else ".2f"
         phi_repr = f"{self.function}"
-        # Add brackets in case that the function has a multiplier
+        # Add brackets in case that the function has a multiplier or is a Combo
         if isinstance(self.function, Iterable) or hasattr(self.function, "multiplier"):
             phi_repr = f"[{phi_repr}]"
         return f"{self.multiplier:{fmt}} {phi_repr}"

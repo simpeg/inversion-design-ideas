@@ -75,6 +75,17 @@ class Inversion:
         # Assign model as a copy of the initial model
         self.model = initial_model.copy()
 
+        # Initialize the counter
+        if not hasattr(self, "_counter"):
+            self._counter = 0
+
+        # Add initial model to log (only on first iteration)
+        if self.counter == 0 and self.log is not None:
+            # TODO:
+            # This might trigger evaluation of objective functions, making the
+            # initialization of the inversion slow. We should put this somewhere else.
+            self.log.update_table(self.counter, self.model)
+
     def __next__(self):
         """
         Run next iteration in the inversion.
@@ -117,17 +128,6 @@ class Inversion:
         return self.model
 
     def __iter__(self):
-        """
-        Initialize and return iterator.
-        """
-        # Initialize the counter if it doesn't exist.
-        # If iter is called again after the inversion has been initialized already,
-        # resume from the last point.
-        if not hasattr(self, "_counter"):
-            self._counter = 0
-        # Update log with the initial model
-        if self.log is not None:
-            self.log.update_table(self.counter, self.model)
         return self
 
     def run(self) -> npt.NDArray[np.float64]:

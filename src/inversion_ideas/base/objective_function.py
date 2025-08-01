@@ -142,8 +142,8 @@ class Scaled(Objective):
     def __repr__(self):
         fmt = ".2e" if np.abs(self.multiplier) > 1e3 else ".2f"
         phi_repr = f"{self.function}"
-        # Add brackets in case that the function has a multiplier
-        if hasattr(self.function, "multiplier"):
+        # Add brackets in case that the function has a multiplier or is a Combo
+        if isinstance(self.function, Iterable) or hasattr(self.function, "multiplier"):
             phi_repr = f"[{phi_repr}]"
         return f"{self.multiplier:{fmt}} {phi_repr}"
 
@@ -160,8 +160,8 @@ class Scaled(Objective):
             exp = str(int(exp))
             multiplier_str = rf"{base} \cdot 10^{{{exp}}}"
         phi_str = self.function._repr_latex_().strip("$")
-        # Add brackets in case that the function has a multiplier
-        if hasattr(self.function, "multiplier"):
+        # Add brackets in case that the function has a multiplier or is a Combo
+        if isinstance(self.function, Iterable) or hasattr(self.function, "multiplier"):
             phi_str = f"[ {phi_str} ]"
         return rf"${multiplier_str} \, {phi_str}$"
 
@@ -231,11 +231,23 @@ class Combo(Objective):
         return Combo(_unpack_combo(self.functions))
 
     def __repr__(self):
-        return "[" + " + ".join(repr(f) for f in self.functions) + "]"
+        functions = []
+        for function in self.functions:
+            function_str = repr(function)
+            if isinstance(function, Iterable):
+                function_str = f"[ {function_str} ]"
+            functions.append(function_str)
+        return " + ".join(functions)
 
     def _repr_latex_(self):
-        phi_str = " + ".join(f._repr_latex_().strip("$") for f in self.functions)
-        return f"$[ {phi_str} ]$"
+        functions = []
+        for function in self.functions:
+            function_str = function._repr_latex_().strip("$")
+            if isinstance(function, Iterable):
+                function_str = f"[ {function_str} ]"
+            functions.append(function_str)
+        phi_str = " + ".join(functions)
+        return f"$ {phi_str} $"
 
     def __iadd__(self, other) -> Self:
         if other.n_params != self.n_params:

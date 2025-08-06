@@ -44,6 +44,7 @@ class DataMisfit(Objective):
         self.simulation = simulation
         self.cache = cache
         self.build_hessian = build_hessian
+        self.set_name("d")
 
     @cache_on_model
     def __call__(self, model) -> float:

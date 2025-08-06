@@ -22,6 +22,7 @@ class TikhonovZero(Objective):
             if reference_model is not None
             else np.zeros(n_params, dtype=np.float64)
         )
+        self.set_name("s")
 
     def __call__(self, model) -> float:
         model_diff = model - self.reference_model

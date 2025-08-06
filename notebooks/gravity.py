@@ -1,6 +1,7 @@
 import numpy as np
 import numpy.typing as npt
 from scipy.sparse.linalg import LinearOperator
+
 from inversion_ideas.base import Simulation
 
 

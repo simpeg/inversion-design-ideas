@@ -63,6 +63,8 @@ class Objective(ABC):
             )
             raise TypeError(msg)
         self.name = value
+        # Return self so we can pipe this method
+        return self
 
     def __repr__(self):
         repr_ = f"{self._base_str}"

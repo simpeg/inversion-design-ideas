@@ -16,6 +16,8 @@ from rich.console import Console
 from rich.live import Live
 from rich.table import Table
 
+from .base import Condition
+
 
 class Inversion:
     """
@@ -30,7 +32,7 @@ class Inversion:
     optimizer : Minimizer or callable
         Function or object to use as minimizer. It must take the objective function and
         a model as arguments.
-    stopping_criteria : callable
+    stopping_criteria : Condition or callable
         Boolean function that takes the model as argument. If this function returns
         ``True``, then the inversion will stop.
     max_iterations : int, optional
@@ -50,7 +52,7 @@ class Inversion:
         initial_model,
         optimizer,
         *,
-        stopping_criteria: Callable | list[Callable],
+        stopping_criteria: Condition | Callable,
         max_iterations: int | None = None,
         cache_models=False,
         log: typing.Optional["InversionLog"] = None,
@@ -84,7 +86,7 @@ class Inversion:
         Run next iteration in the inversion.
         """
         # Check for stopping criteria before trying to run the iteration
-        if self._is_stopping_criteria_met(self.model):
+        if self.stopping_criteria(self.model):
             raise StopIteration
 
         # Check if maximum number of iterations have been reached
@@ -150,14 +152,6 @@ class Inversion:
         if not hasattr(self, "_models"):
             self._models = [self.initial_model]
         return self._models
-
-    def _is_stopping_criteria_met(self, model):
-        if callable(self.stopping_criteria):
-            return self.stopping_criteria(model)
-        should_stop = any(
-            stopping_criteria(model) for stopping_criteria in self.stopping_criteria
-        )
-        return should_stop
 
 
 class InversionLog:

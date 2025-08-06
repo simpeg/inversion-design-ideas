@@ -16,8 +16,6 @@ from rich.console import Console
 from rich.live import Live
 from rich.table import Table
 
-from .base import Directive
-
 
 class Inversion:
     """
@@ -32,9 +30,6 @@ class Inversion:
     optimizer : Minimizer or callable
         Function or object to use as minimizer. It must take the objective function and
         a model as arguments.
-    directives : list of Directive
-        List of ``Directive``s used to modify the objective function after each
-        iteration.
     stopping_criteria : callable
         Boolean function that takes the model as argument. If this function returns
         ``True``, then the inversion will stop.
@@ -55,7 +50,6 @@ class Inversion:
         initial_model,
         optimizer,
         *,
-        directives: typing.Sequence[Directive],
         stopping_criteria: Callable | list[Callable],
         max_iterations: int | None = None,
         cache_models=False,
@@ -65,7 +59,6 @@ class Inversion:
         self.objective_function = objective_function
         self.initial_model = initial_model
         self.optimizer = optimizer
-        self.directives = directives
         self.stopping_criteria = stopping_criteria
         self.max_iterations = max_iterations
         self.cache_models = cache_models
@@ -97,16 +90,6 @@ class Inversion:
         # Check if maximum number of iterations have been reached
         if self.max_iterations is not None and self.counter > self.max_iterations:
             raise StopIteration
-
-        # Initialize directives in the first iteration
-        if self.counter == 0:
-            for directive in self.directives:
-                directive.initialize()
-            self._initialized = True
-        else:
-            # Run directives (after the last iteration)
-            for directive in self.directives:
-                directive()
 
         # Minimize objective function
         model = self.optimizer(self.objective_function, self.model)

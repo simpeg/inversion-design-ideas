@@ -5,7 +5,7 @@ Ideas for inversion framework.
 from . import base, utils
 from ._version import __version__
 from .conditions import ChiTarget, CustomCondition
-from .constructors import create_inversion
+from .constructors import create_inversion, create_standard_log
 from .data_misfit import DataMisfit
 from .directives import MultiplierCooler
 from .errors import ConvergenceWarning
@@ -27,5 +27,6 @@ __all__ = [
     "__version__",
     "base",
     "create_inversion",
+    "create_standard_log",
     "utils",
 ]

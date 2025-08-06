@@ -77,7 +77,7 @@ class Inversion:
             # TODO:
             # This might trigger evaluation of objective functions, making the
             # initialization of the inversion slow. We should put this somewhere else.
-            self.log.update_table(self.counter, self.model)
+            self.log.update_log(self.counter, self.model)
 
     def __next__(self):
         """
@@ -106,7 +106,7 @@ class Inversion:
 
         # Update log
         if self.log is not None:
-            self.log.update_table(self.counter, self.model)
+            self.log.update_log(self.counter, self.model)
 
         return self.model
 
@@ -118,7 +118,10 @@ class Inversion:
         Run the inversion.
         """
         if self.show_log and self.log is not None:
-            with Live(self.log.table) as live:
+            table = getattr(self.log, "table", None)
+            if table is None:
+                raise NotImplementedError()
+            with Live(table) as live:
                 for _ in self:
                     live.refresh()
         else:
@@ -171,9 +174,8 @@ class InversionLog:
         ``model`` (the inverted model as a 1d array).
     """
 
-    def __init__(self, columns: dict[str, Callable], table_kwargs: dict | None = None):
+    def __init__(self, columns: dict[str, Callable]):
         self._columns = columns
-        self.table_kwargs = table_kwargs if table_kwargs is not None else {}
 
     @property
     def columns(self) -> dict[str, Callable]:
@@ -181,6 +183,41 @@ class InversionLog:
         Column specifiers.
         """
         return self._columns
+
+    @property
+    def log(self) -> dict[str, list]:
+        """
+        Inversion log.
+        """
+        if not hasattr(self, "_log"):
+            self._log: dict[str, list] = {col: [] for col in self.columns}
+        return self._log
+
+    def update_log(self, iteration: int, model: npt.NDArray[np.float64]):
+        """
+        Update the log.
+        """
+        for title, column_func in self.columns.items():
+            self.log[title].append(column_func(iteration, model))
+
+
+class InversionLogRich(InversionLog):
+    """
+    Log the outputs of an inversion.
+
+    Parameters
+    ----------
+    columns : dict
+        Dictionary with specification for the columns of the log table.
+        The keys are the column titles as strings. The values are callables that will be
+        used to generate the value for each row and column. Each callable should take
+        two arguments: ``iteration`` (an integer with the number of the iteration) and
+        ``model`` (the inverted model as a 1d array).
+    """
+
+    def __init__(self, columns: dict[str, Callable], table_kwargs: dict | None = None):
+        super().__init__(columns)
+        self.table_kwargs = table_kwargs if table_kwargs is not None else {}
 
     @property
     def table(self) -> Table:
@@ -206,23 +243,7 @@ class InversionLog:
         """
         return Live(self.table, **kwargs)
 
-    @property
-    def log(self) -> dict[str, list]:
-        """
-        Inversion log.
-        """
-        if not hasattr(self, "_log"):
-            self._log: dict[str, list] = {col: [] for col in self.columns}
-        return self._log
-
-    def _update_log(self, iteration: int, model: npt.NDArray[np.float64]):
-        """
-        Update the log.
-        """
-        for title, column_func in self.columns.items():
-            self.log[title].append(column_func(iteration, model))
-
-    def update_table(self, iteration: int, model: npt.NDArray[np.float64]):
+    def update_table(self):
         """
         Add row to the table given the latest inverted model.
 
@@ -230,7 +251,6 @@ class InversionLog:
         ----------
         model : (n_params) array
         """
-        self._update_log(iteration, model)
         row = []
         for column in self.columns:
             value = self.log[column][-1]  # last element in the log
@@ -242,3 +262,12 @@ class InversionLog:
                 fmt = ""
             row.append(f"{value:{fmt}}")
         self.table.add_row(*row)
+
+    def update_log(self, iteration: int, model: npt.NDArray[np.float64]):
+        """
+        Update the log.
+
+        Update the table as well.
+        """
+        super().update_log(iteration, model)
+        self.update_table()

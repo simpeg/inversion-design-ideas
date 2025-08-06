@@ -3,9 +3,24 @@ Functions and callable classes that define conditions.
 
 Use these objects as stopping criteria for inversions.
 """
+from collections.abc import Callable
+
+from .base import Condition
 
 
-class ChiTarget:
+class CustomCondition(Condition):
+    def __init__(self, func: Callable):
+        self.func = func
+
+    def __call__(self, model) -> bool:
+        return self.func(model)
+
+    @classmethod
+    def create(cls, func: Callable):
+        return cls(func)
+
+
+class ChiTarget(Condition):
     """
     Stopping criteria for when chi factor meets the target.
 

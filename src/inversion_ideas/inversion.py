@@ -42,8 +42,6 @@ class Inversion:
         Whether to cache each model after each iteration.
     log : InversionLog, optional
         Instance of :class:`InversionLog` to store information about the inversion.
-    show_log : bool, optional
-        Whether to show the log table in *live* mode while the inversion is running.
     """
 
     def __init__(
@@ -56,7 +54,6 @@ class Inversion:
         max_iterations: int | None = None,
         cache_models=False,
         log: typing.Optional["InversionLog"] = None,
-        show_log=True,
     ):
         self.objective_function = objective_function
         self.initial_model = initial_model
@@ -65,7 +62,6 @@ class Inversion:
         self.max_iterations = max_iterations
         self.cache_models = cache_models
         self.log = log
-        self.show_log = show_log
 
         # Assign model as a copy of the initial model
         self.model = initial_model.copy()
@@ -114,22 +110,6 @@ class Inversion:
 
     def __iter__(self):
         return self
-
-    def run(self) -> npt.NDArray[np.float64]:
-        """
-        Run the inversion.
-        """
-        if self.show_log and self.log is not None:
-            table = getattr(self.log, "table", None)
-            if table is None:
-                raise NotImplementedError()
-            with Live(table) as live:
-                for _ in self:
-                    live.refresh()
-        else:
-            for _ in self:
-                pass
-        return self.model
 
     @property
     def counter(self) -> int:

@@ -77,7 +77,7 @@ class Inversion:
             # TODO:
             # This might trigger evaluation of objective functions, making the
             # initialization of the inversion slow. We should put this somewhere else.
-            self.log.update_log(self.counter, self.model)
+            self.log.update(self.counter, self.model)
 
     def __next__(self):
         """
@@ -106,7 +106,7 @@ class Inversion:
 
         # Update log
         if self.log is not None:
-            self.log.update_log(self.counter, self.model)
+            self.log.update(self.counter, self.model)
 
         return self.model
 
@@ -193,7 +193,7 @@ class InversionLog:
             self._log: dict[str, list] = {col: [] for col in self.columns}
         return self._log
 
-    def update_log(self, iteration: int, model: npt.NDArray[np.float64]):
+    def update(self, iteration: int, model: npt.NDArray[np.float64]):
         """
         Update the log.
         """
@@ -263,11 +263,11 @@ class InversionLogRich(InversionLog):
             row.append(f"{value:{fmt}}")
         self.table.add_row(*row)
 
-    def update_log(self, iteration: int, model: npt.NDArray[np.float64]):
+    def update(self, iteration: int, model: npt.NDArray[np.float64]):
         """
         Update the log.
 
         Update the table as well.
         """
-        super().update_log(iteration, model)
+        super().update(iteration, model)
         self.update_table()

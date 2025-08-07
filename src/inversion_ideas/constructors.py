@@ -58,9 +58,7 @@ def create_inversion(
     ]
 
     # Stopping criteria
-    stopping_criteria = [
-        ChiTarget(data_misfit, chi_target=chi_target),
-    ]
+    stopping_criteria = ChiTarget(data_misfit, chi_target=chi_target)
 
     # Inversion log
     columns = {

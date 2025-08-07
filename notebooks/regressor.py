@@ -1,11 +1,13 @@
 """
 Inversion framework to implement a linear regressor.
 """
+import time
 import numpy as np
 from numpy.typing import NDArray
 from scipy.sparse.linalg import LinearOperator
 
 from inversion_ideas.base import Simulation
+from inversion_ideas.utils import cache_on_model
 
 
 class LinearRegressor(Simulation):
@@ -17,9 +19,11 @@ class LinearRegressor(Simulation):
         \mathbf{y} = \mathbf{X} \cdot \mathbf{m}
     """
 
-    def __init__(self, X, linop=False):
+    def __init__(self, X, linop=False, sleep=0, cache=True):
         self.X = X
         self.linop = linop
+        self.sleep = sleep
+        self.cache = cache
 
     @property
     def n_params(self) -> int:
@@ -35,10 +39,13 @@ class LinearRegressor(Simulation):
         """
         return self.X.shape[0]
 
+    @cache_on_model
     def __call__(self, model) -> NDArray[np.float64]:
         """
         Evaluate simulation for a given model.
         """
+        if self.sleep != 0:
+            time.sleep(self.sleep)
         return self.X @ model
 
     def jacobian(self, model) -> NDArray[np.float64] | LinearOperator:  # noqa: ARG002

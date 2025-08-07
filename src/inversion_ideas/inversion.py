@@ -143,6 +143,26 @@ class Inversion:
             self._models = [self.initial_model]
         return self._models
 
+    def run(self, show_log=True) -> npt.NDArray[np.float64]:
+        """
+        Run the inversion.
+
+        Parameters
+        ----------
+        show_log : bool, optional
+            Whether to show the ``log`` (if it's defined) during the inversion.
+        """
+        if show_log and self.log is not None:
+            if not hasattr(self.log, "live"):
+                raise NotImplementedError()
+            with self.log.live() as live:
+                for _ in self:
+                    live.refresh()
+        else:
+            for _ in self:
+                pass
+        return self.model
+
 
 class InversionLog:
     """
@@ -221,7 +241,7 @@ class InversionLogRich(InversionLog):
         console = Console()
         console.print(self.table)
 
-    def show_live(self, **kwargs):
+    def live(self, **kwargs):
         """
         Context manager for live update of the table.
         """

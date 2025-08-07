@@ -5,7 +5,7 @@ Functions to easily build commonly used objects in inversions.
 from .base import Combo
 from .conditions import ChiTarget
 from .directives import MultiplierCooler
-from .inversion import Inversion, InversionLog, InversionLogRich
+from .inversion import Inversion, InversionLogRich
 
 
 def create_standard_log(phi: Combo):

@@ -4,7 +4,7 @@ Directives to modify the objective function between iterations of an inversion.
 import numpy as np
 import numpy.typing as npt
 
-from .base import Scaled, Directive
+from .base import Directive, Scaled
 
 
 class MultiplierCooler(Directive):

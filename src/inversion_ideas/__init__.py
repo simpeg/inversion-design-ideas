@@ -2,7 +2,7 @@
 Ideas for inversion framework.
 """
 
-from . import base, utils
+from . import base, utils, recipes
 from ._version import __version__
 from .conditions import ChiTarget, CustomCondition
 from .constructors import create_inversion, create_standard_log
@@ -28,5 +28,6 @@ __all__ = [
     "base",
     "create_inversion",
     "create_standard_log",
+    "recipes",
     "utils",
 ]

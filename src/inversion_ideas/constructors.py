@@ -69,7 +69,7 @@ def create_inversion(
         "phi": lambda _, model: objective_function(model),
         "chi": lambda _, model: data_misfit(model) / data_misfit.n_data,
     }
-    inversion_log = InversionLog(columns)
+    inversion_log = InversionLogRich(columns)
 
     inversion = Inversion(
         objective_function,

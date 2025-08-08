@@ -16,7 +16,7 @@ from rich.console import Console
 from rich.live import Live
 from rich.table import Table
 
-from .base import Condition, Directive
+from .base import Condition, Directive, Combo
 
 
 class Inversion:
@@ -203,6 +203,49 @@ class InversionLog:
         """
         for title, column_func in self.columns.items():
             self.log[title].append(column_func(iteration, model))
+
+    @classmethod
+    def create_from(cls, objective_function: Combo) -> typing.Self:
+        r"""
+        Create the standard log for a classic inversion.
+
+        Parameters
+        ----------
+        objective_function : Combo
+            Combo objective function with two elements: the data misfit and the
+            regularization (including a trade-off parameter).
+
+        Returns
+        -------
+        Self
+
+        Notes
+        -----
+        The objective function should be of the type:
+
+        .. math::
+
+            \phi(\mathbf{m}) = \phi_d(\mathbf{m}) + \beta \phi_m(\mathbf{m})
+
+        where :math:`\phi_d(m)` is the data misfit term, :math:`\phi_m(\mathbf{m})` is
+        the model norm, and :math:`\beta` is the trade-off parameter.
+        """
+        # TODO: write proper error messages
+        assert len(objective_function) == 2
+        data_misfit = objective_function[0]
+        regularization = objective_function[1]
+        assert hasattr(regularization, "multiplier")
+
+        columns = {
+            "iter": lambda iteration, _: iteration,
+            "beta": lambda _, __: regularization.multiplier,
+            "phi_d": lambda _, model: data_misfit(model),
+            "phi_m": lambda _, model: regularization.function(model),
+            "beta * phi_m": lambda _, model: regularization(model),
+            "phi": lambda _, model: objective_function(model),
+            "chi": lambda _, model: data_misfit(model) / data_misfit.n_data,
+        }
+        return cls(columns)
 
 
 class InversionLogRich(InversionLog):

@@ -90,18 +90,23 @@ class Objective(ABC):
     def __rmul__(self, value):
         return self.__mul__(value)
 
-    def __div__(self, denominator):
-        return self * (1.0 / denominator)
-
     def __truediv__(self, denominator):
         return self * (1.0 / denominator)
 
-    def __iadd__(self, other) -> "Combo":  # noqa: PYI034
+    def __floordiv__(self, denominator):
+        msg = "Floor division is not implemented for objective functions."
+        raise TypeError(msg)
+
+    def __iadd__(self, other) -> Self:
         msg = "Inplace addition is not implemented for this class."
         raise TypeError(msg)
 
-    def __imul__(self, other) -> "Scaled":  # noqa: PYI034
+    def __imul__(self, other) -> Self:
         msg = "Inplace multiplication is not implemented for this class."
+        raise TypeError(msg)
+
+    def __itruediv__(self, value) -> Self:
+        msg = "Inplace division is not implemented for this class."
         raise TypeError(msg)
 
 
@@ -169,6 +174,10 @@ class Scaled(Objective):
 
     def __imul__(self, value) -> Self:
         self.multiplier *= value
+        return self
+
+    def __itruediv__(self, value) -> Self:
+        self.multiplier /= value
         return self
 
 

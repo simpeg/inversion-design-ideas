@@ -16,7 +16,7 @@ from rich.console import Console
 from rich.live import Live
 from rich.table import Table
 
-from .base import Condition
+from .base import Condition, Directive
 
 
 class Inversion:
@@ -32,6 +32,9 @@ class Inversion:
     optimizer : Minimizer or callable
         Function or object to use as minimizer. It must take the objective function and
         a model as arguments.
+    directives : list of Directive
+        List of ``Directive``s used to modify the objective function after each
+        iteration.
     stopping_criteria : Condition or callable
         Boolean function that takes the model as argument. If this function returns
         ``True``, then the inversion will stop.
@@ -50,6 +53,7 @@ class Inversion:
         initial_model,
         optimizer,
         *,
+        directives: typing.Sequence[Directive],
         stopping_criteria: Condition | Callable,
         max_iterations: int | None = None,
         cache_models=False,
@@ -58,6 +62,7 @@ class Inversion:
         self.objective_function = objective_function
         self.initial_model = initial_model
         self.optimizer = optimizer
+        self.directives = directives
         self.stopping_criteria = stopping_criteria
         self.max_iterations = max_iterations
         self.cache_models = cache_models
@@ -88,6 +93,11 @@ class Inversion:
         # Check if maximum number of iterations have been reached
         if self.max_iterations is not None and self.counter > self.max_iterations:
             raise StopIteration
+
+        # Run directives (only after the first iteration)
+        if self.counter > 0:
+            for directive in self.directives:
+                directive(self.model, self.counter)
 
         # Minimize objective function
         model = self.optimizer(self.objective_function, self.model)
@@ -132,6 +142,26 @@ class Inversion:
         if not hasattr(self, "_models"):
             self._models = [self.initial_model]
         return self._models
+
+    def run(self, show_log=True) -> npt.NDArray[np.float64]:
+        """
+        Run the inversion.
+
+        Parameters
+        ----------
+        show_log : bool, optional
+            Whether to show the ``log`` (if it's defined) during the inversion.
+        """
+        if show_log and self.log is not None:
+            if not hasattr(self.log, "live"):
+                raise NotImplementedError()
+            with self.log.live() as live:
+                for _ in self:
+                    live.refresh()
+        else:
+            for _ in self:
+                pass
+        return self.model
 
 
 class InversionLog:
@@ -211,7 +241,7 @@ class InversionLogRich(InversionLog):
         console = Console()
         console.print(self.table)
 
-    def show_live(self, **kwargs):
+    def live(self, **kwargs):
         """
         Context manager for live update of the table.
         """

@@ -5,7 +5,7 @@ Functions to easily build commonly used objects in inversions.
 from .base import Combo
 from .conditions import ChiTarget
 from .directives import MultiplierCooler
-from .inversion import Inversion, InversionLog, InversionLogRich
+from .inversion import Inversion, InversionLogRich
 
 
 def create_standard_log(phi: Combo):
@@ -58,9 +58,7 @@ def create_inversion(
     ]
 
     # Stopping criteria
-    stopping_criteria = [
-        ChiTarget(data_misfit, chi_target=chi_target),
-    ]
+    stopping_criteria = ChiTarget(data_misfit, chi_target=chi_target)
 
     # Inversion log
     columns = {
@@ -71,7 +69,7 @@ def create_inversion(
         "phi": lambda _, model: objective_function(model),
         "chi": lambda _, model: data_misfit(model) / data_misfit.n_data,
     }
-    inversion_log = InversionLog(columns)
+    inversion_log = InversionLogRich(columns)
 
     inversion = Inversion(
         objective_function,

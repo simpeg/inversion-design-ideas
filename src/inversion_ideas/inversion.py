@@ -16,7 +16,7 @@ from rich.console import Console
 from rich.live import Live
 from rich.table import Table
 
-from .base import Condition, Directive, Combo
+from .base import Combo, Condition, Directive
 
 
 class Inversion:

@@ -4,7 +4,7 @@ Functions to easily build commonly used objects in inversions.
 
 from .conditions import ChiTarget
 from .directives import MultiplierCooler
-from .inversion import Inversion, InversionLogRich
+from .inversion import Inversion
 
 
 def create_inversion(

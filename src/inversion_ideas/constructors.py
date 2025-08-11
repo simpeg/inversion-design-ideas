@@ -38,9 +38,6 @@ def create_inversion(
     # Stopping criteria
     stopping_criteria = ChiTarget(data_misfit, chi_target=chi_target)
 
-    # Inversion log
-    inversion_log = InversionLogRich.create_from(objective_function)
-
     inversion = Inversion(
         objective_function,
         initial_model,
@@ -48,6 +45,6 @@ def create_inversion(
         directives=directives,
         stopping_criteria=stopping_criteria,
         cache_models=cache_models,
-        log=inversion_log,
+        log=True,
     )
     return inversion

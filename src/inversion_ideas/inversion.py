@@ -43,8 +43,11 @@ class Inversion:
         no limit on the total amount of iterations.
     cache_models : bool, optional
         Whether to cache each model after each iteration.
-    log : InversionLog, optional
+    log : InversionLog or bool, optional
         Instance of :class:`InversionLog` to store information about the inversion.
+        If `True`, a default :class:`InversionLog` is going to be used.
+        If `False`, no log will be assigned to the inversion, and :attr:`Inversion.log`
+        will be ``None``.
     """
 
     def __init__(
@@ -57,7 +60,7 @@ class Inversion:
         stopping_criteria: Condition | Callable,
         max_iterations: int | None = None,
         cache_models=False,
-        log: typing.Optional["InversionLog"] = None,
+        log: "InversionLog | bool" = True,
     ):
         self.objective_function = objective_function
         self.initial_model = initial_model
@@ -66,7 +69,14 @@ class Inversion:
         self.stopping_criteria = stopping_criteria
         self.max_iterations = max_iterations
         self.cache_models = cache_models
-        self.log = log
+
+        # Assign log
+        if log is False:
+            self.log = None
+        elif log is True:
+            self.log = InversionLogRich.create_from(self.objective_function)
+        else:
+            self.log = log
 
         # Assign model as a copy of the initial model
         self.model = initial_model.copy()
@@ -75,17 +85,14 @@ class Inversion:
         if not hasattr(self, "_counter"):
             self._counter = 0
 
-        # Add initial model to log (only on first iteration)
-        if self.counter == 0 and self.log is not None:
-            # TODO:
-            # This might trigger evaluation of objective functions, making the
-            # initialization of the inversion slow. We should put this somewhere else.
-            self.log.update(self.counter, self.model)
-
     def __next__(self):
         """
         Run next iteration in the inversion.
         """
+        # Add initial model to log (only on first iteration)
+        if self.counter == 0 and self.log is not None:
+            self.log.update(self.counter, self.model)
+
         # Check for stopping criteria before trying to run the iteration
         if self.stopping_criteria(self.model):
             raise StopIteration

@@ -17,6 +17,7 @@ from rich.live import Live
 from rich.table import Table
 
 from .base import Combo, Condition, Directive
+from .utils import get_logger
 
 
 class Inversion:
@@ -89,19 +90,26 @@ class Inversion:
         """
         Run next iteration in the inversion.
         """
-        # Add initial model to log (only on first iteration)
+        # Add initial model to log (only on zeroth iteration)
         if self.counter == 0 and self.log is not None:
             self.log.update(self.counter, self.model)
 
         # Check for stopping criteria before trying to run the iteration
         if self.stopping_criteria(self.model):
+            get_logger().info(
+                "🎉 Inversion successfully finished due to stopping critiera."
+            )
             raise StopIteration
 
         # Check if maximum number of iterations have been reached
         if self.max_iterations is not None and self.counter > self.max_iterations:
+            get_logger().info(
+                "⚠️ Inversion finished after reaching maximum number of iterations "
+                f"({self.max_iterations})."
+            )
             raise StopIteration
 
-        # Run directives (only after the first iteration)
+        # Run directives (only after the zeroth iteration)
         if self.counter > 0:
             for directive in self.directives:
                 directive(self.model, self.counter)

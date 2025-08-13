@@ -267,11 +267,13 @@ class InversionLogRich(InversionLog):
         used to generate the value for each row and column. Each callable should take
         two arguments: ``iteration`` (an integer with the number of the iteration) and
         ``model`` (the inverted model as a 1d array).
+    kwargs :
+        Pass extra options to :class:`rich.table.Table`.
     """
 
-    def __init__(self, columns: dict[str, Callable], table_kwargs: dict | None = None):
+    def __init__(self, columns: dict[str, Callable], **kwargs):
         super().__init__(columns)
-        self.table_kwargs = table_kwargs if table_kwargs is not None else {}
+        self.kwargs = kwargs
 
     @property
     def table(self) -> Table:
@@ -279,7 +281,7 @@ class InversionLogRich(InversionLog):
         Table for the inversion log.
         """
         if not hasattr(self, "_table"):
-            self._table = Table(**self.table_kwargs)
+            self._table = Table(**self.kwargs)
             for title in self.columns:
                 self._table.add_column(title)
         return self._table

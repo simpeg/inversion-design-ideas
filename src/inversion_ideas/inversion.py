@@ -8,7 +8,7 @@ modify the objective function after each iteration and optionally a logger.
 
 import numbers
 import typing
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 
 import numpy as np
 import numpy.typing as npt
@@ -248,17 +248,19 @@ class InversionLog:
         # TODO: write proper error messages
         assert len(objective_function) == 2
         data_misfit = objective_function[0]
+        assert not hasattr(data_misfit, "multiplier")
+        assert not isinstance(data_misfit, Iterable)
         regularization = objective_function[1]
         assert hasattr(regularization, "multiplier")
 
         columns = {
             "iter": lambda iteration, _: iteration,
-            "beta": lambda _, __: regularization.multiplier,
-            "phi_d": lambda _, model: data_misfit(model),
-            "phi_m": lambda _, model: regularization.function(model),
-            "beta * phi_m": lambda _, model: regularization(model),
-            "phi": lambda _, model: objective_function(model),
-            "chi": lambda _, model: data_misfit(model) / data_misfit.n_data,
+            "β": lambda _, __: regularization.multiplier,
+            "φ_d": lambda _, model: data_misfit(model),
+            "φ_m": lambda _, model: regularization.function(model),
+            "β φ_m": lambda _, model: regularization(model),
+            "φ": lambda _, model: objective_function(model),
+            "χ": lambda _, model: data_misfit(model) / data_misfit.n_data,
         }
         return cls(columns)
 

@@ -141,6 +141,7 @@ class TestObjectiveOperations:
             - Error on imul for Combo.
             - Error on iadd for Scaled.
             - imul works ok for Scaled.
+            - idiv works ok for Scaled.
             - iadd works ok for Combo.
     """
 
@@ -259,6 +260,27 @@ class TestObjectiveOperations:
             phi = phi + other
         with pytest.raises(TypeError):
             phi *= 2.71
+
+    def test_idiv_scaled(self):
+        a = Dummy(self.n_params)
+        scalar = 3.14
+        scaled = scalar * a
+        scaled_bkp = scaled
+        new_scalar = 4.0
+        scaled /= new_scalar
+        assert isinstance(scaled, Scaled)
+        assert scaled is scaled_bkp  # assert inplace operation
+        assert scaled.function is a
+        assert scaled.multiplier == scalar / new_scalar
+
+    @pytest.mark.parametrize("function_type", ["objective", "combo"])
+    def test_idiv_error(self, function_type):
+        phi = Dummy(self.n_params)
+        if function_type == "combo":
+            other = Dummy(self.n_params)
+            phi = phi + other
+        with pytest.raises(TypeError):
+            phi /= 2.71
 
 
 def test_combo_flatten():

@@ -16,7 +16,8 @@ from rich.console import Console
 from rich.live import Live
 from rich.table import Table
 
-from .base import Condition
+from .base import Combo, Condition, Directive
+from .utils import get_logger
 
 
 class Inversion:
@@ -32,6 +33,9 @@ class Inversion:
     optimizer : Minimizer or callable
         Function or object to use as minimizer. It must take the objective function and
         a model as arguments.
+    directives : list of Directive
+        List of ``Directive``s used to modify the objective function after each
+        iteration.
     stopping_criteria : Condition or callable
         Boolean function that takes the model as argument. If this function returns
         ``True``, then the inversion will stop.
@@ -40,8 +44,11 @@ class Inversion:
         no limit on the total amount of iterations.
     cache_models : bool, optional
         Whether to cache each model after each iteration.
-    log : InversionLog, optional
+    log : InversionLog or bool, optional
         Instance of :class:`InversionLog` to store information about the inversion.
+        If `True`, a default :class:`InversionLog` is going to be used.
+        If `False`, no log will be assigned to the inversion, and :attr:`Inversion.log`
+        will be ``None``.
     """
 
     def __init__(
@@ -50,18 +57,27 @@ class Inversion:
         initial_model,
         optimizer,
         *,
+        directives: typing.Sequence[Directive],
         stopping_criteria: Condition | Callable,
         max_iterations: int | None = None,
         cache_models=False,
-        log: typing.Optional["InversionLog"] = None,
+        log: "InversionLog | bool" = True,
     ):
         self.objective_function = objective_function
         self.initial_model = initial_model
         self.optimizer = optimizer
+        self.directives = directives
         self.stopping_criteria = stopping_criteria
         self.max_iterations = max_iterations
         self.cache_models = cache_models
-        self.log = log
+
+        # Assign log
+        if log is False:
+            self.log = None
+        elif log is True:
+            self.log = InversionLogRich.create_from(self.objective_function)
+        else:
+            self.log = log
 
         # Assign model as a copy of the initial model
         self.model = initial_model.copy()
@@ -70,24 +86,33 @@ class Inversion:
         if not hasattr(self, "_counter"):
             self._counter = 0
 
-        # Add initial model to log (only on first iteration)
-        if self.counter == 0 and self.log is not None:
-            # TODO:
-            # This might trigger evaluation of objective functions, making the
-            # initialization of the inversion slow. We should put this somewhere else.
-            self.log.update(self.counter, self.model)
-
     def __next__(self):
         """
         Run next iteration in the inversion.
         """
+        # Add initial model to log (only on zeroth iteration)
+        if self.counter == 0 and self.log is not None:
+            self.log.update(self.counter, self.model)
+
         # Check for stopping criteria before trying to run the iteration
         if self.stopping_criteria(self.model):
+            get_logger().info(
+                "🎉 Inversion successfully finished due to stopping critiera."
+            )
             raise StopIteration
 
         # Check if maximum number of iterations have been reached
         if self.max_iterations is not None and self.counter > self.max_iterations:
+            get_logger().info(
+                "⚠️ Inversion finished after reaching maximum number of iterations "
+                f"({self.max_iterations})."
+            )
             raise StopIteration
+
+        # Run directives (only after the zeroth iteration)
+        if self.counter > 0:
+            for directive in self.directives:
+                directive(self.model, self.counter)
 
         # Minimize objective function
         model = self.optimizer(self.objective_function, self.model)
@@ -133,6 +158,26 @@ class Inversion:
             self._models = [self.initial_model]
         return self._models
 
+    def run(self, show_log=True) -> npt.NDArray[np.float64]:
+        """
+        Run the inversion.
+
+        Parameters
+        ----------
+        show_log : bool, optional
+            Whether to show the ``log`` (if it's defined) during the inversion.
+        """
+        if show_log and self.log is not None:
+            if not hasattr(self.log, "live"):
+                raise NotImplementedError()
+            with self.log.live() as live:
+                for _ in self:
+                    live.refresh()
+        else:
+            for _ in self:
+                pass
+        return self.model
+
 
 class InversionLog:
     """
@@ -174,6 +219,49 @@ class InversionLog:
         for title, column_func in self.columns.items():
             self.log[title].append(column_func(iteration, model))
 
+    @classmethod
+    def create_from(cls, objective_function: Combo) -> typing.Self:
+        r"""
+        Create the standard log for a classic inversion.
+
+        Parameters
+        ----------
+        objective_function : Combo
+            Combo objective function with two elements: the data misfit and the
+            regularization (including a trade-off parameter).
+
+        Returns
+        -------
+        Self
+
+        Notes
+        -----
+        The objective function should be of the type:
+
+        .. math::
+
+            \phi(\mathbf{m}) = \phi_d(\mathbf{m}) + \beta \phi_m(\mathbf{m})
+
+        where :math:`\phi_d(m)` is the data misfit term, :math:`\phi_m(\mathbf{m})` is
+        the model norm, and :math:`\beta` is the trade-off parameter.
+        """
+        # TODO: write proper error messages
+        assert len(objective_function) == 2
+        data_misfit = objective_function[0]
+        regularization = objective_function[1]
+        assert hasattr(regularization, "multiplier")
+
+        columns = {
+            "iter": lambda iteration, _: iteration,
+            "beta": lambda _, __: regularization.multiplier,
+            "phi_d": lambda _, model: data_misfit(model),
+            "phi_m": lambda _, model: regularization.function(model),
+            "beta * phi_m": lambda _, model: regularization(model),
+            "phi": lambda _, model: objective_function(model),
+            "chi": lambda _, model: data_misfit(model) / data_misfit.n_data,
+        }
+        return cls(columns)
+
 
 class InversionLogRich(InversionLog):
     """
@@ -187,11 +275,13 @@ class InversionLogRich(InversionLog):
         used to generate the value for each row and column. Each callable should take
         two arguments: ``iteration`` (an integer with the number of the iteration) and
         ``model`` (the inverted model as a 1d array).
+    kwargs :
+        Pass extra options to :class:`rich.table.Table`.
     """
 
-    def __init__(self, columns: dict[str, Callable], table_kwargs: dict | None = None):
+    def __init__(self, columns: dict[str, Callable], **kwargs):
         super().__init__(columns)
-        self.table_kwargs = table_kwargs if table_kwargs is not None else {}
+        self.kwargs = kwargs
 
     @property
     def table(self) -> Table:
@@ -199,7 +289,7 @@ class InversionLogRich(InversionLog):
         Table for the inversion log.
         """
         if not hasattr(self, "_table"):
-            self._table = Table(**self.table_kwargs)
+            self._table = Table(**self.kwargs)
             for title in self.columns:
                 self._table.add_column(title)
         return self._table
@@ -211,7 +301,7 @@ class InversionLogRich(InversionLog):
         console = Console()
         console.print(self.table)
 
-    def show_live(self, **kwargs):
+    def live(self, **kwargs):
         """
         Context manager for live update of the table.
         """

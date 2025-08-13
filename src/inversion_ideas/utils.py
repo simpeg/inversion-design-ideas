@@ -3,6 +3,46 @@ Code utilities.
 """
 import functools
 import hashlib
+import logging
+
+__all__ = [
+    "cache_on_model",
+    "get_logger",
+]
+
+LOGGER = logging.Logger("inversions")
+LOGGER.addHandler(logging.StreamHandler())
+
+
+def _create_logger():
+    """
+    Create custom logger.
+    """
+    logger = logging.getLogger("inversions")
+    logger.setLevel(logging.INFO)
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter("{levelname}: {message}", style="{")
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    return logger
+
+
+LOGGER = _create_logger()
+
+
+def get_logger():
+    r"""
+    Get the default event logger.
+
+    The logger records events and relevant information while setting up simulations and
+    inversions. By default the logger will stream to stderr and using the INFO level.
+
+    Returns
+    -------
+    logger : :class:`logging.Logger`
+        The logger object for SimPEG.
+    """
+    return LOGGER
 
 
 def cache_on_model(func):

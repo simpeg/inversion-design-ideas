@@ -58,7 +58,7 @@ class Inversion:
         optimizer,
         *,
         directives: typing.Sequence[Directive],
-        stopping_criteria: Condition,
+        stopping_criteria: Condition | Callable,
         max_iterations: int | None = None,
         cache_models=False,
         log: "InversionLog | bool" = True,
@@ -110,7 +110,8 @@ class Inversion:
             raise StopIteration
 
         # Update stopping criteria (if necessary)
-        self.stopping_criteria.update(self.model)
+        if hasattr(self.stopping_criteria, "update"):
+            self.stopping_criteria.update(self.model)
 
         # Run directives (only after the zeroth iteration).
         # We update the directives here (and not at the end of this method), so after

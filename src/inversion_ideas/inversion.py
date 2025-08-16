@@ -109,7 +109,14 @@ class Inversion:
             )
             raise StopIteration
 
-        # Run directives (only after the zeroth iteration)
+        # Update stopping criteria (if necessary)
+        if hasattr(self.stopping_criteria, "update"):
+            self.stopping_criteria.update(self.model)
+
+        # Run directives (only after the zeroth iteration).
+        # We update the directives here (and not at the end of this method), so after
+        # each iteration the objective function is still the same we passed to the
+        # optimizer.
         if self.counter > 0:
             for directive in self.directives:
                 directive(self.model, self.counter)

@@ -18,6 +18,14 @@ class Condition(ABC):
     def __call__(self, model) -> bool:
         ...
 
+    def update(self, model):  # noqa: B027
+        """
+        Update the condition.
+        """
+        # This is not an abstract method. Children classes can choose to override it if
+        # necessary. The base class implements it to provide a common interface, even
+        # for those children that don't implement it.
+
     def __and__(self, other) -> "LogicalAnd":
         return LogicalAnd(self, other)
 
@@ -52,6 +60,13 @@ class LogicalAnd(Condition):
     def __call__(self, model) -> bool:
         return self.condition_a(model) and self.condition_b(model)
 
+    def update(self, model):
+        """
+        Update the underlying conditions.
+        """
+        self.condition_a.update(model)
+        self.condition_b.update(model)
+
 
 class LogicalOr(Condition):
     """
@@ -65,6 +80,13 @@ class LogicalOr(Condition):
     def __call__(self, model) -> bool:
         return self.condition_a(model) or self.condition_b(model)
 
+    def update(self, model):
+        """
+        Update the underlying conditions.
+        """
+        self.condition_a.update(model)
+        self.condition_b.update(model)
+
 
 class LogicalXor(Condition):
     """
@@ -77,3 +99,10 @@ class LogicalXor(Condition):
 
     def __call__(self, model) -> bool:
         return self.condition_a(model) ^ self.condition_b(model)
+
+    def update(self, model):
+        """
+        Update the underlying conditions.
+        """
+        self.condition_a.update(model)
+        self.condition_b.update(model)

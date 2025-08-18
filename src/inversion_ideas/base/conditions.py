@@ -48,7 +48,7 @@ class Condition(ABC):
         raise TypeError(msg)
 
 
-class _BaseMixin:
+class _Mixin:
     """
     Base class for Mixin classes.
     """
@@ -66,7 +66,7 @@ class _BaseMixin:
                 condition.update(model)
 
 
-class LogicalAnd(_BaseMixin, Condition):
+class LogicalAnd(_Mixin, Condition):
     """
     Mixin condition for the AND operation between two other conditions.
     """
@@ -75,7 +75,7 @@ class LogicalAnd(_BaseMixin, Condition):
         return self.condition_a(model) and self.condition_b(model)
 
 
-class LogicalOr(_BaseMixin, Condition):
+class LogicalOr(_Mixin, Condition):
     """
     Mixin condition for the OR operation between two other conditions.
     """
@@ -84,7 +84,7 @@ class LogicalOr(_BaseMixin, Condition):
         return self.condition_a(model) or self.condition_b(model)
 
 
-class LogicalXor(_BaseMixin, Condition):
+class LogicalXor(_Mixin, Condition):
     """
     Mixin condition for the XOR operation between two other conditions.
     """

@@ -9,6 +9,19 @@ conditions together.
 
 from abc import ABC, abstractmethod
 
+from rich.tree import Tree
+
+
+def _get_info_title(condition, model) -> str:
+    """
+    Generate title for condition's information.
+    """
+    status = condition(model)
+    checkbox = "x" if status else " "
+    color = "green" if status else "red"
+    text = f"[bold {color}]\[{checkbox}] {type(condition).__name__}[/bold {color}]"
+    return text
+
 
 class Condition(ABC):
     """
@@ -16,7 +29,8 @@ class Condition(ABC):
     """
 
     @abstractmethod
-    def __call__(self, model) -> bool: ...
+    def __call__(self, model) -> bool:
+        ...
 
     def update(self, model):  # noqa: B027
         """
@@ -25,6 +39,12 @@ class Condition(ABC):
         # This is not an abstract method. Children classes can choose to override it if
         # necessary. The base class implements it to provide a common interface, even
         # for those children that don't implement it.
+
+    def info(self, model) -> Tree:
+        """
+        Display information about the condition for a given model.
+        """
+        return Tree(_get_info_title(self, model))
 
     def __and__(self, other) -> "LogicalAnd":
         return LogicalAnd(self, other)
@@ -48,7 +68,7 @@ class Condition(ABC):
         raise TypeError(msg)
 
 
-class _Mixin:
+class _Mixin(ABC):
     """
     Base class for Mixin classes.
     """
@@ -57,6 +77,10 @@ class _Mixin:
         self.condition_a = condition_a
         self.condition_b = condition_b
 
+    @abstractmethod
+    def __call__(self, model) -> bool:
+        ...
+
     def update(self, model):
         """
         Update the underlying conditions.
@@ -64,6 +88,18 @@ class _Mixin:
         for condition in (self.condition_a, self.condition_b):
             if hasattr(condition, "update"):
                 condition.update(model)
+
+    def info(self, model) -> Tree:
+        status = self(model)
+        color = "green" if status else "red"
+        tree = Tree(_get_info_title(self, model), guide_style=color)
+        for condition in (self.condition_a, self.condition_b):
+            if hasattr(condition, "info"):
+                subtree = condition.info(model)
+                tree.add(subtree)
+            else:
+                raise NotImplementedError()
+        return tree
 
 
 class LogicalAnd(_Mixin, Condition):

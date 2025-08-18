@@ -7,6 +7,7 @@ Use these objects as stopping criteria for inversions.
 from collections.abc import Callable
 
 import numpy as np
+from rich.tree import Tree
 
 from .base import Condition, Objective
 
@@ -43,8 +44,20 @@ class ChiTarget(Condition):
         """
         Check if condition has been met.
         """
-        chi = self.data_misfit(model) / self.data_misfit.n_data
+        chi = self._get_chi(model)
         return float(chi) < self.chi_target
+
+    def _get_chi(self, model) -> float:
+        """
+        Compute chi factor.
+        """
+        return self.data_misfit(model) / self.data_misfit.n_data
+
+    def info(self, model) -> Tree:
+        tree = super().info(model)
+        tree.add(f"chi        = {self._get_chi(model):.2e}")
+        tree.add(f"chi_target = {self.chi_target:.2e}")
+        return tree
 
 
 class ModelChanged(Condition):
@@ -103,6 +116,16 @@ class ModelChanged(Condition):
     def update(self, model):
         self.previous = model
 
+    def info(self, model) -> Tree:
+        tree = super().info(model)
+        diff = float(np.linalg.norm(model - self.previous))
+        previous = float(np.linalg.norm(self.previous))
+        tree.add(f"|m - m_prev| = {diff:.2e}")
+        tree.add(f"|m_prev|     = {previous:.2e}")
+        tree.add(f"rtol         = {self.rtol:.2e}")
+        tree.add(f"atol         = {self.atol:.2e}")
+        return tree
+
 
 class ObjectiveChanged(Condition):
     r"""
@@ -155,8 +178,19 @@ class ObjectiveChanged(Condition):
     def __call__(self, model) -> bool:
         if not hasattr(self, "previous"):
             return False
-        diff = float(self.objective_function(model) - self.previous)
-        return abs(diff) <= max(abs(self.previous) * self.rtol, self.atol)
+        diff = abs(self.objective_function(model) - self.previous)
+        previous = abs(self.previous)
+        return diff <= max(previous * self.rtol, self.atol)
 
     def update(self, model):
         self.previous: float = float(self.objective_function(model))
+
+    def info(self, model) -> Tree:
+        tree = super().info(model)
+        diff = abs(self.objective_function(model) - self.previous)
+        previous = abs(self.previous)
+        tree.add(f"|φ(m) - φ(m_prev)| = {diff:.2e}")
+        tree.add(f"|φ(m_prev)|        = {previous:.2e}")
+        tree.add(f"rtol               = {self.rtol:.2e}")
+        tree.add(f"atol               = {self.atol:.2e}")
+        return tree

@@ -53,6 +53,10 @@ class _BaseMixin:
     Base class for Mixin classes.
     """
 
+    def __init__(self, condition_a, condition_b):
+        self.condition_a = condition_a
+        self.condition_b = condition_b
+
     def update(self, model):
         """
         Update the underlying conditions.
@@ -67,10 +71,6 @@ class LogicalAnd(_BaseMixin, Condition):
     Mixin condition for the AND operation between two other conditions.
     """
 
-    def __init__(self, condition_a, condition_b):
-        self.condition_a = condition_a
-        self.condition_b = condition_b
-
     def __call__(self, model) -> bool:
         return self.condition_a(model) and self.condition_b(model)
 
@@ -80,10 +80,6 @@ class LogicalOr(_BaseMixin, Condition):
     Mixin condition for the OR operation between two other conditions.
     """
 
-    def __init__(self, condition_a, condition_b):
-        self.condition_a = condition_a
-        self.condition_b = condition_b
-
     def __call__(self, model) -> bool:
         return self.condition_a(model) or self.condition_b(model)
 
@@ -92,10 +88,6 @@ class LogicalXor(_BaseMixin, Condition):
     """
     Mixin condition for the XOR operation between two other conditions.
     """
-
-    def __init__(self, condition_a, condition_b):
-        self.condition_a = condition_a
-        self.condition_b = condition_b
 
     def __call__(self, model) -> bool:
         return self.condition_a(model) ^ self.condition_b(model)

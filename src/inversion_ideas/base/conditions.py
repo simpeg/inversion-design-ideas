@@ -18,6 +18,14 @@ class Condition(ABC):
     @abstractmethod
     def __call__(self, model) -> bool: ...
 
+    def update(self, model):  # noqa: B027
+        """
+        Update the condition.
+        """
+        # This is not an abstract method. Children classes can choose to override it if
+        # necessary. The base class implements it to provide a common interface, even
+        # for those children that don't implement it.
+
     def __and__(self, other) -> "LogicalAnd":
         return LogicalAnd(self, other)
 
@@ -40,40 +48,46 @@ class Condition(ABC):
         raise TypeError(msg)
 
 
-class LogicalAnd(Condition):
+class _Mixin:
     """
-    Mixin condition for the AND operation between two other conditions.
+    Base class for Mixin classes.
     """
 
     def __init__(self, condition_a, condition_b):
         self.condition_a = condition_a
         self.condition_b = condition_b
+
+    def update(self, model):
+        """
+        Update the underlying conditions.
+        """
+        for condition in (self.condition_a, self.condition_b):
+            if hasattr(condition, "update"):
+                condition.update(model)
+
+
+class LogicalAnd(_Mixin, Condition):
+    """
+    Mixin condition for the AND operation between two other conditions.
+    """
 
     def __call__(self, model) -> bool:
         return self.condition_a(model) and self.condition_b(model)
 
 
-class LogicalOr(Condition):
+class LogicalOr(_Mixin, Condition):
     """
     Mixin condition for the OR operation between two other conditions.
     """
-
-    def __init__(self, condition_a, condition_b):
-        self.condition_a = condition_a
-        self.condition_b = condition_b
 
     def __call__(self, model) -> bool:
         return self.condition_a(model) or self.condition_b(model)
 
 
-class LogicalXor(Condition):
+class LogicalXor(_Mixin, Condition):
     """
     Mixin condition for the XOR operation between two other conditions.
     """
-
-    def __init__(self, condition_a, condition_b):
-        self.condition_a = condition_a
-        self.condition_b = condition_b
 
     def __call__(self, model) -> bool:
         return self.condition_a(model) ^ self.condition_b(model)

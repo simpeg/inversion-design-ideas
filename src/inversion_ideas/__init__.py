@@ -4,7 +4,7 @@ Ideas for inversion framework.
 
 from . import base, utils
 from ._version import __version__
-from .conditions import ChiTarget, CustomCondition
+from .conditions import ChiTarget, CustomCondition, ModelChanged, ObjectiveChanged
 from .constructors import create_inversion
 from .data_misfit import DataMisfit
 from .directives import MultiplierCooler
@@ -22,7 +22,9 @@ __all__ = [
     "Inversion",
     "InversionLog",
     "InversionLogRich",
+    "ModelChanged",
     "MultiplierCooler",
+    "ObjectiveChanged",
     "TikhonovZero",
     "__version__",
     "base",

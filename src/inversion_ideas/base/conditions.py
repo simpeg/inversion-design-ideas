@@ -9,6 +9,7 @@ conditions together.
 
 from abc import ABC, abstractmethod
 
+from rich.panel import Panel
 from rich.tree import Tree
 
 
@@ -91,12 +92,17 @@ class _Mixin(ABC):
 
     def info(self, model) -> Tree:
         status = self(model)
+        checkbox = "x" if status else " "
         color = "green" if status else "red"
-        tree = Tree(_get_info_title(self, model), guide_style=color)
+        text = rf"[bold {color}]\[{checkbox}] {type(self).__name__}[/bold {color}]"
+        tree = Tree(text, guide_style=color)
         for condition in (self.condition_a, self.condition_b):
             if hasattr(condition, "info"):
                 subtree = condition.info(model)
-                tree.add(subtree)
+                if isinstance(condition, _Mixin):
+                    tree.add(subtree)
+                else:
+                    tree.add(Panel(subtree))
             else:
                 raise NotImplementedError()
         return tree

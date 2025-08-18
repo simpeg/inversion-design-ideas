@@ -48,12 +48,16 @@ class ChiTarget(Condition):
 
 class ModelChanged(Condition):
     r"""
-    Stopping criteria for when model didn't changed above threshold.
+    Stopping criteria for when model didn't changed above tolerance.
 
     Parameters
     ----------
-    threshold : float, optional
-        Threshold below which the model will be considered of not changing enough.
+    rtol : float, optional
+        Relative tolerance below which the model will be considered of not changing
+        enough.
+    atol : float, optional
+        Absolute tolerance below which the model will be considered of not changing
+        enough.
 
     Notes
     -----
@@ -66,28 +70,34 @@ class ModelChanged(Condition):
         }{
             \lVert \mathbf{m}_\text{old} \rVert_2
         }
-        < \delta
+        \le \delta_r,
+
+    and
+
+    .. math::
+
+        \lVert \mathbf{m} - \mathbf{m}_\text{prev} \rVert_2 \le \delta_a,
 
     where :math:`\mathbf{m}` is the current model, :math:`\mathbf{m}_\text{prev}` is the
     previous model in the inversion, :math:`\lVert \cdot \rVert_2` represents an
-    :math:`l_2` norm, and :math:`\delta` is the threshold whose value is given by
-    ``threshold``.
+    :math:`l_2` norm, and :math:`\delta_r` and :math:`\delta_a` are the relative and
+    absolute tolerances whose values are given
+    by ``rtol`` and ``atol``, respectively.
 
-    When called, if the inequality holds, the stopping criteria will return ``True``,
-    and ``False`` otherwise.
+    When called, if any of those inequalities hold, the stopping criteria will return
+    ``True``, and ``False`` otherwise.
     """
 
-    def __init__(self, threshold: float = 1e-3):
-        self.threshold = threshold
+    def __init__(self, rtol: float = 1e-3, atol: float = 0.0):
+        self.rtol = rtol
+        self.atol = atol
 
     def __call__(self, model) -> bool:
         if not hasattr(self, "previous"):
             return False
-        den = np.linalg.norm(self.previous)
-        if den == 0.0:
-            return False
-        num = np.linalg.norm(model - self.previous)
-        return float(num / den) < self.threshold
+        diff = float(np.linalg.norm(model - self.previous))
+        previous = float(np.linalg.norm(self.previous))
+        return diff <= max(previous * self.rtol, self.atol)
 
     def update(self, model):
         self.previous = model
@@ -95,14 +105,18 @@ class ModelChanged(Condition):
 
 class ObjectiveChanged(Condition):
     r"""
-    Stopping criteria for when an objective function didn't changed above threshold.
+    Stopping criteria for when an objective function didn't changed above a tolerance.
 
     Parameters
     ----------
-    objective_function : float
-        Threshold below which the model will be considered of not changing enough.
-    threshold : float, optional
-        Threshold below which the model will be considered of not changing enough.
+    objective_function : Objective
+        Objective function that will be evaluated.
+    rtol : float, optional
+        Relative tolerance below which the model will be considered of not changing
+        enough.
+    atol : float, optional
+        Absolute tolerance below which the model will be considered of not changing
+        enough.
 
     Notes
     -----
@@ -111,30 +125,37 @@ class ObjectiveChanged(Condition):
     .. math::
 
         \frac{
-             \phi(\mathbf{m}) - \phi(\mathbf{m}_\text{old})
+             | \phi(\mathbf{m}) - \phi(\mathbf{m}_\text{old}) |
         }{
-             \phi(\mathbf{m}_\text{old})
+             | \phi(\mathbf{m}_\text{old}) |
         }
-        < \delta
+        \le \delta_r,
+
+    and
+
+    .. math::
+
+        | \phi(\mathbf{m}) - \phi(\mathbf{m}_\text{old}) | \le \delta_a,
 
     where :math:`\phi`, is the objective function, :math:`\mathbf{m}` is the current
     model, :math:`\mathbf{m}_\text{old}` is the previous model in the inversion,
-    :math:`\lVert \cdot \rVert_2` represents an :math:`l_2` norm, and :math:`\delta` is
-    the threshold whose value is given by ``threshold``.
+    and :math:`\delta_r` and :math:`\delta_a` are the relative and absolute tolerances
+    whose values are given by ``rtol`` and ``atol``, respectively.
 
-    When called, if the inequality holds, the stopping criteria will return ``True``,
-    and ``False`` otherwise.
+    When called, if any of those inequalities hold, the stopping criteria will return
+    ``True``, and ``False`` otherwise.
     """
 
-    def __init__(self, objective_function: Objective, threshold: float = 1e-3):
+    def __init__(self, objective_function: Objective, rtol: float = 1e-3, atol=0.0):
         self.objective_function = objective_function
-        self.threshold = threshold
+        self.rtol = rtol
+        self.atol = atol
 
     def __call__(self, model) -> bool:
         if not hasattr(self, "previous"):
             return False
-        new = self.objective_function(model)
-        return float((new - self.previous) / self.previous) < self.threshold
+        diff = float(self.objective_function(model) - self.previous)
+        return abs(diff) <= max(abs(self.previous) * self.rtol, self.atol)
 
     def update(self, model):
-        self.previous = self.objective_function(model)
+        self.previous: float = float(self.objective_function(model))

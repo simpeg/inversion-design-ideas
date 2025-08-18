@@ -20,7 +20,7 @@ def _get_info_title(condition, model) -> str:
     status = condition(model)
     checkbox = "x" if status else " "
     color = "green" if status else "red"
-    text = f"[bold {color}]\[{checkbox}] {type(condition).__name__}[/bold {color}]"
+    text = rf"[bold {color}]\[{checkbox}] {type(condition).__name__}[/bold {color}]"
     return text
 
 

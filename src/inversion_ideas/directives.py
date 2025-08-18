@@ -1,6 +1,7 @@
 """
 Directives to modify the objective function between iterations of an inversion.
 """
+
 import numpy as np
 import numpy.typing as npt
 

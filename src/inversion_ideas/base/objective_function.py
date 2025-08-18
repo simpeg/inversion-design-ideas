@@ -1,6 +1,7 @@
 """
 Classes to represent objective functions.
 """
+
 from abc import ABC, abstractmethod
 from collections.abc import Iterable, Iterator
 from copy import copy

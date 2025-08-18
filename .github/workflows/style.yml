@@ -53,5 +53,8 @@ jobs:
       - name: List installed packages
         run: python -m pip freeze
 
+      - name: Check format with Ruff
+        run: ruff format --check src
+
       - name: Check style with Ruff
         run: ruff check src

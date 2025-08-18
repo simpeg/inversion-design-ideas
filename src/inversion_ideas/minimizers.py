@@ -1,6 +1,7 @@
 """
 Classes to define minimizers.
 """
+
 import warnings
 
 import numpy as np

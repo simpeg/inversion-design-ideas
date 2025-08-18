@@ -1,6 +1,7 @@
 """
 Regularization classes.
 """
+
 import numpy as np
 from scipy.sparse import diags_array
 

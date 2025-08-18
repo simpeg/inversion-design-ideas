@@ -1,6 +1,7 @@
 """
 Class to represent a data misfit term.
 """
+
 import numpy as np
 import numpy.typing as npt
 from scipy.sparse import diags_array, sparray

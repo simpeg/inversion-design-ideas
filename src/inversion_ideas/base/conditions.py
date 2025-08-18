@@ -6,6 +6,7 @@ condition is met or not. They are use to define abstract objects like stopping c
 for inversions. We can use binary operators (and, or, xor) to logically group multiple
 conditions together.
 """
+
 from abc import ABC, abstractmethod
 
 
@@ -15,8 +16,7 @@ class Condition(ABC):
     """
 
     @abstractmethod
-    def __call__(self, model) -> bool:
-        ...
+    def __call__(self, model) -> bool: ...
 
     def __and__(self, other) -> "LogicalAnd":
         return LogicalAnd(self, other)

@@ -3,6 +3,7 @@ Functions and callable classes that define conditions.
 
 Use these objects as stopping criteria for inversions.
 """
+
 from collections.abc import Callable
 
 from .base import Condition

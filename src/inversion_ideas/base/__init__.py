@@ -1,6 +1,7 @@
 """
 Base classes of the inversion framework.
 """
+
 from .conditions import Condition
 from .directive import Directive
 from .minimizer import Minimizer

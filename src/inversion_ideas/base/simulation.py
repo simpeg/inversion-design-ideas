@@ -1,6 +1,7 @@
 """
 Classes to represent simulations.
 """
+
 from abc import ABC, abstractmethod
 
 import numpy as np

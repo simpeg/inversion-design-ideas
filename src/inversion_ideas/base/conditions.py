@@ -48,7 +48,21 @@ class Condition(ABC):
         raise TypeError(msg)
 
 
-class LogicalAnd(Condition):
+class _BaseMixin:
+    """
+    Base class for Mixin classes.
+    """
+
+    def update(self, model):
+        """
+        Update the underlying conditions.
+        """
+        for condition in (self.condition_a, self.condition_b):
+            if hasattr(condition, "update"):
+                condition.update(model)
+
+
+class LogicalAnd(_BaseMixin, Condition):
     """
     Mixin condition for the AND operation between two other conditions.
     """
@@ -60,15 +74,8 @@ class LogicalAnd(Condition):
     def __call__(self, model) -> bool:
         return self.condition_a(model) and self.condition_b(model)
 
-    def update(self, model):
-        """
-        Update the underlying conditions.
-        """
-        self.condition_a.update(model)
-        self.condition_b.update(model)
 
-
-class LogicalOr(Condition):
+class LogicalOr(_BaseMixin, Condition):
     """
     Mixin condition for the OR operation between two other conditions.
     """
@@ -80,15 +87,8 @@ class LogicalOr(Condition):
     def __call__(self, model) -> bool:
         return self.condition_a(model) or self.condition_b(model)
 
-    def update(self, model):
-        """
-        Update the underlying conditions.
-        """
-        self.condition_a.update(model)
-        self.condition_b.update(model)
 
-
-class LogicalXor(Condition):
+class LogicalXor(_BaseMixin, Condition):
     """
     Mixin condition for the XOR operation between two other conditions.
     """
@@ -99,10 +99,3 @@ class LogicalXor(Condition):
 
     def __call__(self, model) -> bool:
         return self.condition_a(model) ^ self.condition_b(model)
-
-    def update(self, model):
-        """
-        Update the underlying conditions.
-        """
-        self.condition_a.update(model)
-        self.condition_b.update(model)

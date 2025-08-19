@@ -110,8 +110,9 @@ class ModelChanged(Condition):
         """
         Initialize condition and clean ``previous`` attribute.
         """
-        if hasattr(self, "previous"):
-            delattr(self, "previous")
+        attr = "previous"
+        if hasattr(self, attr):
+            delattr(self, attr)
 
 
 class ObjectiveChanged(Condition):
@@ -178,5 +179,6 @@ class ObjectiveChanged(Condition):
         """
         Initialize condition and clean ``previous`` attribute.
         """
-        if hasattr(self, "previous"):
-            delattr(self, "previous")
+        attr = "previous"
+        if hasattr(self, attr):
+            delattr(self, attr)

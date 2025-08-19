@@ -90,9 +90,12 @@ class Inversion:
         """
         Run next iteration in the inversion.
         """
-        # Add initial model to log (only on zeroth iteration)
         if self.counter == 0 and self.log is not None:
+            # Add initial model to log (only on zeroth iteration)
             self.log.update(self.counter, self.model)
+            # Initialize stopping criteria (if necessary)
+            if hasattr(self.stopping_criteria, "initialize"):
+                self.stopping_criteria.initialize()
 
         # Check for stopping criteria before trying to run the iteration
         if self.stopping_criteria(self.model):

@@ -114,6 +114,9 @@ class ModelChanged(Condition):
         return diff <= max(previous * self.rtol, self.atol)
 
     def update(self, model):
+        """
+        Cache model as the ``previous`` one.
+        """
         self.previous = model
 
     def info(self, model) -> Tree:
@@ -125,6 +128,14 @@ class ModelChanged(Condition):
         tree.add(f"rtol         = {self.rtol:.2e}")
         tree.add(f"atol         = {self.atol:.2e}")
         return tree
+
+    def initialize(self):
+        """
+        Initialize condition and clean ``previous`` attribute.
+        """
+        attr = "previous"
+        if hasattr(self, attr):
+            delattr(self, attr)
 
 
 class ObjectiveChanged(Condition):
@@ -183,6 +194,9 @@ class ObjectiveChanged(Condition):
         return diff <= max(previous * self.rtol, self.atol)
 
     def update(self, model):
+        """
+        Cache value of objective function with model as the ``previous`` one.
+        """
         self.previous: float = float(self.objective_function(model))
 
     def info(self, model) -> Tree:
@@ -194,3 +208,11 @@ class ObjectiveChanged(Condition):
         tree.add(f"rtol               = {self.rtol:.2e}")
         tree.add(f"atol               = {self.atol:.2e}")
         return tree
+
+    def initialize(self):
+        """
+        Initialize condition and clean ``previous`` attribute.
+        """
+        attr = "previous"
+        if hasattr(self, attr):
+            delattr(self, attr)

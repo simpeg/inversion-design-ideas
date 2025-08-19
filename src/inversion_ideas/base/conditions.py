@@ -30,12 +30,19 @@ class Condition(ABC):
     """
 
     @abstractmethod
-    def __call__(self, model) -> bool:
-        ...
+    def __call__(self, model) -> bool: ...
 
     def update(self, model):  # noqa: B027
         """
         Update the condition.
+        """
+        # This is not an abstract method. Children classes can choose to override it if
+        # necessary. The base class implements it to provide a common interface, even
+        # for those children that don't implement it.
+
+    def initialize(self):  # noqa: B027
+        """
+        Initialize the condition.
         """
         # This is not an abstract method. Children classes can choose to override it if
         # necessary. The base class implements it to provide a common interface, even
@@ -46,14 +53,6 @@ class Condition(ABC):
         Display information about the condition for a given model.
         """
         return Tree(_get_info_title(self, model))
-
-    def initialize(self):  # noqa: B027
-        """
-        Initialize the condition.
-        """
-        # This is not an abstract method. Children classes can choose to override it if
-        # necessary. The base class implements it to provide a common interface, even
-        # for those children that don't implement it.
 
     def __and__(self, other) -> "LogicalAnd":
         return LogicalAnd(self, other)
@@ -87,8 +86,7 @@ class _Mixin(ABC):
         self.condition_b = condition_b
 
     @abstractmethod
-    def __call__(self, model) -> bool:
-        ...
+    def __call__(self, model) -> bool: ...
 
     def update(self, model):
         """

@@ -55,6 +55,7 @@ class ChiTarget(Condition):
 
     def info(self, model) -> Tree:
         tree = super().info(model)
+        tree.add("Condition: chi < chi_target")
         tree.add(f"chi        = {self._get_chi(model):.2e}")
         tree.add(f"chi_target = {self.chi_target:.2e}")
         return tree
@@ -123,6 +124,7 @@ class ModelChanged(Condition):
         tree = super().info(model)
         diff = float(np.linalg.norm(model - self.previous))
         previous = float(np.linalg.norm(self.previous))
+        tree.add("Condition: |m - m_prev| < max(|m_prev| * rtol, atol)")
         tree.add(f"|m - m_prev| = {diff:.2e}")
         tree.add(f"|m_prev|     = {previous:.2e}")
         tree.add(f"rtol         = {self.rtol:.2e}")
@@ -203,6 +205,7 @@ class ObjectiveChanged(Condition):
         tree = super().info(model)
         diff = abs(self.objective_function(model) - self.previous)
         previous = abs(self.previous)
+        tree.add("Condition: |φ(m) - φ(m_prev)| < max(|φ(m_prev)| * rtol, atol)")
         tree.add(f"|φ(m) - φ(m_prev)| = {diff:.2e}")
         tree.add(f"|φ(m_prev)|        = {previous:.2e}")
         tree.add(f"rtol               = {self.rtol:.2e}")

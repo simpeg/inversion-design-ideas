@@ -30,8 +30,7 @@ class Condition(ABC):
     """
 
     @abstractmethod
-    def __call__(self, model) -> bool:
-        ...
+    def __call__(self, model) -> bool: ...
 
     def update(self, model):  # noqa: B027
         """
@@ -87,8 +86,7 @@ class _Mixin(ABC):
         self.condition_b = condition_b
 
     @abstractmethod
-    def __call__(self, model) -> bool:
-        ...
+    def __call__(self, model) -> bool: ...
 
     def update(self, model):
         """

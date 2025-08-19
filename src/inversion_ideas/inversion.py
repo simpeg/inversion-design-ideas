@@ -100,7 +100,7 @@ class Inversion:
         # Check for stopping criteria before trying to run the iteration
         if self.stopping_criteria(self.model):
             get_logger().info(
-                "🎉 Inversion successfully finished due to stopping critiera."
+                "🎉 Inversion successfully finished due to stopping criteria."
             )
             raise StopIteration
 

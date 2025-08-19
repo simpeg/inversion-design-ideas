@@ -16,11 +16,20 @@ class Condition(ABC):
     """
 
     @abstractmethod
-    def __call__(self, model) -> bool: ...
+    def __call__(self, model) -> bool:
+        ...
 
     def update(self, model):  # noqa: B027
         """
         Update the condition.
+        """
+        # This is not an abstract method. Children classes can choose to override it if
+        # necessary. The base class implements it to provide a common interface, even
+        # for those children that don't implement it.
+
+    def initialize(self):  # noqa: B027
+        """
+        Initialize the condition.
         """
         # This is not an abstract method. Children classes can choose to override it if
         # necessary. The base class implements it to provide a common interface, even
@@ -64,6 +73,14 @@ class _Mixin:
         for condition in (self.condition_a, self.condition_b):
             if hasattr(condition, "update"):
                 condition.update(model)
+
+    def initialize(self):
+        """
+        Initialize the underlying conditions.
+        """
+        for condition in (self.condition_a, self.condition_b):
+            if hasattr(condition, "initialize"):
+                condition.initialize()
 
 
 class LogicalAnd(_Mixin, Condition):

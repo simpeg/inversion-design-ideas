@@ -30,7 +30,8 @@ class Condition(ABC):
     """
 
     @abstractmethod
-    def __call__(self, model) -> bool: ...
+    def __call__(self, model) -> bool:
+        ...
 
     def update(self, model):  # noqa: B027
         """
@@ -86,7 +87,8 @@ class _Mixin(ABC):
         self.condition_b = condition_b
 
     @abstractmethod
-    def __call__(self, model) -> bool: ...
+    def __call__(self, model) -> bool:
+        ...
 
     def update(self, model):
         """
@@ -108,7 +110,8 @@ class _Mixin(ABC):
                 if isinstance(condition, _Mixin):
                     tree.add(subtree)
                 else:
-                    tree.add(Panel(subtree))
+                    color = "green" if condition(model) else "red"
+                    tree.add(Panel(subtree, border_style=color))
             else:
                 raise NotImplementedError()
         return tree

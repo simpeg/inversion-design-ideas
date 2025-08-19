@@ -90,14 +90,17 @@ class Inversion:
         """
         Run next iteration in the inversion.
         """
-        # Add initial model to log (only on zeroth iteration)
         if self.counter == 0 and self.log is not None:
+            # Add initial model to log (only on zeroth iteration)
             self.log.update(self.counter, self.model)
+            # Initialize stopping criteria (if necessary)
+            if hasattr(self.stopping_criteria, "initialize"):
+                self.stopping_criteria.initialize()
 
         # Check for stopping criteria before trying to run the iteration
         if self.stopping_criteria(self.model):
             get_logger().info(
-                "🎉 Inversion successfully finished due to stopping critiera."
+                "🎉 Inversion successfully finished due to stopping criteria."
             )
             raise StopIteration
 
@@ -109,7 +112,14 @@ class Inversion:
             )
             raise StopIteration
 
-        # Run directives (only after the zeroth iteration)
+        # Update stopping criteria (if necessary)
+        if hasattr(self.stopping_criteria, "update"):
+            self.stopping_criteria.update(self.model)
+
+        # Run directives (only after the zeroth iteration).
+        # We update the directives here (and not at the end of this method), so after
+        # each iteration the objective function is still the same we passed to the
+        # optimizer.
         if self.counter > 0:
             for directive in self.directives:
                 directive(self.model, self.counter)

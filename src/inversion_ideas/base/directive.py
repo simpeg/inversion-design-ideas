@@ -1,6 +1,7 @@
 """
 Base class for directives.
 """
+
 from abc import ABC, abstractmethod
 
 import numpy as np

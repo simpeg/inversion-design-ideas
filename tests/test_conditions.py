@@ -6,15 +6,6 @@ import numpy as np
 from inversion_ideas.base import Condition
 
 
-class GreaterThanOne(Condition):
-    """
-    Simple condition that checks if model is greater than 1.
-    """
-
-    def __call__(self, model) -> bool:
-        return bool(np.all(model > 1))
-
-
 class Even(Condition):
     """
     Simple condition that checks if model is even.
@@ -71,14 +62,6 @@ class TestMixin:
         assert not is_even(-3.0)
         assert is_even(-4.0)
 
-    def test_greater_than_one(self):
-        greater_than_one = GreaterThanOne()
-        assert greater_than_one(2.0)
-        assert greater_than_one(10.0)
-        assert not greater_than_one(1.0)
-        assert not greater_than_one(0.5)
-        assert not greater_than_one(-2.0)
-
     def test_and(self, is_even):
         is_even = Even()
         is_positive = Positive()
@@ -131,6 +114,9 @@ class GreaterThan(Condition):
 
     def update(self, model):
         self.value = model
+
+    def initialize(self):
+        self.value = None
 
 
 class UpdateMixin:
@@ -192,4 +178,57 @@ class UpdateMixin:
         new_value = 4
         condition.update(new_value)
         assert condition_a.value == new_value
+        assert condition.condition_b is is_even
+
+
+class InitializeMixin:
+    """
+    Test initializing conditions in mixins.
+    """
+
+    def test_initialize(self):
+        condition = GreaterThan(2)
+        condition.initialize()
+        assert condition.value is None
+
+    @pytest.mark.parametrize("operation", ["and", "or", "xor"])
+    def test_initialize_mixin(self, operation):
+        condition_a = GreaterThan(2)
+        condition_b = GreaterThan(3)
+        match operation:
+            case "and":
+                condition = condition_a & condition_b
+            case "or":
+                condition = condition_a | condition_b
+            case "xor":
+                condition = condition_a ^ condition_b
+            case _:
+                msg = f"{operation}"
+                raise ValueError(msg)
+        condition.initialize()
+        assert condition_a.value is None
+        assert condition_b.value is None
+
+    @pytest.mark.parametrize("operation", ["and", "or", "xor"])
+    def test_initialize_mixin_with_function(self, operation):
+        """
+        Test if initialize works in case a condition is a function.
+        """
+
+        def is_even(model) -> bool:
+            return bool(np.all((model % 2) == 0))
+
+        condition_a = GreaterThan(2)
+        match operation:
+            case "and":
+                condition = condition_a & is_even
+            case "or":
+                condition = condition_a | is_even
+            case "xor":
+                condition = condition_a ^ is_even
+            case _:
+                msg = f"{operation}"
+                raise ValueError(msg)
+        condition.initialize()
+        assert condition_a.value is None
         assert condition.condition_b is is_even

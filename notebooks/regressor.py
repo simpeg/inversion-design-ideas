@@ -1,7 +1,9 @@
 """
 Inversion framework to implement a linear regressor.
 """
+
 import time
+
 import numpy as np
 from numpy.typing import NDArray
 from scipy.sparse.linalg import LinearOperator

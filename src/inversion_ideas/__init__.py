@@ -11,7 +11,7 @@ from .directives import MultiplierCooler
 from .errors import ConvergenceWarning
 from .inversion import Inversion, InversionLog, InversionLogRich
 from .minimizers import ConjugateGradient
-from .regularization import TikhonovZero
+from .regularization import SparseSmallness, TikhonovZero
 
 __all__ = [
     "ChiTarget",
@@ -25,6 +25,7 @@ __all__ = [
     "ModelChanged",
     "MultiplierCooler",
     "ObjectiveChanged",
+    "SparseSmallness",
     "TikhonovZero",
     "__version__",
     "base",

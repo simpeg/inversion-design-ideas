@@ -212,6 +212,18 @@ class ObjectiveChanged(Condition):
         tree.add(f"atol               = {self.atol:.2e}")
         return tree
 
+    def ratio(self, model) -> float:
+        """
+        Ratio ``|φ(m) - φ(m_prev)|/|φ(m_prev)|``.
+        """
+        if not hasattr(self, "previous"):
+            return np.nan
+        diff = abs(self.objective_function(model) - self.previous)
+        previous = abs(self.previous)
+        if previous == 0.0:
+            return np.inf
+        return diff / previous
+
     def initialize(self):
         """
         Initialize condition and clean ``previous`` attribute.

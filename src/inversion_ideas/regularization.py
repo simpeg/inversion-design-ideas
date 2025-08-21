@@ -114,10 +114,31 @@ class SparseSmallness(Objective):
         self.threshold = threshold
         self.set_name("ss")
 
-    def activate_irls(self):
-        """
+    def activate_irls(self, model_previous):
+        r"""
         Activate IRLS.
+
+        Parameters
+        ----------
+        model_previous : (n_params) array
+            Inverted model obtained after the first stage (l2 inversion).
+
+        Notes
+        -----
+        Activate IRLS on the regularization, assign ``model_previous`` with the
+        ``model_previous`` obtained after the first stage (the l2 inversion,
+        before IRLS gets activated), and estimate the initial ``threshold`` as:
+
+        .. math::
+
+            \epsilon = \lVert \mathbf{m}_\text{prev} \rVert_\infty =
+            \text{max}(|\mathbf{m}_\text{prev}|)
+
+        where :math:`\mathbf{m}_\text{prev}` is the ``model_previous`` argument.
+
         """
+        self.model_previous = model_previous
+        self.threshold = np.max(np.abs(model_previous))
         self.irls = True
 
     @property

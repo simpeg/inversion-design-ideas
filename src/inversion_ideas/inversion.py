@@ -105,7 +105,7 @@ class Inversion:
             raise StopIteration
 
         # Check if maximum number of iterations have been reached
-        if self.max_iterations is not None and self.counter > self.max_iterations:
+        if self.max_iterations is not None and self.counter >= self.max_iterations:
             get_logger().info(
                 "⚠️ Inversion finished after reaching maximum number of iterations "
                 f"({self.max_iterations})."

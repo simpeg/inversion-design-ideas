@@ -37,6 +37,9 @@ class ChiTarget(Condition):
     """
 
     def __init__(self, data_misfit, chi_target=1.0):
+        if not hasattr(data_misfit, "chi"):
+            msg = "Invalid `data_misfit`: missing `chi` method."
+            raise AttributeError(msg)
         self.data_misfit = data_misfit
         self.chi_target = chi_target
 
@@ -44,19 +47,13 @@ class ChiTarget(Condition):
         """
         Check if condition has been met.
         """
-        chi = self._get_chi(model)
+        chi = self.data_misfit.chi(model)
         return float(chi) < self.chi_target
-
-    def _get_chi(self, model) -> float:
-        """
-        Compute chi factor.
-        """
-        return self.data_misfit(model) / self.data_misfit.n_data
 
     def info(self, model) -> Tree:
         tree = super().info(model)
         tree.add("Condition: chi < chi_target")
-        tree.add(f"chi        = {self._get_chi(model):.2e}")
+        tree.add(f"chi        = {self.data_misfit.chi(model):.2e}")
         tree.add(f"chi_target = {self.chi_target:.2e}")
         return tree
 

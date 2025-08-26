@@ -116,3 +116,9 @@ class DataMisfit(Objective):
         """
         # Return the W.T @ W matrix
         return diags_array(1 / self.uncertainty**2)
+
+    def chi(self, model):
+        """
+        Get chi factor for the data misfit.
+        """
+        return self(model) / self.n_data

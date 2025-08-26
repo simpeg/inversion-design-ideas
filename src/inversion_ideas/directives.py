@@ -5,7 +5,9 @@ Directives to modify the objective function between iterations of an inversion.
 import numpy as np
 import numpy.typing as npt
 
-from .base import Directive, Scaled
+from .base import Directive, Objective, Scaled
+from .conditions import ObjectiveChanged
+from .regularization import SparseSmallness
 
 
 class MultiplierCooler(Directive):
@@ -45,3 +47,95 @@ class MultiplierCooler(Directive):
         """
         if iteration % self.cooling_rate == 0:
             self.regularization.multiplier /= self.cooling_factor
+
+
+class IRLS(Directive):
+    """
+    Apply iterative reweighed least squares (IRLS).
+    """
+
+    def __init__(
+        self,
+        sparse: SparseSmallness,
+        *,
+        data_misfit: Objective,
+        regularization: Scaled,
+        model_stage_one: npt.NDArray[np.float64],
+        beta_cooling_factor=2.0,
+        data_misfit_rtol=1e-1,
+    ):
+        """
+        Parameters
+        ----------
+        sparse : SparseSmallness
+            Sparse regularization that will get IRLS updated.
+        data_misfit : Objective
+            Data misfit function that will be evaluated to decide whether to update the
+            IRLS on ``sparse``, or to cool the multiplier of ``regularization``.
+        regularization : Scaled
+            Regularization that will get its multiplier cooled down.
+        model_stage_one : (nparams) array
+            Model obtained after the first stage of the sparse inversion is finished.
+            This model should be the one obtained after the L2 inverison.
+        beta_cooling_factor : float, optional
+            Cooling factor used to cool down the ``regularization``'s multiplier.
+        data_misfit_rtol : float, optional
+            Relative tolerance for the data misfit.
+            Used to compare the current value of the data misfit with its value on
+            ``model_stage_one``.
+        """
+        for method in ("update_irls", "activate_irls"):
+            if not hasattr(sparse, method):
+                msg = f"Invalid `sparse` object without `{method}` method."
+                raise AttributeError(msg)
+        if not hasattr(sparse, "irls"):
+            msg = "Invalid `sparse` object without `irls` attribute."
+            raise AttributeError(msg)
+        if not sparse.irls:
+            msg = "Sparse regularization should have IRLS active."
+            raise ValueError(msg)
+
+        self.data_misfit = data_misfit
+        self.sparse = sparse
+        self.regularization = regularization
+        self.data_misfit_rtol = data_misfit_rtol
+        self.beta_cooling_factor = beta_cooling_factor
+        self.model_stage_one = model_stage_one
+
+        # Define a beta cooler
+        self._beta_cooler = MultiplierCooler(
+            regularization, cooling_factor=self.beta_cooling_factor
+        )
+
+        # Define a stopping criteria for the data misfit.
+        # Compare it always with the data misfit obtained with the model from l2
+        # inversion.
+        self._dmisfit_below_threshold = ObjectiveChanged(
+            data_misfit, rtol=self.data_misfit_rtol
+        )
+        self._dmisfit_l2 = self.data_misfit(self.model_stage_one)
+        self._dmisfit_below_threshold.previous = self._dmisfit_l2
+
+    def __call__(self, model: npt.NDArray[np.float64], iteration: int):
+        """
+        Apply IRLS.
+
+        Cool down beta or update IRLS depending on the values of the data misfit.
+        """
+        if not self._dmisfit_below_threshold(model):
+            # Cool beta if the data misfit is quite different from the l2 one
+            phi_d = self.data_misfit(model)
+            # Adjust the cooling factor
+            # (following current implementation of UpdateIRLS)
+            if phi_d > self._dmisfit_l2:
+                self._beta_cooler.cooling_factor = 1 / np.mean(
+                    [0.75, self._dmisfit_l2 / phi_d]
+                )
+            else:
+                self._beta_cooler.cooling_factor = 1 / np.mean(
+                    [2.0, self._dmisfit_l2 / phi_d]
+                )
+            self._beta_cooler(model, iteration)
+        else:
+            # Update the IRLS
+            self.sparse.update_irls(model)

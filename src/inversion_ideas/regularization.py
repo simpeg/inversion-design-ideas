@@ -87,6 +87,8 @@ class SparseSmallness(Objective):
     threshold : float, optional
         IRLS threshold. Symbolized with :math:`\epsilon` in
         Fournier and Oldenburg (2019).
+    cooling_factor : float, optional
+        Factor used to cool down the ``threshold`` when updating the IRLS.
     """
 
     def __init__(
@@ -98,6 +100,7 @@ class SparseSmallness(Objective):
         weights=None,
         reference_model=None,
         threshold: float = 1e-8,
+        cooling_factor=1.25,
     ):
         self._n_params = n_params
         self.norm = norm
@@ -112,6 +115,7 @@ class SparseSmallness(Objective):
             else np.zeros(n_params, dtype=np.float64)
         )
         self.threshold = threshold
+        self.cooling_factor = cooling_factor
         self.set_name("ss")
 
     def activate_irls(self, model_previous):
@@ -140,6 +144,16 @@ class SparseSmallness(Objective):
         self.model_previous = model_previous
         self.threshold = np.max(np.abs(model_previous))
         self.irls = True
+
+    def update_irls(self, model):
+        """
+        Update IRLS parameters.
+
+        Cool down the threshold and assign the ``model`` as the new ``model_previous``
+        attribute.
+        """
+        self.threshold /= self.cooling_factor
+        self.model_previous = model
 
     @property
     def R(self):

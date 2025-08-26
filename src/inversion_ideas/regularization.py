@@ -3,7 +3,7 @@ Regularization classes.
 """
 
 import numpy as np
-from scipy.sparse import diags_array
+from scipy.sparse import diags_array, sparray
 
 from .base import Objective
 
@@ -44,6 +44,12 @@ class TikhonovZero(Objective):
         """
         weights = diags_array(self.weights)
         return 2 * weights.T @ weights
+
+    def hessian_approx(self, model) -> sparray:
+        """
+        Approximation of the Hessian as a diagonal matrix.
+        """
+        return self.hessian(model)
 
     @property
     def n_params(self):

@@ -68,6 +68,21 @@ class DataMisfit(Objective):
             jac = aslinearoperator(jac)
         return 2 * jac.T @ aslinearoperator(self.weights_squared) @ jac
 
+    def hessian_approx(self, model) -> sparray:
+        """
+        Approximation of the Hessian as a diagonal matrix.
+        """
+        jac = self.simulation.jacobian(model)
+        if isinstance(jac, LinearOperator):
+            msg = (
+                "`DataMisfit.hessian_approx` is not implemented for simulations "
+                "that return the jacobian as a LinearOperator."
+            )
+            raise NotImplementedError(msg)
+        weights_sq = 1 / self.uncertainty**2
+        jtj_diag = diags_array(np.einsum("i,ij,ij->j", weights_sq, jac, jac))
+        return 2 * jtj_diag
+
     @property
     def n_params(self):
         """

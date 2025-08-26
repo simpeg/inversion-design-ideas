@@ -53,6 +53,12 @@ class Objective(ABC):
         Evaluate the hessian of the objective function for a given model.
         """
 
+    @abstractmethod
+    def hessian_approx(self, model: npt.NDArray) -> sparray:
+        """
+        Approximation of the Hessian as a diagonal matrix.
+        """
+
     def set_name(self, value):
         """
         Set name for the objective function.
@@ -147,6 +153,12 @@ class Scaled(Objective):
         """
         return self.multiplier * self.function.hessian(model)
 
+    def hessian_approx(self, model: npt.NDArray) -> sparray:
+        """
+        Approximation of the Hessian as a diagonal matrix.
+        """
+        return self.multiplier * self.function.hessian_approx(model)
+
     def __repr__(self):
         fmt = ".2e" if np.abs(self.multiplier) > 1e3 else ".2f"
         phi_repr = f"{self.function}"
@@ -233,6 +245,15 @@ class Combo(Objective):
         Evaluate the hessian of the objective function for a given model.
         """
         return _sum(f.hessian(model) for f in self.functions)
+
+    def hessian_approx(self, model: npt.NDArray) -> sparray:
+        """
+        Approximation of the Hessian as a diagonal matrix.
+        """
+        if not self.functions:
+            msg = "Invalid empty Combo when summing."
+            raise ValueError(msg)
+        return sum(f.hessian_approx(model) for f in self.functions)
 
     def flatten(self) -> "Combo":
         """

@@ -75,7 +75,7 @@ class DataMisfit(Objective):
         jac = self.simulation.jacobian(model)
         if isinstance(jac, LinearOperator):
             msg = (
-                "`DataMisfit.hessian_approx` is not implemented for simulations "
+                "`DataMisfit.hessian_diagonal()` is not implemented for simulations "
                 "that return the jacobian as a LinearOperator."
             )
             raise NotImplementedError(msg)

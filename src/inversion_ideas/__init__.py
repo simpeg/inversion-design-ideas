@@ -9,7 +9,8 @@ from .constructors import create_inversion
 from .data_misfit import DataMisfit
 from .directives import MultiplierCooler
 from .errors import ConvergenceWarning
-from .inversion import Inversion, InversionLog, InversionLogRich
+from .inversion import Inversion
+from .inversion_log import InversionLog, InversionLogRich
 from .minimizers import ConjugateGradient
 from .regularization import TikhonovZero
 

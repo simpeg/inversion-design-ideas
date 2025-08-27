@@ -1,6 +1,7 @@
 """
 Classes for inversion logs.
 """
+
 import numbers
 import typing
 from collections.abc import Callable, Iterable

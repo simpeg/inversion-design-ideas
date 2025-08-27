@@ -54,9 +54,9 @@ class Objective(ABC):
         """
 
     @abstractmethod
-    def hessian_approx(self, model: npt.NDArray) -> sparray:
+    def hessian_diagonal(self, model) -> npt.NDArray[np.float64]:
         """
-        Approximation of the Hessian as a diagonal matrix.
+        Diagonal of the Hessian.
         """
 
     def set_name(self, value):
@@ -153,11 +153,11 @@ class Scaled(Objective):
         """
         return self.multiplier * self.function.hessian(model)
 
-    def hessian_approx(self, model: npt.NDArray) -> sparray:
+    def hessian_diagonal(self, model) -> npt.NDArray[np.float64]:
         """
-        Approximation of the Hessian as a diagonal matrix.
+        Diagonal of the Hessian.
         """
-        return self.multiplier * self.function.hessian_approx(model)
+        return self.multiplier * self.function.hessian_diagonal(model)
 
     def __repr__(self):
         fmt = ".2e" if np.abs(self.multiplier) > 1e3 else ".2f"
@@ -246,14 +246,14 @@ class Combo(Objective):
         """
         return _sum(f.hessian(model) for f in self.functions)
 
-    def hessian_approx(self, model: npt.NDArray) -> sparray:
+    def hessian_diagonal(self, model) -> npt.NDArray[np.float64]:
         """
-        Approximation of the Hessian as a diagonal matrix.
+        Diagonal of the Hessian.
         """
         if not self.functions:
             msg = "Invalid empty Combo when summing."
             raise ValueError(msg)
-        return sum(f.hessian_approx(model) for f in self.functions)
+        return _sum_arrays(f.hessian_diagonal(model) for f in self.functions)
 
     def flatten(self) -> "Combo":
         """
@@ -378,4 +378,27 @@ def _sum(
             result += aslinearoperator(operator)
         else:
             result += operator
+    return result
+
+
+def _sum_arrays(arrays: Iterator[npt.NDArray]) -> npt.NDArray:
+    """
+    Sum arrays within an iterator.
+
+    Parameters
+    ----------
+    arrays : Iterator
+        Iterator with arrays.
+
+    See also
+    --------
+    _sum : Supports summing arrays, sparse arrays and ``LinearOperator``s.
+    """
+    if not arrays:
+        msg = "Invalid empty 'arrays' array when summing."
+        raise ValueError(msg)
+
+    result = copy(next(arrays))
+    for array in arrays:
+        result += array
     return result

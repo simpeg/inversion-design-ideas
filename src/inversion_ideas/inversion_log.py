@@ -12,7 +12,7 @@ from rich.live import Live
 from rich.table import Table
 
 try:
-    import pandas
+    import pandas  # noqa: ICN001
 except ImportError:
     pandas = None
 

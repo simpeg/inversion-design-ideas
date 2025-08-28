@@ -4,7 +4,7 @@ Regularization classes.
 
 import numpy as np
 import numpy.typing as npt
-from scipy.sparse import diags_array, sparray
+from scipy.sparse import diags_array
 
 from .base import Objective
 

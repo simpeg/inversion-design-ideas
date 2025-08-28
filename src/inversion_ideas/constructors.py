@@ -2,8 +2,10 @@
 Functions to easily build commonly used objects in inversions.
 """
 
-from typing import Callable
+from collections.abc import Callable
+
 from inversion_ideas.utils import get_jacobi_preconditioner
+
 from .conditions import ChiTarget
 from .directives import MultiplierCooler
 from .inversion import Inversion

@@ -2,8 +2,8 @@
 Classes to define minimizers.
 """
 
-from typing import Callable
 import warnings
+from collections.abc import Callable
 
 import numpy as np
 from numpy.typing import NDArray
@@ -69,7 +69,7 @@ class ConjugateGradient(Minimizer):
         through a Conjugate Gradient algorithm, where :math:`\bar{\bar{\nabla}} \phi`
         and :math:`\bar{\nabla} \phi` are the the Hessian and the gradient of the
         objective function, respectively.
-        """
+        """  # noqa: E501
         if preconditioner is not None and "M" in self.cg_kwargs:
             msg = (
                 "Cannot simultanously set `preconditioner` "

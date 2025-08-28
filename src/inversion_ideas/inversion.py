@@ -6,17 +6,14 @@ inversion, given an objective function, an optimizer, a set of directives that c
 modify the objective function after each iteration and optionally a logger.
 """
 
-import numbers
 import typing
-from collections.abc import Callable, Iterable
+from collections.abc import Callable
 
 import numpy as np
 import numpy.typing as npt
-from rich.console import Console
-from rich.live import Live
-from rich.table import Table
 
-from .base import Combo, Condition, Directive
+from .base import Condition, Directive
+from .inversion_log import InversionLog, InversionLogRich
 from .utils import get_logger
 
 
@@ -191,163 +188,3 @@ class Inversion:
             for _ in self:
                 pass
         return self.model
-
-
-class InversionLog:
-    """
-    Log the outputs of an inversion.
-
-    Parameters
-    ----------
-    columns : dict
-        Dictionary with specification for the columns of the log table.
-        The keys are the column titles as strings. The values are callables that will be
-        used to generate the value for each row and column. Each callable should take
-        two arguments: ``iteration`` (an integer with the number of the iteration) and
-        ``model`` (the inverted model as a 1d array).
-    """
-
-    def __init__(self, columns: dict[str, Callable]):
-        self._columns = columns
-
-    @property
-    def columns(self) -> dict[str, Callable]:
-        """
-        Column specifiers.
-        """
-        return self._columns
-
-    @property
-    def log(self) -> dict[str, list]:
-        """
-        Inversion log.
-        """
-        if not hasattr(self, "_log"):
-            self._log: dict[str, list] = {col: [] for col in self.columns}
-        return self._log
-
-    def update(self, iteration: int, model: npt.NDArray[np.float64]):
-        """
-        Update the log.
-        """
-        for title, column_func in self.columns.items():
-            self.log[title].append(column_func(iteration, model))
-
-    @classmethod
-    def create_from(cls, objective_function: Combo) -> typing.Self:
-        r"""
-        Create the standard log for a classic inversion.
-
-        Parameters
-        ----------
-        objective_function : Combo
-            Combo objective function with two elements: the data misfit and the
-            regularization (including a trade-off parameter).
-
-        Returns
-        -------
-        Self
-
-        Notes
-        -----
-        The objective function should be of the type:
-
-        .. math::
-
-            \phi(\mathbf{m}) = \phi_d(\mathbf{m}) + \beta \phi_m(\mathbf{m})
-
-        where :math:`\phi_d(m)` is the data misfit term, :math:`\phi_m(\mathbf{m})` is
-        the model norm, and :math:`\beta` is the trade-off parameter.
-        """
-        # TODO: write proper error messages
-        assert len(objective_function) == 2
-        data_misfit = objective_function[0]
-        assert not hasattr(data_misfit, "multiplier")
-        assert not isinstance(data_misfit, Iterable)
-        regularization = objective_function[1]
-        assert hasattr(regularization, "multiplier")
-
-        columns = {
-            "iter": lambda iteration, _: iteration,
-            "β": lambda _, __: regularization.multiplier,
-            "φ_d": lambda _, model: data_misfit(model),
-            "φ_m": lambda _, model: regularization.function(model),
-            "β φ_m": lambda _, model: regularization(model),
-            "φ": lambda _, model: objective_function(model),
-            "χ": lambda _, model: data_misfit(model) / data_misfit.n_data,
-        }
-        return cls(columns)
-
-
-class InversionLogRich(InversionLog):
-    """
-    Log the outputs of an inversion.
-
-    Parameters
-    ----------
-    columns : dict
-        Dictionary with specification for the columns of the log table.
-        The keys are the column titles as strings. The values are callables that will be
-        used to generate the value for each row and column. Each callable should take
-        two arguments: ``iteration`` (an integer with the number of the iteration) and
-        ``model`` (the inverted model as a 1d array).
-    kwargs :
-        Pass extra options to :class:`rich.table.Table`.
-    """
-
-    def __init__(self, columns: dict[str, Callable], **kwargs):
-        super().__init__(columns)
-        self.kwargs = kwargs
-
-    @property
-    def table(self) -> Table:
-        """
-        Table for the inversion log.
-        """
-        if not hasattr(self, "_table"):
-            self._table = Table(**self.kwargs)
-            for title in self.columns:
-                self._table.add_column(title)
-        return self._table
-
-    def show(self):
-        """
-        Show table.
-        """
-        console = Console()
-        console.print(self.table)
-
-    def live(self, **kwargs):
-        """
-        Context manager for live update of the table.
-        """
-        return Live(self.table, **kwargs)
-
-    def update_table(self):
-        """
-        Add row to the table given the latest inverted model.
-
-        Parameters
-        ----------
-        model : (n_params) array
-        """
-        row = []
-        for column in self.columns:
-            value = self.log[column][-1]  # last element in the log
-            if isinstance(value, numbers.Integral):
-                fmt = "d"
-            elif isinstance(value, numbers.Real):
-                fmt = ".2e"
-            else:
-                fmt = ""
-            row.append(f"{value:{fmt}}")
-        self.table.add_row(*row)
-
-    def update(self, iteration: int, model: npt.NDArray[np.float64]):
-        """
-        Update the log.
-
-        Update the table as well.
-        """
-        super().update(iteration, model)
-        self.update_table()

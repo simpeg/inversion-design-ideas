@@ -2,7 +2,7 @@
 Handler to run an inversion.
 
 The :class:`Inversion` class is intended to simplify the process of running a full
-inversion, given an objective function, an optimizer, a set of directives that can
+inversion, given an objective function, a minimizer, a set of directives that can
 modify the objective function after each iteration and optionally a logger.
 """
 
@@ -27,7 +27,7 @@ class Inversion:
         Objective function to minimize.
     initial_model : (n_params) array
         Starting model for the inversion.
-    optimizer : Minimizer or callable
+    minimizer : Minimizer or callable
         Function or object to use as minimizer. It must take the objective function and
         a model as arguments.
     directives : list of Directive
@@ -52,7 +52,7 @@ class Inversion:
         self,
         objective_function,
         initial_model,
-        optimizer,
+        minimizer,
         *,
         directives: typing.Sequence[Directive],
         stopping_criteria: Condition | Callable,
@@ -62,7 +62,7 @@ class Inversion:
     ):
         self.objective_function = objective_function
         self.initial_model = initial_model
-        self.optimizer = optimizer
+        self.minimizer = minimizer
         self.directives = directives
         self.stopping_criteria = stopping_criteria
         self.max_iterations = max_iterations
@@ -116,13 +116,13 @@ class Inversion:
         # Run directives (only after the zeroth iteration).
         # We update the directives here (and not at the end of this method), so after
         # each iteration the objective function is still the same we passed to the
-        # optimizer.
+        # minimizer.
         if self.counter > 0:
             for directive in self.directives:
                 directive(self.model, self.counter)
 
         # Minimize objective function
-        model = self.optimizer(self.objective_function, self.model)
+        model = self.minimizer(self.objective_function, self.model)
 
         # Cache model if required
         if self.cache_models:

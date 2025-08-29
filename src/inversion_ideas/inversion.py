@@ -47,6 +47,8 @@ class Inversion:
         If `True`, a default :class:`InversionLog` is going to be used.
         If `False`, no log will be assigned to the inversion, and :attr:`Inversion.log`
         will be ``None``.
+    kwargs : dict, optional
+        Extra arguments that will be passed to the ``minimizer``.
     """
 
     def __init__(
@@ -60,6 +62,7 @@ class Inversion:
         max_iterations: int | None = None,
         cache_models=False,
         log: "InversionLog | bool" = True,
+        **kwargs,
     ):
         self.objective_function = objective_function
         self.initial_model = initial_model
@@ -68,6 +71,7 @@ class Inversion:
         self.stopping_criteria = stopping_criteria
         self.max_iterations = max_iterations
         self.cache_models = cache_models
+        self.kwargs = kwargs
 
         # Assign log
         if log is False:
@@ -123,7 +127,7 @@ class Inversion:
                 directive(self.model, self.counter)
 
         # Minimize objective function
-        model = self.minimizer(self.objective_function, self.model)
+        model = self.minimizer(self.objective_function, self.model, **self.kwargs)
 
         # Cache model if required
         if self.cache_models:

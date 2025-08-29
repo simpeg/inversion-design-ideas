@@ -3,6 +3,7 @@ Regularization classes.
 """
 
 import numpy as np
+import numpy.typing as npt
 from scipy.sparse import diags_array
 
 from .base import Objective
@@ -44,6 +45,12 @@ class TikhonovZero(Objective):
         """
         weights = diags_array(self.weights)
         return 2 * weights.T @ weights
+
+    def hessian_diagonal(self, model) -> npt.NDArray[np.float64]:
+        """
+        Diagonal of the Hessian.
+        """
+        return self.hessian(model).diagonal()
 
     @property
     def n_params(self):

@@ -12,8 +12,9 @@ class GravitySimulation(Simulation):
     This class is meant to be used within the new framework.
     """
 
-    def __init__(self, simulation):
+    def __init__(self, simulation, jac_as_linop=True):
         self.simulation = simulation
+        self.jac_as_linop = jac_as_linop
 
     @property
     def n_params(self) -> int:
@@ -39,10 +40,13 @@ class GravitySimulation(Simulation):
         """
         Jacobian matrix for a given model.
         """
-        jac = LinearOperator(
-            shape=(self.n_data, self.n_params),
-            dtype=np.float64,
-            matvec=lambda v: self.simulation.Jvec(model, v),
-            rmatvec=lambda v: self.simulation.Jtvec(model, v),
-        )
+        if self.jac_as_linop:
+            jac = LinearOperator(
+                shape=(self.n_data, self.n_params),
+                dtype=np.float64,
+                matvec=lambda v: self.simulation.Jvec(model, v),
+                rmatvec=lambda v: self.simulation.Jtvec(model, v),
+            )
+        else:
+            jac = self.simulation.getJ(model)
         return jac

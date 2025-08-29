@@ -126,6 +126,9 @@ class Dummy(Objective):
     def hessian(self, model):  # noqa: ARG002
         return np.eye(self.n_params)
 
+    def hessian_diagonal(self, model):  # noqa: ARG002
+        return np.ones(self.n_params)
+
 
 class TestObjectiveOperations:
     """

@@ -68,6 +68,21 @@ class DataMisfit(Objective):
             jac = aslinearoperator(jac)
         return 2 * jac.T @ aslinearoperator(self.weights_squared) @ jac
 
+    def hessian_diagonal(self, model) -> npt.NDArray[np.float64]:
+        """
+        Diagonal of the Hessian.
+        """
+        jac = self.simulation.jacobian(model)
+        if isinstance(jac, LinearOperator):
+            msg = (
+                "`DataMisfit.hessian_diagonal()` is not implemented for simulations "
+                "that return the jacobian as a LinearOperator."
+            )
+            raise NotImplementedError(msg)
+        weights_sq = 1 / self.uncertainty**2
+        jtj_diag = np.einsum("i,ij,ij->j", weights_sq, jac, jac)
+        return 2 * jtj_diag
+
     @property
     def n_params(self):
         """

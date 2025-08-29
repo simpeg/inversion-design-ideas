@@ -22,11 +22,15 @@ def create_inversion(
     beta_cooling_factor: float = 2.0,
     beta_cooling_rate: int = 1,
     chi_target: float = 1.0,
+    max_iterations: int | None = None,
     cache_models: bool = True,
     preconditioner=None,
 ) -> Inversion:
     r"""
     Create inversion of the form :math:`\phi_d + \beta \phi_m`.
+
+    Build an inversion with a beta cooling schedule and a stopping criteria for a chi
+    factor target.
 
     Parameters
     ----------
@@ -51,6 +55,9 @@ def create_inversion(
     chi_target : float, optional
         Target for the chi factor. The inversion will finish after the data misfit
         reaches a :math:`\chi` factor lower or equal to ``chi_target``.
+    max_iterations : int, optional
+        Max amount of iterations that will be performed. If ``None``, then there will be
+        no limit on the total amount of iterations.
     cache_models : bool, optional
         Whether to cache models after each iteration in the inversion.
     preconditioner : {"jacobi"} or 2d array or sparray or LinearOperator or callable or None, optional
@@ -101,6 +108,7 @@ def create_inversion(
         directives=directives,
         stopping_criteria=stopping_criteria,
         cache_models=cache_models,
+        max_iterations=max_iterations,
         log=True,
         **kwargs,
     )

@@ -5,9 +5,9 @@ Ideas for inversion framework.
 from . import base, utils
 from ._version import __version__
 from .conditions import ChiTarget, CustomCondition, ModelChanged, ObjectiveChanged
-from .constructors import create_inversion
+from .constructors import create_inversion, create_sparse_inversion
 from .data_misfit import DataMisfit
-from .directives import IRLS, MultiplierCooler, IrlsFull
+from .directives import IRLS, IrlsFull, MultiplierCooler
 from .errors import ConvergenceWarning
 from .inversion import Inversion
 from .inversion_log import InversionLog, InversionLogRich
@@ -35,6 +35,7 @@ __all__ = [
     "__version__",
     "base",
     "create_inversion",
+    "create_sparse_inversion",
     "get_jacobi_preconditioner",
     "utils",
 ]

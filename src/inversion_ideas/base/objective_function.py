@@ -53,6 +53,12 @@ class Objective(ABC):
         Evaluate the hessian of the objective function for a given model.
         """
 
+    @abstractmethod
+    def hessian_diagonal(self, model) -> npt.NDArray[np.float64]:
+        """
+        Diagonal of the Hessian.
+        """
+
     def set_name(self, value):
         """
         Set name for the objective function.
@@ -147,6 +153,12 @@ class Scaled(Objective):
         """
         return self.multiplier * self.function.hessian(model)
 
+    def hessian_diagonal(self, model) -> npt.NDArray[np.float64]:
+        """
+        Diagonal of the Hessian.
+        """
+        return self.multiplier * self.function.hessian_diagonal(model)
+
     def __repr__(self):
         fmt = ".2e" if np.abs(self.multiplier) > 1e3 else ".2f"
         phi_repr = f"{self.function}"
@@ -233,6 +245,15 @@ class Combo(Objective):
         Evaluate the hessian of the objective function for a given model.
         """
         return _sum(f.hessian(model) for f in self.functions)
+
+    def hessian_diagonal(self, model) -> npt.NDArray[np.float64]:
+        """
+        Diagonal of the Hessian.
+        """
+        if not self.functions:
+            msg = "Invalid empty Combo when summing."
+            raise ValueError(msg)
+        return _sum_arrays(f.hessian_diagonal(model) for f in self.functions)
 
     def flatten(self) -> "Combo":
         """
@@ -357,4 +378,27 @@ def _sum(
             result += aslinearoperator(operator)
         else:
             result += operator
+    return result
+
+
+def _sum_arrays(arrays: Iterator[npt.NDArray]) -> npt.NDArray:
+    """
+    Sum arrays within an iterator.
+
+    Parameters
+    ----------
+    arrays : Iterator
+        Iterator with arrays.
+
+    See also
+    --------
+    _sum : Supports summing arrays, sparse arrays and ``LinearOperator``s.
+    """
+    if not arrays:
+        msg = "Invalid empty 'arrays' array when summing."
+        raise ValueError(msg)
+
+    result = copy(next(arrays))
+    for array in arrays:
+        result += array
     return result

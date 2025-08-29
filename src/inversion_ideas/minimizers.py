@@ -3,10 +3,12 @@ Classes to define minimizers.
 """
 
 import warnings
+from collections.abc import Callable
 
 import numpy as np
 from numpy.typing import NDArray
-from scipy.sparse.linalg import cg
+from scipy.sparse import sparray
+from scipy.sparse.linalg import LinearOperator, cg
 
 from .base import Minimizer, Objective
 from .errors import ConvergenceWarning
@@ -15,18 +17,14 @@ from .errors import ConvergenceWarning
 class ConjugateGradient(Minimizer):
     """
     Conjugate gradient minimizer.
-
-    Parameters
-    ----------
-    cg_kwargs :
-        Additional arguments to be passed to :func:`scipy.sparse.linalg.cg`.
     """
 
-    def __init__(self, **cg_kwargs):
-        self.cg_kwargs = cg_kwargs
-
     def __call__(
-        self, objective: Objective, initial_model: NDArray[np.float64]
+        self,
+        objective: Objective,
+        initial_model: NDArray[np.float64],
+        preconditioner: NDArray[np.float64] | sparray | LinearOperator | None = None,
+        **kwargs,
     ) -> NDArray[np.float64]:
         r"""
         Minimize objective function with a Conjugate Gradient method.
@@ -41,6 +39,15 @@ class ConjugateGradient(Minimizer):
             Objective function to be minimized.
         initial_model : (n_params) array
             Initial model used to start the minimization.
+        preconditioner : (n_params, n_params) array, sparray or LinearOperator or Callable, optional
+            Matrix used as preconditioner in the conjugant gradient algorithm.
+            If None, no preconditioner will be used.
+            A callable can be passed to build the preconditioner dynamically: such
+            callable should take a single ``initial_model`` argument and return an
+            array, `sparray` or a `LinearOperator`.
+        kwargs : dict
+            Extra arguments that will be passed to the :func:`scipy.sparse.linalg.cg`
+            function.
 
         Returns
         -------
@@ -58,12 +65,21 @@ class ConjugateGradient(Minimizer):
         through a Conjugate Gradient algorithm, where :math:`\bar{\bar{\nabla}} \phi`
         and :math:`\bar{\nabla} \phi` are the the Hessian and the gradient of the
         objective function, respectively.
-        """
+        """  # noqa: E501
+        if preconditioner is not None and "M" in kwargs:
+            msg = "Cannot simultanously pass `preconditioner` and `M`."
+            raise ValueError(msg)
+
+        if preconditioner is not None:
+            if isinstance(preconditioner, Callable):
+                preconditioner = preconditioner(initial_model)
+            kwargs["M"] = preconditioner
+
         # TODO: maybe it would be nice to add a `is_linear` attribute to the objective
         # functions for the ones that generate a linear problem.
         gradient = objective.gradient(initial_model)
         hessian = objective.hessian(initial_model)
-        model_step, info = cg(hessian, -gradient, **self.cg_kwargs)
+        model_step, info = cg(hessian, -gradient, **kwargs)
         if info != 0:
             warnings.warn(
                 "Conjugate gradient convergence to tolerance not achieved after "

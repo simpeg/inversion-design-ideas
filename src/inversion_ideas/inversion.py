@@ -2,7 +2,7 @@
 Handler to run an inversion.
 
 The :class:`Inversion` class is intended to simplify the process of running a full
-inversion, given an objective function, an optimizer, a set of directives that can
+inversion, given an objective function, a minimizer, a set of directives that can
 modify the objective function after each iteration and optionally a logger.
 """
 
@@ -12,7 +12,7 @@ from collections.abc import Callable
 import numpy as np
 import numpy.typing as npt
 
-from .base import Condition, Directive
+from .base import Condition, Directive, Minimizer, Objective
 from .inversion_log import InversionLog, InversionLogRich
 from .utils import get_logger
 
@@ -27,9 +27,10 @@ class Inversion:
         Objective function to minimize.
     initial_model : (n_params) array
         Starting model for the inversion.
-    optimizer : Minimizer or callable
-        Function or object to use as minimizer. It must take the objective function and
-        a model as arguments.
+    minimizer : Minimizer or callable
+        Instance of :class:`Minimizer` or callable used to minimize the objective
+        function during the inversion. It must take the objective function and a model
+        as arguments.
     directives : list of Directive
         List of ``Directive``s used to modify the objective function after each
         iteration.
@@ -47,14 +48,14 @@ class Inversion:
         If `False`, no log will be assigned to the inversion, and :attr:`Inversion.log`
         will be ``None``.
     kwargs : dict, optional
-        Extra arguments that will be passed to the ``optimizer``.
+        Extra arguments that will be passed to the ``minimizer``.
     """
 
     def __init__(
         self,
-        objective_function,
-        initial_model,
-        optimizer,
+        objective_function: Objective,
+        initial_model: npt.NDArray[np.float64],
+        minimizer: Minimizer | Callable,
         *,
         directives: typing.Sequence[Directive],
         stopping_criteria: Condition | Callable,
@@ -65,7 +66,7 @@ class Inversion:
     ):
         self.objective_function = objective_function
         self.initial_model = initial_model
-        self.optimizer = optimizer
+        self.minimizer = minimizer
         self.directives = directives
         self.stopping_criteria = stopping_criteria
         self.max_iterations = max_iterations
@@ -120,13 +121,13 @@ class Inversion:
         # Run directives (only after the zeroth iteration).
         # We update the directives here (and not at the end of this method), so after
         # each iteration the objective function is still the same we passed to the
-        # optimizer.
+        # minimizer.
         if self.counter > 0:
             for directive in self.directives:
                 directive(self.model, self.counter)
 
         # Minimize objective function
-        model = self.optimizer(self.objective_function, self.model, **self.kwargs)
+        model = self.minimizer(self.objective_function, self.model, **self.kwargs)
 
         # Cache model if required
         if self.cache_models:

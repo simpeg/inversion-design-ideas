@@ -16,10 +16,6 @@ class Minimizer(ABC):
     """
 
     @abstractmethod
-    def __init__(self):
-        pass
-
-    @abstractmethod
     def __call__(
         self, objective: Objective, initial_model: NDArray[np.float64]
     ) -> NDArray[np.float64]:

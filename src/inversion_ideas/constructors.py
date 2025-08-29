@@ -5,10 +5,10 @@ Functions to easily build commonly used objects in inversions.
 import numpy as np
 import numpy.typing as npt
 
+from .base import Minimizer, Objective
 from .conditions import ChiTarget
 from .directives import MultiplierCooler
 from .inversion import Inversion
-from .base import Minimizer, Objective
 
 
 def create_inversion(

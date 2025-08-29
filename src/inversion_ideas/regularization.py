@@ -195,6 +195,12 @@ class SparseSmallness(Objective):
         r_matrix = self.R
         return 2 * r_matrix.T @ weights.T @ weights @ r_matrix
 
+    def hessian_diagonal(self, model) -> npt.NDArray[np.float64]:
+        """
+        Diagonal of the Hessian.
+        """
+        return self.hessian(model).diagonal()
+
     @property
     def n_params(self):
         """

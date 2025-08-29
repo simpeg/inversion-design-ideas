@@ -157,9 +157,6 @@ class IrlsFull(Directive):
         IRLS on ``sparse``, or to cool the multiplier of ``regularization``.
     regularization : Scaled
         Regularization that will get its multiplier cooled down.
-    model_stage_one : (nparams) array
-        Model obtained after the first stage of the sparse inversion is finished.
-        This model should be the one obtained after the L2 inverison.
     chi_l2_target : float, optional
         Target for the chi factor used in the first stage (L2 inversion). Once this
         target is reached, the IRLS will be activated.
@@ -167,8 +164,8 @@ class IrlsFull(Directive):
         Cooling factor used to cool down the ``regularization``'s multiplier.
     data_misfit_rtol : float, optional
         Relative tolerance for the data misfit.
-        Used to compare the current value of the data misfit with its value on
-        ``model_stage_one``.
+        Used to compare the current value of the data misfit with its value after the
+        stage one is finished.
     """
 
     def __init__(

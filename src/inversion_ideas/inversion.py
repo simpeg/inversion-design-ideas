@@ -12,7 +12,7 @@ from collections.abc import Callable
 import numpy as np
 import numpy.typing as npt
 
-from .base import Condition, Directive
+from .base import Condition, Directive, Objective, Minimizer
 from .inversion_log import InversionLog, InversionLogRich
 from .utils import get_logger
 
@@ -28,8 +28,9 @@ class Inversion:
     initial_model : (n_params) array
         Starting model for the inversion.
     minimizer : Minimizer or callable
-        Function or object to use as minimizer. It must take the objective function and
-        a model as arguments.
+        Instance of :class:`Minimizer` or callable used to minimize the objective
+        function during the inversion. It must take the objective function and a model
+        as arguments.
     directives : list of Directive
         List of ``Directive``s used to modify the objective function after each
         iteration.
@@ -50,9 +51,9 @@ class Inversion:
 
     def __init__(
         self,
-        objective_function,
-        initial_model,
-        minimizer,
+        objective_function: Objective,
+        initial_model: npt.NDArray[np.float64],
+        minimizer: Minimizer | Callable,
         *,
         directives: typing.Sequence[Directive],
         stopping_criteria: Condition | Callable,

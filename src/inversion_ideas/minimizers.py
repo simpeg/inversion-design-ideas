@@ -17,21 +17,14 @@ from .errors import ConvergenceWarning
 class ConjugateGradient(Minimizer):
     """
     Conjugate gradient minimizer.
-
-    Parameters
-    ----------
-    cg_kwargs :
-        Additional arguments to be passed to :func:`scipy.sparse.linalg.cg`.
     """
-
-    def __init__(self, **cg_kwargs):
-        self.cg_kwargs = cg_kwargs
 
     def __call__(
         self,
         objective: Objective,
         initial_model: NDArray[np.float64],
         preconditioner: NDArray[np.float64] | sparray | LinearOperator | None = None,
+        **kwargs,
     ) -> NDArray[np.float64]:
         r"""
         Minimize objective function with a Conjugate Gradient method.
@@ -52,6 +45,9 @@ class ConjugateGradient(Minimizer):
             A callable can be passed to build the preconditioner dynamically: such
             callable should take a single ``initial_model`` argument and return an
             array, `sparray` or a `LinearOperator`.
+        kwargs : dict
+            Extra arguments that will be passed to the :func:`scipy.sparse.linalg.cg`
+            function.
 
         Returns
         -------
@@ -70,14 +66,10 @@ class ConjugateGradient(Minimizer):
         and :math:`\bar{\nabla} \phi` are the the Hessian and the gradient of the
         objective function, respectively.
         """  # noqa: E501
-        if preconditioner is not None and "M" in self.cg_kwargs:
-            msg = (
-                "Cannot simultanously set `preconditioner` "
-                "if `M` was passed in `cg_kwargs."
-            )
+        if preconditioner is not None and "M" in kwargs:
+            msg = "Cannot simultanously pass `preconditioner` and `M`."
             raise ValueError(msg)
 
-        kwargs = self.cg_kwargs.copy()
         if preconditioner is not None:
             if isinstance(preconditioner, Callable):
                 preconditioner = preconditioner(initial_model)

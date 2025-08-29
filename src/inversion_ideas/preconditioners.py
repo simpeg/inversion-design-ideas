@@ -1,6 +1,7 @@
 """
 Classes and functions to build preconditioners.
 """
+
 import numpy as np
 import numpy.typing as npt
 from scipy.sparse import diags_array, sparray

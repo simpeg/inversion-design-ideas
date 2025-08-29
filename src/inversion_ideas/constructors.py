@@ -2,7 +2,6 @@
 Functions to easily build commonly used objects in inversions.
 """
 
-
 import numpy as np
 import numpy.typing as npt
 

@@ -6,12 +6,6 @@ import functools
 import hashlib
 import logging
 
-import numpy as np
-import numpy.typing as npt
-from scipy.sparse import diags_array
-
-from .base import Objective
-
 __all__ = [
     "cache_on_model",
     "get_logger",
@@ -118,43 +112,3 @@ def cache_on_model(func):
         return result
 
     return wrapper
-
-
-def get_jacobi_preconditioner(
-    objective_function: Objective, model: npt.NDArray[np.float64]
-):
-    r"""
-    Obtain a Jacobi preconditioner from an objective function.
-
-    Parameters
-    ----------
-    objective_function : Objective
-        Objective function from which the preconditioner will be built.
-    model : (n_params) array
-        Model used to build the preconditioner.
-
-    Returns
-    -------
-    diag_array
-        Preconditioner as a sparse diagonal array.
-
-    Notes
-    -----
-    Given an objective function :math:`\phi(\mathbf{m})`, this function builds the
-    Jacobi preconditioner :math:`\mathbf{P}(\mathbf{m})` as the inverse of the diagonal
-    of the Hessian of :math:`\phi(\mathbf{m})`:
-
-    .. math::
-
-        \mathbf{P}(\mathbf{m}) = \text{diag}[ \bar{\bar{\nabla}} \phi(\mathbf{m}) ]^{-1}
-
-    where :math:`\bar{\bar{\nabla}} \phi(\mathbf{m})` is the Hessian of
-    :math:`\phi(\mathbf{m})`.
-    """
-    hessian_diag = objective_function.hessian_diagonal(model)
-
-    # Compute inverse only for non-zero elements
-    zeros = hessian_diag == 0.0
-    hessian_diag[~zeros] **= -1
-
-    return diags_array(hessian_diag)

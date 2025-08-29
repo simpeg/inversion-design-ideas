@@ -2,8 +2,6 @@
 Functions to easily build commonly used objects in inversions.
 """
 
-from collections.abc import Callable
-
 import numpy as np
 import numpy.typing as npt
 
@@ -11,7 +9,7 @@ from .base import Minimizer, Objective
 from .conditions import ChiTarget
 from .directives import MultiplierCooler
 from .inversion import Inversion
-from .utils import get_jacobi_preconditioner
+from .preconditioners import JacobiPreconditioner
 
 
 def create_inversion(
@@ -25,8 +23,7 @@ def create_inversion(
     beta_cooling_rate: int = 1,
     chi_target: float = 1.0,
     cache_models: bool = True,
-    preconditioner="jacobi",
-    update_preconditioner=True,
+    preconditioner=None,
 ) -> Inversion:
     r"""
     Create inversion of the form :math:`\phi_d + \beta \phi_m`.
@@ -56,11 +53,19 @@ def create_inversion(
         reaches a :math:`\chi` factor lower or equal to ``chi_target``.
     cache_models : bool, optional
         Whether to cache models after each iteration in the inversion.
+    preconditioner : {"jacobi"} or 2d array or sparray or LinearOperator or callable or None, optional
+        Preconditioner that will be passed to the ``minimizer`` on every call during the
+        inversion. The preconditioner can be a predefined 2d array, a sparse array or
+        a LinearOperator. Alternatively, it can be a callable that takes the ``model``
+        as argument and returns a preconditioner matrix (same types listed before). If
+        ``"jacobi"``, a default Jacobi preconditioner that will get updated on every
+        iteration will be defined for the inversion. If None, no preconditioner will be
+        passed.
 
     Returns
     -------
     Inversion
-    """
+    """  # noqa: E501
     # Define objective function
     regularization = starting_beta * model_norm
     objective_function = data_misfit + regularization
@@ -82,35 +87,10 @@ def create_inversion(
     if preconditioner is not None:
         if isinstance(preconditioner, str):
             if preconditioner == "jacobi":
-                if update_preconditioner:
-                    preconditioner = (  # noqa: E731
-                        lambda model: get_jacobi_preconditioner(
-                            objective_function, model
-                        )
-                    )
-                else:
-                    preconditioner = get_jacobi_preconditioner(
-                        objective_function, initial_model
-                    )
+                preconditioner = JacobiPreconditioner(objective_function)
             else:
                 msg = f"Invalid preconditioner '{preconditioner}'."
                 raise ValueError(msg)
-
-        if update_preconditioner and not isinstance(preconditioner, Callable):
-            msg = (
-                f"Invalid preconditioner '{preconditioner}'"
-                "When setting `update_preconditioner` to True, "
-                "the `preconditioner` should be a callable."
-            )
-            raise TypeError(msg)
-        if not update_preconditioner and isinstance(preconditioner, Callable):
-            msg = (
-                f"Invalid preconditioner '{preconditioner}'."
-                f"Cannot set `update_preconditioner` to False and pass "
-                "`preconditioner` as a Callable."
-            )
-            raise TypeError(msg)
-
         kwargs["preconditioner"] = preconditioner
 
     # Define inversion

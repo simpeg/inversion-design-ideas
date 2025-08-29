@@ -12,6 +12,7 @@ from .errors import ConvergenceWarning
 from .inversion import Inversion
 from .inversion_log import InversionLog, InversionLogRich
 from .minimizers import ConjugateGradient
+from .preconditioners import JacobiPreconditioner, get_jacobi_preconditioner
 from .regularization import SparseSmallness, TikhonovZero
 
 __all__ = [
@@ -25,6 +26,7 @@ __all__ = [
     "InversionLog",
     "InversionLogRich",
     "IrlsFull",
+    "JacobiPreconditioner",
     "ModelChanged",
     "MultiplierCooler",
     "ObjectiveChanged",
@@ -33,5 +35,6 @@ __all__ = [
     "__version__",
     "base",
     "create_inversion",
+    "get_jacobi_preconditioner",
     "utils",
 ]

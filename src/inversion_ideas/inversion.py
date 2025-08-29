@@ -12,7 +12,7 @@ from collections.abc import Callable
 import numpy as np
 import numpy.typing as npt
 
-from .base import Condition, Directive, Objective, Minimizer
+from .base import Condition, Directive, Minimizer, Objective
 from .inversion_log import InversionLog, InversionLogRich
 from .utils import get_logger
 

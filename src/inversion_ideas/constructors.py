@@ -2,7 +2,6 @@
 Functions to easily build commonly used objects in inversions.
 """
 
-from collections.abc import Callable
 
 import numpy as np
 import numpy.typing as npt
@@ -11,7 +10,7 @@ from .base import Minimizer, Objective
 from .conditions import ChiTarget
 from .directives import MultiplierCooler
 from .inversion import Inversion
-from .preconditioners import get_jacobi_preconditioner, JacobiPreconditioner
+from .preconditioners import JacobiPreconditioner
 
 
 def create_inversion(

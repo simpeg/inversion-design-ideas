@@ -6,7 +6,6 @@ import functools
 import hashlib
 import logging
 
-
 __all__ = [
     "cache_on_model",
     "get_logger",

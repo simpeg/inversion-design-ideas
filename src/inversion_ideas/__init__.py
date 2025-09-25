@@ -14,6 +14,7 @@ from .inversion_log import InversionLog, InversionLogRich
 from .minimizers import ConjugateGradient
 from .preconditioners import JacobiPreconditioner, get_jacobi_preconditioner
 from .regularization import SparseSmallness, TikhonovZero
+from .simulations import wrap_simulation
 
 __all__ = [
     "IRLS",
@@ -38,4 +39,5 @@ __all__ = [
     "create_sparse_inversion",
     "get_jacobi_preconditioner",
     "utils",
+    "wrap_simulation",
 ]

@@ -14,6 +14,7 @@ from .inversion_log import InversionLog, InversionLogRich
 from .minimizers import ConjugateGradient
 from .preconditioners import JacobiPreconditioner, get_jacobi_preconditioner
 from .regularization import TikhonovZero
+from .simulations import wrap_simulation
 
 __all__ = [
     "ChiTarget",
@@ -34,4 +35,5 @@ __all__ = [
     "create_inversion",
     "get_jacobi_preconditioner",
     "utils",
+    "wrap_simulation",
 ]

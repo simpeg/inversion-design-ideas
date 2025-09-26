@@ -69,7 +69,16 @@ class WrappedSimulation(Simulation):
         """
         Number of model parameters.
         """
-        return self.simulation.nC
+        # Potential field simulations have nC attribute with number of parameters
+        if hasattr(self.simulation, "nC"):
+            return self.simulation.nC
+
+        # Cover other type of simulations
+        if hasattr(self.simulation, "model") and self.simulation.model is not None:
+            return len(self.simulation.model)
+
+        msg = f"Cannot obtain number of parameters for simulation '{self.simulation}'."
+        raise AttributeError(msg)
 
     @property
     def n_data(self) -> int:

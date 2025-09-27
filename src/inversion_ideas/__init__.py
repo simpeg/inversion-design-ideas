@@ -11,7 +11,7 @@ from .directives import MultiplierCooler
 from .errors import ConvergenceWarning
 from .inversion import Inversion
 from .inversion_log import InversionLog, InversionLogRich
-from .minimizers import ConjugateGradient
+from .minimizers import ConjugateGradient, GaussNewtonConjugateGradient
 from .preconditioners import JacobiPreconditioner, get_jacobi_preconditioner
 from .regularization import TikhonovZero
 from .simulations import wrap_simulation
@@ -22,6 +22,7 @@ __all__ = [
     "ConvergenceWarning",
     "CustomCondition",
     "DataMisfit",
+    "GaussNewtonConjugateGradient",
     "Inversion",
     "InversionLog",
     "InversionLogRich",

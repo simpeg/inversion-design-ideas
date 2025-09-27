@@ -1,9 +1,9 @@
 """
 Regularization classes.
 """
-from copy import copy
 from collections.abc import Iterator
-from operator import mul
+from copy import copy
+
 import numpy as np
 import numpy.typing as npt
 from scipy.sparse import dia_array, diags_array
@@ -82,7 +82,7 @@ class TikhonovZero(Objective):
         """
         Setter for weights.
         """
-        if not isinstance(value, (np.ndarray, dict)):
+        if not isinstance(value, np.ndarray | dict):
             msg = (
                 f"Invalid weights of type {type(value)}. "
                 "It must be an array or a dictionary."

@@ -7,9 +7,9 @@ from collections.abc import Callable
 
 import numpy as np
 from numpy.typing import NDArray
+from scipy.optimize import line_search
 from scipy.sparse import sparray
 from scipy.sparse.linalg import LinearOperator, cg
-from scipy.optimize import minimize, line_search
 
 from .base import Minimizer, Objective
 from .errors import ConvergenceWarning

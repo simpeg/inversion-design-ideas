@@ -164,6 +164,7 @@ class GaussNewtonConjugateGradient(Minimizer):
         iteration = 0
         phi_prev_value = np.inf  # value of the objective function on previous model
         model = initial_model.copy()
+
         while True:
             # Stop if reached max number of iterations
             if iteration >= maxiter:
@@ -178,9 +179,9 @@ class GaussNewtonConjugateGradient(Minimizer):
             ):
                 break
 
-            # Apply Conjugate Gradient
+            # Apply Conjugate Gradient to get search direction
             gradient, hessian = objective.gradient(model), objective.hessian(model)
-            model_step, info = cg(hessian, -gradient, **cg_kwargs)
+            search_direction, info = cg(hessian, -gradient, **cg_kwargs)
             if info != 0:
                 warnings.warn(
                     "Conjugate gradient convergence to tolerance not achieved after "
@@ -194,7 +195,7 @@ class GaussNewtonConjugateGradient(Minimizer):
             alpha, n_ls_iters = _backtracking_line_search(
                 objective,
                 model,
-                model_step,
+                search_direction,
                 phi_value=phi_value,
                 phi_gradient=gradient,
                 maxiter=maxiter_line_search,
@@ -207,8 +208,8 @@ class GaussNewtonConjugateGradient(Minimizer):
                 raise RuntimeError(msg)
             print(f"Finished line search in {n_ls_iters} iterations.")
 
-            # Update model
-            model += alpha * model_step
+            # Perform model step
+            model += alpha * search_direction
 
             # Update cached values and iteration counter
             phi_prev_value = phi_value

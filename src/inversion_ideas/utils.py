@@ -142,11 +142,11 @@ def get_sensitivity_weights(
     matrix = data_weights @ jacobian if data_weights is not None else jacobian
     sensitivty_weights = np.sqrt(np.sum(matrix**2, axis=0))
 
-    # Add vmin to all values
-    if vmin is not None:
-        sensitivty_weights += vmin
-
     # Normalize it by maximum value
     sensitivty_weights /= sensitivty_weights.max()
+
+    # Add vmin to all values
+    if vmin is not None:
+        sensitivty_weights[sensitivty_weights < vmin] = vmin
 
     return sensitivty_weights

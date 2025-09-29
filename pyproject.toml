@@ -5,7 +5,7 @@ description = "New design ideas for inversion framework."
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.11"
-dependencies = ["numpy>=2.0.0", "scipy", "rich"]
+dependencies = ["numpy>=2.0.0", "scipy", "rich", "simpeg", "discretize"]
 
 [build-system]
 requires = ["setuptools>=61", "wheel", "setuptools_scm[toml]>=6.2"]

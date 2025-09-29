@@ -122,6 +122,7 @@ def get_sensitivity_weights(
     jacobian: npt.NDArray[np.float64],
     *,
     data_weights: npt.NDArray[np.float64] | sparray | None = None,
+    volumes: npt.NDArray[np.float64] | None = None,
     vmin: float | None = 1e-12,
 ):
     """
@@ -133,6 +134,9 @@ def get_sensitivity_weights(
         Jacobian matrix used to compute sensitivity weights.
     data_weights : (n_data, n_data) array or None, optional
         Data weights used to compute the sensitivity weights
+    volumes : (n_params) array
+        Array with the volumes of the active cells. Sensitivity weights are
+        divided by the volumes to account for sensitivity changes due to cell sizes.
     vmin : float or None, optional
         Minimum value used for clipping.
 
@@ -142,10 +146,13 @@ def get_sensitivity_weights(
     matrix = data_weights @ jacobian if data_weights is not None else jacobian
     sensitivty_weights = np.sqrt(np.sum(matrix**2, axis=0))
 
+    if volumes is not None:
+        sensitivty_weights /= volumes
+
     # Normalize it by maximum value
     sensitivty_weights /= sensitivty_weights.max()
 
-    # Add vmin to all values
+    # Clip to vmin
     if vmin is not None:
         sensitivty_weights[sensitivty_weights < vmin] = vmin
 

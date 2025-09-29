@@ -154,3 +154,19 @@ class DataMisfit(Objective):
         """
         # Return the W.T @ W matrix
         return diags_array(self.weights**2)
+
+    def chi_factor(self, model):
+        """
+        Compute chi factor.
+
+        Parameters
+        ----------
+        model : (n_params) array
+            Array with model values.
+
+        Return
+        ------
+        float
+            Chi factor for the given model.
+        """
+        return self(model) / self.n_data

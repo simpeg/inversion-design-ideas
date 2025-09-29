@@ -9,6 +9,8 @@ from collections.abc import Callable
 import numpy as np
 from rich.tree import Tree
 
+from inversion_ideas.data_misfit import DataMisfit
+
 from .base import Condition, Objective
 
 
@@ -30,13 +32,13 @@ class ChiTarget(Condition):
 
     Parameters
     ----------
-    data_misfit : Objective
+    data_misfit : DataMisfit
         Data misfit term to be evaluated.
     chi_target : float
         Target for the chi factor.
     """
 
-    def __init__(self, data_misfit, chi_target=1.0):
+    def __init__(self, data_misfit: DataMisfit, chi_target=1.0):
         self.data_misfit = data_misfit
         self.chi_target = chi_target
 
@@ -44,19 +46,13 @@ class ChiTarget(Condition):
         """
         Check if condition has been met.
         """
-        chi = self._get_chi(model)
+        chi = self.data_misfit.chi_factor(model)
         return float(chi) < self.chi_target
-
-    def _get_chi(self, model) -> float:
-        """
-        Compute chi factor.
-        """
-        return self.data_misfit(model) / self.data_misfit.n_data
 
     def info(self, model) -> Tree:
         tree = super().info(model)
         tree.add("Condition: chi < chi_target")
-        tree.add(f"chi        = {self._get_chi(model):.2e}")
+        tree.add(f"chi        = {self.data_misfit.chi_factor(model):.2e}")
         tree.add(f"chi_target = {self.chi_target:.2e}")
         return tree
 

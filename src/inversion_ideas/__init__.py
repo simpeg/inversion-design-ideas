@@ -13,7 +13,7 @@ from .inversion import Inversion
 from .inversion_log import InversionLog, InversionLogRich
 from .minimizers import ConjugateGradient, GaussNewtonConjugateGradient
 from .preconditioners import JacobiPreconditioner, get_jacobi_preconditioner
-from .regularization import TikhonovZero, Smoothness
+from .regularization import TikhonovZero, Smallness, Smoothness
 from .simulations import wrap_simulation
 
 __all__ = [
@@ -30,6 +30,7 @@ __all__ = [
     "ModelChanged",
     "MultiplierCooler",
     "ObjectiveChanged",
+    "Smallness",
     "Smoothness",
     "TikhonovZero",
     "__version__",

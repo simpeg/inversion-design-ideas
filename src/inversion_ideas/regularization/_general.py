@@ -37,10 +37,11 @@ class TikhonovZero(Objective):
     .. math::
 
         \phi(\mathbf{m})
-        = \sum\limits_{i=1}^M w_i^2 |m_i - m_i^\text{ref}|^2
+        = \sum\limits_{i=1}^M w_i |m_i - m_i^\text{ref}|^2
         = \lVert \mathbf{W} (\mathbf{m} - \mathbf{m}^\text{ref}) \rVert^2
 
-    where :math:`\mathbf{W} = [w_1, \dots, w_M]` are the regularization weights,
+    where :math:`\mathbf{W} = [\sqrt{w_1}, \dots, \sqrt{w_M}]` are the square roots of
+    the regularization weights,
     :math:`\mathbf{m} = [m_1, \dots, m_M]` and :math:`\mathbf{m}^\text{ref}
     = [m_1^\text{ref}, \dots, m_M^\text{ref}]` are the model and reference model
     vectors, respectively.
@@ -146,7 +147,7 @@ class TikhonovZero(Objective):
     @property
     def weights_matrix(self) -> dia_array:
         """
-        Diagonal matrix with the regularization weights.
+        Diagonal matrix with the square root of the regularization weights.
         """
         if isinstance(self.weights, np.ndarray):
             weights_array = self.weights
@@ -155,4 +156,4 @@ class TikhonovZero(Objective):
         else:
             msg = f"Invalid weights of type '{type(self.weights)}'."
             raise TypeError(msg)
-        return diags_array(weights_array)
+        return diags_array(np.sqrt(weights_array))

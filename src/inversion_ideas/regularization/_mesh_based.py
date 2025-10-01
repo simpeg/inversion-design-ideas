@@ -39,7 +39,7 @@ class Smallness(Objective):
 
         \phi_s(\mathbf{m}) =
         \int_\Omega
-        w(\mathbf{r})^2
+        w(\mathbf{r})
         |m(\mathbf{r}) - m^\text{ref}(\mathbf{r})|^2
         \text{d}\mathbf{r},
 
@@ -54,18 +54,19 @@ class Smallness(Objective):
         \phi_s(\mathbf{m})
         =
         \sum\limits_{i=0}^M
-        w_i^2
+        w_i
         V_i
         |m_i - m_i^\text{ref}|^2
         =
         \lVert
         \mathbf{W}
-        \mathbf{V}_{1/2}
+        \mathbf{V}
         (\mathbf{m} - \mathbf{m}^\text{ref})
         \rVert^2,
 
-    where :math:`\mathbf{W} = [w_1, \dots, w_M]` are the cell weights,
-    :math:`\mathbf{V}_{1/2} = [\sqrt{V_1}, \dots, \sqrt{V_M}]`
+    where :math:`\mathbf{W} = [\sqrt{w_1}, \dots, \sqrt{w_M}]` are the square roots of
+    the cell weights,
+    :math:`\mathbf{V} = [\sqrt{V_1}, \dots, \sqrt{V_M}]`
     are the square root of cell volumes,
     :math:`\mathbf{m} = [m_1, \dots, m_M]` and
     :math:`\mathbf{m}^\text{ref} = [m_1^\text{ref}, \dots, m_M^\text{ref}]`
@@ -108,7 +109,7 @@ class Smallness(Objective):
         """
         model_diff = model - self.reference_model
         weights_matrix = self.weights_matrix
-        cell_volumes_sqrt = self.volumes_sqrt_matrix
+        cell_volumes_sqrt = self._volumes_sqrt_matrix
         return (
             model_diff.T
             @ cell_volumes_sqrt.T
@@ -129,7 +130,7 @@ class Smallness(Objective):
         """
         model_diff = model - self.reference_model
         weights_matrix = self.weights_matrix
-        cell_volumes_sqrt = self.volumes_sqrt_matrix
+        cell_volumes_sqrt = self._volumes_sqrt_matrix
         return (
             2
             * cell_volumes_sqrt.T
@@ -149,7 +150,7 @@ class Smallness(Objective):
             Array with model values.
         """
         weights_matrix = self.weights_matrix
-        cell_volumes_sqrt = self.volumes_sqrt_matrix
+        cell_volumes_sqrt = self._volumes_sqrt_matrix
         return (
             2
             * cell_volumes_sqrt.T
@@ -196,7 +197,7 @@ class Smallness(Objective):
     @property
     def weights_matrix(self) -> dia_array:
         """
-        Diagonal matrix with the regularization weights on faces.
+        Diagonal matrix with the square root of regularization weights on faces.
         """
         if isinstance(self.cell_weights, np.ndarray):
             cell_weights = self.cell_weights
@@ -205,10 +206,10 @@ class Smallness(Objective):
         else:
             msg = f"Invalid weights of type '{type(self.cell_weights)}'."
             raise TypeError(msg)
-        return diags_array(cell_weights)
+        return diags_array(np.sqrt(cell_weights))
 
     @property
-    def volumes_sqrt_matrix(self) -> dia_array:
+    def _volumes_sqrt_matrix(self) -> dia_array:
         """
         Diagonal matrix with the square root of cell volumes.
         """
@@ -247,7 +248,7 @@ class Smoothness(Objective):
 
         \phi_x(\mathbf{m}) =
         \int_\Omega
-        w(\mathbf{r})^2
+        w(\mathbf{r})
         \lvert
         \frac{\partial m}{\partial x}
         -
@@ -267,13 +268,13 @@ class Smoothness(Objective):
         =
         \lVert
         \mathbf{W}^f
-        \mathbf{V}^f_{1/2}
+        \mathbf{V}^f
         \mathbf{G}_x
         (\mathbf{m} - \mathbf{m}^\text{ref})
         \rVert^2,
 
-    where :math:`\mathbf{W}^f` are the cell weights averaged on faces,
-    :math:`\mathbf{V}^f_{1/2}`
+    where :math:`\mathbf{W}^f` are the square root of cell weights averaged on faces,
+    :math:`\mathbf{V}^f`
     are the square root of cell volumes averaged on faces,
     :math:`\mathbf{G}_x` is the partial cell gradient operator along the :math:`x`
     direction,
@@ -327,7 +328,7 @@ class Smoothness(Objective):
         """
         model_diff = model - self.reference_model
         weights_matrix = self.weights_matrix
-        cell_volumes_sqrt = self.volumes_sqrt_matrix
+        cell_volumes_sqrt = self._volumes_sqrt_matrix
         cell_gradient = self._cell_gradient
         return (
             model_diff.T
@@ -351,7 +352,7 @@ class Smoothness(Objective):
         """
         model_diff = model - self.reference_model
         weights_matrix = self.weights_matrix
-        cell_volumes_sqrt = self.volumes_sqrt_matrix
+        cell_volumes_sqrt = self._volumes_sqrt_matrix
         cell_gradient = self._cell_gradient
         return (
             2
@@ -375,7 +376,7 @@ class Smoothness(Objective):
         """
         weights_matrix = self.weights_matrix
         cell_gradient = self._cell_gradient
-        cell_volumes_sqrt = self.volumes_sqrt_matrix
+        cell_volumes_sqrt = self._volumes_sqrt_matrix
         return (
             2
             * cell_gradient.T
@@ -424,7 +425,7 @@ class Smoothness(Objective):
     @property
     def weights_matrix(self) -> dia_array:
         """
-        Diagonal matrix with the cell weights averaged on faces.
+        Diagonal matrix with the square root of cell weights averaged on faces.
         """
         if isinstance(self.cell_weights, np.ndarray):
             cell_weights = self.cell_weights
@@ -433,10 +434,10 @@ class Smoothness(Objective):
         else:
             msg = f"Invalid weights of type '{type(self.cell_weights)}'."
             raise TypeError(msg)
-        return diags_array(self._average_cells_to_faces @ cell_weights)
+        return diags_array(self._average_cells_to_faces @ np.sqrt(cell_weights))
 
     @property
-    def volumes_sqrt_matrix(self) -> dia_array:
+    def _volumes_sqrt_matrix(self) -> dia_array:
         """
         Diagonal matrix with the square root of cell volumes averaged on faces.
         """

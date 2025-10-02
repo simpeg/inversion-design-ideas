@@ -5,7 +5,9 @@ Directives to modify the objective function between iterations of an inversion.
 import numpy as np
 import numpy.typing as npt
 
-from .base import Directive, Scaled
+from inversion_ideas.utils import get_sensitivity_weights
+
+from .base import Directive, Objective, Scaled, Simulation
 
 
 class MultiplierCooler(Directive):
@@ -45,3 +47,93 @@ class MultiplierCooler(Directive):
         """
         if iteration % self.cooling_rate == 0:
             self.regularization.multiplier /= self.cooling_factor
+
+
+class UpdateSensitivityWeights(Directive):
+    """
+    Update sensitivity weights on regularizations.
+
+    .. note::
+
+        The regularizations on which this directive can operate need to have
+        a ``cell_weights`` attribute, and it must be a dictionary.
+
+    Parameters
+    ----------
+    *args : Objective
+        Regularizations to which the sensitivity weights will be updated.
+    simulation : Simulation
+        Simulation used to get the jacobian matrix that will be used while updating the
+        sensitivity weights.
+    weights_key : str, optional
+        Key used to store the sensitivity weights on the regularization's
+        ``cell_weights`` dictionary. Only the weights under this key will be updated.
+    **kwargs
+        Extra arguments passed to the
+        :func:`inversion_ideas.utils.get_sensitivity_weights` function.
+
+    See also
+    --------
+    inversion_ideas.utils.get_sensitivity_weights
+    """
+
+    def __init__(
+        self, *args, simulation: Simulation, weights_key: str = "sensitivity", **kwargs
+    ):
+        self.regularizations = args
+        self.weights_key = weights_key
+        self.simulation = simulation
+        self.kwargs = kwargs
+
+        # Sanity checks for cell_weights in regularizations
+        for regularization in self.regularizations:
+            self._check_cell_weights(regularization)
+
+    def __call__(self, model: npt.NDArray[np.float64], iteration: int):  # noqa: ARG002
+        """
+        Update sensitivity weights.
+        """
+        for regularization in self.regularizations:
+            # Check cell_weights in regularization
+            self._check_cell_weights(regularization)
+
+            # Compute the jacobian
+            jacobian = self.simulation.jacobian(model)
+            self._check_jacobian_type(jacobian)
+            new_sensitivity_weights = get_sensitivity_weights(jacobian, **self.kwargs)
+
+            # Update the sensitivity weights
+            regularization.cell_weights[self.weights_key] = new_sensitivity_weights
+
+    def _check_jacobian_type(self, jacobian):
+        """Check if jacobian is a dense array."""
+        if not isinstance(jacobian, np.ndarray):
+            msg = (
+                "Cannot compute sensitivity weights for simulation "
+                f"{self.simulation} : its jacobian is a {type(jacobian)}. "
+                "It must be a dense array."
+            )
+            raise TypeError(msg)
+
+    def _check_cell_weights(self, regularization: Objective):
+        """Sanity checks for cell_weights in regularization."""
+        # Check if regularization have cell_weights attribute
+        if not hasattr(regularization, "cell_weights"):
+            msg = (
+                "Missing `cell-weights` attribute in regularization "
+                f"'{regularization}'."
+            )
+            raise AttributeError(msg)
+
+        if not isinstance(regularization.cell_weights, dict):
+            msg = (
+                f"Invalid `cell_weights` attribute of type '{type(regularization)}' "
+                f"for the '{regularization}'. It must be a dictionary."
+            )
+            raise TypeError(msg)
+        if self.weights_key not in regularization.cell_weights:
+            msg = (
+                f"Missing '{self.weights_key}' weights in "
+                f"{regularization}.cell_weights. "
+            )
+            raise KeyError(msg)

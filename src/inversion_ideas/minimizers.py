@@ -271,6 +271,7 @@ def _backtracking_line_search(
     ----------
     Nocedal, J., & Wright, S. J. (1999). Numerical optimization. Springer.
     """
+    # TODO: remove this function from here, and leave it minimize/_utils.py
     phi_value = phi_value if phi_value is not None else phi(model)
     phi_gradient = phi_gradient if phi_gradient is not None else phi.gradient(model)
 

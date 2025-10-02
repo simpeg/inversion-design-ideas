@@ -192,7 +192,6 @@ class GaussNewtonConjugateGradient(Minimizer):
                     ConvergenceWarning,
                     stacklevel=2,
                 )
-            print("Finished CG")
 
             # Perform line search
             alpha, n_ls_iters = _backtracking_line_search(
@@ -209,7 +208,6 @@ class GaussNewtonConjugateGradient(Minimizer):
                     f"Ran {n_ls_iters} iterations."
                 )
                 raise RuntimeError(msg)
-            print(f"Finished line search in {n_ls_iters} iterations.")
 
             # Perform model step
             model += alpha * search_direction

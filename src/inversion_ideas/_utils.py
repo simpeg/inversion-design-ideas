@@ -3,6 +3,7 @@ Code utilities.
 
 Objects in this submodule are meant to be private.
 """
+
 from collections.abc import Iterator
 from copy import copy
 

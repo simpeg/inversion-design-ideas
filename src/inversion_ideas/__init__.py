@@ -13,7 +13,7 @@ from .inversion import Inversion
 from .inversion_log import InversionLog, InversionLogRich
 from .minimizers import ConjugateGradient, GaussNewtonConjugateGradient
 from .preconditioners import JacobiPreconditioner, get_jacobi_preconditioner
-from .regularization import TikhonovZero, Smallness, Smoothness
+from .regularization import Smallness, Smoothness, TikhonovZero
 from .simulations import wrap_simulation
 
 __all__ = [

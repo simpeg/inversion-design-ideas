@@ -11,9 +11,9 @@ from numpy.typing import NDArray
 from scipy.sparse import sparray
 from scipy.sparse.linalg import LinearOperator, cg
 
-from .utils import get_logger
 from .base import Minimizer, Objective
 from .errors import ConvergenceWarning
+from .utils import get_logger
 
 
 class ConjugateGradient(Minimizer):

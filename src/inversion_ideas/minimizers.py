@@ -11,6 +11,7 @@ from numpy.typing import NDArray
 from scipy.sparse import sparray
 from scipy.sparse.linalg import LinearOperator, cg
 
+from .utils import get_logger
 from .base import Minimizer, Objective
 from .errors import ConvergenceWarning
 
@@ -168,8 +169,10 @@ class GaussNewtonConjugateGradient(Minimizer):
         while True:
             # Stop if reached max number of iterations
             if iteration >= maxiter:
-                msg = f"Reached maximum number of Gauss-Newton iterations ({maxiter})."
-                raise RuntimeError(msg)
+                get_logger().info(
+                    f"⚠️ Reached maximum number of Gauss-Newton iterations ({maxiter})."
+                )
+                break
 
             # Check for stopping criteria
             phi_value = objective(model)

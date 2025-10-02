@@ -120,16 +120,14 @@ class UpdateSensitivityWeights(Directive):
         """
         Update sensitivity weights.
         """
+        # Compute the jacobian and the new sensitivity weights
+        jacobian = self.simulation.jacobian(model)
+        self._check_jacobian_type(jacobian)
+        new_sensitivity_weights = get_sensitivity_weights(jacobian, **self.kwargs)
+
+        # Update sensitivity weights on regularizations
         for regularization in self.regularizations:
-            # Check cell_weights in regularization
             self._check_cell_weights(regularization)
-
-            # Compute the jacobian
-            jacobian = self.simulation.jacobian(model)
-            self._check_jacobian_type(jacobian)
-            new_sensitivity_weights = get_sensitivity_weights(jacobian, **self.kwargs)
-
-            # Update the sensitivity weights
             regularization.cell_weights[self.weights_key] = new_sensitivity_weights
 
     def _check_jacobian_type(self, jacobian):

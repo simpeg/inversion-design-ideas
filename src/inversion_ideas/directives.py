@@ -7,7 +7,7 @@ import numpy.typing as npt
 
 from ._utils import extract_from_combo
 from .base import Combo, Directive, Objective, Scaled, Simulation
-from .utils import get_sensitivity_weights
+from .utils import get_sensitivity_weights, get_logger
 
 
 class MultiplierCooler(Directive):
@@ -91,30 +91,7 @@ class UpdateSensitivityWeights(Directive):
         self.weights_key = weights_key
         self.simulation = simulation
         self.kwargs = kwargs
-
-        # Build the regularizations list. Extract regs from combos or add them directly.
-        def condition(regularization):
-            valid = (
-                hasattr(regularization, "cell_weights")
-                and isinstance(regularization.cell_weights, dict)
-                and self.weights_key in regularization.cell_weights
-            )
-            return valid
-
-        self.regularizations = []
-        for objective in args:
-            if isinstance(objective, Scaled | Combo):
-                extracted_regs = extract_from_combo(objective, condition)
-                for reg in extracted_regs:
-                    # TODO: replace this print for something better, DEBUG maybe?
-                    print(
-                        f"Sensitivity weights of {reg} will be updated "
-                        f"by the {self} directive."
-                    )
-                self.regularizations += extracted_regs
-            else:
-                self._check_cell_weights(objective)
-                self.regularizations.append(objective)
+        self.regularizations = self._extract_regularizations(args)
 
     def __call__(self, model: npt.NDArray[np.float64], iteration: int):  # noqa: ARG002
         """
@@ -129,6 +106,48 @@ class UpdateSensitivityWeights(Directive):
         for regularization in self.regularizations:
             self._check_cell_weights(regularization)
             regularization.cell_weights[self.weights_key] = new_sensitivity_weights
+
+    def _extract_regularizations(self, args: tuple[Objective]) -> list[Objective]:
+        """
+        Select regularizations to update their sensitivity weights.
+
+        Extract a selection of the regularizations passed as arguments to build the
+        ``self.regularizations`` attribute. Follow this criteria:
+
+        - Any objective function that is not a ``Combo`` or a ``Scaled`` will be added
+          as is. We'll check if the regularization has sensitivity weights (see below).
+        - Any ``Combo`` or ``Scaled`` will be recursively explored to extract any
+          regularization function contained by them that has sensitivity weights.
+
+        A regularization is considered to have sensitivity weights if:
+
+        1. Has a ``cell_weights`` attribute.
+        2. Its ``cell_weights`` attribute is a dictionary.
+        3. Its ``cell_weights`` attribute has a key equal to ``self.weights_key``.
+        """
+
+        def has_sensitivity_weights(regularization: Objective) -> bool:
+            return (
+                hasattr(regularization, "cell_weights")
+                and isinstance(regularization.cell_weights, dict)
+                and self.weights_key in regularization.cell_weights
+            )
+
+        regularizations = []
+        for objective in args:
+            if isinstance(objective, Scaled | Combo):
+                extracted_regs = extract_from_combo(objective, has_sensitivity_weights)
+                for reg in extracted_regs:
+                    get_logger().debug(
+                        f"Sensitivity weights of {reg} will be updated "
+                        f"by the {self} directive."
+                    )
+                regularizations += extracted_regs
+            else:
+                self._check_cell_weights(objective)
+                regularizations.append(objective)
+
+        return regularizations
 
     def _check_jacobian_type(self, jacobian):
         """Check if jacobian is a dense array."""

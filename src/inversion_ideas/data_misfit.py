@@ -4,7 +4,7 @@ Class to represent a data misfit term.
 
 import numpy as np
 import numpy.typing as npt
-from scipy.sparse import diags_array, sparray
+from scipy.sparse import dia_array, diags_array, sparray
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from .base import Objective
@@ -38,7 +38,13 @@ class DataMisfit(Objective):
     """
 
     def __init__(
-        self, data, uncertainty, simulation, *, cache=False, build_hessian=False
+        self,
+        data: npt.NDArray[np.float64],
+        uncertainty: npt.NDArray[np.float64],
+        simulation,
+        *,
+        cache=False,
+        build_hessian=False,
     ):
         self.data = data
         self.uncertainty = uncertainty
@@ -49,6 +55,9 @@ class DataMisfit(Objective):
 
     @cache_on_model
     def __call__(self, model) -> float:
+        # TODO:
+        # Cache invalidation: we should clean the cache if data or uncertainties change.
+        # Or they should be immutable.
         residual = self.residual(model)
         return residual.T @ self.weights_squared @ residual
 
@@ -125,9 +134,39 @@ class DataMisfit(Objective):
         return self.data - self.simulation(model)
 
     @property
-    def weights_squared(self):
+    def weights(self) -> npt.NDArray[np.float64]:
+        """
+        Data weights: 1D array with the diagonals of the weights matrix.
+        """
+        return 1 / self.uncertainty
+
+    @property
+    def weights_matrix(self) -> dia_array:
+        """
+        Diagonal matrix with the regularization weights.
+        """
+        return diags_array(self.weights)
+
+    @property
+    def weights_squared(self) -> dia_array:
         """
         Diagonal sparse matrix with weights squared.
         """
         # Return the W.T @ W matrix
-        return diags_array(1 / self.uncertainty**2)
+        return diags_array(self.weights**2)
+
+    def chi_factor(self, model):
+        """
+        Compute chi factor.
+
+        Parameters
+        ----------
+        model : (n_params) array
+            Array with model values.
+
+        Return
+        ------
+        float
+            Chi factor for the given model.
+        """
+        return self(model) / self.n_data

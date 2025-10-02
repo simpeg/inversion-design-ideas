@@ -5,3 +5,5 @@ pytest
 ruff
 mypy
 scipy-stubs
+discretize==0.11.3
+simpeg==0.24.0

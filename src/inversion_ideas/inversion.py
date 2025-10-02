@@ -77,6 +77,8 @@ class Inversion:
         if log is False:
             self.log = None
         elif log is True:
+            # TODO: this could fail if the objective function is not
+            # phi_d + beta * phi_m. We should try-error here maybe...
             self.log = InversionLogRich.create_from(self.objective_function)
         else:
             self.log = log

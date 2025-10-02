@@ -8,9 +8,9 @@ dependencies:
   - numpy>=2.0.0
   - scipy
   - rich
-  # Required by notebooks
   - simpeg==0.24
   - discretize==0.11
+  # Required by notebooks
   - harmonica
   - verde
   - pandas

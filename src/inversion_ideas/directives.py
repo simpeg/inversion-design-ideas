@@ -5,9 +5,9 @@ Directives to modify the objective function between iterations of an inversion.
 import numpy as np
 import numpy.typing as npt
 
-from inversion_ideas.utils import get_sensitivity_weights
-
-from .base import Directive, Objective, Scaled, Simulation
+from .base import Directive, Objective, Scaled, Simulation, Combo
+from .utils import get_sensitivity_weights
+from ._utils import extract_from_combo
 
 
 class MultiplierCooler(Directive):
@@ -55,13 +55,21 @@ class UpdateSensitivityWeights(Directive):
 
     .. note::
 
-        The regularizations on which this directive can operate need to have
-        a ``cell_weights`` attribute, and it must be a dictionary.
+        This directive can only be applied to regularizations that:
+
+        1. have a ``cell_weights`` attribute,
+        2. the ``cell_weights`` attribute is a dictionary,
+        3. the ``cell_weights`` attribute contains weights under the key specified
+           through the ``weights_key`` argument ("sensitivity" by default).
 
     Parameters
     ----------
     *args : Objective
         Regularizations to which the sensitivity weights will be updated.
+        If a :class:`inversion_ideas.base.Combo` or
+        a :class:`inversion_ideas.base.Scaled` are passed, they will be explored
+        recursively to use regularizations that have sensitivity weights that can be
+        updated.
     simulation : Simulation
         Simulation used to get the jacobian matrix that will be used while updating the
         sensitivity weights.
@@ -80,14 +88,33 @@ class UpdateSensitivityWeights(Directive):
     def __init__(
         self, *args, simulation: Simulation, weights_key: str = "sensitivity", **kwargs
     ):
-        self.regularizations = args
         self.weights_key = weights_key
         self.simulation = simulation
         self.kwargs = kwargs
 
-        # Sanity checks for cell_weights in regularizations
-        for regularization in self.regularizations:
-            self._check_cell_weights(regularization)
+        # Build the regularizations list. Extract regs from combos or add them directly.
+        def condition(regularization):
+            valid = (
+                hasattr(regularization, "cell_weights")
+                and isinstance(regularization.cell_weights, dict)
+                and self.weights_key in regularization.cell_weights
+            )
+            return valid
+
+        self.regularizations = []
+        for objective in args:
+            if isinstance(objective, Scaled | Combo):
+                extracted_regs = extract_from_combo(objective, condition)
+                for reg in extracted_regs:
+                    # TODO: replace this print for something better, DEBUG maybe?
+                    print(
+                        f"Sensitivity weights of {reg} will be updated "
+                        f"by the {self} directive."
+                    )
+                self.regularizations += extracted_regs
+            else:
+                self._check_cell_weights(objective)
+                self.regularizations.append(objective)
 
     def __call__(self, model: npt.NDArray[np.float64], iteration: int):  # noqa: ARG002
         """

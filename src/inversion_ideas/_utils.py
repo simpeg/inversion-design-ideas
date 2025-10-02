@@ -10,7 +10,7 @@ from copy import copy
 import numpy as np
 import numpy.typing as npt
 
-from inversion_ideas.base.objective_function import Combo, Objective, Scaled
+from inversion_ideas.base.objective_function import Objective, Scaled
 
 
 def prod_arrays(arrays: Iterator[npt.NDArray[np.float64]]) -> npt.NDArray[np.float64]:

@@ -5,9 +5,9 @@ Directives to modify the objective function between iterations of an inversion.
 import numpy as np
 import numpy.typing as npt
 
-from .base import Directive, Objective, Scaled, Simulation, Combo
-from .utils import get_sensitivity_weights
 from ._utils import extract_from_combo
+from .base import Combo, Directive, Objective, Scaled, Simulation
+from .utils import get_sensitivity_weights
 
 
 class MultiplierCooler(Directive):

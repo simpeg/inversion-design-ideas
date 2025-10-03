@@ -12,8 +12,8 @@ from .utils import cache_on_model
 
 
 class DataMisfit(Objective):
-    """
-    L2 data misfit term.
+    r"""
+    L2 data misfit.
 
     Parameters
     ----------
@@ -35,6 +35,44 @@ class DataMisfit(Objective):
 
             Hessian matrices are usually very large. Use ``build_hessian=True`` only if
             you need to build it.
+
+    Notes
+    -----
+    The L2 data misfit objective function is defined as:
+
+    .. math::
+
+        \phi_d(\mathbf{m}) =
+        \sum\limits_{i=1}^N
+        \frac{\lvert d_i^\text{obs} - f_i(\mathbf{m}) \rvert^2}{\epsilon_i^2}
+
+    where :math:`\mathbf{m}` is the model vector, :math:`d_i^\text{obs}` is the
+    :math:`i`-th observed datum, :math:`f_i(\mathbf{m})` is the forward modelling
+    function for the :math:`i`-th datum, and :math:`\epsilon_i` is the uncertainty of
+    the :math:`i`-th datum.
+
+    The data misfit term can be expressed in terms of weights :math:`w_i
+    = 1 / \epsilon_i^2`:
+
+    .. math::
+
+        \phi_d(\mathbf{m}) =
+        \sum\limits_{i=1}^N
+        w_i \lvert d_i^\text{obs} - f_i(\mathbf{m}) \rvert^2
+
+    And also in matrix form:
+
+    .. math::
+
+        \phi_d(\mathbf{m}) =
+        \lVert
+        \mathbf{W} \left[ \mathbf{d}^\text{obs} - f(\mathbf{m}) \right]
+        \rVert^2
+
+    where :math:`\mathbf{W}` is a diagonal matrix with the square root of the weights,
+    :math:`\mathbf{d}^\text{obs}` is the vector of observed data, and
+    :math:`f(\mathbf{m})` is the forward modelling vector.
+
     """
 
     def __init__(
@@ -59,14 +97,16 @@ class DataMisfit(Objective):
         # Cache invalidation: we should clean the cache if data or uncertainties change.
         # Or they should be immutable.
         residual = self.residual(model)
-        return residual.T @ self.weights_squared @ residual
+        weights_matrix = self.weights_matrix
+        return residual.T @ weights_matrix.T @ weights_matrix @ residual
 
     def gradient(self, model) -> npt.NDArray[np.float64]:
         """
         Gradient vector.
         """
         jac = self.simulation.jacobian(model)
-        return -2 * jac.T @ (self.weights_squared @ self.residual(model))
+        weights_matrix = self.weights_matrix
+        return -2 * jac.T @ (weights_matrix.T @ weights_matrix @ self.residual(model))
 
     def hessian(self, model) -> npt.NDArray[np.float64] | sparray | LinearOperator:
         """
@@ -75,7 +115,8 @@ class DataMisfit(Objective):
         jac = self.simulation.jacobian(model)
         if not self.build_hessian:
             jac = aslinearoperator(jac)
-        return 2 * jac.T @ aslinearoperator(self.weights_squared) @ jac
+        weights_matrix = aslinearoperator(self.weights_matrix)
+        return 2 * jac.T @ weights_matrix.T @ weights_matrix @ jac
 
     def hessian_diagonal(self, model) -> npt.NDArray[np.float64]:
         """
@@ -88,8 +129,7 @@ class DataMisfit(Objective):
                 "that return the jacobian as a LinearOperator."
             )
             raise NotImplementedError(msg)
-        weights_sq = 1 / self.uncertainty**2
-        jtj_diag = np.einsum("i,ij,ij->j", weights_sq, jac, jac)
+        jtj_diag = np.einsum("i,ij,ij->j", self.weights, jac, jac)
         return 2 * jtj_diag
 
     @property
@@ -136,24 +176,16 @@ class DataMisfit(Objective):
     @property
     def weights(self) -> npt.NDArray[np.float64]:
         """
-        Data weights: 1D array with the diagonals of the weights matrix.
+        Data weights: 1D array with the square of the inverse of the uncertainties.
         """
-        return 1 / self.uncertainty
+        return 1 / self.uncertainty**2
 
     @property
     def weights_matrix(self) -> dia_array:
         """
-        Diagonal matrix with the regularization weights.
+        Diagonal matrix with the square root of the regularization weights.
         """
-        return diags_array(self.weights)
-
-    @property
-    def weights_squared(self) -> dia_array:
-        """
-        Diagonal sparse matrix with weights squared.
-        """
-        # Return the W.T @ W matrix
-        return diags_array(self.weights**2)
+        return diags_array(1 / self.uncertainty)
 
     def chi_factor(self, model):
         """

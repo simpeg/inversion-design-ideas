@@ -54,7 +54,7 @@ jobs:
         run: python -m pip freeze
 
       - name: Check format with Ruff
-        run: make check format
+        run: make check-format
 
       - name: Check style with Ruff
-        run: make check style
+        run: make check-style

@@ -17,7 +17,7 @@ from ..typing import Model, Preconditioner
 def conjugate_gradient(
     objective: Objective,
     initial_model: Model,
-    preconditioner: Preconditioner | None = None,
+    preconditioner: Preconditioner | Callable[[Model], Preconditioner] | None = None,
     **kwargs,
 ) -> Model:
     r"""

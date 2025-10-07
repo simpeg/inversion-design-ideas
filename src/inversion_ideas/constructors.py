@@ -12,7 +12,7 @@ from .conditions import ChiTarget
 from .directives import MultiplierCooler
 from .inversion import Inversion
 from .preconditioners import JacobiPreconditioner
-from .typing import Model
+from .typing import Model, Preconditioner
 
 
 def create_inversion(
@@ -27,7 +27,7 @@ def create_inversion(
     chi_target: float = 1.0,
     max_iterations: int | None = None,
     cache_models: bool = True,
-    preconditioner=None,
+    preconditioner: Preconditioner | Callable[[Model], Preconditioner] | None = None,
 ) -> Inversion:
     r"""
     Create inversion of the form :math:`\phi_d + \beta \phi_m`.

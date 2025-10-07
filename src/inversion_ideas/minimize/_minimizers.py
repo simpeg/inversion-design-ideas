@@ -12,7 +12,7 @@ from scipy.sparse.linalg import cg
 
 from ..base import Minimizer, Objective
 from ..errors import ConvergenceWarning
-from ..typing import Preconditioner
+from ..typing import Model, Preconditioner
 from ..utils import get_logger
 from ._utils import backtracking_line_search
 
@@ -35,7 +35,9 @@ class GaussNewtonConjugateGradient(Minimizer):
         self,
         objective: Objective,
         initial_model: npt.NDArray[np.float64],
-        preconditioner: Preconditioner | None = None,
+        preconditioner: Preconditioner
+        | Callable[[Model], Preconditioner]
+        | None = None,
     ) -> Generator[npt.NDArray[np.float64]]:
         """
         Create iterator over Gauss-Newton minimization.

@@ -21,20 +21,21 @@ class GaussNewtonConjugateGradient(Minimizer):
     def __init__(
         self,
         *,
-        preconditioner: Preconditioner | None = None,
         maxiter: int = 100,
         maxiter_line_search: int = 10,
         rtol=1e-5,
         cg_kwargs: dict[str, Any] | None = None,
     ):
-        self.preconditioner = preconditioner
         self.maxiter = maxiter
         self.maxiter_line_search = maxiter_line_search
         self.rtol = rtol
         self.cg_kwargs = cg_kwargs if cg_kwargs is not None else {}
 
     def __call__(
-        self, objective: Objective, initial_model: npt.NDArray[np.float64]
+        self,
+        objective: Objective,
+        initial_model: npt.NDArray[np.float64],
+        preconditioner: Preconditioner | None = None,
     ) -> Generator[npt.NDArray[np.float64]]:
         """
         Create iterator over Gauss-Newton minimization.
@@ -42,14 +43,14 @@ class GaussNewtonConjugateGradient(Minimizer):
         # Define a static preconditioner for all Gauss-Newton iterations
         cg_kwargs = self.cg_kwargs.copy()
 
-        if self.preconditioner is not None:
+        if preconditioner is not None:
             if "M" in self.cg_kwargs:
                 msg = "Cannot simultanously pass `preconditioner` and `M`."
                 raise ValueError(msg)
             preconditioner = (
-                self.preconditioner
-                if not isinstance(self.preconditioner, Callable)
-                else self.preconditioner(initial_model)
+                preconditioner
+                if not isinstance(preconditioner, Callable)
+                else preconditioner(initial_model)
             )
             cg_kwargs["M"] = preconditioner
 

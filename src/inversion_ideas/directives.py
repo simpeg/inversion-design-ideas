@@ -80,7 +80,7 @@ class UpdateSensitivityWeights(Directive):
         Extra arguments passed to the
         :func:`inversion_ideas.utils.get_sensitivity_weights` function.
 
-    See also
+    See Also
     --------
     inversion_ideas.utils.get_sensitivity_weights
     """

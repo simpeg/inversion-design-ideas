@@ -390,7 +390,7 @@ def _sum_arrays(arrays: Iterator[npt.NDArray]) -> npt.NDArray:
     arrays : Iterator
         Iterator with arrays.
 
-    See also
+    See Also
     --------
     _sum : Supports summing arrays, sparse arrays and ``LinearOperator``s.
     """

@@ -59,7 +59,7 @@ def conjugate_gradient(
     through a Conjugate Gradient algorithm, where :math:`\bar{\bar{\nabla}} \phi`
     and :math:`\bar{\nabla} \phi` are the the Hessian and the gradient of the
     objective function, respectively.
-    """  # noqa: E501
+    """
     if preconditioner is not None and "M" in kwargs:
         msg = "Cannot simultanously pass `preconditioner` and `M`."
         raise ValueError(msg)

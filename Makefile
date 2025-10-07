@@ -1,5 +1,5 @@
 PYTEST_TARGETS=src
-CHECK_STYLE=src
+CHECK_STYLE=src notebooks
 
 .PHONY: help install test check check-format check_style format
 

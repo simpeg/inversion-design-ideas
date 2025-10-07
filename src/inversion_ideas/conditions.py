@@ -16,6 +16,17 @@ from .typing import Model
 
 
 class CustomCondition(Condition):
+    """
+    Define a custom :class:`~inversion_ideas.base.Condition` object through a function.
+
+    Parameters
+    ----------
+    func : Callable
+        Function to use as the condition. It should take a model as only argument
+        and return a bool to evaluate whether the condition is valid or not for that
+        particular model.
+    """
+
     def __init__(self, func: Callable[[Model], bool]):
         self.func = func
 

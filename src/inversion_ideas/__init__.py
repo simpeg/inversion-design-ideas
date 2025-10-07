@@ -2,7 +2,7 @@
 Ideas for inversion framework.
 """
 
-from . import base, utils
+from . import base, typing, utils
 from ._version import __version__
 from .conditions import ChiTarget, CustomCondition, ModelChanged, ObjectiveChanged
 from .constructors import create_inversion
@@ -38,6 +38,7 @@ __all__ = [
     "base",
     "create_inversion",
     "get_jacobi_preconditioner",
+    "typing",
     "utils",
     "wrap_simulation",
 ]

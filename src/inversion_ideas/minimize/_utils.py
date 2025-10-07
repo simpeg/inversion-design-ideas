@@ -1,6 +1,7 @@
 """
 Utility functions for minimizers.
 """
+
 import numpy as np
 import numpy.typing as npt
 

@@ -1,19 +1,19 @@
 """
 Minimizer classes.
 """
+
 import warnings
 from collections.abc import Callable, Generator
 from typing import Any
 
 import numpy as np
 import numpy.typing as npt
-from scipy.sparse import sparray
-from scipy.sparse.linalg import LinearOperator, cg
+from scipy.sparse.linalg import cg
 
 from ..base import Minimizer, Objective
 from ..errors import ConvergenceWarning
+from ..typing import Preconditioner
 from ..utils import get_logger
-
 from ._utils import backtracking_line_search
 
 
@@ -21,10 +21,7 @@ class GaussNewtonConjugateGradient(Minimizer):
     def __init__(
         self,
         *,
-        preconditioner: npt.NDArray[np.float64]
-        | sparray
-        | LinearOperator
-        | None = None,
+        preconditioner: Preconditioner | None = None,
         maxiter: int = 100,
         maxiter_line_search: int = 10,
         rtol=1e-5,

@@ -60,7 +60,7 @@ class Inversion:
         max_iterations: int | None = None,
         cache_models=False,
         log: "InversionLog | bool" = True,
-        minimizer_kwargs,
+        minimizer_kwargs: dict | None = None,
     ):
         self.objective_function = objective_function
         self.initial_model = initial_model
@@ -69,6 +69,8 @@ class Inversion:
         self.stopping_criteria = stopping_criteria
         self.max_iterations = max_iterations
         self.cache_models = cache_models
+        if minimizer_kwargs is None:
+            minimizer_kwargs = {}
         self.minimizer_kwargs = minimizer_kwargs
 
         # Assign log

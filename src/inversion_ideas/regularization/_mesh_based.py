@@ -218,9 +218,9 @@ class Smallness(Objective):
         return diags_array(np.sqrt(cell_volumes))
 
 
-class Smoothness(Objective):
+class Flatness(Objective):
     r"""
-    Smoothness regularization.
+    Flatness regularization.
 
     Regularize a weighted norm of a spatial derivative of the model.
 

@@ -2,6 +2,7 @@
 Functions to easily build commonly used objects in inversions.
 """
 
+from collections.abc import Callable
 import numpy as np
 import numpy.typing as npt
 
@@ -10,6 +11,7 @@ from .conditions import ChiTarget
 from .directives import MultiplierCooler
 from .inversion import Inversion
 from .preconditioners import JacobiPreconditioner
+from .typing import Model
 
 
 def create_inversion(
@@ -18,7 +20,7 @@ def create_inversion(
     *,
     starting_beta: float,
     initial_model: npt.NDArray[np.float64],
-    minimizer: Minimizer,
+    minimizer: Minimizer | Callable[[Objective, Model], Model],
     beta_cooling_factor: float = 2.0,
     beta_cooling_rate: int = 1,
     chi_target: float = 1.0,

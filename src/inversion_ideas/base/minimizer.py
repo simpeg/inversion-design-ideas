@@ -3,22 +3,19 @@ Base class for minimizer.
 """
 
 from abc import ABC, abstractmethod
+from collections.abc import Generator
 
-import numpy as np
-from numpy.typing import NDArray
-
+from ..typing import Model
 from .objective_function import Objective
 
 
 class Minimizer(ABC):
     """
-    Base class to represent minimizers.
+    Base class to represent minimizers as generators.
     """
 
     @abstractmethod
-    def __call__(
-        self, objective: Objective, initial_model: NDArray[np.float64]
-    ) -> NDArray[np.float64]:
+    def __call__(self, objective: Objective, initial_model: Model) -> Generator[Model]:
         """
         Minimize objective function.
 
@@ -31,6 +28,6 @@ class Minimizer(ABC):
 
         Returns
         -------
-        inverted_model : (n_params) array
-           Inverted model obtained after minimization.
+        Generator[Model]
+            Generator that yields models after each iteration of the minimizer.
         """

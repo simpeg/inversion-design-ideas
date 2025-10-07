@@ -2,6 +2,8 @@
 Functions to easily build commonly used objects in inversions.
 """
 
+from collections.abc import Callable
+
 import numpy as np
 import numpy.typing as npt
 
@@ -10,6 +12,7 @@ from .conditions import ChiTarget
 from .directives import MultiplierCooler
 from .inversion import Inversion
 from .preconditioners import JacobiPreconditioner
+from .typing import Model, Preconditioner
 
 
 def create_inversion(
@@ -18,13 +21,13 @@ def create_inversion(
     *,
     starting_beta: float,
     initial_model: npt.NDArray[np.float64],
-    minimizer: Minimizer,
+    minimizer: Minimizer | Callable[[Objective, Model], Model],
     beta_cooling_factor: float = 2.0,
     beta_cooling_rate: int = 1,
     chi_target: float = 1.0,
     max_iterations: int | None = None,
     cache_models: bool = True,
-    preconditioner=None,
+    preconditioner: Preconditioner | Callable[[Model], Preconditioner] | None = None,
 ) -> Inversion:
     r"""
     Create inversion of the form :math:`\phi_d + \beta \phi_m`.
@@ -90,7 +93,7 @@ def create_inversion(
     stopping_criteria = ChiTarget(data_misfit, chi_target=chi_target)
 
     # Preconditioner
-    kwargs = {}
+    minimizer_kwargs = {}
     if preconditioner is not None:
         if isinstance(preconditioner, str):
             if preconditioner == "jacobi":
@@ -98,7 +101,7 @@ def create_inversion(
             else:
                 msg = f"Invalid preconditioner '{preconditioner}'."
                 raise ValueError(msg)
-        kwargs["preconditioner"] = preconditioner
+        minimizer_kwargs["preconditioner"] = preconditioner
 
     # Define inversion
     inversion = Inversion(
@@ -110,6 +113,6 @@ def create_inversion(
         cache_models=cache_models,
         max_iterations=max_iterations,
         log=True,
-        **kwargs,
+        minimizer_kwargs=minimizer_kwargs,
     )
     return inversion

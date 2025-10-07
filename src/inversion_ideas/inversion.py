@@ -9,11 +9,9 @@ modify the objective function after each iteration and optionally a logger.
 import typing
 from collections.abc import Callable
 
-import numpy as np
-import numpy.typing as npt
-
 from .base import Condition, Directive, Minimizer, Objective
 from .inversion_log import InversionLog, InversionLogRich
+from .typing import Model
 from .utils import get_logger
 
 
@@ -47,22 +45,22 @@ class Inversion:
         If `True`, a default :class:`InversionLog` is going to be used.
         If `False`, no log will be assigned to the inversion, and :attr:`Inversion.log`
         will be ``None``.
-    kwargs : dict, optional
-        Extra arguments that will be passed to the ``minimizer``.
+    minimizer_kwargs : dict, optional
+        Extra arguments that will be passed to the ``minimizer`` when called.
     """
 
     def __init__(
         self,
         objective_function: Objective,
-        initial_model: npt.NDArray[np.float64],
-        minimizer: Minimizer | Callable,
+        initial_model: Model,
+        minimizer: Minimizer | Callable[[Objective, Model], Model],
         *,
         directives: typing.Sequence[Directive],
         stopping_criteria: Condition | Callable,
         max_iterations: int | None = None,
         cache_models=False,
         log: "InversionLog | bool" = True,
-        **kwargs,
+        minimizer_kwargs: dict | None = None,
     ):
         self.objective_function = objective_function
         self.initial_model = initial_model
@@ -71,7 +69,9 @@ class Inversion:
         self.stopping_criteria = stopping_criteria
         self.max_iterations = max_iterations
         self.cache_models = cache_models
-        self.kwargs = kwargs
+        if minimizer_kwargs is None:
+            minimizer_kwargs = {}
+        self.minimizer_kwargs = minimizer_kwargs
 
         # Assign log
         if log is False:
@@ -129,7 +129,15 @@ class Inversion:
                 directive(self.model, self.counter)
 
         # Minimize objective function
-        model = self.minimizer(self.objective_function, self.model, **self.kwargs)
+        if isinstance(self.minimizer, Minimizer):
+            # Keep only the last model of the minimizer iterator
+            *_, model = self.minimizer(
+                self.objective_function, self.model, **self.minimizer_kwargs
+            )
+        else:
+            model = self.minimizer(
+                self.objective_function, self.model, **self.minimizer_kwargs
+            )
 
         # Cache model if required
         if self.cache_models:
@@ -172,7 +180,7 @@ class Inversion:
             self._models = [self.initial_model]
         return self._models
 
-    def run(self, show_log=True) -> npt.NDArray[np.float64]:
+    def run(self, show_log=True) -> Model:
         """
         Run the inversion.
 

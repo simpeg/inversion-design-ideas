@@ -198,7 +198,7 @@ class Smallness(Objective):
     @property
     def weights_matrix(self) -> dia_array:
         """
-        Diagonal matrix with the square root of regularization weights on faces.
+        Diagonal matrix with the square root of regularization weights on cells.
         """
         if isinstance(self.cell_weights, np.ndarray):
             cell_weights = self.cell_weights

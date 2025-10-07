@@ -92,7 +92,7 @@ def create_inversion(
     stopping_criteria = ChiTarget(data_misfit, chi_target=chi_target)
 
     # Preconditioner
-    kwargs = {}
+    minimizer_kwargs = {}
     if preconditioner is not None:
         if isinstance(preconditioner, str):
             if preconditioner == "jacobi":
@@ -100,7 +100,7 @@ def create_inversion(
             else:
                 msg = f"Invalid preconditioner '{preconditioner}'."
                 raise ValueError(msg)
-        kwargs["preconditioner"] = preconditioner
+        minimizer_kwargs["preconditioner"] = preconditioner
 
     # Define inversion
     inversion = Inversion(
@@ -112,6 +112,6 @@ def create_inversion(
         cache_models=cache_models,
         max_iterations=max_iterations,
         log=True,
-        **kwargs,
+        minimizer_kwargs=minimizer_kwargs,
     )
     return inversion

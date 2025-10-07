@@ -70,24 +70,24 @@ def cache_on_model(func):
     >>> import numpy as np
     >>>
     >>> class MyClass:
-    >>>
-    >>>     def __init__(self):
-    >>>         self.cache = True
-    >>>
-    >>>     @cache_on_model
-    >>>     def squared(self, model) -> float:
-    >>>         return (self.model ** 2).sum()
-    >>>
+    ...
+    ...     def __init__(self):
+    ...         self.cache = True
+    ...
+    ...     @cache_on_model
+    ...     def squared(self, model) -> float:
+    ...         return (model ** 2).sum()
     >>>
     >>> sq = MyClass()
     >>> model = np.array([1.0, 2.0, 3.0])
-    >>> print(squared(model))  # perform the computation
-    np.float64(14.0)
-    >>> print(squared(model))  # access the cached result
-    np.float64(14.0)
+    >>> print(sq.squared(model))  # perform the computation
+    14.0
+    >>> print(sq.squared(model))  # access the cached result
+    14.0
 
     >>> model_new = np.array([4.0, 5.0, 6.0])
-    >>> squared(model_new)  # perform a new computation
+    >>> print(sq.squared(model_new))  # perform a new computation
+    77.0
     """
     # Define attribute name for the model hash
     model_hash_attr = "_model_hash"

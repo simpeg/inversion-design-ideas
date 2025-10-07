@@ -18,6 +18,7 @@ except ImportError:
     pandas = None
 
 from .base import Combo
+from .typing import Model
 
 
 class Column(typing.NamedTuple):
@@ -26,7 +27,7 @@ class Column(typing.NamedTuple):
     """
 
     title: str
-    callable: Callable
+    callable: Callable[[int, Model]]
     fmt: str | None
 
 
@@ -44,7 +45,7 @@ class InversionLog:
         of the iteration) and ``model`` (the inverted model as a 1d array).
     """
 
-    def __init__(self, columns: dict[str, Callable | Column]):
+    def __init__(self, columns: dict[str, Column | Callable[[int, Model]]]):
         for name, column in columns.items():
             self.add_column(name, column)
 
@@ -58,7 +59,9 @@ class InversionLog:
         has_records = any(bool(c) for c in self.log.values())
         return has_records
 
-    def add_column(self, name: str, column: Callable | Column) -> typing.Self:
+    def add_column(
+        self, name: str, column: Column | Callable[[int, Model]]
+    ) -> typing.Self:
         """
         Add column to the log.
 

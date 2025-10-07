@@ -56,7 +56,7 @@ class Inversion:
         minimizer: Minimizer | Callable[[Objective, Model], Model],
         *,
         directives: typing.Sequence[Directive],
-        stopping_criteria: Condition | Callable,
+        stopping_criteria: Condition | Callable[[Model], bool],
         max_iterations: int | None = None,
         cache_models=False,
         log: "InversionLog | bool" = True,

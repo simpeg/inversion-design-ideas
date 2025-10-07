@@ -59,6 +59,10 @@ class GaussNewtonConjugateGradient(Minimizer):
         phi_prev_value = np.inf  # value of the objective function on previous model
         model = initial_model.copy()
 
+        # Yield initial model, so the generator is never empty
+        yield model
+
+        # Apply Gauss-Newton iterations
         while True:
             # Stop if reached max number of iterations
             if iteration >= self.maxiter:
@@ -110,11 +114,5 @@ class GaussNewtonConjugateGradient(Minimizer):
             phi_prev_value = phi_value
             iteration += 1
 
+            # Yield inverted model for the current Gauss-Newon iteration
             yield model
-
-
-# if __name__ == "__main__":
-#     minimizer = GaussNewtonConjugateGradient(maxiter=2, preconditioner=preconditioner)
-#
-#     for model in minimizer(phi, initial_model):
-#         ...

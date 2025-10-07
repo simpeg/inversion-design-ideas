@@ -130,15 +130,10 @@ class Inversion:
 
         # Minimize objective function
         if isinstance(self.minimizer, Minimizer):
-            model = None
-            for m in self.minimizer(
+            # Keep only the last model of the minimizer iterator
+            *_, model = self.minimizer(
                 self.objective_function, self.model, **self.minimizer_kwargs
-            ):
-                model = m
-            if model is None:
-                # TODO: write proper error message for this
-                msg = ""
-                raise TypeError(msg)
+            )
         else:
             model = self.minimizer(
                 self.objective_function, self.model, **self.minimizer_kwargs

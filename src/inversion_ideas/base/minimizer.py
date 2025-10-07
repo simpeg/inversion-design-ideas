@@ -28,6 +28,6 @@ class Minimizer(ABC):
 
         Returns
         -------
-        inverted_model : (n_params) array
-           Inverted model obtained after minimization.
+        Generator[Model]
+            Generator that yields models after each iteration of the minimizer.
         """

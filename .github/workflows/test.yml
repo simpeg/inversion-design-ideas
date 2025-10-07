@@ -59,4 +59,4 @@ jobs:
         run: python -m pip freeze
 
       - name: Run the tests
-        run: pytest -v
+        run: make test

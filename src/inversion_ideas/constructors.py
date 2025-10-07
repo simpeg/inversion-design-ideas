@@ -3,6 +3,7 @@ Functions to easily build commonly used objects in inversions.
 """
 
 from collections.abc import Callable
+
 import numpy as np
 import numpy.typing as npt
 

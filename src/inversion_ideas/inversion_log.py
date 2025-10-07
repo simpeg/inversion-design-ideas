@@ -27,7 +27,7 @@ class Column(typing.NamedTuple):
     """
 
     title: str
-    callable: Callable[[int, Model]]
+    callable: Callable[[int, Model], typing.Any]
     fmt: str | None
 
 
@@ -45,7 +45,7 @@ class InversionLog:
         of the iteration) and ``model`` (the inverted model as a 1d array).
     """
 
-    def __init__(self, columns: dict[str, Column | Callable[[int, Model]]]):
+    def __init__(self, columns: dict[str, Column | Callable[[int, Model], typing.Any]]):
         for name, column in columns.items():
             self.add_column(name, column)
 
@@ -60,7 +60,7 @@ class InversionLog:
         return has_records
 
     def add_column(
-        self, name: str, column: Column | Callable[[int, Model]]
+        self, name: str, column: Column | Callable[[int, Model], typing.Any]
     ) -> typing.Self:
         """
         Add column to the log.

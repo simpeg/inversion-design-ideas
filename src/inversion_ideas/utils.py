@@ -134,7 +134,7 @@ def get_sensitivity_weights(
     jacobian : (n_data, n_params) array
         Jacobian matrix used to compute sensitivity weights.
     data_weights : (n_data, n_data) array or None, optional
-        Data weights used to compute the sensitivity weights
+        Data weights matrix used to compute the sensitivity weights.
     volumes : (n_params) array
         Array with the volumes of the active cells. Sensitivity weights are
         divided by the volumes to account for sensitivity changes due to cell sizes.

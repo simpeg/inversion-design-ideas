@@ -12,17 +12,59 @@ from rich.tree import Tree
 from inversion_ideas.data_misfit import DataMisfit
 
 from .base import Condition, Objective
+from .typing import Model
 
 
 class CustomCondition(Condition):
-    def __init__(self, func: Callable):
+    """
+    Define a custom :class:`~inversion_ideas.base.Condition` object through a function.
+
+    Parameters
+    ----------
+    func : Callable
+        Function to use as the condition. It should take a model as only argument
+        and return a bool to evaluate whether the condition is valid or not for that
+        particular model.
+    """
+
+    def __init__(self, func: Callable[[Model], bool]):
         self.func = func
 
     def __call__(self, model) -> bool:
         return self.func(model)
 
     @classmethod
-    def create(cls, func: Callable):
+    def create(cls, func: Callable[[Model], bool]):
+        """
+        Create a ``CustomCondition`` object directly from a function.
+
+        Parameters
+        ----------
+        func : Callable
+            Function to use as the condition. It should take a model as only argument
+            and return a bool to evaluate whether the condition is valid or not for that
+            particular model.
+
+        Returns
+        -------
+        CustomCondition
+
+        Examples
+        --------
+        >>> import numpy as np
+        >>>
+        >>> def is_all_positive(model):
+        ...     return np.all(model > 0)
+        >>>
+        >>> condition = CustomCondition.create(is_all_positive)
+        >>> model = np.array([1, 2, 3])
+        >>> print(condition(model))
+        True
+
+        >>> model = np.array([-1, 2, 3])
+        >>> print(condition(model))
+        False
+        """
         return cls(func)
 
 

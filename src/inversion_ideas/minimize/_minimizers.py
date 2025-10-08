@@ -10,7 +10,7 @@ import numpy as np
 import numpy.typing as npt
 from scipy.sparse.linalg import cg
 
-from ..base import Minimizer, Objective, Condition
+from ..base import Condition, Minimizer, Objective
 from ..errors import ConvergenceWarning
 from ..typing import Model, Preconditioner
 from ..utils import get_logger

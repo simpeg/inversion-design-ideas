@@ -22,7 +22,7 @@ class Smallness(Objective):
     ----------
     mesh : discretize.base.BaseMesh
         Mesh to use in the regularization.
-    active_cells : (n_params) array
+    active_cells : (n_params) array or None, optional
         Array full of bools that indicate the active cells in the mesh.
     cell_weights : (n_params) array or dict of (n_params) arrays or None, optional
         Array with cell weights.
@@ -77,12 +77,17 @@ class Smallness(Objective):
     def __init__(
         self,
         mesh: discretize.base.BaseMesh,
-        active_cells: int,
+        *,
+        active_cells: npt.NDArray[np.bool] | None = None,
         cell_weights: npt.NDArray | dict[str, npt.NDArray] | None = None,
         reference_model=None,
     ):
         self.mesh = mesh
-        self.active_cells = active_cells
+        self.active_cells = (
+            active_cells
+            if active_cells is not None
+            else np.ones(self.mesh.n_cells, dtype=bool)
+        )
 
         if cell_weights is None:
             cell_weights = np.ones(self.n_params, dtype=np.float64)
@@ -97,7 +102,7 @@ class Smallness(Objective):
 
     @property
     def n_params(self) -> int:
-        return np.sum(self.active_cells)
+        return int(np.sum(self.active_cells))
 
     def __call__(self, model) -> float:
         """
@@ -228,7 +233,7 @@ class Flatness(Objective):
     ----------
     mesh : discretize.base.BaseMesh
         Mesh to use in the regularization.
-    active_cells : (n_params) array
+    active_cells : (n_params) array or None, optional
         Array full of bools that indicate the active cells in the mesh.
     direction : {"x", "y", "z"}
         Direction of the spatial derivative.
@@ -294,14 +299,19 @@ class Flatness(Objective):
     def __init__(
         self,
         mesh: discretize.base.BaseMesh,
-        active_cells: int,
         direction: str,
+        *,
+        active_cells: npt.NDArray[np.bool] | None = None,
         cell_weights: npt.NDArray | dict[str, npt.NDArray] | None = None,
         reference_model=None,
     ):
         self.mesh = mesh
-        self.active_cells = active_cells
         self.direction = direction
+        self.active_cells = (
+            active_cells
+            if active_cells is not None
+            else np.ones(self.mesh.n_cells, dtype=bool)
+        )
 
         if cell_weights is None:
             cell_weights = np.ones(self.n_params, dtype=np.float64)
@@ -316,7 +326,7 @@ class Flatness(Objective):
 
     @property
     def n_params(self) -> int:
-        return np.sum(self.active_cells)
+        return int(np.sum(self.active_cells))
 
     def __call__(self, model) -> float:
         """

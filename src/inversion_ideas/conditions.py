@@ -81,8 +81,8 @@ class ChiTarget(Condition):
     """
 
     def __init__(self, data_misfit: DataMisfit, chi_target=1.0):
-        if not hasattr(data_misfit, "chi"):
-            msg = "Invalid `data_misfit`: missing `chi` method."
+        if not hasattr(data_misfit, "chi_factor"):
+            msg = "Invalid `data_misfit`: missing `chi_factor` method."
             raise AttributeError(msg)
         self.data_misfit = data_misfit
         self.chi_target = chi_target

@@ -5,12 +5,11 @@ Directives to modify the objective function between iterations of an inversion.
 import numpy as np
 import numpy.typing as npt
 
-from .base import Directive, Objective, Scaled
+from ._utils import extract_from_combo
+from .base import Combo, Directive, Objective, Scaled, Simulation
 from .conditions import ObjectiveChanged
 from .data_misfit import DataMisfit
 from .regularization import SparseSmallness
-from ._utils import extract_from_combo
-from .base import Combo, Directive, Objective, Scaled, Simulation
 from .utils import get_logger, get_sensitivity_weights
 
 

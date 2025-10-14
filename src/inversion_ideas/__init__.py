@@ -8,17 +8,17 @@ from .conditions import ChiTarget, CustomCondition, ModelChanged, ObjectiveChang
 from .constructors import create_inversion, create_sparse_inversion
 from .data_misfit import DataMisfit
 from .directives import (
-    MultiplierCooler,
-    UpdateSensitivityWeights,
     IRLS,
     IrlsFull,
+    MultiplierCooler,
+    UpdateSensitivityWeights,
 )
 from .errors import ConvergenceWarning
 from .inversion import Inversion
 from .inversion_log import InversionLog, InversionLogRich
 from .minimize import GaussNewtonConjugateGradient, conjugate_gradient
 from .preconditioners import JacobiPreconditioner, get_jacobi_preconditioner
-from .regularization import Flatness, Smallness, TikhonovZero, SparseSmallness
+from .regularization import Flatness, Smallness, SparseSmallness, TikhonovZero
 from .simulations import wrap_simulation
 
 __all__ = [
@@ -37,8 +37,8 @@ __all__ = [
     "ModelChanged",
     "MultiplierCooler",
     "ObjectiveChanged",
-    "SparseSmallness",
     "Smallness",
+    "SparseSmallness",
     "TikhonovZero",
     "UpdateSensitivityWeights",
     "__version__",

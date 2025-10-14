@@ -190,7 +190,7 @@ def create_sparse_inversion(
     Returns
     -------
     Inversion
-    """  # noqa: E501
+    """
     # Define objective function
     regularization = starting_beta * model_norm
     objective_function = data_misfit + regularization

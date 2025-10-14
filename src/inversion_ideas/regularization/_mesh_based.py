@@ -58,7 +58,7 @@ class Smallness(_MeshBasedRegularization):
     ----------
     mesh : discretize.base.BaseMesh
         Mesh to use in the regularization.
-    active_cells : (n_params) array
+    active_cells : (n_params) array or None, optional
         Array full of bools that indicate the active cells in the mesh.
     cell_weights : (n_params) array or dict of (n_params) arrays or None, optional
         Array with cell weights.
@@ -113,12 +113,17 @@ class Smallness(_MeshBasedRegularization):
     def __init__(
         self,
         mesh: discretize.base.BaseMesh,
-        active_cells: npt.NDArray,
+        *,
+        active_cells: npt.NDArray | None = None,
         cell_weights: npt.NDArray | dict[str, npt.NDArray] | None = None,
         reference_model=None,
     ):
         self.mesh = mesh
-        self.active_cells = active_cells
+        self.active_cells = (
+            active_cells
+            if active_cells is not None
+            else np.ones(mesh.n_cells, dtype=bool)
+        )
 
         # Assign the cell weights through the setter
         self.cell_weights = (
@@ -263,7 +268,7 @@ class Flatness(_MeshBasedRegularization):
     ----------
     mesh : discretize.base.BaseMesh
         Mesh to use in the regularization.
-    active_cells : (n_params) array
+    active_cells : (n_params) array or None, optional
         Array full of bools that indicate the active cells in the mesh.
     direction : {"x", "y", "z"}
         Direction of the spatial derivative.
@@ -329,13 +334,18 @@ class Flatness(_MeshBasedRegularization):
     def __init__(
         self,
         mesh: discretize.base.BaseMesh,
-        active_cells: npt.NDArray,
         direction: str,
+        *,
+        active_cells: npt.NDArray | None = None,
         cell_weights: npt.NDArray | dict[str, npt.NDArray] | None = None,
         reference_model=None,
     ):
         self.mesh = mesh
-        self.active_cells = active_cells
+        self.active_cells = (
+            active_cells
+            if active_cells is not None
+            else np.ones(mesh.n_cells, dtype=bool)
+        )
         self.direction = direction
 
         # Assign the cell weights through the setter
@@ -513,17 +523,10 @@ class SparseSmallness(_MeshBasedRegularization):
     ----------
     mesh : discretize.base.BaseMesh
         Mesh to use in the regularization.
-    active_cells : (n_params) array
-        Array full of bools that indicate the active cells in the mesh.
     norm : float
         Norm used in the regularization (p).
-    model_previous : (n_params) array
-        Array with previous model in the iterations. This model is used to build the
-        ``R`` matrix.
-    irls : bool, optional
-        Flag to activate or deactivate IRLS. If False, the class would work as an L2
-        smallness term. If True, the R matrix will be built using the
-        ``model_previous``.
+    active_cells : (n_params) array or None, optional
+        Array full of bools that indicate the active cells in the mesh.
     cell_weights : (n_params) array or dict of (n_params) arrays or None, optional
         Array with cell weights.
         For multiple cell weights, pass a dictionary where keys are strings and values
@@ -536,25 +539,39 @@ class SparseSmallness(_MeshBasedRegularization):
         Fournier and Oldenburg (2019).
     cooling_factor : float, optional
         Factor used to cool down the ``threshold`` when updating the IRLS.
+    model_previous : (n_params) array
+        Array with previous model in the iterations. This model is used to build the
+        ``R`` matrix.
+    irls : bool, optional
+        Flag to activate or deactivate IRLS. If False, the class would work as an L2
+        smallness term. If True, the R matrix will be built using the
+        ``model_previous``.
     """
 
     def __init__(
         self,
         mesh: discretize.base.BaseMesh,
-        active_cells: npt.NDArray,
+        *,
         norm: float,
-        model_previous: npt.NDArray,
-        irls=False,
+        active_cells: npt.NDArray | None = None,
         cell_weights: npt.NDArray | dict[str, npt.NDArray] | None = None,
         reference_model=None,
         threshold: float = 1e-8,
         cooling_factor=1.25,
+        model_previous: npt.NDArray | None = None,
+        irls=False,
     ):
         self.mesh = mesh
-        self.active_cells = active_cells
+        self.active_cells = (
+            active_cells
+            if active_cells is not None
+            else np.ones(mesh.n_cells, dtype=bool)
+        )
         self.norm = norm
         self.irls = irls
-        self.model_previous = model_previous
+        self.model_previous = (
+            model_previous if model_previous is not None else np.zeros(self.n_params)
+        )
 
         # Assign the cell weights through the setter
         self.cell_weights = (
@@ -570,7 +587,7 @@ class SparseSmallness(_MeshBasedRegularization):
         )
         self.threshold = threshold
         self.cooling_factor = cooling_factor
-        self.set_name(f"s-{self.norm}")
+        self.set_name(f"s(p={self.norm})")
 
     def activate_irls(self, model_previous):
         r"""

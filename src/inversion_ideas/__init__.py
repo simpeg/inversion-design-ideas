@@ -13,7 +13,7 @@ from .inversion import Inversion
 from .inversion_log import InversionLog, InversionLogRich
 from .minimize import GaussNewtonConjugateGradient, conjugate_gradient
 from .preconditioners import JacobiPreconditioner, get_jacobi_preconditioner
-from .regularization import Smallness, Smoothness, TikhonovZero
+from .regularization import Flatness, Smallness, TikhonovZero
 from .simulations import wrap_simulation
 
 __all__ = [
@@ -21,6 +21,7 @@ __all__ = [
     "ConvergenceWarning",
     "CustomCondition",
     "DataMisfit",
+    "Flatness",
     "GaussNewtonConjugateGradient",
     "Inversion",
     "InversionLog",
@@ -30,7 +31,6 @@ __all__ = [
     "MultiplierCooler",
     "ObjectiveChanged",
     "Smallness",
-    "Smoothness",
     "TikhonovZero",
     "UpdateSensitivityWeights",
     "__version__",

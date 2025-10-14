@@ -3,10 +3,10 @@ Regularization classes.
 """
 
 from ._general import TikhonovZero
-from ._mesh_based import Smallness, Flatness
+from ._mesh_based import Flatness, Smallness
 
 __all__ = [
-    "Smallness",
     "Flatness",
+    "Smallness",
     "TikhonovZero",
 ]

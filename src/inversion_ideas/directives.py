@@ -187,8 +187,8 @@ class IrlsFull(Directive):
         if not hasattr(sparse, "irls"):
             msg = "Invalid `sparse` object without `irls` attribute."
             raise TypeError(msg)
-        if not hasattr(data_misfit, "chi"):
-            msg = "Invalid `data_misfit` object without `chi` method."
+        if not hasattr(data_misfit, "chi_factor"):
+            msg = "Invalid `data_misfit` object without `chi_factor` method."
             raise TypeError(msg)
 
         self.data_misfit = data_misfit
@@ -226,7 +226,7 @@ class IrlsFull(Directive):
         """
         Implement first stage of the IRLS inversion.
         """
-        if self.data_misfit.chi(model) < self.chi_l2_target:
+        if self.data_misfit.chi_factor(model) < self.chi_l2_target:
             # Activate IRLS if chi target has been met
             self.sparse.activate_irls(model)
             # Cache some attributes

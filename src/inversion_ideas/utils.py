@@ -6,9 +6,14 @@ import functools
 import hashlib
 import logging
 
+import numpy as np
+import numpy.typing as npt
+from scipy.sparse import sparray
+
 __all__ = [
     "cache_on_model",
     "get_logger",
+    "get_sensitivity_weights",
 ]
 
 LOGGER = logging.Logger("inversions")
@@ -65,24 +70,24 @@ def cache_on_model(func):
     >>> import numpy as np
     >>>
     >>> class MyClass:
-    >>>
-    >>>     def __init__(self):
-    >>>         self.cache = True
-    >>>
-    >>>     @cache_on_model
-    >>>     def squared(self, model) -> float:
-    >>>         return (self.model ** 2).sum()
-    >>>
+    ...
+    ...     def __init__(self):
+    ...         self.cache = True
+    ...
+    ...     @cache_on_model
+    ...     def squared(self, model) -> float:
+    ...         return (model ** 2).sum()
     >>>
     >>> sq = MyClass()
     >>> model = np.array([1.0, 2.0, 3.0])
-    >>> print(squared(model))  # perform the computation
-    np.float64(14.0)
-    >>> print(squared(model))  # access the cached result
-    np.float64(14.0)
+    >>> print(sq.squared(model))  # perform the computation
+    14.0
+    >>> print(sq.squared(model))  # access the cached result
+    14.0
 
     >>> model_new = np.array([4.0, 5.0, 6.0])
-    >>> squared(model_new)  # perform a new computation
+    >>> print(sq.squared(model_new))  # perform a new computation
+    77.0
     """
     # Define attribute name for the model hash
     model_hash_attr = "_model_hash"
@@ -112,3 +117,44 @@ def cache_on_model(func):
         return result
 
     return wrapper
+
+
+def get_sensitivity_weights(
+    jacobian: npt.NDArray[np.float64],
+    *,
+    data_weights: npt.NDArray[np.float64] | sparray | None = None,
+    volumes: npt.NDArray[np.float64] | None = None,
+    vmin: float | None = 1e-12,
+):
+    """
+    Compute sensitivity weights.
+
+    Parameters
+    ----------
+    jacobian : (n_data, n_params) array
+        Jacobian matrix used to compute sensitivity weights.
+    data_weights : (n_data, n_data) array or None, optional
+        Data weights matrix used to compute the sensitivity weights.
+    volumes : (n_params) array
+        Array with the volumes of the active cells. Sensitivity weights are
+        divided by the volumes to account for sensitivity changes due to cell sizes.
+    vmin : float or None, optional
+        Minimum value used for clipping.
+
+    Notes
+    -----
+    """
+    matrix = data_weights @ jacobian if data_weights is not None else jacobian
+    sensitivty_weights = np.sqrt(np.sum(matrix**2, axis=0))
+
+    if volumes is not None:
+        sensitivty_weights /= volumes
+
+    # Normalize it by maximum value
+    sensitivty_weights /= sensitivty_weights.max()
+
+    # Clip to vmin
+    if vmin is not None:
+        sensitivty_weights[sensitivty_weights < vmin] = vmin
+
+    return sensitivty_weights

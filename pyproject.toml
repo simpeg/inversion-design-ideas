@@ -5,7 +5,13 @@ description = "New design ideas for inversion framework."
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.11"
-dependencies = ["numpy>=2.0.0", "scipy", "rich"]
+dependencies = [
+    "numpy>=2.0.0",
+    "scipy",
+    "rich",
+    "simpeg==0.24.0",
+    "discretize==0.11.3",
+]
 
 [build-system]
 requires = ["setuptools>=61", "wheel", "setuptools_scm[toml]>=6.2"]
@@ -56,13 +62,25 @@ ignore = [
   "RET504",   # Allow variable assignment only for return
   "PT001",    # Conventions for parenthesis on pytest.fixture
   "D200",     # Allow single line docstrings in their own line
+  # Temporary ignores:
+  "D102",     # Allow no docstrings in public methods
+  "D105",     # Allow no docstrings in magic methods
+  "D414",     # Allow empty sections in docstrings
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"__init__.py" = ["F401"]  # Disable unused-imports errors on __init__.py
+"__init__.py" = [
+  "F401",   # Disable unused-imports errors on __init__.py
+]
 "test/**" = [
-    "T20", # Allow print statements in tests
-    "D",   # Ignore pydocstyle warnings in tests
+  "D",   # Ignore pydocstyle warnings in tests
+  "T20", # Allow print statements in tests
+]
+"notebooks/**.ipynb" = [
+  "B018",   # Allow unused expression (prints on notebooks)
+  "D",   # Ignore pydocstyle warnings in notebooks
+  "PD901", # Allow to use df as variables for pandas DataFrames
+  "T20",   # Allow print statements in notebooks
 ]
 
 [tool.ruff.lint.pydocstyle]

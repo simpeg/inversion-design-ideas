@@ -9,6 +9,9 @@ from .base import Directive, Objective, Scaled
 from .conditions import ObjectiveChanged
 from .data_misfit import DataMisfit
 from .regularization import SparseSmallness
+from ._utils import extract_from_combo
+from .base import Combo, Directive, Objective, Scaled, Simulation
+from .utils import get_logger, get_sensitivity_weights
 
 
 class MultiplierCooler(Directive):
@@ -257,3 +260,135 @@ class IrlsFull(Directive):
         else:
             # Update the IRLS
             self.sparse.update_irls(model)
+
+
+class UpdateSensitivityWeights(Directive):
+    """
+    Update sensitivity weights on regularizations.
+
+    .. note::
+
+        This directive can only be applied to regularizations that: 1. have a ``cell_weights`` attribute,
+        2. the ``cell_weights`` attribute is a dictionary,
+        3. the ``cell_weights`` attribute contains weights under the key specified
+           through the ``weights_key`` argument ("sensitivity" by default).
+
+    Parameters
+    ----------
+    *args : Objective
+        Regularizations to which the sensitivity weights will be updated.
+        If a :class:`inversion_ideas.base.Combo` or
+        a :class:`inversion_ideas.base.Scaled` are passed, they will be explored
+        recursively to use regularizations that have sensitivity weights that can be
+        updated.
+    simulation : Simulation
+        Simulation used to get the jacobian matrix that will be used while updating the
+        sensitivity weights.
+    weights_key : str, optional
+        Key used to store the sensitivity weights on the regularization's
+        ``cell_weights`` dictionary. Only the weights under this key will be updated.
+    **kwargs
+        Extra arguments passed to the
+        :func:`inversion_ideas.utils.get_sensitivity_weights` function.
+
+    See Also
+    --------
+    inversion_ideas.utils.get_sensitivity_weights
+    """
+
+    def __init__(
+        self, *args, simulation: Simulation, weights_key: str = "sensitivity", **kwargs
+    ):
+        self.weights_key = weights_key
+        self.simulation = simulation
+        self.kwargs = kwargs
+        self.regularizations = self._extract_regularizations(args)
+
+    def __call__(self, model: npt.NDArray[np.float64], iteration: int):  # noqa: ARG002
+        """
+        Update sensitivity weights.
+        """
+        # Compute the jacobian and the new sensitivity weights
+        jacobian = self.simulation.jacobian(model)
+        self._check_jacobian_type(jacobian)
+        new_sensitivity_weights = get_sensitivity_weights(jacobian, **self.kwargs)
+
+        # Update sensitivity weights on regularizations
+        for regularization in self.regularizations:
+            self._check_cell_weights(regularization)
+            regularization.cell_weights[self.weights_key] = new_sensitivity_weights
+
+    def _extract_regularizations(self, args: tuple[Objective]) -> list[Objective]:
+        """
+        Select regularizations to update their sensitivity weights.
+
+        Extract a selection of the regularizations passed as arguments to build the
+        ``self.regularizations`` attribute. Follow this criteria:
+
+        - Any objective function that is not a ``Combo`` or a ``Scaled`` will be added
+          as is. We'll check if the regularization has sensitivity weights (see below).
+        - Any ``Combo`` or ``Scaled`` will be recursively explored to extract any
+          regularization function contained by them that has sensitivity weights.
+
+        A regularization is considered to have sensitivity weights if:
+
+        1. Has a ``cell_weights`` attribute.
+        2. Its ``cell_weights`` attribute is a dictionary.
+        3. Its ``cell_weights`` attribute has a key equal to ``self.weights_key``.
+        """
+
+        def has_sensitivity_weights(regularization: Objective) -> bool:
+            return (
+                hasattr(regularization, "cell_weights")
+                and isinstance(regularization.cell_weights, dict)
+                and self.weights_key in regularization.cell_weights
+            )
+
+        regularizations = []
+        for objective in args:
+            if isinstance(objective, Scaled | Combo):
+                extracted_regs = extract_from_combo(objective, has_sensitivity_weights)
+                for reg in extracted_regs:
+                    get_logger().debug(
+                        f"Sensitivity weights of {reg} will be updated "
+                        f"by the {self} directive."
+                    )
+                regularizations += extracted_regs
+            else:
+                self._check_cell_weights(objective)
+                regularizations.append(objective)
+
+        return regularizations
+
+    def _check_jacobian_type(self, jacobian):
+        """Check if jacobian is a dense array."""
+        if not isinstance(jacobian, np.ndarray):
+            msg = (
+                "Cannot compute sensitivity weights for simulation "
+                f"{self.simulation} : its jacobian is a {type(jacobian)}. "
+                "It must be a dense array."
+            )
+            raise TypeError(msg)
+
+    def _check_cell_weights(self, regularization: Objective):
+        """Sanity checks for cell_weights in regularization."""
+        # Check if regularization have cell_weights attribute
+        if not hasattr(regularization, "cell_weights"):
+            msg = (
+                "Missing `cell-weights` attribute in regularization "
+                f"'{regularization}'."
+            )
+            raise AttributeError(msg)
+
+        if not isinstance(regularization.cell_weights, dict):
+            msg = (
+                f"Invalid `cell_weights` attribute of type '{type(regularization)}' "
+                f"for the '{regularization}'. It must be a dictionary."
+            )
+            raise TypeError(msg)
+        if self.weights_key not in regularization.cell_weights:
+            msg = (
+                f"Missing '{self.weights_key}' weights in "
+                f"{regularization}.cell_weights. "
+            )
+            raise KeyError(msg)

@@ -9,18 +9,62 @@ from collections.abc import Callable
 import numpy as np
 from rich.tree import Tree
 
+from inversion_ideas.data_misfit import DataMisfit
+
 from .base import Condition, Objective
+from .typing import Model
 
 
 class CustomCondition(Condition):
-    def __init__(self, func: Callable):
+    """
+    Define a custom :class:`~inversion_ideas.base.Condition` object through a function.
+
+    Parameters
+    ----------
+    func : Callable
+        Function to use as the condition. It should take a model as only argument
+        and return a bool to evaluate whether the condition is valid or not for that
+        particular model.
+    """
+
+    def __init__(self, func: Callable[[Model], bool]):
         self.func = func
 
     def __call__(self, model) -> bool:
         return self.func(model)
 
     @classmethod
-    def create(cls, func: Callable):
+    def create(cls, func: Callable[[Model], bool]):
+        """
+        Create a ``CustomCondition`` object directly from a function.
+
+        Parameters
+        ----------
+        func : Callable
+            Function to use as the condition. It should take a model as only argument
+            and return a bool to evaluate whether the condition is valid or not for that
+            particular model.
+
+        Returns
+        -------
+        CustomCondition
+
+        Examples
+        --------
+        >>> import numpy as np
+        >>>
+        >>> def is_all_positive(model):
+        ...     return np.all(model > 0)
+        >>>
+        >>> condition = CustomCondition.create(is_all_positive)
+        >>> model = np.array([1, 2, 3])
+        >>> print(condition(model))
+        True
+
+        >>> model = np.array([-1, 2, 3])
+        >>> print(condition(model))
+        False
+        """
         return cls(func)
 
 
@@ -30,13 +74,13 @@ class ChiTarget(Condition):
 
     Parameters
     ----------
-    data_misfit : Objective
+    data_misfit : DataMisfit
         Data misfit term to be evaluated.
     chi_target : float
         Target for the chi factor.
     """
 
-    def __init__(self, data_misfit, chi_target=1.0):
+    def __init__(self, data_misfit: DataMisfit, chi_target=1.0):
         if not hasattr(data_misfit, "chi"):
             msg = "Invalid `data_misfit`: missing `chi` method."
             raise AttributeError(msg)
@@ -47,13 +91,13 @@ class ChiTarget(Condition):
         """
         Check if condition has been met.
         """
-        chi = self.data_misfit.chi(model)
+        chi = self.data_misfit.chi_factor(model)
         return float(chi) < self.chi_target
 
     def info(self, model) -> Tree:
         tree = super().info(model)
         tree.add("Condition: chi < chi_target")
-        tree.add(f"chi        = {self.data_misfit.chi(model):.2e}")
+        tree.add(f"chi        = {self.data_misfit.chi_factor(model):.2e}")
         tree.add(f"chi_target = {self.chi_target:.2e}")
         return tree
 

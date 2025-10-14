@@ -23,7 +23,7 @@ class JacobiPreconditioner:
     objective_function : Objective
         Objective function for which the Jacobi preconditioner will be built.
 
-    See also
+    See Also
     --------
     get_jacobi_preconditioner
     """

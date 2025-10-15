@@ -52,7 +52,7 @@ class WrappedSimulation(Simulation):
     """
 
     def __init__(self, simulation, *, store_jacobian=False):
-        has_getJ = hasattr(simulation, "getJ") and isinstance(simulation.getJ, Callable)
+        has_getJ = hasattr(simulation, "getJ") and callable(simulation.getJ)
         if store_jacobian and not has_getJ:
             msg = (
                 "Not possible to set `store_jacobian` to True when wrapping the "

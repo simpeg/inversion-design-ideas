@@ -79,7 +79,7 @@ class GaussNewtonConjugateGradient(Minimizer):
                 raise ValueError(msg)
             preconditioner = (
                 preconditioner
-                if not isinstance(preconditioner, Callable)
+                if not callable(preconditioner)
                 else preconditioner(initial_model)
             )
             cg_kwargs["M"] = preconditioner

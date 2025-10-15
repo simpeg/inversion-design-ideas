@@ -267,7 +267,8 @@ class UpdateSensitivityWeights(Directive):
 
     .. note::
 
-        This directive can only be applied to regularizations that: 1. have a ``cell_weights`` attribute,
+        This directive can only be applied to regularizations that:
+        1. have a ``cell_weights`` attribute,
         2. the ``cell_weights`` attribute is a dictionary,
         3. the ``cell_weights`` attribute contains weights under the key specified
            through the ``weights_key`` argument ("sensitivity" by default).

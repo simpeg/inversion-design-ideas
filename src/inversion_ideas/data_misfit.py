@@ -178,8 +178,7 @@ class DataMisfit(Objective):
         """
         Data weights: 1D array with the square of the inverse of the uncertainties.
         """
-        # Return the W.T @ W matrix
-        return diags_array(1 / self.uncertainty**2)
+        return 1 / self.uncertainty**2
 
     @property
     def weights_matrix(self) -> dia_array:

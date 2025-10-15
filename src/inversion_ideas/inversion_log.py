@@ -45,7 +45,9 @@ class InversionLog:
         of the iteration) and ``model`` (the inverted model as a 1d array).
     """
 
-    def __init__(self, columns: dict[str, Column | Callable[[int, Model], typing.Any]]):
+    def __init__(
+        self, columns: typing.Mapping[str, Column | Callable[[int, Model], typing.Any]]
+    ):
         for name, column in columns.items():
             self.add_column(name, column)
 

@@ -9,8 +9,8 @@ from ._utils import extract_from_combo
 from .base import Combo, Directive, Objective, Scaled, Simulation
 from .conditions import ObjectiveChanged
 from .data_misfit import DataMisfit
-from .utils import get_logger, get_sensitivity_weights
 from .typing import Model, SparseRegularization
+from .utils import get_logger, get_sensitivity_weights
 
 
 class MultiplierCooler(Directive):
@@ -138,9 +138,9 @@ class IRLS(Directive):
             regularization_with_beta = _reg
 
         self.regularization_with_beta: Scaled = regularization_with_beta
-        self.sparse_regs: list[
-            SparseRegularization
-        ] = self._extract_sparse_regularizations(args)
+        self.sparse_regs: list[SparseRegularization] = (
+            self._extract_sparse_regularizations(args)
+        )
         if not self.sparse_regs:
             msg = (
                 "Invalid regularizations passed through the `args` argument. "

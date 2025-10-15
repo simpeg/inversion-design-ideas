@@ -7,9 +7,9 @@ from collections.abc import Callable
 import numpy as np
 import numpy.typing as npt
 
-from .data_misfit import DataMisfit
 from .base import Minimizer, Objective
 from .conditions import ChiTarget, ObjectiveChanged
+from .data_misfit import DataMisfit
 from .directives import IRLS, MultiplierCooler
 from .inversion import Inversion
 from .inversion_log import Column

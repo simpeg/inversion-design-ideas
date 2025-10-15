@@ -7,6 +7,7 @@ import numpy.typing as npt
 
 from ._utils import extract_from_combo
 from .base import Combo, Directive, Objective, Scaled, Simulation
+from .typing import Model
 from .utils import get_logger, get_sensitivity_weights
 
 
@@ -86,14 +87,30 @@ class UpdateSensitivityWeights(Directive):
     """
 
     def __init__(
-        self, *args, simulation: Simulation, weights_key: str = "sensitivity", **kwargs
+        self,
+        *args: Objective,
+        simulation: Simulation,
+        weights_key: str = "sensitivity",
+        **kwargs,
     ):
+        if not args:
+            msg = "Missing regularization. Pass at least one."
+            raise TypeError(msg)
+
         self.weights_key = weights_key
         self.simulation = simulation
         self.kwargs = kwargs
-        self.regularizations = self._extract_regularizations(args)
+        self.regularizations: list[Objective] = self._extract_regularizations(args)
 
-    def __call__(self, model: npt.NDArray[np.float64], iteration: int):  # noqa: ARG002
+        if not self.regularizations:
+            msg = (
+                "Invalid regularizations passed through the `args` argument. "
+                "Couldn't locate any regularization term to update "
+                "their sensitivity weights."
+            )
+            raise TypeError(msg)
+
+    def __call__(self, model: Model, iteration: int):  # noqa: ARG002
         """
         Update sensitivity weights.
         """
@@ -107,7 +124,7 @@ class UpdateSensitivityWeights(Directive):
             self._check_cell_weights(regularization)
             regularization.cell_weights[self.weights_key] = new_sensitivity_weights
 
-    def _extract_regularizations(self, args: tuple[Objective]) -> list[Objective]:
+    def _extract_regularizations(self, args: tuple[Objective, ...]) -> list[Objective]:
         """
         Select regularizations to update their sensitivity weights.
 

@@ -84,7 +84,7 @@ class IRLS(Directive):
         IRLS on ``sparse``, or to cool the multiplier of ``regularization``.
     regularization_with_beta : Scaled or None, optional
         Regularization that will get its multiplier cooled down.
-        If a single ``arg`` is passed, that will be used as the regularization that will
+        If a single ``arg`` is passed, it will be used as the regularization that will
         get its multiplier cooled down. Pass a ``regularization_with_beta`` if another
         regularization's multiplier should be cooled down, or if multiple ``args`` are
         passed.
@@ -119,7 +119,7 @@ class IRLS(Directive):
             # Raise error if multiple sparse regs and regularization_with_beta as None
             if len(args) > 1:
                 msg = (
-                    "Cannot pass multiple sparse regulariations and leave "
+                    "Cannot pass multiple sparse regularizations and leave "
                     "'regularization_with_beta' as None. "
                 )
                 raise TypeError(msg)
@@ -137,6 +137,7 @@ class IRLS(Directive):
                 raise TypeError(msg)
             regularization_with_beta = _reg
 
+        self.regularization_with_beta: Scaled = regularization_with_beta
         self.sparse_regs: list[Objective] = self._extract_sparse_regularizations(args)
         if not self.sparse_regs:
             msg = (
@@ -156,7 +157,7 @@ class IRLS(Directive):
 
         # Define a beta cooler
         self._beta_cooler = MultiplierCooler(
-            regularization_with_beta, cooling_factor=self.beta_cooling_factor
+            self.regularization_with_beta, cooling_factor=self.beta_cooling_factor
         )
 
         # Define a condition for the data misfit.

@@ -10,7 +10,7 @@ from .base import Combo, Directive, Objective, Scaled, Simulation
 from .conditions import ObjectiveChanged
 from .data_misfit import DataMisfit
 from .utils import get_logger, get_sensitivity_weights
-from .typing import Model
+from .typing import Model, SparseRegularization
 
 
 class MultiplierCooler(Directive):
@@ -138,7 +138,9 @@ class IRLS(Directive):
             regularization_with_beta = _reg
 
         self.regularization_with_beta: Scaled = regularization_with_beta
-        self.sparse_regs: list[Objective] = self._extract_sparse_regularizations(args)
+        self.sparse_regs: list[
+            SparseRegularization
+        ] = self._extract_sparse_regularizations(args)
         if not self.sparse_regs:
             msg = (
                 "Invalid regularizations passed through the `args` argument. "
@@ -206,12 +208,12 @@ class IRLS(Directive):
             # Adjust the cooling factor
             # (following current implementation of UpdateIRLS)
             if phi_d > self._dmisfit_l2:
-                self._beta_cooler.cooling_factor = 1 / np.mean(
-                    [0.75, self._dmisfit_l2 / phi_d]
+                self._beta_cooler.cooling_factor = float(
+                    1 / np.mean([0.75, self._dmisfit_l2 / phi_d])
                 )
             else:
-                self._beta_cooler.cooling_factor = 1 / np.mean(
-                    [2.0, self._dmisfit_l2 / phi_d]
+                self._beta_cooler.cooling_factor = float(
+                    1 / np.mean([2.0, self._dmisfit_l2 / phi_d])
                 )
             self._beta_cooler(model, iteration)
         else:
@@ -221,7 +223,7 @@ class IRLS(Directive):
 
     def _extract_sparse_regularizations(
         self, args: tuple[Objective, ...]
-    ) -> list[Objective]:
+    ) -> list[SparseRegularization]:
         """
         Select sparse regularizations recursively from the passed args.
         """

@@ -10,6 +10,7 @@ from scipy.sparse import dia_array, diags_array, eye_array
 
 from .._utils import prod_arrays
 from ..base import Objective
+from ..typing import Model
 
 
 class _MeshBasedRegularization(Objective):
@@ -589,7 +590,7 @@ class SparseSmallness(_MeshBasedRegularization):
         self.cooling_factor = cooling_factor
         self.set_name(f"s(p={self.norm})")
 
-    def activate_irls(self, model_previous):
+    def activate_irls(self, model_previous: Model):
         r"""
         Activate IRLS.
 
@@ -616,7 +617,7 @@ class SparseSmallness(_MeshBasedRegularization):
         self.threshold = np.max(np.abs(model_previous))
         self.irls = True
 
-    def update_irls(self, model):
+    def update_irls(self, model: Model):
         """
         Update IRLS parameters.
 

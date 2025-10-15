@@ -7,8 +7,8 @@ import numpy.typing as npt
 
 from ._utils import extract_from_combo
 from .base import Combo, Directive, Objective, Scaled, Simulation
-from .utils import get_logger, get_sensitivity_weights
 from .typing import Model
+from .utils import get_logger, get_sensitivity_weights
 
 
 class MultiplierCooler(Directive):

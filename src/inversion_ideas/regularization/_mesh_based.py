@@ -20,6 +20,8 @@ class _MeshBasedRegularization(Objective):
     Implements common methods like ``cell_weights``, the ``n_params`` property.
     """
 
+    active_cells: npt.NDArray[np.bool]
+
     @property
     def n_params(self) -> int:
         return int(np.sum(self.active_cells))

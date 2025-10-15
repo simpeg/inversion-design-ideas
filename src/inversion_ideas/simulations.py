@@ -2,7 +2,6 @@
 Wrap SimPEG simulations to work with this new inversion framework.
 """
 
-
 import numpy as np
 import numpy.typing as npt
 from scipy.sparse.linalg import LinearOperator

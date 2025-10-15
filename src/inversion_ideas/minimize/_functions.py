@@ -65,7 +65,7 @@ def conjugate_gradient(
         raise ValueError(msg)
 
     if preconditioner is not None:
-        if isinstance(preconditioner, Callable):
+        if callable(preconditioner):
             preconditioner = preconditioner(initial_model)
         kwargs["M"] = preconditioner
 

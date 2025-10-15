@@ -7,9 +7,10 @@ from collections.abc import Callable
 import numpy as np
 import numpy.typing as npt
 
+from .data_misfit import DataMisfit
 from .base import Minimizer, Objective
 from .conditions import ChiTarget, ObjectiveChanged
-from .directives import IrlsFull, MultiplierCooler
+from .directives import IRLS, MultiplierCooler
 from .inversion import Inversion
 from .inversion_log import Column
 from .preconditioners import JacobiPreconditioner
@@ -44,7 +45,7 @@ def create_inversion(
         Model norm :math:`\phi_m`.
     starting_beta : float
         Starting value for the trade-off parameter :math:`\beta`.
-    initial_model : npt.NDArray[np.float64]
+    initial_model : (n_params) array
         Initial model to use in the inversion.
     minimizer : Minimizer
         Instance of :class:`Minimizer` used to minimize the objective function during
@@ -120,19 +121,19 @@ def create_inversion(
 
 
 def create_sparse_inversion(
-    data_misfit: Objective,
+    data_misfit: DataMisfit,
     model_norm: Objective,
     *,
     starting_beta: float,
-    initial_model: npt.NDArray[np.float64],
-    minimizer: Minimizer,
+    initial_model: Model,
+    minimizer: Minimizer | Callable[[Objective, Model], Model],
     beta_cooling_factor: float = 2.0,
     data_misfit_rtol=1e-1,
     chi_l2_target: float = 1.0,
     model_norm_rtol: float = 1e-3,
     max_iterations: int | None = None,
     cache_models: bool = True,
-    preconditioner=None,
+    preconditioner: Preconditioner | Callable[[Model], Preconditioner] | None = None,
 ) -> Inversion:
     r"""
     Create sparse norm inversion of the form: :math:`\phi_d + \beta \phi_m`.
@@ -152,10 +153,12 @@ def create_sparse_inversion(
     data_misfit : Objective
         Data misfit term :math:`\phi_d`.
     model_norm : Objective
-        Model norm :math:`\phi_m`.
+        Model norm :math:`\phi_m`. It can be a single objective function term or a combo
+        containing multiple ones. At least one of them should be a sparse regularization
+        term.
     starting_beta : float
         Starting value for the trade-off parameter :math:`\beta`.
-    initial_model : npt.NDArray[np.float64]
+    initial_model : (n_params) array
         Initial model to use in the inversion.
     minimizer : Minimizer
         Instance of :class:`Minimizer` used to minimize the objective function during
@@ -197,10 +200,9 @@ def create_sparse_inversion(
 
     # Define IRLS directive
     directives = [
-        IrlsFull(
-            model_norm,
+        IRLS(
+            regularization,
             data_misfit=data_misfit,
-            regularization=regularization,
             chi_l2_target=chi_l2_target,
             beta_cooling_factor=beta_cooling_factor,
             data_misfit_rtol=data_misfit_rtol,
@@ -211,7 +213,7 @@ def create_sparse_inversion(
     smallness_not_changing = ObjectiveChanged(model_norm, rtol=model_norm_rtol)
 
     # Preconditioner
-    kwargs = {}
+    minimizer_kwargs = {}
     if preconditioner is not None:
         if isinstance(preconditioner, str):
             if preconditioner == "jacobi":
@@ -219,7 +221,7 @@ def create_sparse_inversion(
             else:
                 msg = f"Invalid preconditioner '{preconditioner}'."
                 raise ValueError(msg)
-        kwargs["preconditioner"] = preconditioner
+        minimizer_kwargs["preconditioner"] = preconditioner
 
     # Define inversion
     inversion = Inversion(
@@ -231,27 +233,29 @@ def create_sparse_inversion(
         cache_models=cache_models,
         max_iterations=max_iterations,
         log=True,
-        **kwargs,
+        minimizer_kwargs=minimizer_kwargs,
     )
 
     # Add extra columns to log
-    inversion.log.add_column(
-        "IRLS", lambda _, __: "active" if model_norm.irls else "inactive"
-    )
-    inversion.log.add_column(
-        "IRLS threshold",
-        Column(
-            title="ε",
-            callable=lambda _, __: model_norm.threshold,
-            fmt=None,
-        ),
-    )
-    inversion.log.add_column(
-        "model_norm_relative_diff",
-        Column(
-            title=r"|φm_(k) - φm_(k-1)|/|φm_(k-1)|",
-            callable=lambda _, model: smallness_not_changing.ratio(model),
-            fmt=None,
-        ),
-    )
+    if inversion.log is not None:
+        # TODO: fix this in case that model norm is a combo
+        inversion.log.add_column(
+            "IRLS", lambda _, __: "active" if model_norm.irls else "inactive"
+        )
+        inversion.log.add_column(
+            "IRLS threshold",
+            Column(
+                title="ε",
+                callable=lambda _, __: model_norm.threshold,
+                fmt=None,
+            ),
+        )
+        inversion.log.add_column(
+            "model_norm_relative_diff",
+            Column(
+                title=r"|φm_(k) - φm_(k-1)|/|φm_(k-1)|",
+                callable=lambda _, model: smallness_not_changing.ratio(model),
+                fmt=None,
+            ),
+        )
     return inversion

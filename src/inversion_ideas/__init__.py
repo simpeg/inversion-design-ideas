@@ -9,7 +9,6 @@ from .constructors import create_inversion, create_sparse_inversion
 from .data_misfit import DataMisfit
 from .directives import (
     IRLS,
-    IrlsFull,
     MultiplierCooler,
     UpdateSensitivityWeights,
 )
@@ -32,7 +31,6 @@ __all__ = [
     "Inversion",
     "InversionLog",
     "InversionLogRich",
-    "IrlsFull",
     "JacobiPreconditioner",
     "ModelChanged",
     "MultiplierCooler",

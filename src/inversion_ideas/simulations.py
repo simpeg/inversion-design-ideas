@@ -2,7 +2,6 @@
 Wrap SimPEG simulations to work with this new inversion framework.
 """
 
-from collections.abc import Callable
 
 import numpy as np
 import numpy.typing as npt

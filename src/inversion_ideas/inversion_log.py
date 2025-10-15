@@ -91,7 +91,7 @@ class InversionLog:
         if not hasattr(self, "_columns"):
             self._columns: dict[str, Column] = {}
 
-        if isinstance(column, Callable):
+        if callable(column):
             column = Column(title=name, callable=column, fmt=None)
 
         self._columns[name] = column

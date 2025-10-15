@@ -21,7 +21,7 @@ class _MeshBasedRegularization(Objective):
 
     @property
     def n_params(self) -> int:
-        return np.sum(self.active_cells)
+        return int(np.sum(self.active_cells))
 
     @property
     def cell_weights(
@@ -114,7 +114,7 @@ class Smallness(_MeshBasedRegularization):
         self,
         mesh: discretize.base.BaseMesh,
         *,
-        active_cells: npt.NDArray | None = None,
+        active_cells: npt.NDArray[np.bool] | None = None,
         cell_weights: npt.NDArray | dict[str, npt.NDArray] | None = None,
         reference_model=None,
     ):
@@ -122,7 +122,7 @@ class Smallness(_MeshBasedRegularization):
         self.active_cells = (
             active_cells
             if active_cells is not None
-            else np.ones(mesh.n_cells, dtype=bool)
+            else np.ones(self.mesh.n_cells, dtype=bool)
         )
 
         # Assign the cell weights through the setter
@@ -336,17 +336,17 @@ class Flatness(_MeshBasedRegularization):
         mesh: discretize.base.BaseMesh,
         direction: str,
         *,
-        active_cells: npt.NDArray | None = None,
+        active_cells: npt.NDArray[np.bool] | None = None,
         cell_weights: npt.NDArray | dict[str, npt.NDArray] | None = None,
         reference_model=None,
     ):
         self.mesh = mesh
+        self.direction = direction
         self.active_cells = (
             active_cells
             if active_cells is not None
-            else np.ones(mesh.n_cells, dtype=bool)
+            else np.ones(self.mesh.n_cells, dtype=bool)
         )
-        self.direction = direction
 
         # Assign the cell weights through the setter
         self.cell_weights = (

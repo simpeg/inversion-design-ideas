@@ -81,6 +81,9 @@ class ChiTarget(Condition):
     """
 
     def __init__(self, data_misfit: DataMisfit, chi_target=1.0):
+        if not hasattr(data_misfit, "chi_factor"):
+            msg = "Invalid `data_misfit`: missing `chi_factor` method."
+            raise TypeError(msg)
         self.data_misfit = data_misfit
         self.chi_target = chi_target
 
@@ -249,6 +252,18 @@ class ObjectiveChanged(Condition):
         tree.add(f"rtol               = {self.rtol:.2e}")
         tree.add(f"atol               = {self.atol:.2e}")
         return tree
+
+    def ratio(self, model) -> float:
+        """
+        Ratio ``|φ(m) - φ(m_prev)|/|φ(m_prev)|``.
+        """
+        if not hasattr(self, "previous"):
+            return np.nan
+        diff = abs(self.objective_function(model) - self.previous)
+        previous = abs(self.previous)
+        if previous == 0.0:
+            return np.inf
+        return diff / previous
 
     def initialize(self):
         """

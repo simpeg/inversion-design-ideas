@@ -2,7 +2,7 @@
 Custom types used for type hints.
 """
 
-from typing import TypeAlias
+from typing import Protocol, TypeAlias
 
 import numpy as np
 import numpy.typing as npt
@@ -21,3 +21,17 @@ Type for static preconditioners.
 Static preconditioners can either be a dense matrix, a sparse matrix or
 a ``LinearOperator``.
 """
+
+
+class SparseRegularization(Protocol):
+    """
+    Protocol to define sparse regularizations that can be used with a IRLS algorithm.
+    """
+
+    irls: bool
+
+    def update_irls(self, model: Model) -> None:
+        raise NotImplementedError
+
+    def activate_irls(self, model_previous: Model) -> None:
+        raise NotImplementedError

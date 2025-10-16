@@ -21,7 +21,6 @@ from .regularization import Flatness, Smallness, SparseSmallness, TikhonovZero
 from .simulations import wrap_simulation
 
 __all__ = [
-    "Irls",
     "ChiTarget",
     "ConvergenceWarning",
     "CustomCondition",
@@ -31,6 +30,7 @@ __all__ = [
     "Inversion",
     "InversionLog",
     "InversionLogRich",
+    "Irls",
     "JacobiPreconditioner",
     "ModelChanged",
     "MultiplierCooler",

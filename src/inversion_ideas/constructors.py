@@ -10,7 +10,7 @@ import numpy.typing as npt
 from .base import Minimizer, Objective
 from .conditions import ChiTarget, ObjectiveChanged
 from .data_misfit import DataMisfit
-from .directives import IRLS, MultiplierCooler
+from .directives import Irls, MultiplierCooler
 from .inversion import Inversion
 from .inversion_log import Column
 from .preconditioners import JacobiPreconditioner
@@ -200,7 +200,7 @@ def create_sparse_inversion(
 
     # Define IRLS directive
     directives = [
-        IRLS(
+        Irls(
             regularization,
             data_misfit=data_misfit,
             chi_l2_target=chi_l2_target,

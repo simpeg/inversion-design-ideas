@@ -59,7 +59,7 @@ class Inversion:
         stopping_criteria: Condition | Callable[[Model], bool],
         max_iterations: int | None = None,
         cache_models=False,
-        log: "InversionLog | bool" = True,
+        log: InversionLog | bool = True,
         minimizer_kwargs: dict | None = None,
     ):
         self.objective_function = objective_function

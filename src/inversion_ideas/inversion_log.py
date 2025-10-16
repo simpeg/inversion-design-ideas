@@ -113,7 +113,7 @@ class InversionLog:
             self._log: dict[str, list] = {col: [] for col in self.columns}
         return self._log
 
-    def update(self, iteration: int, model: npt.NDArray[np.float64]):
+    def update(self, iteration: int, model: Model):
         """
         Update the log.
         """
@@ -268,7 +268,7 @@ class InversionLogRich(InversionLog):
             fmt = ""
         return fmt
 
-    def update(self, iteration: int, model: npt.NDArray[np.float64]):
+    def update(self, iteration: int, model: Model):
         """
         Update the log.
 

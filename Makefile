@@ -27,6 +27,6 @@ check-style:
 	ruff check $(CHECK_STYLE)
 
 format:
-	ruff check --select I --fix $(CHECK_STYLE) # fix isort errors
+	ruff check --fix $(CHECK_STYLE)
 	ruff format $(CHECK_STYLE)
 

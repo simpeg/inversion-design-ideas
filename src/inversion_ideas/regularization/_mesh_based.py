@@ -6,13 +6,52 @@ import discretize
 import numpy as np
 import numpy.typing as npt
 import simpeg
-from scipy.sparse import dia_array, diags_array
+from scipy.sparse import dia_array, diags_array, eye_array
 
 from .._utils import prod_arrays
 from ..base import Objective
+from ..typing import Model
 
 
-class Smallness(Objective):
+class _MeshBasedRegularization(Objective):
+    """
+    Base class for mesh-based regularizations.
+
+    Implements common methods like ``cell_weights``, the ``n_params`` property.
+    """
+
+    active_cells: npt.NDArray[np.bool]
+
+    @property
+    def n_params(self) -> int:
+        return int(np.sum(self.active_cells))
+
+    @property
+    def cell_weights(
+        self,
+    ) -> npt.NDArray[np.float64] | dict[str, npt.NDArray[np.float64]]:
+        """
+        Regularization weights on cells.
+        """
+        return self._cell_weights
+
+    @cell_weights.setter
+    def cell_weights(
+        self, value: npt.NDArray[np.float64] | dict[str, npt.NDArray[np.float64]]
+    ):
+        """
+        Setter for weights on cells.
+        """
+        if not isinstance(value, np.ndarray | dict):
+            msg = (
+                f"Invalid weights of type {type(value)}. "
+                "It must be an array or a dictionary."
+            )
+            raise TypeError(msg)
+        self._cell_weights = value
+
+
+class Smallness(_MeshBasedRegularization):
     r"""
     Smallness regularization.
 
@@ -89,9 +128,12 @@ class Smallness(Objective):
             else np.ones(self.mesh.n_cells, dtype=bool)
         )
 
-        if cell_weights is None:
-            cell_weights = np.ones(self.n_params, dtype=np.float64)
-        self.cell_weights = cell_weights  # assign the weights through the setter
+        # Assign the cell weights through the setter
+        self.cell_weights = (
+            cell_weights
+            if cell_weights is not None
+            else np.ones(self.n_params, dtype=np.float64)
+        )
 
         self.reference_model = (
             reference_model
@@ -99,10 +141,6 @@ class Smallness(Objective):
             else np.zeros(self.n_params, dtype=np.float64)
         )
         self.set_name("s")
-
-    @property
-    def n_params(self) -> int:
-        return int(np.sum(self.active_cells))
 
     def __call__(self, model) -> float:
         """
@@ -223,7 +261,7 @@ class Smallness(Objective):
         return diags_array(np.sqrt(cell_volumes))
 
 
-class Flatness(Objective):
+class Flatness(_MeshBasedRegularization):
     r"""
     Flatness regularization.
 
@@ -313,9 +351,12 @@ class Flatness(Objective):
             else np.ones(self.mesh.n_cells, dtype=bool)
         )
 
-        if cell_weights is None:
-            cell_weights = np.ones(self.n_params, dtype=np.float64)
-        self.cell_weights = cell_weights  # assign the weights through the setter
+        # Assign the cell weights through the setter
+        self.cell_weights = (
+            cell_weights
+            if cell_weights is not None
+            else np.ones(self.n_params, dtype=np.float64)
+        )
 
         self.reference_model = (
             reference_model
@@ -323,10 +364,6 @@ class Flatness(Objective):
             else np.zeros(self.n_params, dtype=np.float64)
         )
         self.set_name(direction)
-
-    @property
-    def n_params(self) -> int:
-        return int(np.sum(self.active_cells))
 
     def __call__(self, model) -> float:
         """
@@ -479,3 +516,206 @@ class Flatness(Objective):
                 self.mesh, self.active_cells
             )
         return self._regmesh
+
+
+class SparseSmallness(_MeshBasedRegularization):
+    r"""
+    Smallness regularization using lp norm.
+
+    Parameters
+    ----------
+    mesh : discretize.base.BaseMesh
+        Mesh to use in the regularization.
+    norm : float
+        Norm used in the regularization (p).
+    active_cells : (n_params) array or None, optional
+        Array full of bools that indicate the active cells in the mesh.
+    cell_weights : (n_params) array or dict of (n_params) arrays or None, optional
+        Array with cell weights.
+        For multiple cell weights, pass a dictionary where keys are strings and values
+        are the different weights arrays.
+        If None, no cell weights are going to be used.
+    reference_model : (n_params) array, optional
+        Reference model used in the regularization.
+    threshold : float, optional
+        IRLS threshold. Symbolized with :math:`\epsilon` in
+        Fournier and Oldenburg (2019).
+    cooling_factor : float, optional
+        Factor used to cool down the ``threshold`` when updating the IRLS.
+    model_previous : (n_params) array
+        Array with previous model in the iterations. This model is used to build the
+        ``R`` matrix.
+    irls : bool, optional
+        Flag to activate or deactivate IRLS. If False, the class would work as an L2
+        smallness term. If True, the R matrix will be built using the
+        ``model_previous``.
+    """
+
+    def __init__(
+        self,
+        mesh: discretize.base.BaseMesh,
+        *,
+        norm: float,
+        active_cells: npt.NDArray | None = None,
+        cell_weights: npt.NDArray | dict[str, npt.NDArray] | None = None,
+        reference_model=None,
+        threshold: float = 1e-8,
+        cooling_factor=1.25,
+        model_previous: npt.NDArray | None = None,
+        irls=False,
+    ):
+        self.mesh = mesh
+        self.active_cells = (
+            active_cells
+            if active_cells is not None
+            else np.ones(mesh.n_cells, dtype=bool)
+        )
+        self.norm = norm
+        self.irls = irls
+        self.model_previous = (
+            model_previous if model_previous is not None else np.zeros(self.n_params)
+        )
+
+        # Assign the cell weights through the setter
+        self.cell_weights = (
+            cell_weights
+            if cell_weights is not None
+            else np.ones(self.n_params, dtype=np.float64)
+        )
+
+        self.reference_model = (
+            reference_model
+            if reference_model is not None
+            else np.zeros(self.n_params, dtype=np.float64)
+        )
+        self.threshold = threshold
+        self.cooling_factor = cooling_factor
+        self.set_name(f"s(p={self.norm})")
+
+    def activate_irls(self, model_previous: Model):
+        r"""
+        Activate IRLS.
+
+        Parameters
+        ----------
+        model_previous : (n_params) array
+            Inverted model obtained after the first stage (l2 inversion).
+
+        Notes
+        -----
+        Activate IRLS on the regularization, assign ``model_previous`` with the
+        ``model_previous`` obtained after the first stage (the l2 inversion,
+        before IRLS gets activated), and estimate the initial ``threshold`` as:
+
+        .. math::
+
+            \epsilon = \lVert \mathbf{m}_\text{prev} \rVert_\infty =
+            \text{max}(|\mathbf{m}_\text{prev}|)
+
+        where :math:`\mathbf{m}_\text{prev}` is the ``model_previous`` argument.
+
+        """
+        self.model_previous = model_previous
+        self.threshold = np.max(np.abs(model_previous))
+        self.irls = True
+
+    def update_irls(self, model: Model):
+        """
+        Update IRLS parameters.
+
+        Cool down the threshold and assign the ``model`` as the new ``model_previous``
+        attribute.
+        """
+        self.threshold /= self.cooling_factor
+        self.model_previous = model
+
+    @property
+    def R(self) -> dia_array:
+        """
+        R matrix to approximate lp norm using Lawson's algorithm.
+        """
+        if not self.irls:
+            return eye_array(self.n_params)
+        power = self.norm / 4 - 0.5
+        diagonal = (self.model_previous**2 + self.threshold**2) ** power
+        return diags_array(diagonal)
+
+    def __call__(self, model) -> float:
+        model_diff = model - self.reference_model
+        weights_matrix = self.weights_matrix
+        cell_volumes_sqrt = self._volumes_sqrt_matrix
+        r_matrix = self.R
+        return (
+            model_diff.T
+            @ r_matrix.T
+            @ cell_volumes_sqrt.T
+            @ weights_matrix.T
+            @ weights_matrix
+            @ cell_volumes_sqrt
+            @ r_matrix
+            @ model_diff
+        )
+
+    def gradient(self, model):
+        """
+        Gradient vector.
+        """
+        model_diff = model - self.reference_model
+        weights_matrix = self.weights_matrix
+        cell_volumes_sqrt = self._volumes_sqrt_matrix
+        r_matrix = self.R
+        return (
+            2
+            * r_matrix.T
+            @ cell_volumes_sqrt.T
+            @ weights_matrix.T
+            @ weights_matrix
+            @ cell_volumes_sqrt
+            @ r_matrix
+            @ model_diff
+        )
+
+    def hessian(self, model):  # noqa: ARG002
+        """
+        Hessian matrix.
+        """
+        weights_matrix = self.weights_matrix
+        r_matrix = self.R
+        cell_volumes_sqrt = self._volumes_sqrt_matrix
+        return (
+            2
+            * r_matrix.T
+            @ cell_volumes_sqrt.T
+            @ weights_matrix.T
+            @ weights_matrix
+            @ cell_volumes_sqrt
+            @ r_matrix
+        )
+
+    def hessian_diagonal(self, model) -> npt.NDArray[np.float64]:
+        """
+        Diagonal of the Hessian.
+        """
+        return self.hessian(model).diagonal()
+
+    @property
+    def weights_matrix(self) -> dia_array:
+        """
+        Diagonal matrix with the square root of regularization weights on cells.
+        """
+        if isinstance(self.cell_weights, np.ndarray):
+            cell_weights = self.cell_weights
+        elif isinstance(self.cell_weights, dict):
+            cell_weights = prod_arrays(iter(self.cell_weights.values()))
+        else:
+            msg = f"Invalid weights of type '{type(self.cell_weights)}'."
+            raise TypeError(msg)
+        return diags_array(np.sqrt(cell_weights))
+
+    @property
+    def _volumes_sqrt_matrix(self) -> dia_array:
+        """
+        Diagonal matrix with the square root of cell volumes.
+        """
+        cell_volumes = self.mesh.cell_volumes[self.active_cells]
+        return diags_array(np.sqrt(cell_volumes))

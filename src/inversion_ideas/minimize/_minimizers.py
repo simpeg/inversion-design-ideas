@@ -14,6 +14,7 @@ from ..base import Condition, Minimizer, Objective
 from ..errors import ConvergenceWarning
 from ..typing import Model, Preconditioner
 from ..utils import get_logger
+from . import MinimizerResult
 from ._utils import backtracking_line_search
 
 
@@ -63,16 +64,33 @@ class GaussNewtonConjugateGradient(Minimizer):
         self,
         objective: Objective,
         initial_model: npt.NDArray[np.float64],
+        *,
         preconditioner: Preconditioner
         | Callable[[Model], Preconditioner]
         | None = None,
+        callback: Callable[[MinimizerResult], None] | None = None,
     ) -> Generator[npt.NDArray[np.float64]]:
         """
         Create iterator over Gauss-Newton minimization.
+
+        Parameters
+        ----------
+        objective : Objective
+            Objective function that will get minimized.
+        initial_model : (n_params) array
+            Initial model to start the minimization.
+        preconditioner : (n_params, n_params) array, sparray or LinearOperator or Callable, optional
+            Matrix used as preconditioner in the conjugant gradient algorithm.
+            If None, no preconditioner will be used.
+            A callable can be passed to build the preconditioner dynamically: such
+            callable should take a single ``initial_model`` argument and return an
+            array, `sparray` or a `LinearOperator`.
+        callback : callable, optional
+            Callable that gets called after each iteration.
         """
-        # Define a static preconditioner for all Gauss-Newton iterations
         cg_kwargs = self.cg_kwargs.copy()
 
+        # Define a static preconditioner for all Gauss-Newton iterations
         if preconditioner is not None:
             if "M" in self.cg_kwargs:
                 msg = "Cannot simultanously pass `preconditioner` and `M`."
@@ -85,9 +103,21 @@ class GaussNewtonConjugateGradient(Minimizer):
             cg_kwargs["M"] = preconditioner
 
         # Perform Gauss-Newton iterations
+        # -------------------------------
         iteration = 0
         phi_prev_value = np.inf  # value of the objective function on previous model
         model = initial_model.copy()
+
+        # Run callback before first yield
+        if callback is not None:
+            minimizer_result = MinimizerResult(
+                iteration=iteration,
+                model=model,
+                conj_grad_iters=0,
+                line_search_iters=0,
+                step_norm=0,
+            )
+            callback(minimizer_result)
 
         # Yield initial model, so the generator is never empty
         yield model
@@ -96,7 +126,7 @@ class GaussNewtonConjugateGradient(Minimizer):
         while True:
             # Stop if reached max number of iterations
             if iteration >= self.maxiter:
-                get_logger().info(
+                get_logger().debug(
                     "⚠️ Reached maximum number of Gauss-Newton iterations "
                     f"({self.maxiter})."
                 )
@@ -116,17 +146,17 @@ class GaussNewtonConjugateGradient(Minimizer):
 
             # Apply Conjugate Gradient to get search direction
             gradient, hessian = objective.gradient(model), objective.hessian(model)
-            search_direction, info = cg(hessian, -gradient, **cg_kwargs)
-            if info != 0:
+            search_direction, cg_iters = cg(hessian, -gradient, **cg_kwargs)
+            if cg_iters != 0:
                 warnings.warn(
                     "Conjugate gradient convergence to tolerance not achieved after "
-                    f"{info} number of iterations.",
+                    f"{cg_iters} number of iterations.",
                     ConvergenceWarning,
                     stacklevel=2,
                 )
 
             # Perform line search
-            alpha, n_ls_iters = backtracking_line_search(
+            alpha, line_search_iters = backtracking_line_search(
                 objective,
                 model,
                 search_direction,
@@ -137,16 +167,28 @@ class GaussNewtonConjugateGradient(Minimizer):
             if alpha is None:
                 msg = (
                     "Couldn't find a valid alpha, obtained None. "
-                    f"Ran {n_ls_iters} iterations."
+                    f"Ran {line_search_iters} iterations."
                 )
                 raise RuntimeError(msg)
 
             # Perform model step
-            model += alpha * search_direction
+            step = alpha * search_direction
+            model += step
 
             # Update cached values and iteration counter
             phi_prev_value = phi_value
             iteration += 1
 
-            # Yield inverted model for the current Gauss-Newon iteration
+            # Run callback before next yield
+            if callback is not None:
+                minimizer_result = MinimizerResult(
+                    iteration=iteration,
+                    model=model,
+                    conj_grad_iters=cg_iters,
+                    line_search_iters=line_search_iters,
+                    step_norm=float(np.linalg.norm(step)),
+                )
+                callback(minimizer_result)
+
+            # Yield inverted model for the current Gauss-Newton iteration
             yield model

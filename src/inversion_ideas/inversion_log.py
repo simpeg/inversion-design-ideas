@@ -6,8 +6,6 @@ import numbers
 import typing
 from collections.abc import Callable, Iterable
 
-import numpy as np
-import numpy.typing as npt
 from rich.console import Console
 from rich.live import Live
 from rich.table import Table

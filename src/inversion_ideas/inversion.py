@@ -90,9 +90,6 @@ class Inversion:
         # Assign model as a copy of the initial model
         self.model = initial_model.copy()
 
-        # Initialize the counter
-        self._counter = 0
-
         # TODO: Support for handling custom callbacks for the minimizer
         if log is not None and "callback" in self.minimizer_kwargs:
             msg = "Passing a custom callback for the minimizer is not yet supported."
@@ -102,7 +99,11 @@ class Inversion:
         """
         Run next iteration in the inversion.
         """
-        if self.counter == 0:
+        # Zeroth iteration
+        if not hasattr(self, "_counter"):
+            # Initialize counter to zero
+            self._counter = 0
+
             # Add initial model to log (only on zeroth iteration)
             if self.log is not None:
                 self.log.update(self.counter, self.model)
@@ -110,9 +111,6 @@ class Inversion:
             # Initialize stopping criteria (if necessary)
             if hasattr(self.stopping_criteria, "initialize"):
                 self.stopping_criteria.initialize()
-
-            # Increase counter by one
-            self._counter += 1
 
             # Return the initial model in the zeroth iteration
             return self.model

@@ -10,6 +10,7 @@ dependencies = [
     "scipy",
     "rich",
     "simpeg==0.24.0",
+    "pymatsolver==0.3.1",  # need to pin it for simpeg v0.24.0
     "discretize==0.11.3",
 ]
 

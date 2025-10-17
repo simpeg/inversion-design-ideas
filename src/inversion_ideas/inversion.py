@@ -11,7 +11,7 @@ from collections.abc import Callable
 
 from .base import Condition, Directive, Minimizer, Objective
 from .inversion_log import InversionLog, InversionLogRich
-from .typing import Model
+from .typing import Log, Model
 from .utils import get_logger
 
 
@@ -40,8 +40,9 @@ class Inversion:
         no limit on the total amount of iterations.
     cache_models : bool, optional
         Whether to cache each model after each iteration.
-    log : InversionLog or bool, optional
-        Instance of :class:`InversionLog` to store information about the inversion.
+    log : Log or bool, optional
+        Instance of :class:`InversionLog` to store information about the inversion,
+        or any object that follows the :class:`inversion_ideas.typing.Log` protocol.
         If `True`, a default :class:`InversionLog` is going to be used.
         If `False`, no log will be assigned to the inversion, and :attr:`Inversion.log`
         will be ``None``.
@@ -59,7 +60,7 @@ class Inversion:
         stopping_criteria: Condition | Callable[[Model], bool],
         max_iterations: int | None = None,
         cache_models=False,
-        log: InversionLog | bool = True,
+        log: Log | InversionLog | bool = True,
         minimizer_kwargs: dict | None = None,
     ):
         self.objective_function = objective_function

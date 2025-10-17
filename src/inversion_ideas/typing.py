@@ -35,3 +35,12 @@ class SparseRegularization(Protocol):
 
     def activate_irls(self, model_previous: Model) -> None:
         raise NotImplementedError
+
+
+class Log(Protocol):
+    """
+    Protocol to define inversion and minimizer logs.
+    """
+
+    def update(self, iteration: int, model: Model) -> None:
+        raise NotImplementedError

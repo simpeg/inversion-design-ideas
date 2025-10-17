@@ -9,6 +9,9 @@ modify the objective function after each iteration and optionally a logger.
 import typing
 from collections.abc import Callable
 
+from rich.console import RenderableType
+from rich.live import Live
+
 from .base import Condition, Directive, Minimizer, Objective
 from .inversion_log import InversionLog, InversionLogRich
 from .typing import Log, Model
@@ -204,9 +207,9 @@ class Inversion:
             Whether to show the ``log`` (if it's defined) during the inversion.
         """
         if show_log and self.log is not None:
-            if not hasattr(self.log, "live"):
+            if not isinstance(self.log, RenderableType):
                 raise NotImplementedError()
-            with self.log.live() as live:
+            with Live(self.log) as live:
                 for _ in self:
                     live.refresh()
         else:

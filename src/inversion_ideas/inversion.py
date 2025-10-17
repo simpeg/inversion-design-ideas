@@ -87,19 +87,26 @@ class Inversion:
         self.model = initial_model.copy()
 
         # Initialize the counter
-        if not hasattr(self, "_counter"):
-            self._counter = 0
+        self._counter = 0
 
     def __next__(self):
         """
         Run next iteration in the inversion.
         """
-        if self.counter == 0 and self.log is not None:
+        if self.counter == 0:
             # Add initial model to log (only on zeroth iteration)
-            self.log.update(self.counter, self.model)
+            if self.log is not None:
+                self.log.update(self.counter, self.model)
+
             # Initialize stopping criteria (if necessary)
             if hasattr(self.stopping_criteria, "initialize"):
                 self.stopping_criteria.initialize()
+
+            # Increase counter by one
+            self._counter += 1
+
+            # Return the initial model in the zeroth iteration
+            return self.model
 
         # Check for stopping criteria before trying to run the iteration
         if self.stopping_criteria(self.model):
@@ -124,9 +131,8 @@ class Inversion:
         # We update the directives here (and not at the end of this method), so after
         # each iteration the objective function is still the same we passed to the
         # minimizer.
-        if self.counter > 0:
-            for directive in self.directives:
-                directive(self.model, self.counter)
+        for directive in self.directives:
+            directive(self.model, self.counter)
 
         # Minimize objective function
         if isinstance(self.minimizer, Minimizer):

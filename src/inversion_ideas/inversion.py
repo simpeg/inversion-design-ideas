@@ -92,7 +92,6 @@ class Inversion:
         """
         # Zeroth iteration
         if not hasattr(self, "_counter"):
-
             # Initialize counter to zero
             self._counter = 0
 

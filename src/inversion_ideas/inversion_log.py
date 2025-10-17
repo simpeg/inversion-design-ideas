@@ -10,12 +10,14 @@ from rich.console import Console
 from rich.live import Live
 from rich.table import Table
 
+from inversion_ideas.minimize._utils import MinimizerResult
+
 try:
     import pandas  # noqa: ICN001
 except ImportError:
     pandas = None
 
-from .base import Combo
+from .base import Combo, BaseLog
 from .typing import Model
 
 
@@ -29,7 +31,7 @@ class Column(typing.NamedTuple):
     fmt: str | None
 
 
-class InversionLog:
+class InversionLog(BaseLog):
     """
     Log the outputs of an inversion.
 
@@ -215,6 +217,7 @@ class InversionLogRich(InversionLog):
     def __init__(self, columns: dict[str, Callable | Column], **kwargs):
         super().__init__(columns)
         self.kwargs = kwargs
+        self.minimizer_logs: list[None | MinimizerLog] = [None]
 
     @property
     def table(self) -> Table:
@@ -272,5 +275,45 @@ class InversionLogRich(InversionLog):
 
         Update the table as well.
         """
+        # Update the log
         super().update(iteration, model)
+
+        # Create a new minimizer log for the next iteration
+        self.minimizer_logs.append(MinimizerLog())
+
+        # Update the table
         self.update_table()
+
+    def minimizer_callback(self, minimizer_result: MinimizerResult):
+        minimizer_log = self.minimizer_logs[-1]
+        if minimizer_log is None:
+            minimizer_log = MinimizerLog()
+            self.minimizer_logs.append(minimizer_log)
+        minimizer_log.update(minimizer_result)
+
+
+class MinimizerLog:
+    """Class to store results of a minimizer in the form of a log."""
+
+    # Columns defined by the fields in MinimizerResult
+    columns: typing.ClassVar = (
+        "iteration",
+        "model",
+        "conj_grad_iters",
+        "line_search_iters",
+        "step_norm",
+    )
+
+    def update(self, minimizer_result: MinimizerResult):
+        """
+        Use as callback for :class:`inversion_ideas.base.Minimizer`.
+        """
+        for column in self.columns:
+            self._log[column].append(getattr(minimizer_result, column))
+
+    @property
+    def log(self) -> dict[str, list]:
+        """Returns the log."""
+        if not hasattr(self, "_log"):
+            self._log: dict[str, list] = {col: [] for col in self.columns}
+        return self._log

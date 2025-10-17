@@ -91,6 +91,11 @@ class Inversion:
         if not hasattr(self, "_counter"):
             self._counter = 0
 
+        # TODO: Support for handling custom callbacks for the minimizer
+        if log is not None and "callback" in self.minimizer_kwargs:
+            msg = "Passing a custom callback for the minimizer is not yet supported."
+            raise NotImplementedError(msg)
+
     def __next__(self):
         """
         Run next iteration in the inversion.
@@ -130,10 +135,18 @@ class Inversion:
                 directive(self.model, self.counter)
 
         # Minimize objective function
+        # ---------------------------
         if isinstance(self.minimizer, Minimizer):
-            # Keep only the last model of the minimizer iterator
+            # Get minimizer callback from the log
+            minimizer_kwargs = self.minimizer_kwargs.copy()
+            if self.log is not None:
+                minimizer_kwargs["callback"] = self.log.get_minimizer_callback()
+
+            # Unpack the generator and keep only the last model
             *_, model = self.minimizer(
-                self.objective_function, self.model, **self.minimizer_kwargs
+                self.objective_function,
+                self.model,
+                **minimizer_kwargs,
             )
         else:
             model = self.minimizer(

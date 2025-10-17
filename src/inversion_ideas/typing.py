@@ -2,12 +2,16 @@
 Custom types used for type hints.
 """
 
-from typing import Protocol, TypeAlias
+from collections.abc import Callable
+from typing import TYPE_CHECKING, Protocol, TypeAlias
 
 import numpy as np
 import numpy.typing as npt
 from scipy.sparse import sparray
 from scipy.sparse.linalg import LinearOperator
+
+if TYPE_CHECKING:
+    from .base import MinimizerResult
 
 Model: TypeAlias = npt.NDArray[np.float64]
 """
@@ -43,4 +47,7 @@ class Log(Protocol):
     """
 
     def update(self, iteration: int, model: Model) -> None:
+        raise NotImplementedError
+
+    def get_minimizer_callback(self) -> Callable[["MinimizerResult"], None]:
         raise NotImplementedError

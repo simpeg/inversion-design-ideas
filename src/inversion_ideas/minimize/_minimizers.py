@@ -10,11 +10,10 @@ import numpy as np
 import numpy.typing as npt
 from scipy.sparse.linalg import cg
 
-from ..base import Condition, Minimizer, Objective
+from ..base import Condition, Minimizer, MinimizerResult, Objective
 from ..errors import ConvergenceWarning
 from ..typing import Model, Preconditioner
 from ..utils import get_logger
-from . import MinimizerResult
 from ._utils import backtracking_line_search
 
 

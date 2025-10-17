@@ -10,14 +10,14 @@ from rich.console import Console
 from rich.live import Live
 from rich.table import Table
 
-from inversion_ideas.minimize._utils import MinimizerResult
+from .base import MinimizerResult
 
 try:
     import pandas  # noqa: ICN001
 except ImportError:
     pandas = None
 
-from .base import Combo, BaseLog
+from .base import Combo
 from .typing import Model
 
 
@@ -31,7 +31,7 @@ class Column(typing.NamedTuple):
     fmt: str | None
 
 
-class InversionLog(BaseLog):
+class InversionLog:
     """
     Log the outputs of an inversion.
 
@@ -50,6 +50,41 @@ class InversionLog(BaseLog):
     ):
         for name, column in columns.items():
             self.add_column(name, column)
+
+        # Initialize a list of minimizer logs. The first element of it should be None
+        # since minimizers are not ran in the first iteration.
+        self._minimizer_logs: list[None | MinimizerLog] = [None]
+
+    def update(self, iteration: int, model: Model):
+        """
+        Update the log.
+        """
+        for name, column in self.columns.items():
+            self.log[name].append(column.callable(iteration, model))
+
+    def get_minimizer_callback(self) -> Callable[[MinimizerResult], None]:
+        """
+        Return a callable that can be passed to a minimizer.
+
+        This method creates a new :class:`MinimizerLog` that gets stored in a running
+        list inside this inversion log, and returns the :func:`MinimizerLog.update`
+        method that can be passed as a callback to any minimizer.
+
+        Returns
+        -------
+        callable
+            A callable that can be passed to a minimizer ``callback`` argument.
+        """
+        minimizer_log = MinimizerLog()
+        self._minimizer_logs.append(minimizer_log)
+        return minimizer_log.update
+
+    @property
+    def minimizer_logs(self) -> list["None | MinimizerLog"]:
+        """
+        List of logs for the minimizer.
+        """
+        return self._minimizer_logs
 
     @property
     def has_records(self) -> bool:
@@ -112,13 +147,6 @@ class InversionLog(BaseLog):
         if not hasattr(self, "_log"):
             self._log: dict[str, list] = {col: [] for col in self.columns}
         return self._log
-
-    def update(self, iteration: int, model: Model):
-        """
-        Update the log.
-        """
-        for name, column in self.columns.items():
-            self.log[name].append(column.callable(iteration, model))
 
     def to_pandas(self, index_col=0):
         """
@@ -217,7 +245,6 @@ class InversionLogRich(InversionLog):
     def __init__(self, columns: dict[str, Callable | Column], **kwargs):
         super().__init__(columns)
         self.kwargs = kwargs
-        self.minimizer_logs: list[None | MinimizerLog] = [None]
 
     @property
     def table(self) -> Table:
@@ -275,21 +302,8 @@ class InversionLogRich(InversionLog):
 
         Update the table as well.
         """
-        # Update the log
         super().update(iteration, model)
-
-        # Create a new minimizer log for the next iteration
-        self.minimizer_logs.append(MinimizerLog())
-
-        # Update the table
         self.update_table()
-
-    def minimizer_callback(self, minimizer_result: MinimizerResult):
-        minimizer_log = self.minimizer_logs[-1]
-        if minimizer_log is None:
-            minimizer_log = MinimizerLog()
-            self.minimizer_logs.append(minimizer_log)
-        minimizer_log.update(minimizer_result)
 
 
 class MinimizerLog:
@@ -309,7 +323,7 @@ class MinimizerLog:
         Use as callback for :class:`inversion_ideas.base.Minimizer`.
         """
         for column in self.columns:
-            self._log[column].append(getattr(minimizer_result, column))
+            self.log[column].append(getattr(minimizer_result, column))
 
     @property
     def log(self) -> dict[str, list]:

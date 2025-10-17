@@ -2,24 +2,10 @@
 Utility functions for minimizers.
 """
 
-from dataclasses import dataclass
-
 import numpy as np
 import numpy.typing as npt
 
 from ..base import Objective
-from ..typing import Model
-
-
-@dataclass
-class MinimizerResult:
-    """Dataclass to store results of a single minimization iteration."""
-
-    iteration: int
-    model: Model
-    conj_grad_iters: int | None = None
-    line_search_iters: int | None = None
-    step_norm: float | None = None
 
 
 def backtracking_line_search(

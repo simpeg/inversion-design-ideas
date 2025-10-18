@@ -132,7 +132,7 @@ class Inversion:
         # We update the directives here (and not at the end of this method), so after
         # each iteration the objective function is still the same we passed to the
         # minimizer.
-        if self.counter > 1:
+        if self._counter > 1:
             for directive in self.directives:
                 directive(self.model, self.counter)
 

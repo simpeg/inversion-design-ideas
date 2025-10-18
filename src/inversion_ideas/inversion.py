@@ -134,12 +134,16 @@ class Inversion:
         if hasattr(self.stopping_criteria, "update"):
             self.stopping_criteria.update(self.model)
 
-        # Run directives (only after the zeroth iteration).
+        # Increase counter by one
+        self._counter += 1
+
+        # Run directives (only after the first minimization).
         # We update the directives here (and not at the end of this method), so after
         # each iteration the objective function is still the same we passed to the
         # minimizer.
-        for directive in self.directives:
-            directive(self.model, self.counter)
+        if self._counter > 1:
+            for directive in self.directives:
+                directive(self.model, self.counter)
 
         # Minimize objective function
         # ---------------------------
@@ -163,9 +167,6 @@ class Inversion:
         # Cache model if required
         if self.cache_models:
             self.models.append(model)
-
-        # Increase counter by one
-        self._counter += 1
 
         # Assign the model to self
         self.model = model

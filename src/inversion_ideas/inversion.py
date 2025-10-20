@@ -9,8 +9,9 @@ modify the objective function after each iteration and optionally a logger.
 import typing
 from collections.abc import Callable
 
-from rich.console import RenderableType
+from rich.console import Group, RenderableType
 from rich.live import Live
+from rich.spinner import Spinner
 
 from .base import Condition, Directive, Minimizer, Objective
 from .inversion_log import InversionLog, InversionLogRich
@@ -214,9 +215,17 @@ class Inversion:
         if show_log and self.log is not None:
             if not isinstance(self.log, RenderableType):
                 raise NotImplementedError()
-            with Live(self.log) as live:
+
+            spinner = Spinner(
+                name="dots", text="Starting inversion...", style="green", speed=1
+            )
+            group = Group(self.log, spinner)
+            with Live(group, refresh_per_second=10) as live:
                 for _ in self:
-                    live.refresh()
+                    spinner.text = f"Running iteration {self.counter + 1}..."
+                group.renderables.pop(-1)
+                live.refresh()
+
         else:
             for _ in self:
                 pass

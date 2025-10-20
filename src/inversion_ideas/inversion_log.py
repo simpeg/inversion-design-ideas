@@ -7,9 +7,11 @@ import typing
 import warnings
 from collections.abc import Callable, Iterable
 
-from rich.console import Console
+from rich.console import Console, Group, RenderableType
 from rich.live import Live
+from rich.panel import Panel
 from rich.table import Table
+from rich.tree import Tree
 
 from .base import MinimizerResult
 
@@ -283,11 +285,47 @@ class InversionLogRich(InversionLog):
         super().__init__(columns)
         self.kwargs = kwargs
 
-    def __rich__(self) -> Table:
+    def __rich__(self) -> RenderableType:
         """
         Return the log as a Rich renderable.
         """
+        if self.log_minimizer:
+            return self.group
         return self.table
+
+    @property
+    def group(self) -> Group:
+        if not hasattr(self, "_group"):
+            self._group = Group()
+        return self._group
+
+    def update_group(self, iteration: int):
+        # Build a table with just one row for this iteration
+        table = Table(**self.kwargs)
+        for column in self.columns.values():
+            table.add_column(column.title)
+
+        # Add the last row to it
+        row = []
+        for name, column in self.columns.items():
+            value = self.log[name][iteration]
+            fmt = column.fmt if column.fmt is not None else _get_fmt(value)
+            row.append(f"{value:{fmt}}")
+        table.add_row(*row)
+
+        # Put this table in a panel
+        panel = Panel(table, title=f"Iteration: {iteration:d}", expand=False)
+
+        # Create a tree to add the minimizer log
+        if self.minimizer_logs is not None:
+            minimizer_log = self.minimizer_logs[iteration]
+            if minimizer_log is not None:
+                tree = Tree(panel)
+                tree.add(Panel(minimizer_log, title="Minimizer log"))
+                self.group.renderables.append(tree)
+                return
+
+        self.group.renderables.append(panel)
 
     @property
     def table(self) -> Table:
@@ -319,7 +357,10 @@ class InversionLogRich(InversionLog):
         Update the log.
         """
         super().update(iteration, model)
-        self.update_table()
+        if self.log_minimizer:
+            self.update_group(iteration)
+        else:
+            self.update_table()
 
     def update_table(self):
         """

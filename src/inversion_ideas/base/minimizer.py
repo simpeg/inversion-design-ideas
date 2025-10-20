@@ -16,6 +16,7 @@ class MinimizerResult:
 
     iteration: int
     model: Model
+    objective_value: float
     conj_grad_iters: int | None = None
     line_search_iters: int | None = None
     step_norm: float | None = None

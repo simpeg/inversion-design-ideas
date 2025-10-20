@@ -112,6 +112,7 @@ class GaussNewtonConjugateGradient(Minimizer):
             minimizer_result = MinimizerResult(
                 iteration=iteration,
                 model=model,
+                objective_value=objective(model),
                 conj_grad_iters=0,
                 line_search_iters=0,
                 step_norm=0,
@@ -183,6 +184,7 @@ class GaussNewtonConjugateGradient(Minimizer):
                 minimizer_result = MinimizerResult(
                     iteration=iteration,
                     model=model,
+                    objective_value=phi_value,
                     conj_grad_iters=cg_iters,
                     line_search_iters=line_search_iters,
                     step_norm=float(np.linalg.norm(step)),

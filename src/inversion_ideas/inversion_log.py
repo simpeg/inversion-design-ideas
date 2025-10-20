@@ -44,17 +44,23 @@ class InversionLog:
         be used to generate the value for each row and column, or ``Column``. Each
         callable should take two arguments: ``iteration`` (an integer with the number
         of the iteration) and ``model`` (the inverted model as a 1d array).
+    log_minimizer : bool, optional
+        Whether to log the minimizer output or not.
     """
 
     def __init__(
-        self, columns: typing.Mapping[str, Column | Callable[[int, Model], typing.Any]]
+        self,
+        columns: typing.Mapping[str, Column | Callable[[int, Model], typing.Any]],
+        log_minimizer: bool = True,
     ):
         for name, column in columns.items():
             self.add_column(name, column)
 
-        # Initialize a list of minimizer logs. The first element of it should be None
-        # since minimizers are not ran in the first iteration.
-        self._minimizer_logs: list[None | MinimizerLog] = [None]
+        self.log_minimizer = log_minimizer
+        if self.log_minimizer:
+            # Initialize a list of minimizer logs. The first element of it should be
+            # None since minimizers are not run in the first iteration.
+            self._minimizer_logs: list[None | MinimizerLog] = [None]
 
     def update(self, iteration: int, model: Model):
         """
@@ -76,15 +82,20 @@ class InversionLog:
         callable
             A callable that can be passed to a minimizer ``callback`` argument.
         """
+        if not self.log_minimizer:
+            # Return a dummy callable if we are not logging the minimizer
+            return lambda _: None
         minimizer_log = MinimizerLog()
         self._minimizer_logs.append(minimizer_log)
         return minimizer_log.update
 
     @property
-    def minimizer_logs(self) -> list["None | MinimizerLog"]:
+    def minimizer_logs(self) -> list["None | MinimizerLog"] | None:
         """
         List of logs for the minimizer.
         """
+        if not self.log_minimizer:
+            return None
         return self._minimizer_logs
 
     @property
@@ -160,7 +171,7 @@ class InversionLog:
         return pandas.DataFrame(self.log).set_index(index)
 
     @classmethod
-    def create_from(cls, objective_function: Combo) -> typing.Self:
+    def create_from(cls, objective_function: Combo, **kwargs) -> typing.Self:
         r"""
         Create the standard log for a classic inversion.
 
@@ -169,6 +180,8 @@ class InversionLog:
         objective_function : Combo
             Combo objective function with two elements: the data misfit and the
             regularization (including a trade-off parameter).
+        kwargs : dict
+            Keyword arguments passed to the constructor of the class.
 
         Returns
         -------
@@ -224,7 +237,7 @@ class InversionLog:
                 fmt=".2e",
             ),
         }
-        return cls(columns)
+        return cls(columns, **kwargs)
 
 
 class InversionLogRich(InversionLog):
@@ -319,6 +332,7 @@ class MinimizerLog:
     columns: typing.ClassVar = {
         "iteration": "d",
         "model": "",
+        "objective_value": ".2e",
         "conj_grad_iters": "d",
         "line_search_iters": "d",
         "step_norm": ".2e",

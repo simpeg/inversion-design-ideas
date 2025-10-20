@@ -7,11 +7,9 @@ import typing
 import warnings
 from collections.abc import Callable, Iterable
 
-from rich.console import Console, Group, RenderableType
+from rich.console import Console, RenderableType
 from rich.live import Live
-from rich.panel import Panel
 from rich.table import Table
-from rich.tree import Tree
 
 from .base import MinimizerResult
 
@@ -69,23 +67,14 @@ class InversionLog:
         be used to generate the value for each row and column, or ``Column``. Each
         callable should take two arguments: ``iteration`` (an integer with the number
         of the iteration) and ``model`` (the inverted model as a 1d array).
-    log_minimizer : bool, optional
-        Whether to log the minimizer output or not.
     """
 
     def __init__(
         self,
         columns: typing.Mapping[str, Column | Callable[[int, Model], typing.Any]],
-        log_minimizer: bool = True,
     ):
         for name, column in columns.items():
             self.add_column(name, column)
-
-        self.log_minimizer = log_minimizer
-        if self.log_minimizer:
-            # Initialize a list of minimizer logs. The first element of it should be
-            # None since minimizers are not run in the first iteration.
-            self._minimizer_logs: list[None | MinimizerLog] = [None]
 
     def update(self, iteration: int, model: Model):
         """
@@ -93,35 +82,6 @@ class InversionLog:
         """
         for name, column in self.columns.items():
             self.log[name].append(column.callable(iteration, model))
-
-    def get_minimizer_callback(self) -> Callable[[MinimizerResult], None]:
-        """
-        Return a callable that can be passed to a minimizer.
-
-        This method creates a new :class:`MinimizerLog` that gets stored in a running
-        list inside this inversion log, and returns the :func:`MinimizerLog.update`
-        method that can be passed as a callback to any minimizer.
-
-        Returns
-        -------
-        callable
-            A callable that can be passed to a minimizer ``callback`` argument.
-        """
-        if not self.log_minimizer:
-            # Return a dummy callable if we are not logging the minimizer
-            return lambda _: None
-        minimizer_log = MinimizerLog()
-        self._minimizer_logs.append(minimizer_log)
-        return minimizer_log.update
-
-    @property
-    def minimizer_logs(self) -> list["None | MinimizerLog"] | None:
-        """
-        List of logs for the minimizer.
-        """
-        if not self.log_minimizer:
-            return None
-        return self._minimizer_logs
 
     @property
     def has_records(self) -> bool:
@@ -289,44 +249,21 @@ class InversionLogRich(InversionLog):
         """
         Return the log as a Rich renderable.
         """
-        if self.log_minimizer:
-            return self.group
         return self.table
 
-    @property
-    def group(self) -> Group:
-        if not hasattr(self, "_group"):
-            self._group = Group()
-        return self._group
-
-    def update_group(self, iteration: int):
-        # Build a table with just one row for this iteration
-        table = Table(**self.kwargs)
-        for column in self.columns.values():
-            table.add_column(column.title)
-
-        # Add the last row to it
-        # TODO: Check that each entry in the log has the same amount of elements
-        row = []
-        for name, column in self.columns.items():
-            value = self.log[name][iteration]
-            fmt = column.fmt if column.fmt is not None else _get_fmt(value)
-            row.append(f"{value:{fmt}}")
-        table.add_row(*row)
-
-        # Put this table in a panel
-        panel = Panel(table, title=f"Iteration: {iteration:d}", expand=False)
-
-        # Create a tree to add the minimizer log
-        if self.minimizer_logs is not None:
-            minimizer_log = self.minimizer_logs[iteration]
-            if minimizer_log is not None:
-                tree = Tree(panel)
-                tree.add(Panel(minimizer_log, title="Minimizer log"))
-                self.group.renderables.append(tree)
-                return
-
-        self.group.renderables.append(panel)
+    # def update_group(self, iteration: int):
+    #     self.update_table()
+    #
+    #     # Create a tree to add the minimizer log
+    #     if self.minimizer_logs is not None:
+    #         minimizer_log = self.minimizer_logs[iteration]
+    #         if minimizer_log is not None:
+    #             tree = Tree(self.table)
+    #             tree.add(Panel(minimizer_log, title="Minimizer log"))
+    #             self.group.renderables.append(tree)
+    #             return
+    #
+    #     self.group.renderables.append(panel)
 
     @property
     def table(self) -> Table:
@@ -358,10 +295,7 @@ class InversionLogRich(InversionLog):
         Update the log.
         """
         super().update(iteration, model)
-        if self.log_minimizer:
-            self.update_group(iteration)
-        else:
-            self.update_table()
+        self.update_table()
 
     def update_table(self):
         """
@@ -371,6 +305,7 @@ class InversionLogRich(InversionLog):
         ----------
         model : (n_params) array
         """
+        # TODO: Check that each entry in the log has the same amount of elements
         row = []
         for name, column in self.columns.items():
             value = self.log[name][-1]  # last element in the log

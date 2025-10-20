@@ -11,10 +11,12 @@ from collections.abc import Callable
 
 from rich.console import Group, RenderableType
 from rich.live import Live
+from rich.panel import Panel
 from rich.spinner import Spinner
+from rich.tree import Tree
 
 from .base import Condition, Directive, Minimizer, Objective
-from .inversion_log import InversionLog, InversionLogRich
+from .inversion_log import InversionLog, InversionLogRich, MinimizerLog
 from .typing import Log, Model
 from .utils import get_logger
 
@@ -50,6 +52,9 @@ class Inversion:
         If `True`, a default :class:`InversionLog` is going to be used.
         If `False`, no log will be assigned to the inversion, and :attr:`Inversion.log`
         will be ``None``.
+    log_minimizers : bool, optional
+        Whether to log the minimizers or not. Logging minimizers is only possible when
+        the ``minimizer`` is an instance of :class:`inversion_ideas.base.Minimizer``.
     minimizer_kwargs : dict, optional
         Extra arguments that will be passed to the ``minimizer`` when called.
     """
@@ -65,6 +70,7 @@ class Inversion:
         max_iterations: int | None = None,
         cache_models=False,
         log: Log | InversionLog | bool = True,
+        log_minimizers: bool = True,
         minimizer_kwargs: dict | None = None,
     ):
         self.objective_function = objective_function
@@ -77,6 +83,7 @@ class Inversion:
         if minimizer_kwargs is None:
             minimizer_kwargs = {}
         self.minimizer_kwargs = minimizer_kwargs
+        self.log_minimizers = log_minimizers
 
         # Assign log
         if log is False:
@@ -149,10 +156,12 @@ class Inversion:
         # Minimize objective function
         # ---------------------------
         if isinstance(self.minimizer, Minimizer):
-            # Get minimizer callback from the log
+            # Generate a new minimizer log for this iteration
             minimizer_kwargs = self.minimizer_kwargs.copy()
             if self.log is not None:
-                minimizer_kwargs["callback"] = self.log.get_minimizer_callback()
+                minimizer_log = MinimizerLog()
+                self.minimizer_logs.append(minimizer_log)
+                minimizer_kwargs["callback"] = minimizer_log.update
 
             # Unpack the generator and keep only the last model
             *_, model = self.minimizer(
@@ -203,6 +212,17 @@ class Inversion:
             self._models = [self.initial_model]
         return self._models
 
+    @property
+    def minimizer_logs(self) -> list[None | MinimizerLog] | None:
+        """
+        Logs of minimizers.
+        """
+        if not self.log_minimizers:
+            return None
+        if not hasattr(self, "_minimizer_logs"):
+            self._minimizer_logs = [None]
+        return self._minimizer_logs
+
     def run(self, show_log=True) -> Model:
         """
         Run the inversion.
@@ -219,9 +239,19 @@ class Inversion:
             spinner = Spinner(
                 name="dots", text="Starting inversion...", style="green", speed=1
             )
-            group = Group(self.log, spinner)
+            log = Tree(self.log) if self.log_minimizers else self.log
+            group = Group(log, spinner)
+
             with Live(group, refresh_per_second=10) as live:
                 for _ in self:
+                    if self.minimizer_logs is not None:
+                        minimizer_log = self.minimizer_logs[self.counter]
+                        if minimizer_log is not None:
+                            panel = Panel(
+                                minimizer_log,
+                                title=f"Minimizer log for iteration {self.counter}",
+                            )
+                            log.add(panel)
                     spinner.text = f"Running iteration {self.counter + 1}..."
                 group.renderables.pop(-1)
                 live.refresh()

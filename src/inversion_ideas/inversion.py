@@ -247,11 +247,11 @@ class Inversion:
                     if self.minimizer_logs is not None:
                         minimizer_log = self.minimizer_logs[self.counter]
                         if minimizer_log is not None:
-                            panel = Panel(
-                                minimizer_log,
-                                title=f"Minimizer log for iteration {self.counter}",
+                            renderable = minimizer_log.__rich__()
+                            renderable.title = (
+                                f"Minimizer log for iteration {self.counter}"
                             )
-                            log.add(panel)
+                            log.add(renderable)
                     spinner.text = f"Running iteration {self.counter + 1}..."
                 group.renderables.pop(-1)
                 live.refresh()

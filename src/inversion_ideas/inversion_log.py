@@ -80,16 +80,6 @@ class InversionLog:
         self._minimizer_logs.append(minimizer_log)
         return minimizer_log.update
 
-    def __len__(self):
-        """Return number of entries in the log."""
-        if not self.has_records:
-            return 0
-        n_entries = [len(v) for v in self.log.values()]
-        if not all(n_entries[0] == n for n in n_entries):
-            msg = "Invalid log with variable entries."
-            raise ValueError(msg)
-        return n_entries[0]
-
     @property
     def minimizer_logs(self) -> list["None | MinimizerLog"]:
         """
@@ -261,26 +251,13 @@ class InversionLogRich(InversionLog):
         """
         Return the log as a Rich renderable.
         """
-        return self._build_rich_table()
-
-    def _build_rich_table(self):
-        """Represent the log as a Rich table."""
-        table = Table(*self.log.keys())
-        for i in range(len(self)):
-            row = []
-            for name, column in self.columns.items():
-                value = self.log[name][i]
-                fmt = column.fmt if column.fmt is not None else self._get_fmt(value)
-                row.append(f"{value:{fmt}}")
-            table.add_row(*row)
-        return table
+        return self.table
 
     @property
     def table(self) -> Table:
         """
         Table for the inversion log.
         """
-        warnings.warn("table will be removed", FutureWarning, stacklevel=2)
         if not hasattr(self, "_table"):
             self._table = Table(**self.kwargs)
             for column in self.columns.values():
@@ -301,6 +278,13 @@ class InversionLogRich(InversionLog):
         warnings.warn("live will be removed", FutureWarning, stacklevel=2)
         return Live(self.table, **kwargs)
 
+    def update(self, iteration: int, model: Model):
+        """
+        Update the log.
+        """
+        super().update(iteration, model)
+        self.update_table()
+
     def update_table(self):
         """
         Add row to the table given the latest inverted model.
@@ -309,7 +293,6 @@ class InversionLogRich(InversionLog):
         ----------
         model : (n_params) array
         """
-        warnings.warn("update_table will be removed", FutureWarning, stacklevel=2)
         row = []
         for name, column in self.columns.items():
             value = self.log[name][-1]  # last element in the log
@@ -347,26 +330,7 @@ class MinimizerLog:
         """
         for column in self.columns:
             self.log[column].append(getattr(minimizer_result, column))
-
-    def __len__(self):
-        """Return number of entries in the log."""
-        if not self.has_records:
-            return 0
-        n_entries = [len(v) for v in self.log.values()]
-        if not all(n_entries[0] == n for n in n_entries):
-            msg = "Invalid log with variable entries."
-            raise ValueError(msg)
-        return n_entries[0]
-
-    @property
-    def has_records(self) -> bool:
-        """
-        Whether the log has recorded values or not.
-        """
-        if not hasattr(self, "_log"):
-            return False
-        has_records = any(bool(c) for c in self.log.values())
-        return has_records
+        self._update_table()
 
     @property
     def log(self) -> dict[str, list]:
@@ -379,18 +343,32 @@ class MinimizerLog:
         """
         Return the log as a Rich renderable.
         """
-        return self._build_rich_table()
+        return self.table
 
-    def _build_rich_table(self):
-        """Represent the log as a Rich table."""
-        table = Table(*self.log.keys())
-        for i in range(len(self)):
-            row = []
-            for column, fmt in self.columns.items():
-                value = self.log[column][i]
-                row.append(f"{value:{fmt}}")
-            table.add_row(*row)
-        return table
+    @property
+    def table(self) -> Table:
+        """
+        Table for the inversion log.
+        """
+        if not hasattr(self, "_table"):
+            self._table = Table()
+            for column in self.columns:
+                self._table.add_column(column)
+        return self._table
+
+    def _update_table(self):
+        """
+        Add last row in the log to the Rich table.
+
+        Parameters
+        ----------
+        model : (n_params) array
+        """
+        row = []
+        for column, fmt in self.columns.items():
+            value = self.log[column][-1]  # last element in the log
+            row.append(f"{value:{fmt}}")
+        self.table.add_row(*row)
 
     def show(self):
         """

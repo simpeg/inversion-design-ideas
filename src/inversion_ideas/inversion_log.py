@@ -306,6 +306,7 @@ class InversionLogRich(InversionLog):
             table.add_column(column.title)
 
         # Add the last row to it
+        # TODO: Check that each entry in the log has the same amount of elements
         row = []
         for name, column in self.columns.items():
             value = self.log[name][iteration]

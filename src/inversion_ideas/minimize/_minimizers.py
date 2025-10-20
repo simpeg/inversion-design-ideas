@@ -113,7 +113,7 @@ class GaussNewtonConjugateGradient(Minimizer):
                 iteration=iteration,
                 model=model,
                 objective_value=objective(model),
-                conj_grad_iters=0,
+                conj_grad_code=0,
                 line_search_iters=0,
                 step_norm=0,
             )

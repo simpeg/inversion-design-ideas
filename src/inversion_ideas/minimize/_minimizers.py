@@ -185,7 +185,7 @@ class GaussNewtonConjugateGradient(Minimizer):
                     iteration=iteration,
                     model=model,
                     objective_value=phi_value,
-                    conj_grad_iters=cg_iters,
+                    conj_grad_code=cg_iters,
                     line_search_iters=line_search_iters,
                     step_norm=float(np.linalg.norm(step)),
                 )

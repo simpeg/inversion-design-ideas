@@ -22,6 +22,29 @@ from .base import Combo
 from .typing import Model
 
 
+def _get_fmt(value):
+    """
+    Guess fmt of object based on its value.
+
+    Parameters
+    ----------
+    value : Any
+
+    Returns
+    -------
+    fmt : str
+    """
+    if isinstance(value, bool):
+        fmt = ""
+    elif isinstance(value, numbers.Integral):
+        fmt = "d"
+    elif isinstance(value, numbers.Real):
+        fmt = ".2e"
+    else:
+        fmt = ""
+    return fmt
+
+
 class Column(typing.NamedTuple):
     """
     Column for the ``InversionLog``.
@@ -309,48 +332,29 @@ class InversionLogRich(InversionLog):
         row = []
         for name, column in self.columns.items():
             value = self.log[name][-1]  # last element in the log
-            fmt = column.fmt if column.fmt is not None else self._get_fmt(value)
+            fmt = column.fmt if column.fmt is not None else _get_fmt(value)
             row.append(f"{value:{fmt}}")
         self.table.add_row(*row)
-
-    def _get_fmt(self, value):
-        if isinstance(value, bool):
-            fmt = ""
-        elif isinstance(value, numbers.Integral):
-            fmt = "d"
-        elif isinstance(value, numbers.Real):
-            fmt = ".2e"
-        else:
-            fmt = ""
-        return fmt
 
 
 class MinimizerLog:
     """Class to store results of a minimizer in the form of a log."""
 
-    # Columns defined by the fields in MinimizerResult
-    columns: typing.ClassVar = {
-        "iteration": "d",
-        "model": "",
-        "objective_value": ".2e",
-        "conj_grad_iters": "d",
-        "line_search_iters": "d",
-        "step_norm": ".2e",
-    }
-
     def update(self, minimizer_result: MinimizerResult):
         """
         Use as callback for :class:`inversion_ideas.base.Minimizer`.
         """
-        for column in self.columns:
-            self.log[column].append(getattr(minimizer_result, column))
+        for field, value in minimizer_result.items():
+            if field not in self.log:
+                self.log[field] = []
+            self.log[field].append(value)
         self._update_table()
 
     @property
     def log(self) -> dict[str, list]:
         """Returns the log."""
         if not hasattr(self, "_log"):
-            self._log: dict[str, list] = {col: [] for col in self.columns}
+            self._log: dict[str, list] = {}
         return self._log
 
     def __rich__(self) -> Table:
@@ -366,8 +370,9 @@ class MinimizerLog:
         """
         if not hasattr(self, "_table"):
             self._table = Table()
-            for column in self.columns:
-                self._table.add_column(column)
+        if not self._table.columns:
+            for column_name in self.log:
+                self._table.add_column(column_name)
         return self._table
 
     def _update_table(self):
@@ -379,8 +384,9 @@ class MinimizerLog:
         model : (n_params) array
         """
         row = []
-        for column, fmt in self.columns.items():
-            value = self.log[column][-1]  # last element in the log
+        for values in self.log.values():
+            value = values[-1]  # last element in the log
+            fmt = _get_fmt(value)
             row.append(f"{value:{fmt}}")
         self.table.add_row(*row)
 

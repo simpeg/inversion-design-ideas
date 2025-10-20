@@ -4,22 +4,34 @@ Base class for minimizer.
 
 from abc import ABC, abstractmethod
 from collections.abc import Callable, Generator
-from dataclasses import dataclass
 
 from ..typing import Model
 from .objective_function import Objective
 
 
-@dataclass
-class MinimizerResult:
-    """Dataclass to store results of a single minimization iteration."""
+class MinimizerResult(dict):
+    """
+    Dictionary to store results of a single minimization iteration.
 
-    iteration: int
-    model: Model
-    objective_value: float
-    conj_grad_iters: int | None = None
-    line_search_iters: int | None = None
-    step_norm: float | None = None
+    This class is a child of ``dict``, but allows to access the values through
+    attributes.
+
+    Notes
+    -----
+    Inspired in the :class:`scipy.optimize.OptimizeResult`.
+    """
+
+    def __getattr__(self, name):
+        try:
+            return self[name]
+        except KeyError as e:
+            raise AttributeError(name) from e
+
+    __setattr__ = dict.__setitem__  # type: ignore[assignment]
+    __delattr__ = dict.__delitem__  # type: ignore[assignment]
+
+    def __dir__(self):
+        return list(self.keys())
 
 
 class Minimizer(ABC):

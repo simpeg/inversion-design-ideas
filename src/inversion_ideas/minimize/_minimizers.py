@@ -62,7 +62,7 @@ class GaussNewtonConjugateGradient(Minimizer):
     def __call__(
         self,
         objective: Objective,
-        initial_model: npt.NDArray[np.float64],
+        initial_model: Model,
         preconditioner: Preconditioner
         | Callable[[Model], Preconditioner]
         | None = None,

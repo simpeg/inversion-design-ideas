@@ -4,9 +4,6 @@ Functions to easily build commonly used objects in inversions.
 
 from collections.abc import Callable
 
-import numpy as np
-import numpy.typing as npt
-
 from .base import Minimizer, Objective
 from .conditions import ChiTarget, ObjectiveChanged
 from .data_misfit import DataMisfit
@@ -22,7 +19,7 @@ def create_inversion(
     model_norm: Objective,
     *,
     starting_beta: float,
-    initial_model: npt.NDArray[np.float64],
+    initial_model: Model,
     minimizer: Minimizer | Callable[[Objective, Model], Model],
     beta_cooling_factor: float = 2.0,
     beta_cooling_rate: int = 1,

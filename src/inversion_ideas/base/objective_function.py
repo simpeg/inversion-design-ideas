@@ -12,6 +12,8 @@ import numpy.typing as npt
 from scipy.sparse import sparray
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
+from ..typing import Model
+
 
 class Objective(ABC):
     """
@@ -34,20 +36,20 @@ class Objective(ABC):
         """
 
     @abstractmethod
-    def __call__(self, model: npt.NDArray) -> float:
+    def __call__(self, model: Model) -> float:
         """
         Evaluate the objective function for a given model.
         """
 
     @abstractmethod
-    def gradient(self, model: npt.NDArray) -> npt.NDArray[np.float64]:
+    def gradient(self, model: Model) -> npt.NDArray[np.float64]:
         """
         Evaluate the gradient of the objective function for a given model.
         """
 
     @abstractmethod
     def hessian(
-        self, model: npt.NDArray
+        self, model: Model
     ) -> npt.NDArray[np.float64] | sparray | LinearOperator:
         """
         Evaluate the hessian of the objective function for a given model.
@@ -139,14 +141,14 @@ class Scaled(Objective):
         """
         return self.multiplier * self.function(model)
 
-    def gradient(self, model: npt.NDArray) -> npt.NDArray[np.float64]:
+    def gradient(self, model: Model) -> npt.NDArray[np.float64]:
         """
         Evaluate the gradient of the objective function for a given model.
         """
         return self.multiplier * self.function.gradient(model)
 
     def hessian(
-        self, model: npt.NDArray
+        self, model: Model
     ) -> npt.NDArray[np.float64] | sparray | LinearOperator:
         """
         Evaluate the hessian of the objective function for a given model.
@@ -232,14 +234,14 @@ class Combo(Objective):
         """
         return sum(f(model) for f in self.functions)
 
-    def gradient(self, model: npt.NDArray) -> npt.NDArray[np.float64]:
+    def gradient(self, model: Model) -> npt.NDArray[np.float64]:
         """
         Evaluate the gradient of the objective function for a given model.
         """
         return sum(f.gradient(model) for f in self.functions)
 
     def hessian(
-        self, model: npt.NDArray
+        self, model: Model
     ) -> npt.NDArray[np.float64] | sparray | LinearOperator:
         """
         Evaluate the hessian of the objective function for a given model.

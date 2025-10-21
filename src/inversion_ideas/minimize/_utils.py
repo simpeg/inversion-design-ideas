@@ -6,11 +6,12 @@ import numpy as np
 import numpy.typing as npt
 
 from ..base import Objective
+from ..typing import Model
 
 
 def backtracking_line_search(
     phi: Objective,
-    model: npt.NDArray[np.float64],
+    model: Model,
     search_direction: npt.NDArray[np.float64],
     *,
     contraction_factor: float = 0.5,

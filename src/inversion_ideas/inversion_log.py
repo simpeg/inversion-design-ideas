@@ -6,8 +6,6 @@ import numbers
 import typing
 from collections.abc import Callable, Iterable
 
-import numpy as np
-import numpy.typing as npt
 from rich.console import Console
 from rich.live import Live
 from rich.table import Table
@@ -113,7 +111,7 @@ class InversionLog:
             self._log: dict[str, list] = {col: [] for col in self.columns}
         return self._log
 
-    def update(self, iteration: int, model: npt.NDArray[np.float64]):
+    def update(self, iteration: int, model: Model):
         """
         Update the log.
         """
@@ -268,7 +266,7 @@ class InversionLogRich(InversionLog):
             fmt = ""
         return fmt
 
-    def update(self, iteration: int, model: npt.NDArray[np.float64]):
+    def update(self, iteration: int, model: Model):
         """
         Update the log.
 

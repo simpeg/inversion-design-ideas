@@ -3,7 +3,6 @@ Directives to modify the objective function between iterations of an inversion.
 """
 
 import numpy as np
-import numpy.typing as npt
 
 from ._utils import extract_from_combo
 from .base import Combo, Directive, Objective, Scaled, Simulation
@@ -44,7 +43,7 @@ class MultiplierCooler(Directive):
         self.cooling_factor = cooling_factor
         self.cooling_rate = cooling_rate
 
-    def __call__(self, model: npt.NDArray[np.float64], iteration: int):  # noqa: ARG002
+    def __call__(self, model: Model, iteration: int):  # noqa: ARG002
         """
         Cool the multiplier.
         """

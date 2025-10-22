@@ -92,7 +92,7 @@ class DataMisfit(Objective):
         self.set_name("d")
 
     @cache_on_model
-    def __call__(self, model) -> float:
+    def __call__(self, model: Model) -> float:
         # TODO:
         # Cache invalidation: we should clean the cache if data or uncertainties change.
         # Or they should be immutable.
@@ -100,7 +100,7 @@ class DataMisfit(Objective):
         weights_matrix = self.weights_matrix
         return residual.T @ weights_matrix.T @ weights_matrix @ residual
 
-    def gradient(self, model) -> npt.NDArray[np.float64]:
+    def gradient(self, model: Model) -> npt.NDArray[np.float64]:
         """
         Gradient vector.
         """
@@ -108,7 +108,9 @@ class DataMisfit(Objective):
         weights_matrix = self.weights_matrix
         return -2 * jac.T @ (weights_matrix.T @ weights_matrix @ self.residual(model))
 
-    def hessian(self, model) -> npt.NDArray[np.float64] | sparray | LinearOperator:
+    def hessian(
+        self, model: Model
+    ) -> npt.NDArray[np.float64] | sparray | LinearOperator:
         """
         Hessian matrix.
         """

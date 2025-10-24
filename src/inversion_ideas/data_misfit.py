@@ -8,6 +8,7 @@ from scipy.sparse import dia_array, diags_array, sparray
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from .base import Objective
+from .typing import Model
 from .utils import cache_on_model
 
 
@@ -94,7 +95,7 @@ class DataMisfit(Objective):
         self.set_name("d")
 
     @cache_on_model
-    def __call__(self, model) -> float:
+    def __call__(self, model: Model) -> float:
         # TODO:
         # Cache invalidation: we should clean the cache if data or uncertainties change.
         # Or they should be immutable.
@@ -102,7 +103,7 @@ class DataMisfit(Objective):
         weights_matrix = self.weights_matrix
         return residual.T @ weights_matrix.T @ weights_matrix @ residual
 
-    def gradient(self, model) -> npt.NDArray[np.float64]:
+    def gradient(self, model: Model) -> npt.NDArray[np.float64]:
         """
         Gradient vector.
         """
@@ -110,7 +111,9 @@ class DataMisfit(Objective):
         weights_matrix = self.weights_matrix
         return -2 * jac.T @ (weights_matrix.T @ weights_matrix @ self.residual(model))
 
-    def hessian(self, model) -> npt.NDArray[np.float64] | sparray | LinearOperator:
+    def hessian(
+        self, model: Model
+    ) -> npt.NDArray[np.float64] | sparray | LinearOperator:
         """
         Hessian matrix.
         """
@@ -120,7 +123,7 @@ class DataMisfit(Objective):
         weights_matrix = aslinearoperator(self.weights_matrix)
         return 2 * jac.T @ weights_matrix.T @ weights_matrix @ jac
 
-    def hessian_diagonal(self, model) -> npt.NDArray[np.float64]:
+    def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
         """
         Diagonal of the Hessian.
         """
@@ -148,7 +151,7 @@ class DataMisfit(Objective):
         """
         return self.data.size
 
-    def residual(self, model):
+    def residual(self, model: Model):
         r"""
         Residual vector.
 
@@ -189,7 +192,7 @@ class DataMisfit(Objective):
         """
         return diags_array(1 / self.uncertainty)
 
-    def chi_factor(self, model):
+    def chi_factor(self, model: Model):
         """
         Compute chi factor.
 

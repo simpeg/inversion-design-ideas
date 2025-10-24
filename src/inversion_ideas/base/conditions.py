@@ -12,6 +12,8 @@ from abc import ABC, abstractmethod
 from rich.panel import Panel
 from rich.tree import Tree
 
+from ..typing import Model
+
 
 def _get_info_title(condition, model) -> str:
     """
@@ -30,9 +32,9 @@ class Condition(ABC):
     """
 
     @abstractmethod
-    def __call__(self, model) -> bool: ...
+    def __call__(self, model: Model) -> bool: ...
 
-    def update(self, model):  # noqa: B027
+    def update(self, model: Model):  # noqa: B027
         """
         Update the condition.
         """
@@ -48,7 +50,7 @@ class Condition(ABC):
         # necessary. The base class implements it to provide a common interface, even
         # for those children that don't implement it.
 
-    def info(self, model) -> Tree:
+    def info(self, model: Model) -> Tree:
         """
         Display information about the condition for a given model.
         """
@@ -86,9 +88,9 @@ class _Mixin(ABC):
         self.condition_b = condition_b
 
     @abstractmethod
-    def __call__(self, model) -> bool: ...
+    def __call__(self, model: Model) -> bool: ...
 
-    def update(self, model):
+    def update(self, model: Model):
         """
         Update the underlying conditions.
         """
@@ -96,7 +98,7 @@ class _Mixin(ABC):
             if hasattr(condition, "update"):
                 condition.update(model)
 
-    def info(self, model) -> Tree:
+    def info(self, model: Model) -> Tree:
         status = self(model)
         checkbox = "x" if status else " "
         color = "green" if status else "red"
@@ -128,7 +130,7 @@ class LogicalAnd(_Mixin, Condition):
     Mixin condition for the AND operation between two other conditions.
     """
 
-    def __call__(self, model) -> bool:
+    def __call__(self, model: Model) -> bool:
         return self.condition_a(model) and self.condition_b(model)
 
 
@@ -137,7 +139,7 @@ class LogicalOr(_Mixin, Condition):
     Mixin condition for the OR operation between two other conditions.
     """
 
-    def __call__(self, model) -> bool:
+    def __call__(self, model: Model) -> bool:
         return self.condition_a(model) or self.condition_b(model)
 
 
@@ -146,5 +148,5 @@ class LogicalXor(_Mixin, Condition):
     Mixin condition for the XOR operation between two other conditions.
     """
 
-    def __call__(self, model) -> bool:
+    def __call__(self, model: Model) -> bool:
         return self.condition_a(model) ^ self.condition_b(model)

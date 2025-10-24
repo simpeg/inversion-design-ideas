@@ -8,6 +8,7 @@ from scipy.sparse import dia_array, diags_array
 
 from .._utils import prod_arrays
 from ..base import Objective
+from ..typing import Model
 
 
 class TikhonovZero(Objective):
@@ -62,7 +63,7 @@ class TikhonovZero(Objective):
         )
         self.set_name("0")
 
-    def __call__(self, model) -> float:
+    def __call__(self, model: Model) -> float:
         """
         Evaluate the regularization on a given model.
 
@@ -75,7 +76,7 @@ class TikhonovZero(Objective):
         weights_matrix = self.weights_matrix
         return model_diff.T @ weights_matrix.T @ weights_matrix @ model_diff
 
-    def gradient(self, model):
+    def gradient(self, model: Model):
         """
         Gradient vector.
 
@@ -88,7 +89,7 @@ class TikhonovZero(Objective):
         weights_matrix = self.weights_matrix
         return 2 * weights_matrix.T @ weights_matrix @ model_diff
 
-    def hessian(self, model):  # noqa: ARG002
+    def hessian(self, model: Model):  # noqa: ARG002
         """
         Hessian matrix.
 
@@ -100,7 +101,7 @@ class TikhonovZero(Objective):
         weights_matrix = self.weights_matrix
         return 2 * weights_matrix.T @ weights_matrix
 
-    def hessian_diagonal(self, model) -> npt.NDArray[np.float64]:
+    def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
         """
         Diagonal of the Hessian.
 

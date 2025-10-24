@@ -5,6 +5,7 @@ Classes to represent objective functions.
 from abc import ABC, abstractmethod
 from collections.abc import Iterable, Iterator
 from copy import copy
+from numbers import Real
 from typing import Self
 
 import numpy as np
@@ -56,7 +57,7 @@ class Objective(ABC):
         """
 
     @abstractmethod
-    def hessian_diagonal(self, model) -> npt.NDArray[np.float64]:
+    def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
         """
         Diagonal of the Hessian.
         """
@@ -135,7 +136,7 @@ class Scaled(Objective):
         """
         return self.function.n_params
 
-    def __call__(self, model):
+    def __call__(self, model: Model):
         """
         Evaluate the objective function.
         """
@@ -155,7 +156,7 @@ class Scaled(Objective):
         """
         return self.multiplier * self.function.hessian(model)
 
-    def hessian_diagonal(self, model) -> npt.NDArray[np.float64]:
+    def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
         """
         Diagonal of the Hessian.
         """
@@ -187,11 +188,11 @@ class Scaled(Objective):
             phi_str = f"[ {phi_str} ]"
         return rf"${multiplier_str} \, {phi_str}$"
 
-    def __imul__(self, value) -> Self:
+    def __imul__(self, value: Real) -> Self:
         self.multiplier *= value
         return self
 
-    def __itruediv__(self, value) -> Self:
+    def __itruediv__(self, value: Real) -> Self:
         self.multiplier /= value
         return self
 
@@ -201,7 +202,7 @@ class Combo(Objective):
     Sum of objective functions.
     """
 
-    def __init__(self, functions):
+    def __init__(self, functions: list[Objective]):
         _get_n_params(functions)  # check if functions have the same n_params
         self._functions = functions
 
@@ -228,7 +229,7 @@ class Combo(Objective):
         """
         return _get_n_params(self.functions)
 
-    def __call__(self, model):
+    def __call__(self, model: Model):
         """
         Evaluate the objective function.
         """
@@ -248,7 +249,7 @@ class Combo(Objective):
         """
         return _sum(f.hessian(model) for f in self.functions)
 
-    def hessian_diagonal(self, model) -> npt.NDArray[np.float64]:
+    def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
         """
         Diagonal of the Hessian.
         """

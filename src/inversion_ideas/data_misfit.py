@@ -85,6 +85,8 @@ class DataMisfit(Objective):
         cache=False,
         build_hessian=False,
     ):
+        # TODO: Check that the data and uncertainties have the size as ndata in the
+        #       simulation.
         self.data = data
         self.uncertainty = uncertainty
         self.simulation = simulation

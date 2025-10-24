@@ -8,6 +8,7 @@ from scipy.sparse import dia_array, diags_array, sparray
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from .base import Objective
+from .typing import Model
 from .utils import cache_on_model
 
 
@@ -120,7 +121,7 @@ class DataMisfit(Objective):
         weights_matrix = aslinearoperator(self.weights_matrix)
         return 2 * jac.T @ weights_matrix.T @ weights_matrix @ jac
 
-    def hessian_diagonal(self, model) -> npt.NDArray[np.float64]:
+    def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
         """
         Diagonal of the Hessian.
         """
@@ -148,7 +149,7 @@ class DataMisfit(Objective):
         """
         return self.data.size
 
-    def residual(self, model):
+    def residual(self, model: Model):
         r"""
         Residual vector.
 
@@ -189,7 +190,7 @@ class DataMisfit(Objective):
         """
         return diags_array(1 / self.uncertainty)
 
-    def chi_factor(self, model):
+    def chi_factor(self, model: Model):
         """
         Compute chi factor.
 

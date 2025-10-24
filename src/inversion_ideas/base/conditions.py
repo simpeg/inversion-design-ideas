@@ -32,10 +32,9 @@ class Condition(ABC):
     """
 
     @abstractmethod
-    def __call__(self, model: Model) -> bool:
-        ...
+    def __call__(self, model: Model) -> bool: ...
 
-    def update(self, model):  # noqa: B027
+    def update(self, model: Model):  # noqa: B027
         """
         Update the condition.
         """
@@ -51,7 +50,7 @@ class Condition(ABC):
         # necessary. The base class implements it to provide a common interface, even
         # for those children that don't implement it.
 
-    def info(self, model) -> Tree:
+    def info(self, model: Model) -> Tree:
         """
         Display information about the condition for a given model.
         """
@@ -89,8 +88,7 @@ class _Mixin(ABC):
         self.condition_b = condition_b
 
     @abstractmethod
-    def __call__(self, model) -> bool:
-        ...
+    def __call__(self, model: Model) -> bool: ...
 
     def update(self, model: Model):
         """

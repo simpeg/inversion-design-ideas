@@ -229,7 +229,7 @@ class Combo(Objective):
         """
         return _get_n_params(self.functions)
 
-    def __call__(self, model):
+    def __call__(self, model: Model):
         """
         Evaluate the objective function.
         """
@@ -249,7 +249,7 @@ class Combo(Objective):
         """
         return _sum(f.hessian(model) for f in self.functions)
 
-    def hessian_diagonal(self, model) -> npt.NDArray[np.float64]:
+    def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
         """
         Diagonal of the Hessian.
         """

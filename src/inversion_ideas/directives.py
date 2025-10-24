@@ -182,6 +182,15 @@ class Irls(Directive):
             data_misfit, rtol=self.data_misfit_rtol
         )
 
+    @property
+    def beta_cooling_factor(self) -> float | None:
+        """
+        Current beta cooling factor.
+        """
+        if self._beta_cooler is None:
+            return None
+        return self._beta_cooler.cooling_factor
+
     def __call__(self, model: Model, iteration: int):
         """
         Apply IRLS.

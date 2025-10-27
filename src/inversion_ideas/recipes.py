@@ -1,5 +1,5 @@
 """
-Functions to easily build commonly used objects in inversions.
+Recipe functions to easily build commonly used inversions.
 """
 
 from collections.abc import Callable
@@ -14,7 +14,7 @@ from .preconditioners import JacobiPreconditioner
 from .typing import Model, Preconditioner
 
 
-def create_inversion(
+def create_l2_inversion(
     data_misfit: Objective,
     model_norm: Objective,
     *,

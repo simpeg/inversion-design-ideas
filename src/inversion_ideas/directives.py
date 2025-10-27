@@ -1,7 +1,7 @@
 """
 Directives to modify the objective function between iterations of an inversion.
 """
-import warnings
+
 import numpy as np
 
 from ._utils import extract_from_combo
@@ -148,9 +148,9 @@ class Irls(Directive):
             regularization_with_beta = _reg
 
         self.regularization_with_beta: Scaled = regularization_with_beta
-        self.sparse_regs: list[
-            SparseRegularization
-        ] = self._extract_sparse_regularizations(args)
+        self.sparse_regs: list[SparseRegularization] = (
+            self._extract_sparse_regularizations(args)
+        )
         if not self.sparse_regs:
             msg = (
                 "Invalid regularizations passed through the `args` argument. "

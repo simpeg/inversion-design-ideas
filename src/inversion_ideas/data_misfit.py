@@ -109,7 +109,7 @@ class DataMisfit(Objective):
         """
         jac = self.simulation.jacobian(model)
         weights_matrix = self.weights_matrix
-        return -2 * jac.T @ (weights_matrix.T @ weights_matrix @ self.residual(model))
+        return 2 * jac.T @ (weights_matrix.T @ weights_matrix @ self.residual(model))
 
     def hessian(
         self, model: Model
@@ -171,12 +171,12 @@ class DataMisfit(Objective):
 
         .. math::
 
-            \mathbf{r} = \mathbf{d} - \mathcal{F}(\mathbf{m})
+            \mathbf{r} = \mathcal{F}(\mathbf{m}) - \mathbf{d}
 
         where :math:`\mathbf{d}` is the vector with observed data, :math:`\mathcal{F}`
         is the forward model, and :math:`\mathbf{m}` is the model vector.
         """
-        return self.data - self.simulation(model)
+        return self.simulation(model) - self.data
 
     @property
     def weights(self) -> npt.NDArray[np.float64]:

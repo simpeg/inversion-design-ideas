@@ -119,7 +119,7 @@ class Smallness(_MeshBasedRegularization):
         *,
         active_cells: npt.NDArray[np.bool] | None = None,
         cell_weights: npt.NDArray | dict[str, npt.NDArray] | None = None,
-        reference_model=None,
+        reference_model: Model | None = None,
     ):
         self.mesh = mesh
         self.active_cells = (
@@ -341,7 +341,7 @@ class Flatness(_MeshBasedRegularization):
         *,
         active_cells: npt.NDArray[np.bool] | None = None,
         cell_weights: npt.NDArray | dict[str, npt.NDArray] | None = None,
-        reference_model=None,
+        reference_model: Model | None = None,
     ):
         self.mesh = mesh
         self.direction = direction
@@ -558,7 +558,7 @@ class SparseSmallness(_MeshBasedRegularization):
         norm: float,
         active_cells: npt.NDArray | None = None,
         cell_weights: npt.NDArray | dict[str, npt.NDArray] | None = None,
-        reference_model=None,
+        reference_model: Model | None = None,
         threshold: float = 1e-8,
         cooling_factor=1.25,
         model_previous: Model | None = None,

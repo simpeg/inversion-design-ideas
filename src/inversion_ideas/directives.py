@@ -96,6 +96,16 @@ class Irls(Directive):
         Relative tolerance for the data misfit.
         Used to compare the current value of the data misfit with its value after the
         stage one is finished.
+    cool_beta : bool, optional
+        Whether to cool down beta during the IRLS process.
+        If False, make sure you handle beta cooling in other way, like through other
+        directive.
+
+        .. warning::
+            If False, the Irls directive won't cool down beta during the inversions.
+            This might prevent from reaching convergence.
+            Make sure you handle beta cooling in other way, like through other
+            directive.
     """
 
     def __init__(
@@ -106,6 +116,7 @@ class Irls(Directive):
         chi_l2_target=1.0,
         beta_cooling_factor=2.0,
         data_misfit_rtol=1e-1,
+        cool_beta=True,
     ):
         if len(args) == 0:
             msg = (
@@ -153,12 +164,15 @@ class Irls(Directive):
             raise TypeError(msg)
 
         self.data_misfit_rtol = data_misfit_rtol
-        self.beta_cooling_factor = beta_cooling_factor
         self.chi_l2_target = chi_l2_target
 
         # Define a beta cooler
-        self._beta_cooler = MultiplierCooler(
-            self.regularization_with_beta, cooling_factor=self.beta_cooling_factor
+        self._beta_cooler = (
+            MultiplierCooler(
+                self.regularization_with_beta, cooling_factor=beta_cooling_factor
+            )
+            if cool_beta
+            else None
         )
 
         # Define a condition for the data misfit.
@@ -167,6 +181,15 @@ class Irls(Directive):
         self._dmisfit_below_threshold = ObjectiveChanged(
             data_misfit, rtol=self.data_misfit_rtol
         )
+
+    @property
+    def beta_cooling_factor(self) -> float | None:
+        """
+        Current beta cooling factor.
+        """
+        if self._beta_cooler is None:
+            return None
+        return self._beta_cooler.cooling_factor
 
     def __call__(self, model: Model, iteration: int):
         """
@@ -195,7 +218,8 @@ class Irls(Directive):
             return
 
         # Cool down beta otherwise
-        self._beta_cooler(model, iteration)
+        if self._beta_cooler is not None:
+            self._beta_cooler(model, iteration)
 
     def _stage_two(self, model: Model, iteration: int):
         """
@@ -206,15 +230,17 @@ class Irls(Directive):
             phi_d = self.data_misfit(model)
             # Adjust the cooling factor
             # (following current implementation of UpdateIRLS)
-            if phi_d > self._dmisfit_l2:
-                self._beta_cooler.cooling_factor = float(
-                    1 / np.mean([0.75, self._dmisfit_l2 / phi_d])
-                )
-            else:
-                self._beta_cooler.cooling_factor = float(
-                    1 / np.mean([2.0, self._dmisfit_l2 / phi_d])
-                )
-            self._beta_cooler(model, iteration)
+            if self._beta_cooler is not None:
+                if self._beta_cooler.cooling_factor != 1:
+                    if phi_d > self._dmisfit_l2:
+                        self._beta_cooler.cooling_factor = float(
+                            1 / np.mean([0.75, self._dmisfit_l2 / phi_d])
+                        )
+                    else:
+                        self._beta_cooler.cooling_factor = float(
+                            1 / np.mean([2.0, self._dmisfit_l2 / phi_d])
+                        )
+                self._beta_cooler(model, iteration)
         else:
             # Update the IRLS
             for sparse_reg in self.sparse_regs:

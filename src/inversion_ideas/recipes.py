@@ -1,20 +1,24 @@
 """
-Functions to easily build commonly used objects in inversions.
+Recipe functions to easily build commonly used inversions and objective functions.
 """
 
 from collections.abc import Callable
 
-from .base import Minimizer, Objective
+import numpy as np
+import numpy.typing as npt
+
+from .base import Combo, Minimizer, Objective
 from .conditions import ChiTarget, ObjectiveChanged
 from .data_misfit import DataMisfit
 from .directives import Irls, MultiplierCooler
 from .inversion import Inversion
 from .inversion_log import Column
 from .preconditioners import JacobiPreconditioner
+from .regularization import Flatness, Smallness
 from .typing import Model, Preconditioner
 
 
-def create_inversion(
+def create_l2_inversion(
     data_misfit: Objective,
     model_norm: Objective,
     *,
@@ -256,3 +260,95 @@ def create_sparse_inversion(
             ),
         )
     return inversion
+
+
+def create_tikhonov_regularization(
+    mesh,
+    *,
+    active_cells: npt.NDArray[np.bool] | None = None,
+    cell_weights: npt.NDArray | dict[str, npt.NDArray] | None = None,
+    reference_model: Model | None = None,
+    alpha_s: float | None = None,
+    alpha_x: float | None = None,
+    alpha_y: float | None = None,
+    alpha_z: float | None = None,
+    reference_model_in_flatness: bool = False,
+) -> Combo:
+    """
+    Create a linear combination of Tikhonov (L2) regularization terms.
+
+    Define a :class:`inversion_ideas.base.Combo` with L2 smallness and flatness
+    regularization terms.
+
+    Parameters
+    ----------
+    mesh : discretize.base.BaseMesh
+        Mesh to use in the regularization.
+    active_cells : (n_params) array or None, optional
+        Array full of bools that indicate the active cells in the mesh.
+    cell_weights : (n_params) array or dict of (n_params) arrays or None, optional
+        Array with cell weights.
+        For multiple cell weights, pass a dictionary where keys are strings and values
+        are the different weights arrays.
+        If None, no cell weights are going to be used.
+    reference_model : (n_params) array or None, optional
+        Array with values for the reference model.
+    alpha_s : float or None, optional
+        Multiplier for the smallness term.
+    alpha_x, alpha_y, alpha_z : float or None, optional
+        Multipliers for the flatness terms.
+
+    Returns
+    -------
+    inversion_ideas.base.Combo
+        Combo of L2 regularization terms.
+
+    Notes
+    -----
+    TODO
+    """
+    ndims = mesh.dim
+    if ndims == 2 and alpha_z is not None:
+        msg = f"Cannot pass 'alpha_z' when mesh has {ndims} dimensions."
+        raise TypeError(msg)
+    if ndims == 1 and (alpha_y is not None or alpha_z is not None):
+        msg = "Cannot pass 'alpha_y' nor 'alpha_z' when mesh has 1 dimension."
+        raise TypeError(msg)
+
+    smallness = Smallness(
+        mesh,
+        active_cells=active_cells,
+        cell_weights=cell_weights,
+        reference_model=reference_model,
+    )
+    if alpha_s is not None:
+        smallness = alpha_s * smallness
+
+    kwargs = {
+        "active_cells": active_cells,
+        "cell_weights": cell_weights,
+    }
+    if reference_model_in_flatness:
+        kwargs["reference_model"] = reference_model
+
+    match ndims:
+        case 3:
+            directions = ("x", "y", "z")
+            alphas = (alpha_x, alpha_y, alpha_z)
+        case 2:
+            directions = ("x", "y")
+            alphas = (alpha_x, alpha_y)
+        case 1:
+            directions = ("x",)
+            alphas = (alpha_x,)
+        case _:
+            raise ValueError()
+
+    regularization = smallness
+    for direction, alpha in zip(directions, alphas, strict=True):
+        phi = Flatness(mesh, **kwargs, direction=direction)
+        if alpha is not None:
+            phi = alpha * phi
+        regularization = regularization + phi
+
+    return regularization.flatten()

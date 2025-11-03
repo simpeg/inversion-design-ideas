@@ -8,6 +8,8 @@ import numpy as np
 from numpy.typing import NDArray
 from scipy.sparse.linalg import LinearOperator
 
+from ..typing import Model
+
 
 class Simulation(ABC):
     """
@@ -33,13 +35,13 @@ class Simulation(ABC):
         """
 
     @abstractmethod
-    def __call__(self, model) -> NDArray[np.float64]:
+    def __call__(self, model: Model) -> NDArray[np.float64]:
         """
         Evaluate simulation for a given model.
         """
 
     @abstractmethod
-    def jacobian(self, model) -> NDArray[np.float64] | LinearOperator:
+    def jacobian(self, model: Model) -> NDArray[np.float64] | LinearOperator:
         """
         Jacobian matrix for a given model.
         """

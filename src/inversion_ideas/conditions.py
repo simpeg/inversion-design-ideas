@@ -30,7 +30,7 @@ class CustomCondition(Condition):
     def __init__(self, func: Callable[[Model], bool]):
         self.func = func
 
-    def __call__(self, model) -> bool:
+    def __call__(self, model: Model) -> bool:
         return self.func(model)
 
     @classmethod
@@ -87,14 +87,14 @@ class ChiTarget(Condition):
         self.data_misfit = data_misfit
         self.chi_target = chi_target
 
-    def __call__(self, model) -> bool:
+    def __call__(self, model: Model) -> bool:
         """
         Check if condition has been met.
         """
         chi = self.data_misfit.chi_factor(model)
         return float(chi) < self.chi_target
 
-    def info(self, model) -> Tree:
+    def info(self, model: Model) -> Tree:
         tree = super().info(model)
         tree.add("Condition: chi < chi_target")
         tree.add(f"chi        = {self.data_misfit.chi_factor(model):.2e}")
@@ -148,20 +148,20 @@ class ModelChanged(Condition):
         self.rtol = rtol
         self.atol = atol
 
-    def __call__(self, model) -> bool:
+    def __call__(self, model: Model) -> bool:
         if not hasattr(self, "previous"):
             return False
         diff = float(np.linalg.norm(model - self.previous))
         previous = float(np.linalg.norm(self.previous))
         return diff <= max(previous * self.rtol, self.atol)
 
-    def update(self, model):
+    def update(self, model: Model):
         """
         Cache model as the ``previous`` one.
         """
         self.previous = model
 
-    def info(self, model) -> Tree:
+    def info(self, model: Model) -> Tree:
         tree = super().info(model)
         diff = float(np.linalg.norm(model - self.previous))
         previous = float(np.linalg.norm(self.previous))
@@ -229,20 +229,20 @@ class ObjectiveChanged(Condition):
         self.rtol = rtol
         self.atol = atol
 
-    def __call__(self, model) -> bool:
+    def __call__(self, model: Model) -> bool:
         if not hasattr(self, "previous"):
             return False
         diff = abs(self.objective_function(model) - self.previous)
         previous = abs(self.previous)
         return diff <= max(previous * self.rtol, self.atol)
 
-    def update(self, model):
+    def update(self, model: Model):
         """
         Cache value of objective function with model as the ``previous`` one.
         """
         self.previous: float = float(self.objective_function(model))
 
-    def info(self, model) -> Tree:
+    def info(self, model: Model) -> Tree:
         tree = super().info(model)
         diff = abs(self.objective_function(model) - self.previous)
         previous = abs(self.previous)
@@ -253,7 +253,7 @@ class ObjectiveChanged(Condition):
         tree.add(f"atol               = {self.atol:.2e}")
         return tree
 
-    def ratio(self, model) -> float:
+    def ratio(self, model: Model) -> float:
         """
         Ratio ``|φ(m) - φ(m_prev)|/|φ(m_prev)|``.
         """

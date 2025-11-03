@@ -7,7 +7,6 @@ from collections.abc import Callable, Generator
 from typing import Any
 
 import numpy as np
-import numpy.typing as npt
 from scipy.sparse.linalg import cg
 
 from ..base import Condition, Minimizer, MinimizerResult, Objective
@@ -68,7 +67,7 @@ class GaussNewtonConjugateGradient(Minimizer):
         | Callable[[Model], Preconditioner]
         | None = None,
         callback: Callable[[MinimizerResult], None] | None = None,
-    ) -> Generator[npt.NDArray[np.float64]]:
+    ) -> Generator[Model]:
         """
         Create iterator over Gauss-Newton minimization.
 

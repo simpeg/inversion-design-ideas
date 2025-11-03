@@ -6,7 +6,8 @@ import numpy as np
 import numpy.typing as npt
 from scipy.sparse.linalg import LinearOperator
 
-from inversion_ideas.base import Simulation
+from .base import Simulation
+from .typing import Model
 
 
 def wrap_simulation(simulation, *, store_jacobian=False):
@@ -85,13 +86,13 @@ class WrappedSimulation(Simulation):
         """
         return self.simulation.survey.nD
 
-    def __call__(self, model) -> npt.NDArray[np.float64]:
+    def __call__(self, model: Model) -> npt.NDArray[np.float64]:
         """
         Evaluate simulation for a given model.
         """
         return self.simulation.dpred(model)
 
-    def jacobian(self, model) -> npt.NDArray[np.float64] | LinearOperator:
+    def jacobian(self, model: Model) -> npt.NDArray[np.float64] | LinearOperator:
         """
         Jacobian matrix for a given model.
         """

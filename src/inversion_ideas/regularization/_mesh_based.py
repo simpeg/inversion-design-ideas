@@ -119,7 +119,7 @@ class Smallness(_MeshBasedRegularization):
         *,
         active_cells: npt.NDArray[np.bool] | None = None,
         cell_weights: npt.NDArray | dict[str, npt.NDArray] | None = None,
-        reference_model=None,
+        reference_model: Model | None = None,
     ):
         self.mesh = mesh
         self.active_cells = (
@@ -142,7 +142,7 @@ class Smallness(_MeshBasedRegularization):
         )
         self.set_name("s")
 
-    def __call__(self, model) -> float:
+    def __call__(self, model: Model) -> float:
         """
         Evaluate the regularization on a given model.
 
@@ -163,7 +163,7 @@ class Smallness(_MeshBasedRegularization):
             @ model_diff
         )
 
-    def gradient(self, model):
+    def gradient(self, model: Model):
         """
         Gradient vector.
 
@@ -184,7 +184,7 @@ class Smallness(_MeshBasedRegularization):
             @ model_diff
         )
 
-    def hessian(self, model):  # noqa: ARG002
+    def hessian(self, model: Model):  # noqa: ARG002
         """
         Hessian matrix.
 
@@ -203,7 +203,7 @@ class Smallness(_MeshBasedRegularization):
             @ cell_volumes_sqrt
         )
 
-    def hessian_diagonal(self, model) -> npt.NDArray[np.float64]:
+    def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
         """
         Diagonal of the Hessian.
 
@@ -341,7 +341,7 @@ class Flatness(_MeshBasedRegularization):
         *,
         active_cells: npt.NDArray[np.bool] | None = None,
         cell_weights: npt.NDArray | dict[str, npt.NDArray] | None = None,
-        reference_model=None,
+        reference_model: Model | None = None,
     ):
         self.mesh = mesh
         self.direction = direction
@@ -365,7 +365,7 @@ class Flatness(_MeshBasedRegularization):
         )
         self.set_name(direction)
 
-    def __call__(self, model) -> float:
+    def __call__(self, model: Model) -> float:
         """
         Evaluate the regularization on a given model.
 
@@ -389,7 +389,7 @@ class Flatness(_MeshBasedRegularization):
             @ model_diff
         )
 
-    def gradient(self, model):
+    def gradient(self, model: Model):
         """
         Gradient vector.
 
@@ -413,7 +413,7 @@ class Flatness(_MeshBasedRegularization):
             @ model_diff
         )
 
-    def hessian(self, model):  # noqa: ARG002
+    def hessian(self, model: Model):  # noqa: ARG002
         """
         Hessian matrix.
 
@@ -435,7 +435,7 @@ class Flatness(_MeshBasedRegularization):
             @ cell_gradient
         )
 
-    def hessian_diagonal(self, model) -> npt.NDArray[np.float64]:
+    def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
         """
         Diagonal of the Hessian.
 
@@ -558,10 +558,10 @@ class SparseSmallness(_MeshBasedRegularization):
         norm: float,
         active_cells: npt.NDArray | None = None,
         cell_weights: npt.NDArray | dict[str, npt.NDArray] | None = None,
-        reference_model=None,
+        reference_model: Model | None = None,
         threshold: float = 1e-8,
         cooling_factor=1.25,
-        model_previous: npt.NDArray | None = None,
+        model_previous: Model | None = None,
         irls=False,
     ):
         self.mesh = mesh
@@ -640,7 +640,7 @@ class SparseSmallness(_MeshBasedRegularization):
         diagonal = (self.model_previous**2 + self.threshold**2) ** power
         return diags_array(diagonal)
 
-    def __call__(self, model) -> float:
+    def __call__(self, model: Model) -> float:
         model_diff = model - self.reference_model
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
@@ -656,7 +656,7 @@ class SparseSmallness(_MeshBasedRegularization):
             @ model_diff
         )
 
-    def gradient(self, model):
+    def gradient(self, model: Model):
         """
         Gradient vector.
         """
@@ -675,7 +675,7 @@ class SparseSmallness(_MeshBasedRegularization):
             @ model_diff
         )
 
-    def hessian(self, model):  # noqa: ARG002
+    def hessian(self, model: Model):  # noqa: ARG002
         """
         Hessian matrix.
         """
@@ -692,7 +692,7 @@ class SparseSmallness(_MeshBasedRegularization):
             @ r_matrix
         )
 
-    def hessian_diagonal(self, model) -> npt.NDArray[np.float64]:
+    def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
         """
         Diagonal of the Hessian.
         """

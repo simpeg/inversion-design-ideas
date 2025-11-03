@@ -11,7 +11,6 @@ from collections.abc import Callable
 
 from rich.console import Group, RenderableType
 from rich.live import Live
-from rich.panel import Panel
 from rich.spinner import Spinner
 from rich.tree import Tree
 

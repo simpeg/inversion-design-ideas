@@ -2,7 +2,7 @@
 Recipe functions to easily build commonly used inversions and objective functions.
 """
 
-from collections.abc import Callable, Iterable
+from collections.abc import Callable
 
 import numpy as np
 import numpy.typing as npt

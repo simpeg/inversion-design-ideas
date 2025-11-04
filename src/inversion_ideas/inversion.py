@@ -82,7 +82,7 @@ class Inversion:
         if minimizer_kwargs is None:
             minimizer_kwargs = {}
         self.minimizer_kwargs = minimizer_kwargs
-        self.log_minimizers = log_minimizers
+        self._log_minimizers = log_minimizers
 
         # Assign log
         if log is False:
@@ -157,7 +157,7 @@ class Inversion:
         if isinstance(self.minimizer, Minimizer):
             # Generate a new minimizer log for this iteration
             minimizer_kwargs = self.minimizer_kwargs.copy()
-            if self.log is not None:
+            if self.log is not None and self.log_minimizers:
                 minimizer_log = MinimizerLog()
                 self.minimizer_logs.append(minimizer_log)
                 minimizer_kwargs["callback"] = minimizer_log.update
@@ -212,6 +212,11 @@ class Inversion:
         return self._models
 
     @property
+    def log_minimizers(self) -> bool:
+        """Whether if minimizers will be logged or not."""
+        return self._log_minimizers and isinstance(self.minimizer, Minimizer)
+
+    @property
     def minimizer_logs(self) -> list[None | MinimizerLog] | None:
         """
         Logs of minimizers.
@@ -243,7 +248,7 @@ class Inversion:
 
             with Live(group, refresh_per_second=10) as live:
                 for _ in self:
-                    if self.minimizer_logs is not None:
+                    if self.log_minimizers:
                         minimizer_log = self.minimizer_logs[self.counter]
                         if minimizer_log is not None:
                             renderable = minimizer_log.__rich__()

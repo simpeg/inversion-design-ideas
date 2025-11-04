@@ -4,11 +4,14 @@ Classes for inversion logs.
 
 import numbers
 import typing
+import warnings
 from collections.abc import Callable, Iterable
 
-from rich.console import Console
+from rich.console import Console, RenderableType
 from rich.live import Live
 from rich.table import Table
+
+from .base import MinimizerResult
 
 try:
     import pandas  # noqa: ICN001
@@ -17,6 +20,29 @@ except ImportError:
 
 from .base import Combo
 from .typing import Model
+
+
+def _get_fmt(value):
+    """
+    Guess fmt of object based on its value.
+
+    Parameters
+    ----------
+    value : Any
+
+    Returns
+    -------
+    fmt : str
+    """
+    if isinstance(value, bool):
+        fmt = ""
+    elif isinstance(value, numbers.Integral):
+        fmt = "d"
+    elif isinstance(value, numbers.Real):
+        fmt = ".2e"
+    else:
+        fmt = ""
+    return fmt
 
 
 class Column(typing.NamedTuple):
@@ -44,10 +70,18 @@ class InversionLog:
     """
 
     def __init__(
-        self, columns: typing.Mapping[str, Column | Callable[[int, Model], typing.Any]]
+        self,
+        columns: typing.Mapping[str, Column | Callable[[int, Model], typing.Any]],
     ):
         for name, column in columns.items():
             self.add_column(name, column)
+
+    def update(self, iteration: int, model: Model):
+        """
+        Update the log.
+        """
+        for name, column in self.columns.items():
+            self.log[name].append(column.callable(iteration, model))
 
     @property
     def has_records(self) -> bool:
@@ -111,13 +145,6 @@ class InversionLog:
             self._log: dict[str, list] = {col: [] for col in self.columns}
         return self._log
 
-    def update(self, iteration: int, model: Model):
-        """
-        Update the log.
-        """
-        for name, column in self.columns.items():
-            self.log[name].append(column.callable(iteration, model))
-
     def to_pandas(self, index_col=0):
         """
         Generate a ``pandas.DataFrame`` out of the log.
@@ -129,7 +156,7 @@ class InversionLog:
         return pandas.DataFrame(self.log).set_index(index)
 
     @classmethod
-    def create_from(cls, objective_function: Combo) -> typing.Self:
+    def create_from(cls, objective_function: Combo, **kwargs) -> typing.Self:
         r"""
         Create the standard log for a classic inversion.
 
@@ -138,6 +165,8 @@ class InversionLog:
         objective_function : Combo
             Combo objective function with two elements: the data misfit and the
             regularization (including a trade-off parameter).
+        kwargs : dict
+            Keyword arguments passed to the constructor of the class.
 
         Returns
         -------
@@ -193,7 +222,7 @@ class InversionLog:
                 fmt=".2e",
             ),
         }
-        return cls(columns)
+        return cls(columns, **kwargs)
 
 
 class InversionLogRich(InversionLog):
@@ -216,6 +245,26 @@ class InversionLogRich(InversionLog):
         super().__init__(columns)
         self.kwargs = kwargs
 
+    def __rich__(self) -> RenderableType:
+        """
+        Return the log as a Rich renderable.
+        """
+        return self.table
+
+    # def update_group(self, iteration: int):
+    #     self.update_table()
+    #
+    #     # Create a tree to add the minimizer log
+    #     if self.minimizer_logs is not None:
+    #         minimizer_log = self.minimizer_logs[iteration]
+    #         if minimizer_log is not None:
+    #             tree = Tree(self.table)
+    #             tree.add(Panel(minimizer_log, title="Minimizer log"))
+    #             self.group.renderables.append(tree)
+    #             return
+    #
+    #     self.group.renderables.append(panel)
+
     @property
     def table(self) -> Table:
         """
@@ -229,16 +278,24 @@ class InversionLogRich(InversionLog):
 
     def show(self):
         """
-        Show table.
+        Show log through a Rich console.
         """
         console = Console()
-        console.print(self.table)
+        console.print(self)
 
     def live(self, **kwargs):
         """
         Context manager for live update of the table.
         """
+        warnings.warn("live will be removed", FutureWarning, stacklevel=2)
         return Live(self.table, **kwargs)
+
+    def update(self, iteration: int, model: Model):
+        """
+        Update the log.
+        """
+        super().update(iteration, model)
+        self.update_table()
 
     def update_table(self):
         """
@@ -248,29 +305,71 @@ class InversionLogRich(InversionLog):
         ----------
         model : (n_params) array
         """
+        # TODO: Check that each entry in the log has the same amount of elements
         row = []
         for name, column in self.columns.items():
             value = self.log[name][-1]  # last element in the log
-            fmt = column.fmt if column.fmt is not None else self._get_fmt(value)
+            fmt = column.fmt if column.fmt is not None else _get_fmt(value)
             row.append(f"{value:{fmt}}")
         self.table.add_row(*row)
 
-    def _get_fmt(self, value):
-        if isinstance(value, bool):
-            fmt = ""
-        elif isinstance(value, numbers.Integral):
-            fmt = "d"
-        elif isinstance(value, numbers.Real):
-            fmt = ".2e"
-        else:
-            fmt = ""
-        return fmt
 
-    def update(self, iteration: int, model: Model):
-        """
-        Update the log.
+class MinimizerLog:
+    """Class to store results of a minimizer in the form of a log."""
 
-        Update the table as well.
+    def update(self, minimizer_result: MinimizerResult):
         """
-        super().update(iteration, model)
-        self.update_table()
+        Use as callback for :class:`inversion_ideas.base.Minimizer`.
+        """
+        for field, value in minimizer_result.items():
+            if field not in self.log:
+                self.log[field] = []
+            self.log[field].append(value)
+        self._update_table()
+
+    @property
+    def log(self) -> dict[str, list]:
+        """Returns the log."""
+        if not hasattr(self, "_log"):
+            self._log: dict[str, list] = {}
+        return self._log
+
+    def __rich__(self) -> Table:
+        """
+        Return the log as a Rich renderable.
+        """
+        return self.table
+
+    @property
+    def table(self) -> Table:
+        """
+        Table for the inversion log.
+        """
+        if not hasattr(self, "_table"):
+            self._table = Table()
+        if not self._table.columns:
+            for column_name in self.log:
+                self._table.add_column(column_name)
+        return self._table
+
+    def _update_table(self):
+        """
+        Add last row in the log to the Rich table.
+
+        Parameters
+        ----------
+        model : (n_params) array
+        """
+        row = []
+        for values in self.log.values():
+            value = values[-1]  # last element in the log
+            fmt = _get_fmt(value)
+            row.append(f"{value:{fmt}}")
+        self.table.add_row(*row)
+
+    def show(self):
+        """
+        Show log through a Rich console.
+        """
+        console = Console()
+        console.print(self)

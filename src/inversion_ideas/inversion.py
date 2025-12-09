@@ -318,3 +318,128 @@ class InversionLogRich(InversionLog):
         """
         super().update(iteration, model)
         self.update_table()
+
+
+class Admm(Inversion):
+    """
+    Inversion runner.
+
+    Parameters
+    ----------
+    model_objective_function : Objective
+        Objective function to minimize.
+    auxiliary_objective_function : Objective
+        Objective function to minimize.
+    initial_model : (n_params) array
+        Starting model for the inversion.
+    initial_Z : (n_params) array
+        Starting auxiliary for the inversion.
+    model_optimizer : Minimizer or callable
+        Function or object to use as minimizer. It must take the objective function and
+        a model as arguments.
+    auxiliary_optimizer : Minimizer or callable
+        Function or object to use as minimizer. It must take the objective function and
+        a model as arguments.
+    directives : list of Directive
+        List of ``Directive``s used to modify the objective function after each
+        iteration.
+    stopping_criteria : Condition or callable
+        Boolean function that takes the model as argument. If this function returns
+        ``True``, then the inversion will stop.
+    max_iterations : int, optional
+        Max amount of iterations that will be performed. If ``None``, then there will be
+        no limit on the total amount of iterations.
+    cache_models : bool, optional
+        Whether to cache each model after each iteration.
+    log : InversionLog, optional
+        Instance of :class:`InversionLog` to store information about the inversion.
+    """
+
+    def __init__(
+        self,
+        model_objective_function,
+        auxiliary_objective_function,
+        initial_model,
+        initial_Z,
+        model_optimizer,
+        auxiliary_optimizer,
+        *,
+        directives: typing.Sequence[Directive],
+        stopping_criteria: Condition | Callable,
+        max_iterations: int | None = None,
+        cache_models=False,
+        log: typing.Optional["InversionLog"] = None,
+    ):
+        super.__init__(
+            model_objective_function,
+            initial_model,
+            model_optimizer,
+            directives=directives,
+            stopping_criteria=stopping_criteria,
+            max_iterations=max_iterations,
+            cache_models=cache_models,
+            log=log,
+        )
+
+        self.auxiliary_optimizer = auxiliary_optimizer
+        self.auxiliary_objective_function = auxiliary_objective_function
+
+        # Assign model as a copy of the initial model
+        self.model = initial_model.copy()
+        # Assign auxiliary space Z as a copy of the initial Z
+        self.Z = initial_Z.copy()
+        # Assign dual variable
+        self.u = np.zeros(initial_model.shape(0))
+
+    def __next__(self):
+        """
+        Run next iteration in the inversion.
+        """
+        # Check for stopping criteria before trying to run the iteration
+        if self.stopping_criteria(self.model):
+            raise StopIteration
+
+        # Check if maximum number of iterations have been reached
+        if self.max_iterations is not None and self.counter > self.max_iterations:
+            raise StopIteration
+
+        # Run directives (only after the first iteration)
+        if self.counter > 0:
+            for directive in self.directives:
+                directive(self.model, self.counter)
+
+        # Minimize objective function using Alternating Direction Method of Multipliers
+
+        # step 1 take a step in the model space
+        model = self.optimizer(self.objective_function, self.model)
+
+        self.auxiliary_objective_function.model = model
+
+        # step 2 take a step in the auxiliary space
+        Z = self.auxiliary_optimizer(self.auxiliary_objective_function, Z)
+
+        self.objective_function.Z = Z
+
+        # create segmentation model
+        s = (Z @ self.auxiliary_objective_function.cl)[:, 0]
+
+        # step 3 accumulate the constraint violation
+        u = u + (model - s)
+
+        # Cache model if required
+        if self.cache_models:
+            self.models.append(model)
+
+        # Increase counter by one
+        self._counter += 1
+
+        # Assign the model to self
+        self.model = model
+        self.Z = Z
+        self.u = u
+
+        # Update log
+        if self.log is not None:
+            self.log.update(self.counter, self.model)
+
+        return self.model

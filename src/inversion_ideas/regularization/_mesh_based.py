@@ -48,6 +48,23 @@ class _MeshBasedRegularization(Objective):
                 "It must be an array or a dictionary."
             )
             raise TypeError(msg)
+        if isinstance(value, np.ndarray) and value.size != self.n_params:
+            msg = (
+                f"Invalid cell_weights array with '{value.size}' elements. "
+                f"It must have '{self.n_params}' elements, "
+                "equal to the number of active cells."
+            )
+            raise ValueError(msg)
+        if isinstance(value, dict):
+            for key, array in value.items():
+                if array.size != self.n_params:
+                    msg = (
+                        f"Invalid cell_weights array '{key}' with "
+                        f"'{array.size}' elements. "
+                        f"It must have '{self.n_params}' elements, "
+                        "equal to the number of active cells."
+                    )
+                    raise ValueError(msg)
         self._cell_weights = value
 
 
@@ -214,30 +231,6 @@ class Smallness(_MeshBasedRegularization):
             Array with model values.
         """
         return self.hessian(model).diagonal()
-
-    @property
-    def cell_weights(
-        self,
-    ) -> npt.NDArray[np.float64] | dict[str, npt.NDArray[np.float64]]:
-        """
-        Regularization weights on cells.
-        """
-        return self._cell_weights
-
-    @cell_weights.setter
-    def cell_weights(
-        self, value: npt.NDArray[np.float64] | dict[str, npt.NDArray[np.float64]]
-    ):
-        """
-        Setter for weights on cells.
-        """
-        if not isinstance(value, np.ndarray | dict):
-            msg = (
-                f"Invalid weights of type {type(value)}. "
-                "It must be an array or a dictionary."
-            )
-            raise TypeError(msg)
-        self._cell_weights = value
 
     @property
     def weights_matrix(self) -> dia_array:
@@ -447,30 +440,6 @@ class Flatness(_MeshBasedRegularization):
             Array with model values.
         """
         return self.hessian(model).diagonal()
-
-    @property
-    def cell_weights(
-        self,
-    ) -> npt.NDArray[np.float64] | dict[str, npt.NDArray[np.float64]]:
-        """
-        Regularization weights on cells.
-        """
-        return self._cell_weights
-
-    @cell_weights.setter
-    def cell_weights(
-        self, value: npt.NDArray[np.float64] | dict[str, npt.NDArray[np.float64]]
-    ):
-        """
-        Setter for weights on cells.
-        """
-        if not isinstance(value, np.ndarray | dict):
-            msg = (
-                f"Invalid weights of type {type(value)}. "
-                "It must be an array or a dictionary."
-            )
-            raise TypeError(msg)
-        self._cell_weights = value
 
     @property
     def weights_matrix(self) -> dia_array:

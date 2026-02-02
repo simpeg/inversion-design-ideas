@@ -9,9 +9,11 @@ import numpy.typing as npt
 from scipy.sparse import sparray
 from scipy.sparse.linalg import LinearOperator
 
-Model: TypeAlias = npt.NDArray[np.float64]
+from .base.model import MultiModel
+
+Model: TypeAlias = npt.NDArray[np.float64] | MultiModel
 """
-Type alias to represent models in the inversion framework as 1D arrays.
+Type alias to represent models in the inversion framework as a 1D array or a MultiModel.
 """
 
 Preconditioner: TypeAlias = npt.NDArray[np.float64] | sparray | LinearOperator

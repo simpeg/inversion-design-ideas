@@ -24,6 +24,10 @@ class DataMisfit(Objective):
         Array with data uncertainty.
     simulation : Simulation
         Instance of Simulation.
+    model_subset : str, list of str, or None, optional
+        Model subset key(s) that the objective function will use.
+        Use only if the objective function is intended to be used with a portion of
+        a  :class:`inversion_ideas.base.MultiModel`.
     cache : bool, optional
         Whether to cache the last result of the `__call__` method.
         Default to False.
@@ -82,6 +86,7 @@ class DataMisfit(Objective):
         uncertainty: npt.NDArray[np.float64],
         simulation,
         *,
+        model_subset=None,
         cache=False,
         build_hessian=False,
     ):
@@ -92,6 +97,7 @@ class DataMisfit(Objective):
         self.simulation = simulation
         self.cache = cache
         self.build_hessian = build_hessian
+        self.model_subset = model_subset
         self.set_name("d")
 
     @cache_on_model
@@ -142,6 +148,8 @@ class DataMisfit(Objective):
         """
         Number of model parameters.
         """
+        if self.model_subset is not None:
+            return None
         return self.simulation.n_params
 
     @property
@@ -157,7 +165,7 @@ class DataMisfit(Objective):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params) array or MultiModel
             Array with model values.
 
         Returns
@@ -176,6 +184,7 @@ class DataMisfit(Objective):
         where :math:`\mathbf{d}` is the vector with observed data, :math:`\mathcal{F}`
         is the forward model, and :math:`\mathbf{m}` is the model vector.
         """
+        model = self.extract_model_subset(model)
         return self.simulation(model) - self.data
 
     @property
@@ -198,7 +207,7 @@ class DataMisfit(Objective):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params) array or MultiModel
             Array with model values.
 
         Return
@@ -206,4 +215,5 @@ class DataMisfit(Objective):
         float
             Chi factor for the given model.
         """
+        model = self.extract_model_subset(model)
         return self(model) / self.n_data

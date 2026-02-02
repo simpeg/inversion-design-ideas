@@ -3,7 +3,7 @@ Classes to represent objective functions.
 """
 
 from abc import ABC, abstractmethod
-from collections.abc import Iterable, Iterator
+from collections.abc import Iterable, Iterator, Sequence
 from copy import copy
 from numbers import Real
 from typing import Self
@@ -31,10 +31,73 @@ class Objective(ABC):
 
     @property
     @abstractmethod
-    def n_params(self) -> int:
+    def n_params(self) -> int | None:
         """
         Number of model parameters.
         """
+
+    @property
+    def model_subset(self) -> str | Sequence[str] | None:
+        """
+        Model subset key(s) that the objective function will use.
+
+        .. important::
+
+            This property is used only if the objective function is intended to be used
+            with a portion of a  :class:`inversion_ideas.base.MultiModel`.
+        """
+        return getattr(self, "_model_subset", None)
+
+    @model_subset.setter
+    def model_subset(self, value):
+        """
+        Model subset key(s) that the objective function will use.
+
+        .. important::
+
+            This property is used only if the objective function is intended to be used
+            with a portion of a  :class:`inversion_ideas.base.MultiModel`.
+        """
+        if not isinstance(value, (str, Sequence)) and value is not None:
+            raise TypeError()
+        if isinstance(value, Sequence):
+            for element in value:
+                if not isinstance(element, str):
+                    raise TypeError()
+        self._model_subset = value
+
+    def extract_model_subset(self, model: Model) -> npt.NDArray:
+        """
+        Extract subset of the model for this objective function.
+
+        Makes use of the ``model_subset`` attribute to extract a subset of the passed
+        model. If ``model_subset`` is ``None`` and the ``model`` is an array, it'll
+        return the same array.
+
+        Parameters
+        ----------
+        model : (n_params,) array or inversion_ideas.base.MultiModel
+            Model from which a subset will be extracted from.
+
+        Returns
+        -------
+        model_subset : array
+            Subset of model values.
+        """
+        if isinstance(model, np.ndarray):
+            if self.model_subset is not None:
+                raise TypeError()
+            return model
+
+        if self.model_subset is None:
+            raise TypeError()
+
+        model_subset = (
+            self.model_subset
+            if isinstance(self.model_subset, str)
+            else list(self.model_subset)
+        )
+        return np.hstack([model[key] for key in model_subset])
 
     @abstractmethod
     def __call__(self, model: Model) -> float:
@@ -125,12 +188,12 @@ class Scaled(Objective):
     Scaled objective function.
     """
 
-    def __init__(self, multiplier, function):
+    def __init__(self, multiplier: float, function: "Objective | Combo"):
         self.multiplier = multiplier
         self.function = function
 
     @property
-    def n_params(self) -> int:
+    def n_params(self) -> int | None:
         """
         Number of model parameters.
         """
@@ -223,7 +286,7 @@ class Combo(Objective):
         return self._functions
 
     @property
-    def n_params(self) -> int:
+    def n_params(self) -> int | None:
         """
         Number of model parameters.
         """
@@ -292,7 +355,11 @@ class Combo(Objective):
         return f"$ {phi_str} $"
 
     def __iadd__(self, other) -> Self:
-        if other.n_params != self.n_params:
+        if (
+            self.n_params is not None
+            and other.n_params is not None
+            and other.n_params != self.n_params
+        ):
             msg = (
                 f"Trying to add objective function '{other}' with invalid "
                 f"n_params ({other.n_params}) different from the one of "
@@ -333,7 +400,7 @@ def _contains(combo: Combo, objective: Objective) -> bool:
     return False
 
 
-def _get_n_params(functions: list) -> int:
+def _get_n_params(functions: list) -> int | None:
     """
     Get number of parameters of a list of objective functions.
 
@@ -353,7 +420,9 @@ def _get_n_params(functions: list) -> int:
         If any of the objective functions in the list have different number of
         parameters.
     """
-    n_params_list = [f.n_params for f in functions]
+    n_params_list = [f.n_params for f in functions if f.n_params is not None]
+    if not n_params_list:
+        return None
     n_params = n_params_list[0]
     if not all(p == n_params for p in n_params_list):
         msg = "Invalid objective functions with different n_params."

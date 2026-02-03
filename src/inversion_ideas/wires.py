@@ -5,6 +5,11 @@ Model wiring.
 from numbers import Integral
 
 import numpy as np
+import numpy.typing as npt
+from scipy.sparse import sparray
+from scipy.sparse.linalg import LinearOperator
+
+from ..operators import BlockColumnMatrix
 
 from .typing import Model
 
@@ -27,7 +32,7 @@ class Wires:
                 # TODO: Add msg
                 raise TypeError()
 
-            self._slices[key] = WireSlice(subset=key, slice=slice_, wires=self)
+            self._slices[key] = WireSlice(name=key, slice=slice_, wires=self)
 
         self._size = sum([slice_.size for slice_ in self._slices.values()])
 
@@ -51,9 +56,9 @@ class Wires:
         return self._slices[value]
 
     @classmethod
-    def create(cls, model_dict: dict[str, Model]):
+    def create_from(cls, model_dict: dict[str, Model]):
         """
-        Create a ``Wiring`` object from a model dictionary.
+        Create a ``Wires`` object from a model dictionary.
         """
         kwargs = {key: array.size for key, array in model_dict.items()}
         return cls(**kwargs)
@@ -87,17 +92,17 @@ class WireSlice:
         Don't instantiate this class. Use the ``Wires`` class instead.
     """
 
-    def __init__(self, subset: str, slice: slice, wires: Wires):
-        if not isinstance(subset, str):
+    def __init__(self, name: str, slice: slice, wires: Wires):
+        if not isinstance(name, str):
             # TODO: Add msg
             raise TypeError()
-        self._subset = subset
+        self._name = name
         self._slice = slice
         self._wires = wires
 
     @property
-    def subset(self) -> str:
-        return self._subset
+    def name(self) -> str:
+        return self._name
 
     @property
     def slice(self) -> slice:
@@ -116,3 +121,39 @@ class WireSlice:
             # TODO: add msg
             raise ValueError()
         return model[self.slice]
+
+    def expand_array(self, array: npt.NDArray) -> npt.NDArray:
+        """
+        Expand a 1D array with zeros outside the model slice.
+        """
+        if not isinstance(array, np.ndarray):
+            msg = f"Invalid array of type {type(array).__name__}."
+            raise TypeError(msg)
+        if array.ndim != 1:
+            msg = f"Invalid array with {array.ndim} dimensions. It must be a 1D array."
+            raise ValueError(msg)
+        out = np.zeros(self.wires.size, dtype=array.dtype)
+        out[self.slice] = array
+        return out
+
+    def expand_matrix(
+        self, matrix: npt.NDArray | sparray | LinearOperator
+    ) -> BlockColumnMatrix:
+        """
+        Expand a matrix that operates on the model slice into a block matrix.
+        """
+        if matrix.ndim != 2:
+            msg = (
+                f"Invalid matrix with {matrix.ndim} dimensions. "
+                "It must be a 2D matrix or LinearOperator."
+            )
+            raise ValueError(msg)
+        if matrix.shape[1] != self.size:
+            # TODO: Complete the error message
+            msg = f"Invalid matrix with shape '{matrix.shape}'."
+            raise ValueError(msg)
+        return BlockColumnMatrix(
+            block=matrix,
+            index_start=self.slice.start,
+            n_cols=self.wires.size,
+        )

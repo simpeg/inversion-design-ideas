@@ -9,8 +9,7 @@ import numpy.typing as npt
 from scipy.sparse import sparray
 from scipy.sparse.linalg import LinearOperator
 
-from ..operators import BlockColumnMatrix
-
+from .operators import BlockColumnMatrix
 from .typing import Model
 
 
@@ -19,20 +18,20 @@ class Wires:
     def __init__(self, **kwargs):
         self._slices = {}
 
-        current_index = 0
+        current_index: int = 0
         for key, value in kwargs.items():
             if not isinstance(key, str):
                 # TODO: Add msg
                 raise TypeError()
 
             if isinstance(value, Integral):
-                slice_ = slice(current_index, int(value))
-                current_index = value
+                slice_ = slice(current_index, current_index + value)
+                current_index += int(value)
             else:
                 # TODO: Add msg
                 raise TypeError()
 
-            self._slices[key] = WireSlice(name=key, slice=slice_, wires=self)
+            self._slices[key] = ModelSlice(name=key, slice=slice_, wires=self)
 
         self._size = sum([slice_.size for slice_ in self._slices.values()])
 
@@ -49,10 +48,13 @@ class Wires:
         """
         return self._slices.keys()
 
-    def __getattr__(self, value: str) -> "WireSlice":
+    def __getattr__(self, value: str) -> "ModelSlice":
+        if value not in self._slices:
+            # TODO: Add msg
+            raise AttributeError()
         return self._slices[value]
 
-    def __getitem__(self, value: str) -> "WireSlice":
+    def __getitem__(self, value: str) -> "ModelSlice":
         return self._slices[value]
 
     @classmethod
@@ -83,9 +85,9 @@ class Wires:
         return model
 
 
-class WireSlice:
+class ModelSlice:
     """
-    Wire slice used to slice a model array.
+    Class used to slice a model.
 
     .. important::
 
@@ -113,6 +115,10 @@ class WireSlice:
         return self._slice.stop - self._slice.start
 
     @property
+    def full_size(self) -> int:
+        return self.wires.size
+
+    @property
     def wires(self) -> Wires:
         return self._wires
 
@@ -132,7 +138,7 @@ class WireSlice:
         if array.ndim != 1:
             msg = f"Invalid array with {array.ndim} dimensions. It must be a 1D array."
             raise ValueError(msg)
-        out = np.zeros(self.wires.size, dtype=array.dtype)
+        out = np.zeros(self.full_size, dtype=array.dtype)
         out[self.slice] = array
         return out
 
@@ -155,5 +161,5 @@ class WireSlice:
         return BlockColumnMatrix(
             block=matrix,
             index_start=self.slice.start,
-            n_cols=self.wires.size,
+            n_cols=self.full_size,
         )

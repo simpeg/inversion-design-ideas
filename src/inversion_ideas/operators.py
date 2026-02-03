@@ -6,8 +6,8 @@ Define classes for custom linear operators.
 
 import numpy as np
 import numpy.typing as npt
-from scipy.sparse.linalg import LinearOperator
 from scipy.sparse import sparray
+from scipy.sparse.linalg import LinearOperator
 
 
 class BlockColumnMatrix(LinearOperator):

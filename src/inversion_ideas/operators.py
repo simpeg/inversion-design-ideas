@@ -41,7 +41,7 @@ class BlockColumnMatrix(LinearOperator):
         self,
         block: npt.NDArray | LinearOperator | sparray,
         index_start: int,
-        n_cols: tuple[int, int],
+        n_cols: int,
     ):
         # TODO: raise error if the block matrix has more columns than n_cols
         shape = (block.shape[0], n_cols)

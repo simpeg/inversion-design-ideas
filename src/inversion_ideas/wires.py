@@ -14,6 +14,12 @@ from .typing import Model
 
 
 class Wires:
+    """
+    Collection of model slices.
+
+    The ``Wires`` have capabilities for handling models with multiple physical
+    properties.
+    """
 
     def __init__(self, **kwargs):
         self._slices = {}

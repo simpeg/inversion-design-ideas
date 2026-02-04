@@ -235,8 +235,9 @@ class DataMisfit(Objective):
         """
         Return the jacobian of the simulation.
 
-        This private method is intended to simplify code throughout the public ones when
-        dealing with ``model_slice`` not ``None``.
+        Make use of the ``model_slice`` to expand the jacobian if ``model_slice`` is not
+        ``None``. This private method is intended to simplify code throughout the public
+        ones when dealing with ``model_slice`` not ``None``.
 
         Parameters
         ----------

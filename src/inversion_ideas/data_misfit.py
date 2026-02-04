@@ -8,6 +8,7 @@ from scipy.sparse import dia_array, diags_array, sparray
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from .base import Objective
+from .operators import BlockColumnMatrix
 from .typing import Model
 from .utils import cache_on_model
 from .wires import ModelSlice
@@ -110,17 +111,11 @@ class DataMisfit(Objective):
         """
         Gradient vector.
         """
-        jac = self.simulation.jacobian(
-            model if self.model_slice is None else self.model_slice.extract(model)
-        )
+        jac = self._get_jacobian(model)
         weights_matrix = self.weights_matrix
         gradient = (
             2 * jac.T @ (weights_matrix.T @ weights_matrix @ self.residual(model))
         )
-
-        if self.model_slice is not None:
-            gradient = self.model_slice.expand_array(gradient)
-
         return gradient
 
     def hessian(
@@ -129,36 +124,36 @@ class DataMisfit(Objective):
         """
         Hessian matrix.
         """
-        jac = self.simulation.jacobian(
-            model if self.model_slice is None else self.model_slice.extract(model)
-        )
+        jac = self._get_jacobian(model)
         weights_matrix = aslinearoperator(self.weights_matrix)
-
-        if self.model_slice is not None:
-            jac = self.model_slice.expand_matrix(jac)
-
         if not self.build_hessian:
             jac = aslinearoperator(jac)
-
         return 2 * jac.T @ weights_matrix.T @ weights_matrix @ jac
 
     def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
         """
-        Diagonal of the Hessian.
+        Approximated diagonal of the Hessian.
         """
-        jac = self.simulation.jacobian(model)
-        if self.model_slice is not None:
-            msg = (
-                "DataMisfit with a model_slice doesn't support `hessian_diagonal` yet."
+        jac = self._get_jacobian(model)
+        if isinstance(jac, LinearOperator):
+            # If the linear operator implements the get_column method, we could use it
+            # to approximate the diagonal of the hessian.
+            # TODO: we can transform this into a Protocol.
+            if not hasattr(jac, "get_column"):
+                msg = (
+                    "`DataMisfit.hessian_diagonal()` is not implemented for simulations "
+                    "that return the jacobian as a LinearOperator."
+                )
+                raise NotImplementedError(msg)
+            weights_diagonal = self.weights_matrix.diagonal()
+            jtj_diag = np.array(
+                [
+                    np.sum(weights_diagonal * jac.get_column(i) ** 2)
+                    for i in range(jac.shape[1])
+                ]
             )
-            raise NotImplementedError(msg)
-        if isinstance(jac, LinearOperator) or self.model_slice is not None:
-            msg = (
-                "`DataMisfit.hessian_diagonal()` is not implemented for simulations "
-                "that return the jacobian as a LinearOperator."
-            )
-            raise NotImplementedError(msg)
-        jtj_diag = np.einsum("i,ij,ij->j", self.weights_matrix.diagonal(), jac, jac)
+        else:
+            jtj_diag = np.einsum("i,ij,ij->j", self.weights_matrix.diagonal(), jac, jac)
         return 2 * jtj_diag
 
     @property
@@ -235,3 +230,24 @@ class DataMisfit(Objective):
             Chi factor for the given model.
         """
         return self(model) / self.n_data
+
+    def _get_jacobian(self, model) -> npt.NDArray | LinearOperator | BlockColumnMatrix:
+        """
+        Return the jacobian of the simulation.
+
+        This private method is intended to simplify code throughout the public ones when
+        dealing with ``model_slice`` not ``None``.
+
+        Parameters
+        ----------
+        model : (n_params) array
+            Model array. The array must have the full size. This method will use the
+            ``model_slice`` to extract the relevant portion that will be passed to the
+            simulation.
+        """
+        jac = self.simulation.jacobian(
+            model if self.model_slice is None else self.model_slice.extract(model)
+        )
+        if self.model_slice is not None:
+            jac = self.model_slice.expand_matrix(jac)
+        return jac

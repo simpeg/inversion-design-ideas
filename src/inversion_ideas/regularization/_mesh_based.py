@@ -2,15 +2,20 @@
 Regularization classes for mesh-based inversion problems.
 """
 
+from types import NoneType
 import discretize
 import numpy as np
 import numpy.typing as npt
+from scipy.sparse.linalg import aslinearoperator
 import simpeg
 from scipy.sparse import dia_array, diags_array, eye_array
+
+from inversion_ideas.operators import BlockColumnMatrix
 
 from .._utils import prod_arrays
 from ..base import Objective
 from ..typing import Model
+from ..wires import ModelSlice
 
 
 class _MeshBasedRegularization(Objective):
@@ -24,6 +29,12 @@ class _MeshBasedRegularization(Objective):
 
     @property
     def n_params(self) -> int:
+        if (model_slice := getattr(self, "model_slice", None)) is not None:
+            return model_slice.full_size
+        return self.n_active
+
+    @property
+    def n_active(self) -> int:
         return int(np.sum(self.active_cells))
 
     @property
@@ -48,7 +59,7 @@ class _MeshBasedRegularization(Objective):
                 "It must be an array or a dictionary."
             )
             raise TypeError(msg)
-        if isinstance(value, np.ndarray) and value.size != self.n_params:
+        if isinstance(value, np.ndarray) and value.size != self.n_active:
             msg = (
                 f"Invalid cell_weights array with '{value.size}' elements. "
                 f"It must have '{self.n_params}' elements, "
@@ -57,7 +68,7 @@ class _MeshBasedRegularization(Objective):
             raise ValueError(msg)
         if isinstance(value, dict):
             for key, array in value.items():
-                if array.size != self.n_params:
+                if array.size != self.n_active:
                     msg = (
                         f"Invalid cell_weights array '{key}' with "
                         f"'{array.size}' elements. "
@@ -81,7 +92,7 @@ class Smallness(_MeshBasedRegularization):
     active_cells : (n_cells) array or None, optional
         Array full of bools that indicate the active cells in the mesh. It must have the
         same amount of elements as cells in the mesh.
-    cell_weights : (n_params) array or dict of (n_params) arrays or None, optional
+    cell_weights : (n_active) array or dict of (n_active) arrays or None, optional
         Array with cell weights.
         For multiple cell weights, pass a dictionary where keys are strings and values
         are the different weights arrays.
@@ -138,6 +149,7 @@ class Smallness(_MeshBasedRegularization):
         active_cells: npt.NDArray[np.bool] | None = None,
         cell_weights: npt.NDArray | dict[str, npt.NDArray] | None = None,
         reference_model: Model | None = None,
+        model_slice: ModelSlice | None = None,
     ):
         self.mesh = mesh
         self.active_cells = (
@@ -145,12 +157,14 @@ class Smallness(_MeshBasedRegularization):
             if active_cells is not None
             else np.ones(self.mesh.n_cells, dtype=bool)
         )
+        # assign model_slice after active_cells so n_params is correct during __init__
+        self.model_slice = model_slice
 
         # Assign the cell weights through the setter
         self.cell_weights = (
             cell_weights
             if cell_weights is not None
-            else np.ones(self.n_params, dtype=np.float64)
+            else np.ones(self.n_active, dtype=np.float64)
         )
 
         self.reference_model = (
@@ -172,6 +186,11 @@ class Smallness(_MeshBasedRegularization):
         model_diff = model - self.reference_model
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
+
+        if self.model_slice is not None:
+            weights_matrix = aslinearoperator(weights_matrix)
+            cell_volumes_sqrt = self.model_slice.expand_matrix(cell_volumes_sqrt)
+
         return (
             model_diff.T
             @ cell_volumes_sqrt.T
@@ -193,6 +212,11 @@ class Smallness(_MeshBasedRegularization):
         model_diff = model - self.reference_model
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
+
+        if self.model_slice is not None:
+            weights_matrix = aslinearoperator(weights_matrix)
+            cell_volumes_sqrt = self.model_slice.expand_matrix(cell_volumes_sqrt)
+
         return (
             2
             * cell_volumes_sqrt.T
@@ -213,6 +237,11 @@ class Smallness(_MeshBasedRegularization):
         """
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
+
+        if self.model_slice is not None:
+            weights_matrix = aslinearoperator(weights_matrix)
+            cell_volumes_sqrt = self.model_slice.expand_matrix(cell_volumes_sqrt)
+
         return (
             2
             * cell_volumes_sqrt.T
@@ -230,6 +259,20 @@ class Smallness(_MeshBasedRegularization):
         model : (n_params) array
             Array with model values.
         """
+        # Patch: compute the diagonal again, but this should be avoided
+        if self.model_slice is not None:
+            weights_matrix = self.weights_matrix
+            cell_volumes_sqrt = self._volumes_sqrt_matrix
+            hessian_diagonal = (
+                2
+                * cell_volumes_sqrt.T
+                @ weights_matrix.T
+                @ weights_matrix
+                @ cell_volumes_sqrt
+            ).diagonal()
+            hessian_diagonal = self.model_slice.expand_array(hessian_diagonal)
+            return hessian_diagonal
+
         return self.hessian(model).diagonal()
 
     @property

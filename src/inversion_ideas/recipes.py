@@ -284,8 +284,9 @@ def create_tikhonov_regularization(
     ----------
     mesh : discretize.base.BaseMesh
         Mesh to use in the regularization.
-    active_cells : (n_params) array or None, optional
-        Array full of bools that indicate the active cells in the mesh.
+    active_cells : (n_cells) array or None, optional
+        Array full of bools that indicate the active cells in the mesh. It must have the
+        same amount of elements as cells in the mesh.
     cell_weights : (n_params) array or dict of (n_params) arrays or None, optional
         Array with cell weights.
         For multiple cell weights, pass a dictionary where keys are strings and values

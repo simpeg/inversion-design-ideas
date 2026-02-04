@@ -47,14 +47,27 @@ class BlockColumnMatrix(LinearOperator):
         shape = (block.shape[0], n_cols)
         super().__init__(shape=shape, dtype=block.dtype)
 
-        self.block = block
+        self._block = block
+        self._index_start = index_start
         self._slice = slice(index_start, index_start + block.shape[1])
+
+    @property
+    def block(self):
+        return self._block
+
+    @property
+    def index_start(self):
+        return self._index_start
+
+    @property
+    def slice(self):
+        return self._slice
 
     def _matvec(self, x):
         """
         Dot product between the matrix and a vector.
         """
-        x_subset = x[self._slice]
+        x_subset = x[self.slice]
         return self.block @ x_subset
 
     def _rmatvec(self, x):
@@ -62,7 +75,7 @@ class BlockColumnMatrix(LinearOperator):
         Dot product between the transposed matrix and a vector.
         """
         out = np.zeros(self.shape[1], dtype=self.dtype)
-        out[self._slice] = self.block.T @ x
+        out[self.slice] = self.block.T @ x
         return out
 
     def toarray(self):
@@ -72,5 +85,77 @@ class BlockColumnMatrix(LinearOperator):
         # TODO: raise error if the block is not an array or if it doesn't have a toarray
         # method.
         matrix = np.zeros(self.shape, dtype=self.dtype)
-        matrix[:, self._slice] = self.block
+        matrix[:, self.slice] = self.block
         return matrix
+
+    def get_column(self, column_index) -> npt.NDArray:
+        """
+        Get the j-th column of the matrix.
+
+        Parameters
+        ----------
+        column_index : int
+            Index for the desired column.
+
+        Returns
+        -------
+        column : array
+            The j-th column of the matrix.
+        """
+        # TODO: raise error if we cannot extract column from block
+        # (sparse array, linear operator).
+        axis = 1
+        if not (0 <= column_index < self.shape[axis]):
+            msg = (
+                f"index {column_index} is out of bounds for axis {axis} "
+                f"with size {self.shape[axis]}"
+            )
+            raise IndexError(msg)
+        if self.slice.start <= column_index < self.slice.stop:
+            return self.block[:, column_index - self.slice.start]
+        return np.zeros(self.shape[0], dtype=self.dtype)
+
+    def __getitem__(self, indices):
+        # TODO: raise error if block cannot be indexed
+        # TODO: raise error if slices? or support them.
+
+        row, column = indices
+
+        # Sanity checks for indices
+        axis = 0
+        if row >= 0:
+            if not (0 <= row < self.shape[axis]):
+                msg = (
+                    f"index {row} is out of bounds for axis {axis} "
+                    f"with size {self.shape[axis]}"
+                )
+                raise IndexError(msg)
+        else:
+            if row < -self.shape[0]:
+                msg = (
+                    f"index {row} is out of bounds for axis {axis} "
+                    f"with size {self.shape[axis]}"
+                )
+                raise IndexError(msg)
+            row += self.shape[0]
+
+        axis = 1
+        if column >= 0:
+            if not (0 <= column < self.shape[axis]):
+                msg = (
+                    f"index {column} is out of bounds for axis {axis} "
+                    f"with size {self.shape[axis]}"
+                )
+                raise IndexError(msg)
+        else:
+            if column < -self.shape[axis]:
+                msg = (
+                    f"index {column} is out of bounds for axis {axis} "
+                    f"with size {self.shape[axis]}"
+                )
+                raise IndexError(msg)
+            column += self.shape[axis]
+
+        if self.slice.start <= column < self.slice.stop:
+            return self.block[row, column - self.slice.start]
+        return np.astype(np.float64(0.0), self.dtype)

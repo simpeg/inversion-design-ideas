@@ -186,17 +186,16 @@ class Smallness(_MeshBasedRegularization):
         model_diff = model - self.reference_model
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
-
-        if self.model_slice is not None:
-            weights_matrix = aslinearoperator(weights_matrix)
-            cell_volumes_sqrt = self.model_slice.expand_matrix(cell_volumes_sqrt)
+        slicer_matrix = self._get_slicer_matrix()
 
         return (
             model_diff.T
+            @ slicer_matrix.T
             @ cell_volumes_sqrt.T
             @ weights_matrix.T
             @ weights_matrix
             @ cell_volumes_sqrt
+            @ slicer_matrix
             @ model_diff
         )
 
@@ -212,17 +211,16 @@ class Smallness(_MeshBasedRegularization):
         model_diff = model - self.reference_model
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
-
-        if self.model_slice is not None:
-            weights_matrix = aslinearoperator(weights_matrix)
-            cell_volumes_sqrt = self.model_slice.expand_matrix(cell_volumes_sqrt)
+        slicer_matrix = self._get_slicer_matrix()
 
         return (
             2
-            * cell_volumes_sqrt.T
+            * slicer_matrix.T
+            @ cell_volumes_sqrt.T
             @ weights_matrix.T
             @ weights_matrix
             @ cell_volumes_sqrt
+            @ slicer_matrix
             @ model_diff
         )
 
@@ -237,17 +235,16 @@ class Smallness(_MeshBasedRegularization):
         """
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
-
-        if self.model_slice is not None:
-            weights_matrix = aslinearoperator(weights_matrix)
-            cell_volumes_sqrt = self.model_slice.expand_matrix(cell_volumes_sqrt)
+        slicer_matrix = self._get_slicer_matrix()
 
         return (
             2
-            * cell_volumes_sqrt.T
+            * slicer_matrix.T
+            @ cell_volumes_sqrt.T
             @ weights_matrix.T
             @ weights_matrix
             @ cell_volumes_sqrt
+            @ slicer_matrix
         )
 
     def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
@@ -259,24 +256,10 @@ class Smallness(_MeshBasedRegularization):
         model : (n_params) array
             Array with model values.
         """
-        # Patch: compute the diagonal again, but this should be avoided
-        if self.model_slice is not None:
-            weights_matrix = self.weights_matrix
-            cell_volumes_sqrt = self._volumes_sqrt_matrix
-            hessian_diagonal = (
-                2
-                * cell_volumes_sqrt.T
-                @ weights_matrix.T
-                @ weights_matrix
-                @ cell_volumes_sqrt
-            ).diagonal()
-            hessian_diagonal = self.model_slice.expand_array(hessian_diagonal)
-            return hessian_diagonal
-
         return self.hessian(model).diagonal()
 
     @property
-    def weights_matrix(self) -> dia_array:
+    def weights_matrix(self) -> dia_array[np.float64]:
         """
         Diagonal matrix with the square root of regularization weights on cells.
         """
@@ -290,12 +273,23 @@ class Smallness(_MeshBasedRegularization):
         return diags_array(np.sqrt(cell_weights))
 
     @property
-    def _volumes_sqrt_matrix(self) -> dia_array:
+    def _volumes_sqrt_matrix(self) -> dia_array[np.float64]:
         """
         Diagonal matrix with the square root of cell volumes.
         """
         cell_volumes = self.mesh.cell_volumes[self.active_cells]
         return diags_array(np.sqrt(cell_volumes))
+
+    def _get_slicer_matrix(self) -> dia_array[np.float64]:
+        """
+        Return ``model_slicer.slicer_matrix`` or just a diagonal array.
+        """
+        slicer_matrix = (
+            self.model_slice.slice_matrix
+            if self.model_slice is not None
+            else eye_array(self.n_params, dtype=np.float64)
+        )
+        return slicer_matrix
 
 
 class Flatness(_MeshBasedRegularization):

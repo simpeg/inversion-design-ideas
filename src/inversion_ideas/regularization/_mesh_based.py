@@ -370,6 +370,7 @@ class Flatness(_MeshBasedRegularization):
         active_cells: npt.NDArray[np.bool] | None = None,
         cell_weights: npt.NDArray | dict[str, npt.NDArray] | None = None,
         reference_model: Model | None = None,
+        model_slice: ModelSlice | None = None,
     ):
         self.mesh = mesh
         self.direction = direction
@@ -378,12 +379,14 @@ class Flatness(_MeshBasedRegularization):
             if active_cells is not None
             else np.ones(self.mesh.n_cells, dtype=bool)
         )
+        # assign model_slice after active_cells so n_params is correct during __init__
+        self.model_slice = model_slice
 
         # Assign the cell weights through the setter
         self.cell_weights = (
             cell_weights
             if cell_weights is not None
-            else np.ones(self.n_params, dtype=np.float64)
+            else np.ones(self.n_active, dtype=np.float64)
         )
 
         self.reference_model = (
@@ -406,14 +409,18 @@ class Flatness(_MeshBasedRegularization):
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
         cell_gradient = self._cell_gradient
+        slicer_matrix = self._get_slicer_matrix()
+
         return (
             model_diff.T
+            @ slicer_matrix.T
             @ cell_gradient.T
             @ cell_volumes_sqrt.T
             @ weights_matrix.T
             @ weights_matrix
             @ cell_volumes_sqrt
             @ cell_gradient
+            @ slicer_matrix
             @ model_diff
         )
 
@@ -430,14 +437,18 @@ class Flatness(_MeshBasedRegularization):
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
         cell_gradient = self._cell_gradient
+        slicer_matrix = self._get_slicer_matrix()
+
         return (
             2
-            * cell_gradient.T
+            * slicer_matrix.T
+            @ cell_gradient.T
             @ cell_volumes_sqrt.T
             @ weights_matrix.T
             @ weights_matrix
             @ cell_volumes_sqrt
             @ cell_gradient
+            @ slicer_matrix
             @ model_diff
         )
 
@@ -453,14 +464,18 @@ class Flatness(_MeshBasedRegularization):
         weights_matrix = self.weights_matrix
         cell_gradient = self._cell_gradient
         cell_volumes_sqrt = self._volumes_sqrt_matrix
+        slicer_matrix = self._get_slicer_matrix()
+
         return (
             2
-            * cell_gradient.T
+            * slicer_matrix.T
+            @ cell_gradient.T
             @ cell_volumes_sqrt.T
             @ weights_matrix.T
             @ weights_matrix
             @ cell_volumes_sqrt
             @ cell_gradient
+            @ slicer_matrix
         )
 
     def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
@@ -520,6 +535,17 @@ class Flatness(_MeshBasedRegularization):
                 self.mesh, self.active_cells
             )
         return self._regmesh
+
+    def _get_slicer_matrix(self) -> dia_array[np.float64]:
+        """
+        Return ``model_slicer.slicer_matrix`` or just a diagonal array.
+        """
+        slicer_matrix = (
+            self.model_slice.slice_matrix
+            if self.model_slice is not None
+            else eye_array(self.n_params, dtype=np.float64)
+        )
+        return slicer_matrix
 
 
 class SparseSmallness(_MeshBasedRegularization):

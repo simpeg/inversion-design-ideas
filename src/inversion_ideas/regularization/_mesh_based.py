@@ -182,8 +182,7 @@ class Smallness(_MeshBasedRegularization):
         model_diff = model - self.reference_model
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
-        slicer_matrix = self._get_slicer_matrix()
-
+        slicer_matrix = self._slicer_matrix
         return (
             model_diff.T
             @ slicer_matrix.T
@@ -207,8 +206,7 @@ class Smallness(_MeshBasedRegularization):
         model_diff = model - self.reference_model
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
-        slicer_matrix = self._get_slicer_matrix()
-
+        slicer_matrix = self._slicer_matrix
         return (
             2
             * slicer_matrix.T
@@ -231,8 +229,7 @@ class Smallness(_MeshBasedRegularization):
         """
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
-        slicer_matrix = self._get_slicer_matrix()
-
+        slicer_matrix = self._slicer_matrix
         return (
             2
             * slicer_matrix.T
@@ -276,7 +273,8 @@ class Smallness(_MeshBasedRegularization):
         cell_volumes = self.mesh.cell_volumes[self.active_cells]
         return diags_array(np.sqrt(cell_volumes))
 
-    def _get_slicer_matrix(self) -> dia_array[np.float64]:
+    @property
+    def _slicer_matrix(self) -> dia_array[np.float64]:
         """
         Return ``model_slicer.slicer_matrix`` or just a diagonal array.
         """
@@ -409,8 +407,7 @@ class Flatness(_MeshBasedRegularization):
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
         cell_gradient = self._cell_gradient
-        slicer_matrix = self._get_slicer_matrix()
-
+        slicer_matrix = self._slicer_matrix
         return (
             model_diff.T
             @ slicer_matrix.T
@@ -437,8 +434,7 @@ class Flatness(_MeshBasedRegularization):
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
         cell_gradient = self._cell_gradient
-        slicer_matrix = self._get_slicer_matrix()
-
+        slicer_matrix = self._slicer_matrix
         return (
             2
             * slicer_matrix.T
@@ -464,8 +460,7 @@ class Flatness(_MeshBasedRegularization):
         weights_matrix = self.weights_matrix
         cell_gradient = self._cell_gradient
         cell_volumes_sqrt = self._volumes_sqrt_matrix
-        slicer_matrix = self._get_slicer_matrix()
-
+        slicer_matrix = self._slicer_matrix
         return (
             2
             * slicer_matrix.T
@@ -536,7 +531,8 @@ class Flatness(_MeshBasedRegularization):
             )
         return self._regmesh
 
-    def _get_slicer_matrix(self) -> dia_array[np.float64]:
+    @property
+    def _slicer_matrix(self) -> dia_array[np.float64]:
         """
         Return ``model_slicer.slicer_matrix`` or just a diagonal array.
         """

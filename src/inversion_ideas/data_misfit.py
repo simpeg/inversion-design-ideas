@@ -112,10 +112,9 @@ class DataMisfit(Objective):
         """
         jac = self._get_jacobian(model)
         weights_matrix = self.weights_matrix
-        slicer_matrix = self._get_slicer_matrix()
         gradient = (
             2
-            * slicer_matrix.T
+            * self._slicer_matrix.T
             @ jac.T
             @ (weights_matrix.T @ weights_matrix @ self.residual(model))
         )
@@ -129,7 +128,7 @@ class DataMisfit(Objective):
         """
         jac = self._get_jacobian(model)
         weights_matrix = aslinearoperator(self.weights_matrix)
-        slicer_matrix = aslinearoperator(self._get_slicer_matrix())
+        slicer_matrix = aslinearoperator(self._slicer_matrix)
         if not self.build_hessian:
             jac = aslinearoperator(jac)
         return (
@@ -155,8 +154,7 @@ class DataMisfit(Objective):
             raise NotImplementedError(msg)
 
         jtj_diag = np.einsum("i,ij,ij->j", self.weights_matrix.diagonal(), jac, jac)
-        slicer_matrix = self._get_slicer_matrix()
-        return 2 * slicer_matrix.T @ jtj_diag
+        return 2 * self._slicer_matrix.T @ jtj_diag
 
     @property
     def n_params(self):
@@ -233,7 +231,7 @@ class DataMisfit(Objective):
         """
         return self(model) / self.n_data
 
-    def _get_jacobian(self, model: Model) -> npt.NDArray[np.float64] | LinearOperator:
+    def _get_jacobian(self, model: Model) -> LinearOperator:
         """
         Return the jacobian of the simulation evaluated on the passed model.
 
@@ -249,7 +247,8 @@ class DataMisfit(Objective):
         )
         return jac
 
-    def _get_slicer_matrix(self) -> dia_array[np.float64]:
+    @property
+    def _slicer_matrix(self) -> dia_array[np.float64]:
         """
         Return ``model_slicer.slicer_matrix`` or just a diagonal array.
         """

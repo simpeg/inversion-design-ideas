@@ -5,11 +5,8 @@ Model wiring.
 from numbers import Integral
 
 import numpy as np
-import numpy.typing as npt
-from scipy.sparse import dia_array, diags_array, sparray
-from scipy.sparse.linalg import LinearOperator
+from scipy.sparse import dia_array, diags_array
 
-from .operators import BlockColumnMatrix
 from .typing import Model
 
 
@@ -135,46 +132,12 @@ class ModelSlice:
         """
         ones = np.ones(self.size)
         shape = (self.size, self.full_size)
-        return diags_array(ones, offsets=self.slice.start, shape=shape, dtype=np.float64)
+        return diags_array(
+            ones, offsets=self.slice.start, shape=shape, dtype=np.float64
+        )
 
     def extract(self, model: Model):
         if model.size != self.wires.size:
             # TODO: add msg
             raise ValueError()
         return model[self.slice]
-
-    def expand_array(self, array: npt.NDArray) -> npt.NDArray:
-        """
-        Expand a 1D array with zeros outside the model slice.
-        """
-        if not isinstance(array, np.ndarray):
-            msg = f"Invalid array of type {type(array).__name__}."
-            raise TypeError(msg)
-        if array.ndim != 1:
-            msg = f"Invalid array with {array.ndim} dimensions. It must be a 1D array."
-            raise ValueError(msg)
-        out = np.zeros(self.full_size, dtype=array.dtype)
-        out[self.slice] = array
-        return out
-
-    def expand_matrix(
-        self, matrix: npt.NDArray | sparray | LinearOperator
-    ) -> BlockColumnMatrix:
-        """
-        Expand a matrix that operates on the model slice into a block matrix.
-        """
-        if matrix.ndim != 2:
-            msg = (
-                f"Invalid matrix with {matrix.ndim} dimensions. "
-                "It must be a 2D matrix or LinearOperator."
-            )
-            raise ValueError(msg)
-        if matrix.shape[1] != self.size:
-            # TODO: Complete the error message
-            msg = f"Invalid matrix with shape '{matrix.shape}'."
-            raise ValueError(msg)
-        return BlockColumnMatrix(
-            block=matrix,
-            index_start=self.slice.start,
-            n_cols=self.full_size,
-        )

@@ -2,15 +2,11 @@
 Regularization classes for mesh-based inversion problems.
 """
 
-from types import NoneType
 import discretize
 import numpy as np
 import numpy.typing as npt
-from scipy.sparse.linalg import aslinearoperator
 import simpeg
 from scipy.sparse import dia_array, diags_array, eye_array
-
-from inversion_ideas.operators import BlockColumnMatrix
 
 from .._utils import prod_arrays
 from ..base import Objective

@@ -4,11 +4,10 @@ Class to represent a data misfit term.
 
 import numpy as np
 import numpy.typing as npt
-from scipy.sparse import dia_array, diags_array, sparray, eye_array
+from scipy.sparse import dia_array, diags_array, eye_array, sparray
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from .base import Objective
-from .operators import BlockColumnMatrix
 from .typing import Model
 from .utils import cache_on_model
 from .wires import ModelSlice
@@ -234,9 +233,7 @@ class DataMisfit(Objective):
         """
         return self(model) / self.n_data
 
-    def _get_jacobian(
-        self, model: Model
-    ) -> npt.NDArray[np.float64] | LinearOperator | BlockColumnMatrix:
+    def _get_jacobian(self, model: Model) -> npt.NDArray[np.float64] | LinearOperator:
         """
         Return the jacobian of the simulation evaluated on the passed model.
 

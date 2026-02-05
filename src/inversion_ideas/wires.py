@@ -6,7 +6,7 @@ from numbers import Integral
 
 import numpy as np
 import numpy.typing as npt
-from scipy.sparse import sparray
+from scipy.sparse import dia_array, diags_array, sparray
 from scipy.sparse.linalg import LinearOperator
 
 from .operators import BlockColumnMatrix
@@ -127,6 +127,15 @@ class ModelSlice:
     @property
     def wires(self) -> Wires:
         return self._wires
+
+    @property
+    def slice_matrix(self) -> dia_array[np.float64]:
+        """
+        Return a matrix that can be used to slice a model array.
+        """
+        ones = np.ones(self.size)
+        shape = (self.size, self.full_size)
+        return diags_array(ones, offsets=self.slice.start, shape=shape, dtype=np.float64)
 
     def extract(self, model: Model):
         if model.size != self.wires.size:

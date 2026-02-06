@@ -89,9 +89,6 @@ def cache_on_model(func):
     >>> print(sq.squared(model_new))  # perform a new computation
     77.0
     """
-    # Define attribute name for the model hash
-    model_hash_attr = "_model_hash"
-
     # Define attribute name for the cached result using the hash of the function
     cache_attr = f"_cache_{hash(func)}"
 
@@ -103,18 +100,20 @@ def cache_on_model(func):
 
         if self.cache:
             model_hash = hashlib.sha256(model)
-            if (
-                hasattr(self, model_hash_attr)
-                and getattr(self, model_hash_attr).digest() == model_hash.digest()
-            ):
-                return getattr(self, cache_attr)
 
+            # Return cached object if the model hash matches with the cached one
+            if hasattr(self, cache_attr):
+                model_hash_cached, cached_result = getattr(self, cache_attr)
+                if model_hash_cached.digest() == model_hash.digest():
+                    return cached_result
+
+            # Compute new result and cache it
             result = func(self, model, *args, **kwargs)
-            setattr(self, cache_attr, result)
-            setattr(self, model_hash_attr, model_hash)
-        else:
-            result = func(self, model, *args, **kwargs)
-        return result
+            setattr(self, cache_attr, (model_hash, result))
+            return result
+
+        # Return result without caching
+        return func(self, model, *args, **kwargs)
 
     return wrapper
 

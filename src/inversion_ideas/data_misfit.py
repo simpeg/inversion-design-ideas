@@ -9,7 +9,6 @@ from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from .base import Objective
 from .typing import Model
-from .utils import cache_on_model
 
 
 class DataMisfit(Objective):
@@ -24,9 +23,6 @@ class DataMisfit(Objective):
         Array with data uncertainty.
     simulation : Simulation
         Instance of Simulation.
-    cache : bool, optional
-        Whether to cache the last result of the `__call__` method.
-        Default to False.
     build_hessian : bool, optional
         If True, the ``hessian`` method will build the Hessian matrix and allocate it in
         memory. If False, the ``hessian`` method will return a linear operator that
@@ -82,7 +78,6 @@ class DataMisfit(Objective):
         uncertainty: npt.NDArray[np.float64],
         simulation,
         *,
-        cache=False,
         build_hessian=False,
     ):
         # TODO: Check that the data and uncertainties have the size as ndata in the
@@ -90,15 +85,10 @@ class DataMisfit(Objective):
         self.data = data
         self.uncertainty = uncertainty
         self.simulation = simulation
-        self.cache = cache
         self.build_hessian = build_hessian
         self.set_name("d")
 
-    @cache_on_model
     def __call__(self, model: Model) -> float:
-        # TODO:
-        # Cache invalidation: we should clean the cache if data or uncertainties change.
-        # Or they should be immutable.
         residual = self.residual(model)
         weights_matrix = self.weights_matrix
         return residual.T @ weights_matrix.T @ weights_matrix @ residual

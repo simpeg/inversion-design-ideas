@@ -98,7 +98,6 @@ class WrappedSimulation(Simulation):
         """
         return self.simulation.dpred(model)
 
-    @cache_on_model
     def jacobian(self, model: Model) -> npt.NDArray[np.float64] | LinearOperator:
         """
         Jacobian matrix for a given model.

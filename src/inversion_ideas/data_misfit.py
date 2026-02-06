@@ -4,12 +4,13 @@ Class to represent a data misfit term.
 
 import numpy as np
 import numpy.typing as npt
-from scipy.sparse import dia_array, diags_array, sparray
+from scipy.sparse import dia_array, diags_array, eye_array, sparray
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from .base import Objective
 from .typing import Model
 from .utils import cache_on_model
+from .wires import ModelSlice
 
 
 class DataMisfit(Objective):
@@ -82,6 +83,7 @@ class DataMisfit(Objective):
         uncertainty: npt.NDArray[np.float64],
         simulation,
         *,
+        model_slice: ModelSlice | None = None,
         cache=False,
         build_hessian=False,
     ):
@@ -90,6 +92,7 @@ class DataMisfit(Objective):
         self.data = data
         self.uncertainty = uncertainty
         self.simulation = simulation
+        self.model_slice = model_slice
         self.cache = cache
         self.build_hessian = build_hessian
         self.set_name("d")
@@ -107,9 +110,15 @@ class DataMisfit(Objective):
         """
         Gradient vector.
         """
-        jac = self.simulation.jacobian(model)
+        jac = self._get_jacobian(model)
         weights_matrix = self.weights_matrix
-        return 2 * jac.T @ (weights_matrix.T @ weights_matrix @ self.residual(model))
+        gradient = (
+            2
+            * self._slicer_matrix.T
+            @ jac.T
+            @ (weights_matrix.T @ weights_matrix @ self.residual(model))
+        )
+        return gradient
 
     def hessian(
         self, model: Model
@@ -117,31 +126,43 @@ class DataMisfit(Objective):
         """
         Hessian matrix.
         """
-        jac = self.simulation.jacobian(model)
+        jac = self._get_jacobian(model)
+        weights_matrix = aslinearoperator(self.weights_matrix)
+        slicer_matrix = aslinearoperator(self._slicer_matrix)
         if not self.build_hessian:
             jac = aslinearoperator(jac)
-        weights_matrix = aslinearoperator(self.weights_matrix)
-        return 2 * jac.T @ weights_matrix.T @ weights_matrix @ jac
+        return (
+            2
+            * slicer_matrix.T
+            @ jac.T
+            @ weights_matrix.T
+            @ weights_matrix
+            @ jac
+            @ slicer_matrix
+        )
 
     def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
         """
-        Diagonal of the Hessian.
+        Approximated diagonal of the Hessian.
         """
-        jac = self.simulation.jacobian(model)
+        jac = self._get_jacobian(model)
         if isinstance(jac, LinearOperator):
             msg = (
                 "`DataMisfit.hessian_diagonal()` is not implemented for simulations "
                 "that return the jacobian as a LinearOperator."
             )
             raise NotImplementedError(msg)
+
         jtj_diag = np.einsum("i,ij,ij->j", self.weights_matrix.diagonal(), jac, jac)
-        return 2 * jtj_diag
+        return 2 * self._slicer_matrix.T @ jtj_diag
 
     @property
     def n_params(self):
         """
         Number of model parameters.
         """
+        if self.model_slice is not None:
+            return self.model_slice.full_size
         return self.simulation.n_params
 
     @property
@@ -176,6 +197,8 @@ class DataMisfit(Objective):
         where :math:`\mathbf{d}` is the vector with observed data, :math:`\mathcal{F}`
         is the forward model, and :math:`\mathbf{m}` is the model vector.
         """
+        if self.model_slice is not None:
+            model = self.model_slice.extract(model)
         return self.simulation(model) - self.data
 
     @property
@@ -186,7 +209,7 @@ class DataMisfit(Objective):
         return 1 / self.uncertainty**2
 
     @property
-    def weights_matrix(self) -> dia_array:
+    def weights_matrix(self) -> dia_array[np.float64]:
         """
         Diagonal matrix with the square root of the regularization weights.
         """
@@ -207,3 +230,31 @@ class DataMisfit(Objective):
             Chi factor for the given model.
         """
         return self(model) / self.n_data
+
+    def _get_jacobian(self, model: Model) -> LinearOperator:
+        """
+        Return the jacobian of the simulation evaluated on the passed model.
+
+        Parameters
+        ----------
+        model : (n_params) array
+            Model array. The array must have the full size. This method will use the
+            ``model_slice`` to extract the relevant portion that will be passed to the
+            simulation.
+        """
+        jac = self.simulation.jacobian(
+            model if self.model_slice is None else self.model_slice.extract(model)
+        )
+        return jac
+
+    @property
+    def _slicer_matrix(self) -> dia_array[np.float64]:
+        """
+        Return ``model_slicer.slicer_matrix`` or just a diagonal array.
+        """
+        slicer_matrix = (
+            self.model_slice.slice_matrix
+            if self.model_slice is not None
+            else eye_array(self.n_params, dtype=np.float64)
+        )
+        return slicer_matrix

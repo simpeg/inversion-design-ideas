@@ -4,7 +4,7 @@ Class to represent a data misfit term.
 
 import numpy as np
 import numpy.typing as npt
-from scipy.sparse import dia_array, diags_array, eye_array, sparray
+from scipy.sparse import dia_array, diags_array, sparray
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from .base import Objective
@@ -113,11 +113,12 @@ class DataMisfit(Objective):
         jac = self._get_jacobian(model)
         weights_matrix = self.weights_matrix
         gradient = (
-            2
-            * self._slicer_matrix.T
-            @ jac.T
-            @ (weights_matrix.T @ weights_matrix @ self.residual(model))
+            2 * jac.T @ (weights_matrix.T @ weights_matrix @ self.residual(model))
         )
+
+        if self.model_slice is not None:
+            gradient = self.model_slice.expand_array(gradient)
+
         return gradient
 
     def hessian(
@@ -128,18 +129,15 @@ class DataMisfit(Objective):
         """
         jac = self._get_jacobian(model)
         weights_matrix = aslinearoperator(self.weights_matrix)
-        slicer_matrix = aslinearoperator(self._slicer_matrix)
         if not self.build_hessian:
             jac = aslinearoperator(jac)
-        return (
-            2
-            * slicer_matrix.T
-            @ jac.T
-            @ weights_matrix.T
-            @ weights_matrix
-            @ jac
-            @ slicer_matrix
-        )
+
+        hessian = 2 * jac.T @ weights_matrix.T @ weights_matrix @ jac
+
+        if self.model_slice is not None:
+            hessian = self.model_slice.expand_matrix(hessian)
+
+        return hessian
 
     def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
         """
@@ -154,7 +152,12 @@ class DataMisfit(Objective):
             raise NotImplementedError(msg)
 
         jtj_diag = np.einsum("i,ij,ij->j", self.weights_matrix.diagonal(), jac, jac)
-        return 2 * self._slicer_matrix.T @ jtj_diag
+        hessian_diag = 2 * jtj_diag
+
+        if self.model_slice is not None:
+            hessian_diag = self.model_slice.expand_array(hessian_diag)
+
+        return hessian_diag
 
     @property
     def n_params(self):
@@ -246,15 +249,3 @@ class DataMisfit(Objective):
             model if self.model_slice is None else self.model_slice.extract(model)
         )
         return jac
-
-    @property
-    def _slicer_matrix(self) -> dia_array[np.float64]:
-        """
-        Return ``model_slicer.slicer_matrix`` or just a diagonal array.
-        """
-        slicer_matrix = (
-            self.model_slice.slice_matrix
-            if self.model_slice is not None
-            else eye_array(self.n_params, dtype=np.float64)
-        )
-        return slicer_matrix

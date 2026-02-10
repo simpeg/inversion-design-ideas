@@ -144,6 +144,23 @@ class ModelSlice:
             raise ValueError()
         return model[self.slice]
 
+    def expand_array(self, array: npt.NDArray) -> npt.NDArray:
+        """
+        Expand a 1D array by filling it with extra zeros.
+
+        Parameters
+        ----------
+        array : (n,) array
+            Array that will be filled. It must have the same number of elements as the
+            model slice.
+
+        Returns
+        -------
+        array : (m,) array
+            Array filled with zeros on elements outside of the model slice.
+        """
+        return self.slice_matrix.T @ array
+
     def expand_matrix(
         self, matrix: npt.NDArray | LinearOperator | sparray
     ) -> "BlockSquareMatrix":
@@ -154,6 +171,12 @@ class ModelSlice:
         ----------
         matrix : array, sparse array or LinearOperator
             Square matrix that will be expanded
+
+        Returns
+        -------
+        block_square_matrix : BlockSquareMatrix
+            LinearOperator that represents the matrix filled with zeros outside of the
+            block.
         """
         return BlockSquareMatrix(block=matrix, slice_matrix=self.slice_matrix)
 
@@ -176,7 +199,6 @@ class BlockSquareMatrix(LinearOperator):
 
     Notes
     -----
-
     This ``LinearOperator`` represents square matrices like:
 
     .. math::

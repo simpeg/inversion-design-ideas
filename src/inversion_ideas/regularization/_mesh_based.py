@@ -93,8 +93,9 @@ class Smallness(_MeshBasedRegularization):
         For multiple cell weights, pass a dictionary where keys are strings and values
         are the different weights arrays.
         If None, no cell weights are going to be used.
-    reference_model : (n_params) array or None, optional
-        Array with values for the reference model.
+    reference_model : (n_active) array or None, optional
+        Array with values for the reference model. It must have the same number of
+        elements as active cells in the mesh.
 
     Notes
     -----
@@ -179,18 +180,16 @@ class Smallness(_MeshBasedRegularization):
         model : (n_params) array
             Array with model values.
         """
+        model = model if self.model_slice is None else self.model_slice.extract(model)
         model_diff = model - self.reference_model
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
-        slicer_matrix = self._slicer_matrix
         return (
             model_diff.T
-            @ slicer_matrix.T
             @ cell_volumes_sqrt.T
             @ weights_matrix.T
             @ weights_matrix
             @ cell_volumes_sqrt
-            @ slicer_matrix
             @ model_diff
         )
 
@@ -203,20 +202,23 @@ class Smallness(_MeshBasedRegularization):
         model : (n_params) array
             Array with model values.
         """
+        model = model if self.model_slice is None else self.model_slice.extract(model)
         model_diff = model - self.reference_model
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
-        slicer_matrix = self._slicer_matrix
-        return (
+        gradient = (
             2
-            * slicer_matrix.T
-            @ cell_volumes_sqrt.T
+            * cell_volumes_sqrt.T
             @ weights_matrix.T
             @ weights_matrix
             @ cell_volumes_sqrt
-            @ slicer_matrix
             @ model_diff
         )
+
+        if self.model_slice is not None:
+            gradient = self.model_slice.expand_array(gradient)
+
+        return gradient
 
     def hessian(self, model: Model):  # noqa: ARG002
         """
@@ -229,16 +231,18 @@ class Smallness(_MeshBasedRegularization):
         """
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
-        slicer_matrix = self._slicer_matrix
-        return (
+        hessian = (
             2
-            * slicer_matrix.T
-            @ cell_volumes_sqrt.T
+            * cell_volumes_sqrt.T
             @ weights_matrix.T
             @ weights_matrix
             @ cell_volumes_sqrt
-            @ slicer_matrix
         )
+
+        if self.model_slice is not None:
+            hessian = self.model_slice.expand_matrix(hessian)
+
+        return hessian
 
     def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
         """
@@ -273,18 +277,6 @@ class Smallness(_MeshBasedRegularization):
         cell_volumes = self.mesh.cell_volumes[self.active_cells]
         return diags_array(np.sqrt(cell_volumes))
 
-    @property
-    def _slicer_matrix(self) -> dia_array[np.float64]:
-        """
-        Return ``model_slicer.slicer_matrix`` or just a diagonal array.
-        """
-        slicer_matrix = (
-            self.model_slice.slice_matrix
-            if self.model_slice is not None
-            else eye_array(self.n_params, dtype=np.float64)
-        )
-        return slicer_matrix
-
 
 class Flatness(_MeshBasedRegularization):
     r"""
@@ -301,12 +293,12 @@ class Flatness(_MeshBasedRegularization):
     active_cells : (n_cells) array or None, optional
         Array full of bools that indicate the active cells in the mesh. It must have the
         same amount of elements as cells in the mesh.
-    cell_weights : (n_params) array or dict of (n_params) arrays or None, optional
+    cell_weights : (n_active) array or dict of (n_params) arrays or None, optional
         Array with cell weights.
         For multiple cell weights, pass a dictionary where keys are strings and values
         are the different weights arrays.
         If None, no cell weights are going to be used.
-    reference_model : (n_params) array or None, optional
+    reference_model : (n_active) array or None, optional
         Array with values for the reference model.
 
     Notes
@@ -390,7 +382,7 @@ class Flatness(_MeshBasedRegularization):
         self.reference_model = (
             reference_model
             if reference_model is not None
-            else np.zeros(self.n_params, dtype=np.float64)
+            else np.zeros(self.n_active, dtype=np.float64)
         )
         self.set_name(direction)
 
@@ -403,21 +395,19 @@ class Flatness(_MeshBasedRegularization):
         model : (n_params) array
             Array with model values.
         """
+        model = model if self.model_slice is None else self.model_slice.extract(model)
         model_diff = model - self.reference_model
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
         cell_gradient = self._cell_gradient
-        slicer_matrix = self._slicer_matrix
         return (
             model_diff.T
-            @ slicer_matrix.T
             @ cell_gradient.T
             @ cell_volumes_sqrt.T
             @ weights_matrix.T
             @ weights_matrix
             @ cell_volumes_sqrt
             @ cell_gradient
-            @ slicer_matrix
             @ model_diff
         )
 
@@ -430,23 +420,27 @@ class Flatness(_MeshBasedRegularization):
         model : (n_params) array
             Array with model values.
         """
+        model = model if self.model_slice is None else self.model_slice.extract(model)
         model_diff = model - self.reference_model
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
         cell_gradient = self._cell_gradient
-        slicer_matrix = self._slicer_matrix
-        return (
+
+        gradient = (
             2
-            * slicer_matrix.T
             @ cell_gradient.T
             @ cell_volumes_sqrt.T
             @ weights_matrix.T
             @ weights_matrix
             @ cell_volumes_sqrt
             @ cell_gradient
-            @ slicer_matrix
             @ model_diff
         )
+
+        if self.model_slice is not None:
+            gradient = self.model_slice.expand_array(gradient)
+
+        return gradient
 
     def hessian(self, model: Model):  # noqa: ARG002
         """
@@ -460,18 +454,18 @@ class Flatness(_MeshBasedRegularization):
         weights_matrix = self.weights_matrix
         cell_gradient = self._cell_gradient
         cell_volumes_sqrt = self._volumes_sqrt_matrix
-        slicer_matrix = self._slicer_matrix
-        return (
+        hessian = (
             2
-            * slicer_matrix.T
-            @ cell_gradient.T
+            * cell_gradient.T
             @ cell_volumes_sqrt.T
             @ weights_matrix.T
             @ weights_matrix
             @ cell_volumes_sqrt
             @ cell_gradient
-            @ slicer_matrix
         )
+        if self.model_slice is not None:
+            hessian = self.model_slice.expand_matrix(hessian)
+        return hessian
 
     def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
         """
@@ -530,18 +524,6 @@ class Flatness(_MeshBasedRegularization):
                 self.mesh, self.active_cells
             )
         return self._regmesh
-
-    @property
-    def _slicer_matrix(self) -> dia_array[np.float64]:
-        """
-        Return ``model_slicer.slicer_matrix`` or just a diagonal array.
-        """
-        slicer_matrix = (
-            self.model_slice.slice_matrix
-            if self.model_slice is not None
-            else eye_array(self.n_params, dtype=np.float64)
-        )
-        return slicer_matrix
 
 
 class SparseSmallness(_MeshBasedRegularization):

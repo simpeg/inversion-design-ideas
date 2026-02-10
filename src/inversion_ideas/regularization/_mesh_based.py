@@ -167,7 +167,7 @@ class Smallness(_MeshBasedRegularization):
         self.reference_model = (
             reference_model
             if reference_model is not None
-            else np.zeros(self.n_params, dtype=np.float64)
+            else np.zeros(self.n_active, dtype=np.float64)
         )
         self.set_name("s")
 

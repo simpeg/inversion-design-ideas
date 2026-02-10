@@ -9,7 +9,7 @@ from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from .base import Objective
 from .typing import Model
-from .utils import cache_on_model
+from .utils import cache_on_model, support_model_slice
 from .wires import ModelSlice
 
 
@@ -97,67 +97,54 @@ class DataMisfit(Objective):
         self.build_hessian = build_hessian
         self.set_name("d")
 
+    @support_model_slice
     @cache_on_model
     def __call__(self, model: Model) -> float:
         # TODO:
         # Cache invalidation: we should clean the cache if data or uncertainties change.
         # Or they should be immutable.
-        residual = self.residual(model)
+        residual = self.simulation(model) - self.data
         weights_matrix = self.weights_matrix
         return residual.T @ weights_matrix.T @ weights_matrix @ residual
 
+    @support_model_slice
     def gradient(self, model: Model) -> npt.NDArray[np.float64]:
         """
         Gradient vector.
         """
-        jac = self._get_jacobian(model)
+        jac = self.simulation.jacobian(model)
         weights_matrix = self.weights_matrix
-        gradient = (
-            2 * jac.T @ (weights_matrix.T @ weights_matrix @ self.residual(model))
-        )
-
-        if self.model_slice is not None:
-            gradient = self.model_slice.expand_array(gradient)
-
+        residual = self.simulation(model) - self.data
+        gradient = 2 * jac.T @ (weights_matrix.T @ weights_matrix @ residual)
         return gradient
 
+    @support_model_slice
     def hessian(
         self, model: Model
     ) -> npt.NDArray[np.float64] | sparray | LinearOperator:
         """
         Hessian matrix.
         """
-        jac = self._get_jacobian(model)
+        jac = self.simulation.jacobian(model)
         weights_matrix = aslinearoperator(self.weights_matrix)
         if not self.build_hessian:
             jac = aslinearoperator(jac)
+        return 2 * jac.T @ weights_matrix.T @ weights_matrix @ jac
 
-        hessian = 2 * jac.T @ weights_matrix.T @ weights_matrix @ jac
-
-        if self.model_slice is not None:
-            hessian = self.model_slice.expand_matrix(hessian)
-
-        return hessian
-
+    @support_model_slice
     def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
         """
         Approximated diagonal of the Hessian.
         """
-        jac = self._get_jacobian(model)
+        jac = self.simulation.jacobian(model)
         if isinstance(jac, LinearOperator):
             msg = (
                 "`DataMisfit.hessian_diagonal()` is not implemented for simulations "
                 "that return the jacobian as a LinearOperator."
             )
             raise NotImplementedError(msg)
-
         jtj_diag = np.einsum("i,ij,ij->j", self.weights_matrix.diagonal(), jac, jac)
-        hessian_diag = 2 * jtj_diag
-
-        if self.model_slice is not None:
-            hessian_diag = self.model_slice.expand_array(hessian_diag)
-
-        return hessian_diag
+        return 2 * jtj_diag
 
     @property
     def n_params(self):
@@ -233,19 +220,3 @@ class DataMisfit(Objective):
             Chi factor for the given model.
         """
         return self(model) / self.n_data
-
-    def _get_jacobian(self, model: Model) -> LinearOperator:
-        """
-        Return the jacobian of the simulation evaluated on the passed model.
-
-        Parameters
-        ----------
-        model : (n_params) array
-            Model array. The array must have the full size. This method will use the
-            ``model_slice`` to extract the relevant portion that will be passed to the
-            simulation.
-        """
-        jac = self.simulation.jacobian(
-            model if self.model_slice is None else self.model_slice.extract(model)
-        )
-        return jac

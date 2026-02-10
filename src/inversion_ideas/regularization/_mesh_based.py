@@ -11,6 +11,7 @@ from scipy.sparse import dia_array, diags_array, eye_array
 from .._utils import prod_arrays
 from ..base import Objective
 from ..typing import Model
+from ..utils import support_model_slice
 from ..wires import ModelSlice
 
 
@@ -171,6 +172,7 @@ class Smallness(_MeshBasedRegularization):
         )
         self.set_name("s")
 
+    @support_model_slice
     def __call__(self, model: Model) -> float:
         """
         Evaluate the regularization on a given model.
@@ -180,7 +182,6 @@ class Smallness(_MeshBasedRegularization):
         model : (n_params) array
             Array with model values.
         """
-        model = model if self.model_slice is None else self.model_slice.extract(model)
         model_diff = model - self.reference_model
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
@@ -193,6 +194,7 @@ class Smallness(_MeshBasedRegularization):
             @ model_diff
         )
 
+    @support_model_slice
     def gradient(self, model: Model):
         """
         Gradient vector.
@@ -202,7 +204,6 @@ class Smallness(_MeshBasedRegularization):
         model : (n_params) array
             Array with model values.
         """
-        model = model if self.model_slice is None else self.model_slice.extract(model)
         model_diff = model - self.reference_model
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
@@ -214,12 +215,9 @@ class Smallness(_MeshBasedRegularization):
             @ cell_volumes_sqrt
             @ model_diff
         )
-
-        if self.model_slice is not None:
-            gradient = self.model_slice.expand_array(gradient)
-
         return gradient
 
+    @support_model_slice
     def hessian(self, model: Model):  # noqa: ARG002
         """
         Hessian matrix.
@@ -238,10 +236,6 @@ class Smallness(_MeshBasedRegularization):
             @ weights_matrix
             @ cell_volumes_sqrt
         )
-
-        if self.model_slice is not None:
-            hessian = self.model_slice.expand_matrix(hessian)
-
         return hessian
 
     def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
@@ -386,6 +380,7 @@ class Flatness(_MeshBasedRegularization):
         )
         self.set_name(direction)
 
+    @support_model_slice
     def __call__(self, model: Model) -> float:
         """
         Evaluate the regularization on a given model.
@@ -395,7 +390,6 @@ class Flatness(_MeshBasedRegularization):
         model : (n_params) array
             Array with model values.
         """
-        model = model if self.model_slice is None else self.model_slice.extract(model)
         model_diff = model - self.reference_model
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
@@ -411,6 +405,7 @@ class Flatness(_MeshBasedRegularization):
             @ model_diff
         )
 
+    @support_model_slice
     def gradient(self, model: Model):
         """
         Gradient vector.
@@ -420,12 +415,10 @@ class Flatness(_MeshBasedRegularization):
         model : (n_params) array
             Array with model values.
         """
-        model = model if self.model_slice is None else self.model_slice.extract(model)
         model_diff = model - self.reference_model
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
         cell_gradient = self._cell_gradient
-
         gradient = (
             2
             @ cell_gradient.T
@@ -436,12 +429,9 @@ class Flatness(_MeshBasedRegularization):
             @ cell_gradient
             @ model_diff
         )
-
-        if self.model_slice is not None:
-            gradient = self.model_slice.expand_array(gradient)
-
         return gradient
 
+    @support_model_slice
     def hessian(self, model: Model):  # noqa: ARG002
         """
         Hessian matrix.
@@ -463,8 +453,6 @@ class Flatness(_MeshBasedRegularization):
             @ cell_volumes_sqrt
             @ cell_gradient
         )
-        if self.model_slice is not None:
-            hessian = self.model_slice.expand_matrix(hessian)
         return hessian
 
     def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:

@@ -10,6 +10,8 @@ import numpy as np
 import numpy.typing as npt
 from scipy.sparse import sparray
 
+from inversion_ideas.wires import ModelSlice
+
 __all__ = [
     "cache_on_model",
     "get_logger",
@@ -158,3 +160,56 @@ def get_sensitivity_weights(
         sensitivty_weights[sensitivty_weights < vmin] = vmin
 
     return sensitivty_weights
+
+
+def support_model_slice(func):
+    """
+    Apply a ``model_slice`` to the input and output of a method.
+
+    This decorator will take the full model passed to the decorated method, extract only
+    the relevant slice for the instance based on its ``model_slice``, and then extend
+    the result if it's a 1D array or a 2D matrix, filling non-relevant elements with
+    zeros.
+
+    .. important::
+
+        Use this decorator only for methods that take the ``model`` as the first
+        argument.
+
+    .. important::
+
+        The instance needs to have a ``model_slice`` attribute. If it's None, then the
+        method will run without any modification.
+    """
+
+    @functools.wraps(func)
+    def wrapper(self, model, *args, **kwargs):
+        if not hasattr(self, "model_slice"):
+            # TODO: add msg
+            raise AttributeError()
+
+        if self.model_slice is None:
+            return func(self, model, *args, **kwargs)
+
+        model_slice: ModelSlice = self.model_slice
+        model_reduced = model_slice.extract(model)
+        result = func(self, model_reduced, *args, **kwargs)
+
+        if isinstance(result, float):
+            return result
+
+        if hasattr(result, "ndim"):
+            if result.ndim == 1:
+                result = model_slice.expand_array(result)
+            elif result.ndim == 2:
+                result = model_slice.expand_matrix(result)
+            else:
+                # TODO: add msg
+                raise ValueError()
+        else:
+            # TODO: add msg
+            raise TypeError()
+
+        return result
+
+    return wrapper

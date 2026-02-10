@@ -8,6 +8,7 @@ from scipy.sparse.linalg import LinearOperator
 
 from .base import Simulation
 from .typing import Model
+from .utils import cache_on_model
 
 
 def wrap_simulation(simulation, *, store_jacobian=False):
@@ -48,9 +49,12 @@ class WrappedSimulation(Simulation):
         a :class:`~scipy.sparse.linalg.LinearOperator` that calls the ``Jvec`` and
         ``Jtvec`` methods of the SimPEG simulation.
         Default to False.
+    cache : bool, optional
+        Whether to cache the last result of the ``__call__`` and ``jacobian`` methods.
+        Default to True.
     """
 
-    def __init__(self, simulation, *, store_jacobian=False):
+    def __init__(self, simulation, *, store_jacobian=False, cache=True):
         has_getJ = hasattr(simulation, "getJ") and callable(simulation.getJ)
         if store_jacobian and not has_getJ:
             msg = (
@@ -62,6 +66,7 @@ class WrappedSimulation(Simulation):
 
         self.simulation = simulation
         self.store_jacobian = store_jacobian
+        self.cache = cache
 
     @property
     def n_params(self) -> int:
@@ -86,6 +91,7 @@ class WrappedSimulation(Simulation):
         """
         return self.simulation.survey.nD
 
+    @cache_on_model
     def __call__(self, model: Model) -> npt.NDArray[np.float64]:
         """
         Evaluate simulation for a given model.

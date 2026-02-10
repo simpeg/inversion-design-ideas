@@ -2,7 +2,7 @@
 Custom types used for type hints.
 """
 
-from typing import Protocol, TypeAlias
+from typing import Protocol, TypeAlias, runtime_checkable
 
 import numpy as np
 import numpy.typing as npt
@@ -35,3 +35,12 @@ class SparseRegularization(Protocol):
 
     def activate_irls(self, model_previous: Model) -> None:
         raise NotImplementedError
+
+
+@runtime_checkable
+class HasDiagonal(Protocol):
+    """
+    Protocol to define an object that implements the ``diagonal`` method.
+    """
+
+    def diagonal(self) -> npt.NDArray: ...

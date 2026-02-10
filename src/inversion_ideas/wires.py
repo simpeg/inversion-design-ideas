@@ -9,7 +9,7 @@ import numpy.typing as npt
 from scipy.sparse import dia_array, diags_array, sparray
 from scipy.sparse.linalg import LinearOperator
 
-from .typing import Model
+from .typing import HasDiagonal, Model
 
 
 class Wires:
@@ -280,6 +280,8 @@ class BlockSquareMatrix(LinearOperator):
         """
         Diagonal of the matrix.
         """
-        # TODO: check if the block has a diagonal method (implement a protocol for it)
+        if not isinstance(self.block, HasDiagonal):
+            # TODO: Add msg
+            raise TypeError()
         diagonal = self.block.diagonal()
         return self.slice_matrix.T @ diagonal

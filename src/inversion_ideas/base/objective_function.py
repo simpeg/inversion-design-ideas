@@ -10,10 +10,9 @@ from typing import Self
 
 import numpy as np
 import numpy.typing as npt
-from scipy.sparse import sparray
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
-from ..typing import Model
+from ..typing import Model, SparseArray
 
 
 class Objective(ABC):
@@ -51,7 +50,7 @@ class Objective(ABC):
     @abstractmethod
     def hessian(
         self, model: Model
-    ) -> npt.NDArray[np.float64] | sparray | LinearOperator:
+    ) -> npt.NDArray[np.float64] | SparseArray | LinearOperator:
         """
         Evaluate the hessian of the objective function for a given model.
         """
@@ -150,7 +149,7 @@ class Scaled(Objective):
 
     def hessian(
         self, model: Model
-    ) -> npt.NDArray[np.float64] | sparray | LinearOperator:
+    ) -> npt.NDArray[np.float64] | SparseArray | LinearOperator:
         """
         Evaluate the hessian of the objective function for a given model.
         """
@@ -243,7 +242,7 @@ class Combo(Objective):
 
     def hessian(
         self, model: Model
-    ) -> npt.NDArray[np.float64] | sparray | LinearOperator:
+    ) -> npt.NDArray[np.float64] | SparseArray | LinearOperator:
         """
         Evaluate the hessian of the objective function for a given model.
         """
@@ -362,8 +361,8 @@ def _get_n_params(functions: list) -> int:
 
 
 def _sum(
-    operators: Iterator[npt.NDArray | sparray | LinearOperator],
-) -> npt.NDArray | sparray | LinearOperator:
+    operators: Iterator[npt.NDArray | SparseArray | LinearOperator],
+) -> npt.NDArray | SparseArray | LinearOperator:
     """
     Sum objects within an iterator.
 

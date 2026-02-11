@@ -8,7 +8,8 @@ import logging
 
 import numpy as np
 import numpy.typing as npt
-from scipy.sparse import sparray
+
+from .typing import SparseArray
 
 from inversion_ideas.wires import ModelSlice
 
@@ -123,7 +124,7 @@ def cache_on_model(func):
 def get_sensitivity_weights(
     jacobian: npt.NDArray[np.float64],
     *,
-    data_weights: npt.NDArray[np.float64] | sparray | None = None,
+    data_weights: npt.NDArray[np.float64] | SparseArray | None = None,
     volumes: npt.NDArray[np.float64] | None = None,
     vmin: float | None = 1e-12,
 ):

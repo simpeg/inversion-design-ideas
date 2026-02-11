@@ -68,7 +68,7 @@ def create_l2_inversion(
         no limit on the total amount of iterations.
     cache_models : bool, optional
         Whether to cache models after each iteration in the inversion.
-    preconditioner : {"jacobi"} or 2d array or sparray or LinearOperator or callable or None, optional
+    preconditioner : {"jacobi"} or 2d array or sparse array or LinearOperator or callable or None, optional
         Preconditioner that will be passed to the ``minimizer`` on every call during the
         inversion. The preconditioner can be a predefined 2d array, a sparse array or
         a LinearOperator. Alternatively, it can be a callable that takes the ``model``
@@ -184,7 +184,7 @@ def create_sparse_inversion(
         no limit on the total amount of iterations.
     cache_models : bool, optional
         Whether to cache models after each iteration in the inversion.
-    preconditioner : {"jacobi"} or 2d array or sparray or LinearOperator or callable or None, optional
+    preconditioner : {"jacobi"} or 2d array or sparse array or LinearOperator or callable or None, optional
         Preconditioner that will be passed to the ``minimizer`` on every call during the
         inversion. The preconditioner can be a predefined 2d array, a sparse array or
         a LinearOperator. Alternatively, it can be a callable that takes the ``model``

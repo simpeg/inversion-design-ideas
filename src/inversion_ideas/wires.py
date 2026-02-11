@@ -2,6 +2,7 @@
 Model wiring.
 """
 
+from abc import ABC, abstractmethod
 from numbers import Integral
 
 import numpy as np
@@ -90,7 +91,65 @@ class Wires:
         return model
 
 
-class ModelSlice:
+class _BaseModelSlice(ABC):
+    """
+    Base class for a ModelSlice.
+    """
+
+    @property
+    @abstractmethod
+    def size(self) -> int: ...
+
+    @property
+    @abstractmethod
+    def full_size(self) -> int: ...
+
+    @property
+    @abstractmethod
+    def wires(self) -> Wires: ...
+
+    @property
+    @abstractmethod
+    def slice_matrix(self) -> dia_array[np.float64]: ...
+
+    def expand_array(self, array: npt.NDArray) -> npt.NDArray:
+        """
+        Expand a 1D array by filling it with extra zeros.
+
+        Parameters
+        ----------
+        array : (n,) array
+            Array that will be filled. It must have the same number of elements as the
+            model slice.
+
+        Returns
+        -------
+        array : (m,) array
+            Array filled with zeros on elements outside of the model slice.
+        """
+        return self.slice_matrix.T @ array
+
+    def expand_matrix(
+        self, matrix: npt.NDArray | LinearOperator | sparray
+    ) -> "BlockSquareMatrix":
+        """
+        Expand a square matrix into a ``BlockSquareMatrix`` filling blocks with zeros.
+
+        Parameters
+        ----------
+        matrix : array, sparse array or LinearOperator
+            Square matrix that will be expanded
+
+        Returns
+        -------
+        block_square_matrix : BlockSquareMatrix
+            LinearOperator that represents the matrix filled with zeros outside of the
+            block.
+        """
+        return BlockSquareMatrix(block=matrix, slice_matrix=self.slice_matrix)
+
+
+class ModelSlice(_BaseModelSlice):
     """
     Class used to slice a model.
 
@@ -144,44 +203,8 @@ class ModelSlice:
             raise ValueError()
         return model[self.slice]
 
-    def expand_array(self, array: npt.NDArray) -> npt.NDArray:
-        """
-        Expand a 1D array by filling it with extra zeros.
 
-        Parameters
-        ----------
-        array : (n,) array
-            Array that will be filled. It must have the same number of elements as the
-            model slice.
-
-        Returns
-        -------
-        array : (m,) array
-            Array filled with zeros on elements outside of the model slice.
-        """
-        return self.slice_matrix.T @ array
-
-    def expand_matrix(
-        self, matrix: npt.NDArray | LinearOperator | sparray
-    ) -> "BlockSquareMatrix":
-        """
-        Expand a square matrix into a ``BlockSquareMatrix`` filling blocks with zeros.
-
-        Parameters
-        ----------
-        matrix : array, sparse array or LinearOperator
-            Square matrix that will be expanded
-
-        Returns
-        -------
-        block_square_matrix : BlockSquareMatrix
-            LinearOperator that represents the matrix filled with zeros outside of the
-            block.
-        """
-        return BlockSquareMatrix(block=matrix, slice_matrix=self.slice_matrix)
-
-
-class MultiSlice:
+class MultiSlice(_BaseModelSlice):
     """
     Multiple slices.
 
@@ -239,44 +262,12 @@ class MultiSlice:
             row += length
         return s
 
-    def extract(self, model: Model): ...
-
-    # These two could be inherited
-    def expand_array(self, array: npt.NDArray) -> npt.NDArray:
-        """
-        Expand a 1D array by filling it with extra zeros.
-
-        Parameters
-        ----------
-        array : (n,) array
-            Array that will be filled. It must have the same number of elements as the
-            model slice.
-
-        Returns
-        -------
-        array : (m,) array
-            Array filled with zeros on elements outside of the model slice.
-        """
-        return self.slice_matrix.T @ array
-
-    def expand_matrix(
-        self, matrix: npt.NDArray | LinearOperator | sparray
-    ) -> "BlockSquareMatrix":
-        """
-        Expand a square matrix into a ``BlockSquareMatrix`` filling blocks with zeros.
-
-        Parameters
-        ----------
-        matrix : array, sparse array or LinearOperator
-            Square matrix that will be expanded
-
-        Returns
-        -------
-        block_square_matrix : BlockSquareMatrix
-            LinearOperator that represents the matrix filled with zeros outside of the
-            block.
-        """
-        return BlockSquareMatrix(block=matrix, slice_matrix=self.slice_matrix)
+    def extract(self, model: Model):
+        if model.size != self.wires.size:
+            # TODO: add msg
+            raise ValueError()
+        parts = [model[s] for s in self.slices.values()]
+        return np.hstack(parts)
 
 
 class BlockSquareMatrix(LinearOperator):

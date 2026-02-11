@@ -1,6 +1,7 @@
 """
 Test operations for objective functions.
 """
+
 import pytest
 import numpy as np
 from scipy.sparse import diags_array, sparray

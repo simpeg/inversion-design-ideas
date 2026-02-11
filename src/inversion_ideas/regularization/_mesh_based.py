@@ -12,7 +12,7 @@ from .._utils import prod_arrays
 from ..base import Objective
 from ..typing import Model
 from ..utils import support_model_slice
-from ..wires import ModelSlice
+from ..wires import ModelSlice, MultiSlice
 
 
 class _MeshBasedRegularization(Objective):
@@ -147,7 +147,7 @@ class Smallness(_MeshBasedRegularization):
         active_cells: npt.NDArray[np.bool] | None = None,
         cell_weights: npt.NDArray | dict[str, npt.NDArray] | None = None,
         reference_model: Model | None = None,
-        model_slice: ModelSlice | None = None,
+        model_slice: ModelSlice | MultiSlice | None = None,
     ):
         self.mesh = mesh
         self.active_cells = (
@@ -354,7 +354,7 @@ class Flatness(_MeshBasedRegularization):
         active_cells: npt.NDArray[np.bool] | None = None,
         cell_weights: npt.NDArray | dict[str, npt.NDArray] | None = None,
         reference_model: Model | None = None,
-        model_slice: ModelSlice | None = None,
+        model_slice: ModelSlice | MultiSlice | None = None,
     ):
         self.mesh = mesh
         self.direction = direction

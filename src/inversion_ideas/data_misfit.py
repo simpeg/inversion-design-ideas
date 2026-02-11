@@ -10,7 +10,7 @@ from scipy.sparse.linalg import LinearOperator, aslinearoperator
 from .base import Objective
 from .typing import Model, SparseArray
 from .utils import support_model_slice
-from .wires import ModelSlice
+from .wires import ModelSlice, MultiSlice
 
 
 class DataMisfit(Objective):
@@ -80,7 +80,7 @@ class DataMisfit(Objective):
         uncertainty: npt.NDArray[np.float64],
         simulation,
         *,
-        model_slice: ModelSlice | None = None,
+        model_slice: ModelSlice | MultiSlice | None = None,
         build_hessian=False,
     ):
         # TODO: Check that the data and uncertainties have the size as ndata in the

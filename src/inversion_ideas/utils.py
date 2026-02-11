@@ -9,7 +9,7 @@ import logging
 import numpy as np
 import numpy.typing as npt
 
-from inversion_ideas.wires import ModelSlice
+from inversion_ideas.wires import ModelSlice, MultiSlice
 
 from .typing import SparseArray
 
@@ -191,7 +191,7 @@ def support_model_slice(func):
         if self.model_slice is None:
             return func(self, model, *args, **kwargs)
 
-        model_slice: ModelSlice = self.model_slice
+        model_slice: ModelSlice | MultiSlice = self.model_slice
         model_reduced = model_slice.extract(model)
         result = func(self, model_reduced, *args, **kwargs)
 

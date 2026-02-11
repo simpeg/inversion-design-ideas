@@ -7,8 +7,6 @@ from collections.abc import Callable
 import numpy as np
 import numpy.typing as npt
 
-from inversion_ideas.wires import ModelSlice
-
 from .base import Combo, Minimizer, Objective
 from .conditions import ChiTarget, ObjectiveChanged
 from .data_misfit import DataMisfit
@@ -18,6 +16,7 @@ from .inversion_log import Column
 from .preconditioners import JacobiPreconditioner
 from .regularization import Flatness, Smallness
 from .typing import Model, Preconditioner
+from .wires import ModelSlice, MultiSlice
 
 
 def create_l2_inversion(
@@ -275,7 +274,7 @@ def create_tikhonov_regularization(
     alpha_y: float | None = None,
     alpha_z: float | None = None,
     reference_model_in_flatness: bool = False,
-    model_slice: ModelSlice | None = None,
+    model_slice: ModelSlice | MultiSlice | None = None,
 ) -> Combo:
     """
     Create a linear combination of Tikhonov (L2) regularization terms.

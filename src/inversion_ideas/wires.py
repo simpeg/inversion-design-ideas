@@ -181,6 +181,104 @@ class ModelSlice:
         return BlockSquareMatrix(block=matrix, slice_matrix=self.slice_matrix)
 
 
+class MultiSlice:
+    """
+    Multiple slices.
+
+    .. important::
+
+        Don't instantiate this class. Use the ``Wires`` class instead.
+    """
+
+    def __init__(self, slices: dict[str, slice], wires: Wires):
+        self._slices = slices
+        self._wires = wires
+
+    @property
+    def names(self) -> list[str]:
+        """
+        Slices names.
+        """
+        return list(self.slices.keys())
+
+    @property
+    def slices(self) -> dict[str, slice]:
+        return self._slices
+
+    @property
+    def wires(self) -> Wires:
+        return self._wires
+
+    @property
+    def size(self) -> int:
+        return sum(s.stop - s.start for s in self.slices.values())
+
+    @property
+    def full_size(self) -> int:
+        return self.wires.size
+
+    @property
+    def slice_matrix(self) -> dia_array[np.float64]:
+        """
+        Return a matrix that can be used to slice a model array.
+        """
+        if not self.slices:
+            # Add msg and choose right error type for empty slices
+            raise ValueError()
+
+        shape = (self.size, self.full_size)
+        s = 0
+        row = 0
+        for slice_ in self.slices.values():
+            offset = slice_.start - row
+            index_start = row if offset >= 0 else row + offset
+            length = slice_.stop - slice_.start
+            diagonal = np.zeros(self.size, dtype=np.float64)
+            diagonal[index_start : index_start + length] = 1.0
+            s += diags_array(diagonal, offsets=offset, shape=shape, dtype=np.float64)
+            row += length
+        return s
+
+    def extract(self, model: Model): ...
+
+    # These two could be inherited
+    def expand_array(self, array: npt.NDArray) -> npt.NDArray:
+        """
+        Expand a 1D array by filling it with extra zeros.
+
+        Parameters
+        ----------
+        array : (n,) array
+            Array that will be filled. It must have the same number of elements as the
+            model slice.
+
+        Returns
+        -------
+        array : (m,) array
+            Array filled with zeros on elements outside of the model slice.
+        """
+        return self.slice_matrix.T @ array
+
+    def expand_matrix(
+        self, matrix: npt.NDArray | LinearOperator | sparray
+    ) -> "BlockSquareMatrix":
+        """
+        Expand a square matrix into a ``BlockSquareMatrix`` filling blocks with zeros.
+
+        Parameters
+        ----------
+        matrix : array, sparse array or LinearOperator
+            Square matrix that will be expanded
+
+        Returns
+        -------
+        block_square_matrix : BlockSquareMatrix
+            LinearOperator that represents the matrix filled with zeros outside of the
+            block.
+        """
+        return BlockSquareMatrix(block=matrix, slice_matrix=self.slice_matrix)
+
+
 class BlockSquareMatrix(LinearOperator):
     r"""
     Operator that represents a square matrix with a non-zero block surrounded by zeros.

@@ -6,15 +6,43 @@ from typing import Protocol, TypeAlias
 
 import numpy as np
 import numpy.typing as npt
-from scipy.sparse import sparray
+from scipy.sparse import (
+    bsr_array,
+    bsr_matrix,
+    coo_array,
+    coo_matrix,
+    csc_array,
+    csc_matrix,
+    csr_array,
+    csr_matrix,
+    dia_array,
+    dia_matrix,
+)
 from scipy.sparse.linalg import LinearOperator
+
+SparseArray: TypeAlias = (
+    bsr_array
+    | bsr_matrix
+    | coo_array
+    | coo_matrix
+    | csc_array
+    | csc_matrix
+    | csr_array
+    | csr_matrix
+    | dia_array
+    | dia_matrix
+)
+"""
+Type alias to represent sparse arrays.
+"""
 
 Model: TypeAlias = npt.NDArray[np.float64]
 """
 Type alias to represent models in the inversion framework as 1D arrays.
 """
 
-Preconditioner: TypeAlias = npt.NDArray[np.float64] | sparray | LinearOperator
+
+Preconditioner: TypeAlias = npt.NDArray[np.float64] | SparseArray | LinearOperator
 """
 Type for static preconditioners.
 

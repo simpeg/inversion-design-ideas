@@ -4,11 +4,11 @@ Class to represent a data misfit term.
 
 import numpy as np
 import numpy.typing as npt
-from scipy.sparse import dia_array, diags_array, sparray
+from scipy.sparse import dia_array, diags_array
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from .base import Objective
-from .typing import Model
+from .typing import Model, SparseArray
 
 
 class DataMisfit(Objective):
@@ -103,7 +103,7 @@ class DataMisfit(Objective):
 
     def hessian(
         self, model: Model
-    ) -> npt.NDArray[np.float64] | sparray | LinearOperator:
+    ) -> npt.NDArray[np.float64] | SparseArray | LinearOperator:
         """
         Hessian matrix.
         """

@@ -9,9 +9,9 @@ import logging
 import numpy as np
 import numpy.typing as npt
 
-from .typing import SparseArray
-
 from inversion_ideas.wires import ModelSlice
+
+from .typing import SparseArray
 
 __all__ = [
     "cache_on_model",

@@ -8,9 +8,9 @@ from scipy.sparse import dia_array, diags_array
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from .base import Objective
-from .utils import support_model_slice
-from .wires import ModelSlice
 from .typing import Model
+from .utils import support_model_slice
+from .wires import ModelSlice, SparseArray
 
 
 class DataMisfit(Objective):

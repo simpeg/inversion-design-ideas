@@ -4,6 +4,7 @@ Model wiring.
 
 from abc import ABC, abstractmethod
 from numbers import Integral
+from typing import Sequence
 
 import numpy as np
 import numpy.typing as npt
@@ -22,7 +23,7 @@ class Wires:
     """
 
     def __init__(self, **kwargs):
-        self._slices = {}
+        self._slices: dict[str, ModelSlice] = {}
 
         current_index: int = 0
         for key, value in kwargs.items():
@@ -60,7 +61,13 @@ class Wires:
             raise AttributeError()
         return self._slices[value]
 
-    def __getitem__(self, value: str) -> "ModelSlice":
+    def __getitem__(self, value: str | Sequence[str]) -> "ModelSlice | MultiSlice":
+        if not isinstance(value, str):
+            if not isinstance(value, Sequence):
+                # TODO: add msg
+                raise TypeError()
+            slices = {name: self._slices[name].slice for name in value}
+            return MultiSlice(slices=slices, wires=self)
         return self._slices[value]
 
     @classmethod

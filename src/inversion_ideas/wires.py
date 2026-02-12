@@ -8,10 +8,10 @@ from numbers import Integral
 
 import numpy as np
 import numpy.typing as npt
-from scipy.sparse import dia_array, diags_array, sparray
+from scipy.sparse import dia_array, diags_array
 from scipy.sparse.linalg import LinearOperator
 
-from .typing import HasDiagonal, Model
+from .typing import HasDiagonal, Model, SparseArray
 
 
 class Wires:
@@ -137,7 +137,7 @@ class _BaseModelSlice(ABC):
         return self.slice_matrix.T @ array
 
     def expand_matrix(
-        self, matrix: npt.NDArray | LinearOperator | sparray
+        self, matrix: npt.NDArray | LinearOperator | SparseArray
     ) -> "BlockSquareMatrix":
         """
         Expand a square matrix into a ``BlockSquareMatrix`` filling blocks with zeros.
@@ -317,7 +317,7 @@ class BlockSquareMatrix(LinearOperator):
 
     def __init__(
         self,
-        block: npt.NDArray | LinearOperator | sparray,
+        block: npt.NDArray | LinearOperator | SparseArray,
         slice_matrix: dia_array,
     ):
         # TODO:

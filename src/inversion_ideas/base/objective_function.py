@@ -93,14 +93,14 @@ class Objective(ABC):
     def __radd__(self, other) -> "Combo":
         return Combo([other, self])
 
-    def __mul__(self, value) -> "Scaled":
+    def __mul__(self, value: Real) -> "Scaled":
         return Scaled(value, self)
 
     def __rmul__(self, value):
         return self.__mul__(value)
 
-    def __truediv__(self, denominator):
-        return self * (1.0 / denominator)
+    def __truediv__(self, denominator: Real):
+        return self * (1.0 / denominator)  # type: ignore[operator]
 
     def __floordiv__(self, denominator):
         msg = "Floor division is not implemented for objective functions."
@@ -110,11 +110,11 @@ class Objective(ABC):
         msg = "Inplace addition is not implemented for this class."
         raise TypeError(msg)
 
-    def __imul__(self, other) -> Self:
+    def __imul__(self, other: Real) -> Self:
         msg = "Inplace multiplication is not implemented for this class."
         raise TypeError(msg)
 
-    def __itruediv__(self, value) -> Self:
+    def __itruediv__(self, value: Real) -> Self:
         msg = "Inplace division is not implemented for this class."
         raise TypeError(msg)
 
@@ -238,7 +238,7 @@ class Combo(Objective):
         """
         Evaluate the gradient of the objective function for a given model.
         """
-        return sum(f.gradient(model) for f in self.functions)
+        return sum(f.gradient(model) for f in self.functions)  # type: ignore[return-value]
 
     def hessian(
         self, model: Model
@@ -376,10 +376,10 @@ def _sum(
     result = copy(next(operators))
     for operator in operators:
         if isinstance(operator, LinearOperator) or isinstance(result, LinearOperator):
-            result = aslinearoperator(result)
-            result += aslinearoperator(operator)
+            result = aslinearoperator(result)  # type: ignore[arg-type]
+            result += aslinearoperator(operator)  # type: ignore[arg-type]
         else:
-            result += operator
+            result += operator  # type: ignore[operator]
     return result
 
 

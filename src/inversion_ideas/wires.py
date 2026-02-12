@@ -166,6 +166,8 @@ class ModelSlice(_BaseModelSlice):
     """
 
     def __init__(self, name: str, slice: slice, wires: Wires):
+        # TODO: Check that the slice has slice.start < slice.stop, no negative numbers,
+        # no None as start/stop, and step == 1.
         if not isinstance(name, str):
             # TODO: Add msg
             raise TypeError()
@@ -221,6 +223,9 @@ class MultiSlice(_BaseModelSlice):
     """
 
     def __init__(self, slices: dict[str, slice], wires: Wires):
+        # TODO: Check that the slices have slice.start < slice.stop, no negative
+        # numbers, no None as start/stop, and step == 1.
+        # TODO: check that keys in slices dict are all strings
         self._slices = slices
         self._wires = wires
 

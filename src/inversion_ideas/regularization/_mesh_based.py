@@ -155,7 +155,7 @@ class Smallness(_MeshBasedRegularization):
             if active_cells is not None
             else np.ones(self.mesh.n_cells, dtype=bool)
         )
-        # assign model_slice after active_cells so n_params is correct during __init__
+        # assign model_slice after active_cells so n_active is correct during __init__
         self.model_slice = model_slice
 
         # Assign the cell weights through the setter
@@ -363,7 +363,7 @@ class Flatness(_MeshBasedRegularization):
             if active_cells is not None
             else np.ones(self.mesh.n_cells, dtype=bool)
         )
-        # assign model_slice after active_cells so n_params is correct during __init__
+        # assign model_slice after active_cells so n_active is correct during __init__
         self.model_slice = model_slice
 
         # Assign the cell weights through the setter

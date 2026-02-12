@@ -320,10 +320,6 @@ class BlockSquareMatrix(LinearOperator):
         block: npt.NDArray | LinearOperator | SparseArray,
         slice_matrix: dia_array,
     ):
-        # TODO:
-        # - [ ] raise error if the block plus the offset doesn't fit in the shape
-        # - [x] raise error if the block is not square
-        # - [x] raise error if the shape is not square
         if block.shape[0] != block.shape[1]:
             msg = (
                 f"Invalid block matrix '{block}' with shape '{block.shape}'. "

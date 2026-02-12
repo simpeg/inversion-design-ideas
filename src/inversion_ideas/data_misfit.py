@@ -9,6 +9,8 @@ from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from .base import Objective
 from .typing import Model, SparseArray
+from .utils import support_model_slice
+from .wires import ModelSlice, MultiSlice
 
 
 class DataMisfit(Objective):
@@ -78,6 +80,7 @@ class DataMisfit(Objective):
         uncertainty: npt.NDArray[np.float64],
         simulation,
         *,
+        model_slice: ModelSlice | MultiSlice | None = None,
         build_hessian=False,
     ):
         # TODO: Check that the data and uncertainties have the size as ndata in the
@@ -85,22 +88,28 @@ class DataMisfit(Objective):
         self.data = data
         self.uncertainty = uncertainty
         self.simulation = simulation
+        self.model_slice = model_slice
         self.build_hessian = build_hessian
         self.set_name("d")
 
+    @support_model_slice
     def __call__(self, model: Model) -> float:
-        residual = self.residual(model)
+        residual = self.simulation(model) - self.data
         weights_matrix = self.weights_matrix
         return residual.T @ weights_matrix.T @ weights_matrix @ residual
 
+    @support_model_slice
     def gradient(self, model: Model) -> npt.NDArray[np.float64]:
         """
         Gradient vector.
         """
         jac = self.simulation.jacobian(model)
         weights_matrix = self.weights_matrix
-        return 2 * jac.T @ (weights_matrix.T @ weights_matrix @ self.residual(model))
+        residual = self.simulation(model) - self.data
+        gradient = 2 * jac.T @ (weights_matrix.T @ weights_matrix @ residual)
+        return gradient
 
+    @support_model_slice
     def hessian(
         self, model: Model
     ) -> npt.NDArray[np.float64] | SparseArray | LinearOperator:
@@ -108,14 +117,15 @@ class DataMisfit(Objective):
         Hessian matrix.
         """
         jac = self.simulation.jacobian(model)
+        weights_matrix = aslinearoperator(self.weights_matrix)
         if not self.build_hessian:
             jac = aslinearoperator(jac)
-        weights_matrix = aslinearoperator(self.weights_matrix)
         return 2 * jac.T @ weights_matrix.T @ weights_matrix @ jac
 
+    @support_model_slice
     def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
         """
-        Diagonal of the Hessian.
+        Approximated diagonal of the Hessian.
         """
         jac = self.simulation.jacobian(model)
         if isinstance(jac, LinearOperator):
@@ -132,6 +142,8 @@ class DataMisfit(Objective):
         """
         Number of model parameters.
         """
+        if self.model_slice is not None:
+            return self.model_slice.full_size
         return self.simulation.n_params
 
     @property
@@ -166,6 +178,8 @@ class DataMisfit(Objective):
         where :math:`\mathbf{d}` is the vector with observed data, :math:`\mathcal{F}`
         is the forward model, and :math:`\mathbf{m}` is the model vector.
         """
+        if self.model_slice is not None:
+            model = self.model_slice.extract(model)
         return self.simulation(model) - self.data
 
     @property
@@ -176,7 +190,7 @@ class DataMisfit(Objective):
         return 1 / self.uncertainty**2
 
     @property
-    def weights_matrix(self) -> dia_array:
+    def weights_matrix(self) -> dia_array[np.float64]:
         """
         Diagonal matrix with the square root of the regularization weights.
         """

@@ -23,6 +23,7 @@ from .recipes import (
 )
 from .regularization import Flatness, Smallness, SparseSmallness, TikhonovZero
 from .simulations import wrap_simulation
+from .wires import Wires
 
 __all__ = [
     "ChiTarget",
@@ -43,6 +44,7 @@ __all__ = [
     "SparseSmallness",
     "TikhonovZero",
     "UpdateSensitivityWeights",
+    "Wires",
     "__version__",
     "base",
     "conjugate_gradient",

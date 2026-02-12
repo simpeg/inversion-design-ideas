@@ -87,10 +87,24 @@ class Objective(ABC):
             repr_ += rf"_{{{self.name}}}"
         return f"${repr_} (m)$"
 
-    def __add__(self, other) -> "Combo":
+    def __add__(self, other) -> "Combo | Self":
+        # Allow to add a zero to the objective function.
+        # This is needed to add objective functions with the sum() function.
+        if isinstance(other, Real):
+            if other != 0:
+                msg = f"Invalid factor '{other}'. It must be an objective function."
+                raise TypeError(msg)
+            return self
         return Combo([self, other])
 
-    def __radd__(self, other) -> "Combo":
+    def __radd__(self, other) -> "Combo | Self":
+        # Allow to add a zero to the objective function.
+        # This is needed to add objective functions with the sum() function.
+        if isinstance(other, Real):
+            if other != 0:
+                msg = f"Invalid factor '{other}'. It must be an objective function."
+                raise TypeError(msg)
+            return self
         return Combo([other, self])
 
     def __mul__(self, value: Real) -> "Scaled":

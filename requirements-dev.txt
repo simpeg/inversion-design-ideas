@@ -2,6 +2,8 @@ numpy>=2.0.0
 scipy
 rich
 pytest
+pytest-cov
+coverage
 ruff
 mypy
 scipy-stubs

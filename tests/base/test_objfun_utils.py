@@ -66,7 +66,9 @@ class TestSum:
     def test_one_sparse_array(self, matrices, index):
         # Put a sparse array in the list of operators
         operators = list(matrices)
-        operators[index] = diags_array(np.arange(self.shape[1]), shape=self.shape)
+        operators[index] = diags_array(
+            np.arange(self.shape[1]), shape=self.shape, dtype=float
+        )
 
         # Get the sum
         result = _sum(op for op in operators)

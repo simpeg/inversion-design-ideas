@@ -1,8 +1,10 @@
 """
 Test conditions.
 """
-import pytest
+
 import numpy as np
+import pytest
+
 from inversion_ideas.base import Condition
 
 
@@ -106,6 +108,10 @@ class TestMixin:
 
 
 class GreaterThan(Condition):
+    """
+    Check if model is greater than certain value for all elements in the model.
+    """
+
     def __init__(self, value):
         self.value = value
 

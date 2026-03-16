@@ -1,4 +1,5 @@
 PYTEST_TARGETS=src tests
+PYTEST_ARGS=--cov-report=term-missing --cov --doctest-modules --verbose
 CHECK_STYLE=src notebooks tests
 CHECK_TYPE=src
 
@@ -18,7 +19,7 @@ install:
 	python -m pip install --no-deps --editable .
 
 test:
-	pytest --verbose --doctest-modules $(PYTEST_TARGETS)
+	pytest $(PYTEST_ARGS) $(PYTEST_TARGETS)
 
 check: check-format check-style
 

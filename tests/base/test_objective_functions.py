@@ -185,6 +185,11 @@ class TestObjectiveOperations:
         assert scaled.function is a
         assert scaled.multiplier == scalar * new_scalar
 
+    def test_floordiv_error(self):
+        phi = Dummy(self.n_params)
+        with pytest.raises(TypeError, match="Floor division is not implemented"):
+            phi // 2.71
+
     @pytest.mark.parametrize("function_type", ["objective", "combo"])
     def test_imul_error(self, function_type):
         phi = Dummy(self.n_params)

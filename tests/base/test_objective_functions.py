@@ -255,3 +255,51 @@ class TestScaledMethods:
     """
     Test ``__call__``, ``gradient`` and ``hessian`` for a ``Scaled``.
     """
+
+    scalar = 3.1416
+    n_params = 5
+
+    @pytest.fixture
+    def model(self):
+        rng = np.random.default_rng(seed=42)
+        model = rng.uniform(size=self.n_params)
+        return model
+
+    def test_call(self, model):
+        """
+        Test the call method of Scaled objective functions.
+        """
+        phi = Dummy(self.n_params)
+        scaled = self.scalar * phi
+        np.testing.assert_allclose(scaled(model), self.scalar * phi(model))
+
+    def test_gradient(self, model):
+        """
+        Test the gradient method of Scaled objective functions.
+        """
+        phi = Dummy(self.n_params)
+        scaled = self.scalar * phi
+        np.testing.assert_allclose(
+            scaled.gradient(model), self.scalar * phi.gradient(model)
+        )
+
+    def test_hessian(self, model):
+        """
+        Test the hessian method of Scaled objective functions.
+        """
+        # TODO: extend this test to sparse arrays
+        phi = Dummy(self.n_params)
+        scaled = self.scalar * phi
+        np.testing.assert_allclose(
+            scaled.hessian(model), self.scalar * phi.hessian(model)
+        )
+
+    def test_hessian_diagonal(self, model):
+        """
+        Test the hessian_diagonal method of Scaled objective functions.
+        """
+        phi = Dummy(self.n_params)
+        scaled = self.scalar * phi
+        np.testing.assert_allclose(
+            scaled.hessian_diagonal(model), self.scalar * phi.hessian_diagonal(model)
+        )

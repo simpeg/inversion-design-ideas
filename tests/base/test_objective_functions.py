@@ -126,6 +126,25 @@ class TestObjectiveOperations:
         assert new_combo[0] is combo
         assert new_combo[1] is scaled
 
+    def test_radd(self):
+        """
+        Test the __radd__ method of objective functions.
+
+        We'll need to add an object of some dummy class that raises NotImplemented when
+        calling __add__ to trigger __radd__.
+        """
+
+        class DummyNonObjectiveFunction:
+            n_params = self.n_params
+
+        a = DummyNonObjectiveFunction()
+        b = Dummy(self.n_params)
+        combo = a + b
+        assert isinstance(combo, Combo)
+        assert len(combo) == 2
+        assert combo[0] is a
+        assert combo[1] is b
+
     def test_iadd_combo(self):
         a, b, c = tuple(Dummy(self.n_params) for _ in range(3))
         combo = a + b

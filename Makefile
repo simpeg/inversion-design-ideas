@@ -1,5 +1,5 @@
-PYTEST_TARGETS=src
-CHECK_STYLE=src notebooks
+PYTEST_TARGETS=src tests
+CHECK_STYLE=src notebooks tests
 CHECK_TYPE=src
 
 .PHONY: help install test check check-format check_style format mypy
@@ -32,6 +32,6 @@ mypy:
 	mypy $(CHECK_TYPE)
 
 format:
-	ruff check --fix $(CHECK_STYLE)
 	ruff format $(CHECK_STYLE)
+	ruff check --fix $(CHECK_STYLE)
 

@@ -125,7 +125,7 @@ class GreaterThan(Condition):
         self.value = None
 
 
-class UpdateMixin:
+class TestUpdateMixin:
     """
     Test updating conditions in mixins.
     """
@@ -187,7 +187,7 @@ class UpdateMixin:
         assert condition.condition_b is is_even
 
 
-class InitializeMixin:
+class TestInitializeMixin:
     """
     Test initializing conditions in mixins.
     """

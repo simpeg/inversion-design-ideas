@@ -2,6 +2,8 @@
 Test operations for objective functions.
 """
 
+import re
+
 import numpy as np
 import pytest
 
@@ -249,29 +251,168 @@ class TestObjectiveOperations:
         with pytest.raises(TypeError):
             phi /= 2.71
 
+    def test_add_incompatible_error(self):
+        """
+        Test error when adding two objective functions with different ``n_params``.
+        """
+        phi_a, phi_b = Dummy(3), Dummy(4)
+        msg = re.escape(
+            f"Invalid objective functions {phi_a}, {phi_b} with different n_params: "
+            "3, 4, respectively."
+        )
+        with pytest.raises(ValueError, match=msg):
+            phi_a + phi_b
 
-def test_combo_flatten():
+    def test_iadd_incompatible_error(self):
+        """
+        Test error when adding in-place objective functions with different ``n_params``.
+        """
+        combo = Dummy(3) + Dummy(3)
+        phi_c = Dummy(4)
+        msg = re.escape(
+            f"Trying to add objective function '{phi_c}' with invalid "
+            "n_params (4) different from the one of "
+            f"'{combo}' (3)."
+        )
+        with pytest.raises(ValueError, match=msg):
+            combo += phi_c
+
+
+class TestComboExtraMethods:
     """
-    Test flattening of a Combo.
+    Test additional methods of the Combo class.
     """
-    a, b, c, d, e = tuple(Dummy(3) for _ in range(5))
-    f = 2.5 * c
-    g = d + e
 
-    # build combo: (((a + b) + 2.5 * c) + (d + e))
-    combo = a + b + f + g
-    assert len(combo) == 2
+    def test_combo_flatten(self):
+        """
+        Test flattening of a Combo.
+        """
+        a, b, c, d, e = tuple(Dummy(3) for _ in range(5))
+        f = 2.5 * c
+        g = d + e
 
-    # Flatten it into: a + b + 2.5 * c + d + e
-    flat_combo = combo.flatten()
+        # build combo: (((a + b) + 2.5 * c) + (d + e))
+        combo = a + b + f + g
+        assert len(combo) == 2
 
-    # Check the result of the operation
-    assert len(flat_combo) == 5
-    assert flat_combo[0] is a
-    assert flat_combo[1] is b
-    assert flat_combo[2] is f
-    assert flat_combo[3] is d
-    assert flat_combo[4] is e
+        # Flatten it into: a + b + 2.5 * c + d + e
+        flat_combo = combo.flatten()
+
+        # Check the result of the operation
+        assert len(flat_combo) == 5
+        assert flat_combo[0] is a
+        assert flat_combo[1] is b
+        assert flat_combo[2] is f
+        assert flat_combo[3] is d
+        assert flat_combo[4] is e
+
+    def test_combo_error(self):
+        """
+        Test error when `functions` argument is not a sequence.
+        """
+        msg = re.escape(
+            "Invalid 'functions' argument of type 'float'. "
+            "It must be a sequence of `Objective` functions."
+        )
+        with pytest.raises(TypeError, match=msg):
+            Combo(functions=3.14)
+
+    def test_empty_combo_error(self):
+        """
+        Test if an empty combo raises an error.
+        """
+        # Check error when defining an empty Combo
+        msg = re.escape(
+            "Invalid empty 'functions' argument. "
+            "The list of objective functions must contain at least one function."
+        )
+        with pytest.raises(ValueError, match=msg):
+            Combo(functions=[])
+
+        # Check error when accessing the Combo.functions with no functions
+        combo = Combo([Dummy(n_params=3)])
+        combo._functions.pop()  # empty the combo
+        msg = re.escape("Invalid empty `Combo` without functions.")
+        with pytest.raises(ValueError, match=msg):
+            combo.functions  # noqa: B018
+
+
+class TestComboContains:
+    """
+    Test the contains method of the Combo functions.
+    """
+
+    n_params = 5
+
+    def test_shallow(self):
+        """
+        Test a shallow container.
+        """
+        # Two elements
+        phi_a, phi_b = Dummy(self.n_params), Dummy(self.n_params)
+        combo = phi_a + phi_b
+        assert combo.contains(phi_a)
+        assert combo.contains(phi_b)
+        phi_c = Dummy(self.n_params)
+        assert not combo.contains(phi_c)
+
+        # Three elements
+        combo = (phi_a + phi_b + phi_c).flatten()
+        assert combo.contains(phi_a)
+        assert combo.contains(phi_b)
+        assert combo.contains(phi_c)
+        phi_d = Dummy(self.n_params)
+        assert not combo.contains(phi_d)
+
+    def test_nested(self):
+        """
+        Test a nested Combo.
+        """
+        phi_a, phi_b, phi_c, phi_d = (Dummy(self.n_params) for _ in range(4))
+        combo = (phi_a + phi_b) + (phi_c + phi_d)
+        assert combo.contains(phi_a)
+        assert combo.contains(phi_b)
+        assert combo.contains(phi_c)
+        assert combo.contains(phi_d)
+
+    def test_scaled_combo(self):
+        """
+        Test contains against a Combo within a Scaled.
+        """
+        phi_a, phi_b, phi_c = (Dummy(self.n_params) for _ in range(3))
+        inner_combo = phi_b + phi_c
+        scaled_combo = 5.24 * inner_combo
+        combo = phi_a + scaled_combo
+        assert combo.contains(inner_combo)
+        assert combo.contains(phi_a)
+        assert combo.contains(phi_b)
+        assert combo.contains(phi_c)
+
+    def test_contains_scaled(self):
+        """
+        Test contains against a function in a Scaled class.
+        """
+        phi_a, phi_b = Dummy(self.n_params), Dummy(self.n_params)
+        scaled = 3.0 * phi_a
+        combo = scaled + phi_b
+        assert combo.contains(scaled)
+        assert combo.contains(phi_a)
+        other_scaled = 3.0 * phi_a
+        assert not combo.contains(other_scaled)
+
+    def test_contains_combo(self):
+        """
+        Test contains against another Combo.
+        """
+        phi_a, phi_b, phi_c = (Dummy(self.n_params) for _ in range(3))
+        inner_combo = phi_a + phi_b
+        combo = inner_combo + phi_c
+        assert combo.contains(inner_combo)
+        assert combo.contains(phi_a)
+        assert combo.contains(phi_b)
+        assert combo.contains(phi_c)
+        other_combo = phi_a + phi_b
+        assert not combo.contains(other_combo)
 
 
 class TestComboMethods:

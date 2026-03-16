@@ -250,6 +250,54 @@ class TestComboMethods:
     Test ``__call__``, ``gradient`` and ``hessian`` for a ``Combo``.
     """
 
+    n_params = 5
+
+    @pytest.fixture
+    def model(self):
+        rng = np.random.default_rng(seed=42)
+        model = rng.uniform(size=self.n_params)
+        return model
+
+    def test_call(self, model):
+        """
+        Test the call method of Combo objective functions.
+        """
+        phi_a, phi_b = Dummy(self.n_params), Dummy(self.n_params)
+        combo = phi_a + phi_b
+        np.testing.assert_allclose(combo(model), phi_a(model) + phi_b(model))
+
+    def test_gradient(self, model):
+        """
+        Test the gradient method of Combo objective functions.
+        """
+        phi_a, phi_b = Dummy(self.n_params), Dummy(self.n_params)
+        combo = phi_a + phi_b
+        np.testing.assert_allclose(
+            combo.gradient(model), phi_a.gradient(model) + phi_b.gradient(model)
+        )
+
+    def test_hessian(self, model):
+        """
+        Test the hessian method of Combo objective functions.
+        """
+        # TODO: extend this test to sparse arrays
+        phi_a, phi_b = Dummy(self.n_params), Dummy(self.n_params)
+        combo = phi_a + phi_b
+        np.testing.assert_allclose(
+            combo.hessian(model), phi_a.hessian(model) + phi_b.hessian(model)
+        )
+
+    def test_hessian_diagonal(self, model):
+        """
+        Test the hessian_diagonal method of Combo objective functions.
+        """
+        phi_a, phi_b = Dummy(self.n_params), Dummy(self.n_params)
+        combo = phi_a + phi_b
+        np.testing.assert_allclose(
+            combo.hessian_diagonal(model),
+            phi_a.hessian_diagonal(model) + phi_b.hessian_diagonal(model),
+        )
+
 
 class TestScaledMethods:
     """

@@ -102,6 +102,14 @@ class TestObjectiveOperations:
         assert scaled.function is a
         assert scaled.multiplier == scalar
 
+    def test_truediv(self):
+        a = Dummy(self.n_params)
+        scalar = 3.14
+        scaled = a / scalar
+        assert isinstance(scaled, Scaled)
+        assert scaled.function is a
+        assert scaled.multiplier == 1 / scalar
+
     def test_add_combos(self):
         a, b, c, d = tuple(Dummy(self.n_params) for _ in range(4))
         combo_a = a + b

@@ -9,28 +9,57 @@ from inversion_ideas.base import Combo, Objective, Scaled
 
 
 class Dummy(Objective):
-    """
+    r"""
     Dummy objective function.
+
+    Define a dummy objective function as:
+
+    .. math::
+
+        \phi(\mathbf{m}) = \mathbf{m}^T \mathbf{A}^T \mathbf{A} \mathbf{m},
+
+    where :math:`\mathbf{A}` is a random ``(n, \n_params)`` matrix.
+
+    It's gradient will therefore be:
+
+    .. math::
+
+        \nabla\phi(\mathbf{m}) = \mathbf{A}^T \mathbf{A} \mathbf{m},
+
+    and its Hessian:
+
+    .. math::
+
+        \bar{\bar{\nabla}}\phi(\mathbf{m}) = \mathbf{A}^T \mathbf{A}.
+
+    Parameters
+    ----------
+    n_params : int
+        Number of parameters for the objective function.
+    seed : int or numpy.random.Generator or numpy.random.RandomState or None, optional
+        Random seed used to define the :math:`\mathbf{A}` matrix.
     """
 
-    def __init__(self, n_params):
+    def __init__(self, n_params, seed=None):
+        rng = np.random.default_rng(seed=seed)
+        self.a_matrix = rng.uniform(size=(n_params, n_params))
         self._n_params = n_params
 
     @property
     def n_params(self):
         return self._n_params
 
-    def __call__(self, model):  # noqa: ARG002
-        return 2.0
+    def __call__(self, model):
+        return float(model.T @ self.a_matrix.T @ self.a_matrix @ model)
 
-    def gradient(self, model):  # noqa: ARG002
-        return np.ones(self.n_params)
+    def gradient(self, model):
+        return self.a_matrix.T @ self.a_matrix @ model
 
     def hessian(self, model):  # noqa: ARG002
-        return np.eye(self.n_params)
+        return self.a_matrix.T @ self.a_matrix
 
     def hessian_diagonal(self, model):  # noqa: ARG002
-        return np.ones(self.n_params)
+        return (self.a_matrix.T @ self.a_matrix).diagonal()
 
 
 class TestObjectiveOperations:
@@ -223,7 +252,7 @@ class TestObjectiveOperations:
 
 def test_combo_flatten():
     """
-    Test flatenning of a Combo.
+    Test flattening of a Combo.
     """
     a, b, c, d, e = tuple(Dummy(3) for _ in range(5))
     f = 2.5 * c
@@ -262,7 +291,7 @@ class TestComboMethods:
         """
         Test the call method of Combo objective functions.
         """
-        phi_a, phi_b = Dummy(self.n_params), Dummy(self.n_params)
+        phi_a, phi_b = Dummy(self.n_params, seed=42), Dummy(self.n_params, seed=43)
         combo = phi_a + phi_b
         np.testing.assert_allclose(combo(model), phi_a(model) + phi_b(model))
 
@@ -270,7 +299,7 @@ class TestComboMethods:
         """
         Test the gradient method of Combo objective functions.
         """
-        phi_a, phi_b = Dummy(self.n_params), Dummy(self.n_params)
+        phi_a, phi_b = Dummy(self.n_params, seed=42), Dummy(self.n_params, seed=43)
         combo = phi_a + phi_b
         np.testing.assert_allclose(
             combo.gradient(model), phi_a.gradient(model) + phi_b.gradient(model)
@@ -281,7 +310,7 @@ class TestComboMethods:
         Test the hessian method of Combo objective functions.
         """
         # TODO: extend this test to sparse arrays
-        phi_a, phi_b = Dummy(self.n_params), Dummy(self.n_params)
+        phi_a, phi_b = Dummy(self.n_params, seed=42), Dummy(self.n_params, seed=43)
         combo = phi_a + phi_b
         np.testing.assert_allclose(
             combo.hessian(model), phi_a.hessian(model) + phi_b.hessian(model)
@@ -291,7 +320,7 @@ class TestComboMethods:
         """
         Test the hessian_diagonal method of Combo objective functions.
         """
-        phi_a, phi_b = Dummy(self.n_params), Dummy(self.n_params)
+        phi_a, phi_b = Dummy(self.n_params, seed=42), Dummy(self.n_params, seed=43)
         combo = phi_a + phi_b
         np.testing.assert_allclose(
             combo.hessian_diagonal(model),

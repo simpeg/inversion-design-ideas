@@ -2,10 +2,13 @@
 Test operations for objective functions.
 """
 
+import itertools
 import re
 
 import numpy as np
 import pytest
+from scipy.sparse import dia_array, sparray
+from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from inversion_ideas.base import Combo, Objective, Scaled
 
@@ -40,12 +43,19 @@ class Dummy(Objective):
         Number of parameters for the objective function.
     seed : int or numpy.random.Generator or numpy.random.RandomState or None, optional
         Random seed used to define the :math:`\mathbf{A}` matrix.
+    hessian_type : {"dense", "sparse", "linop"}, optional
+        Type of Hessian matrix: "dense" matrix, "sparse" matrix or "linop" as in
+        a ``LinearOperator``.
     """
 
-    def __init__(self, n_params, seed=None):
+    def __init__(self, n_params, seed=None, hessian_type="dense"):
+        self._n_params = n_params
         rng = np.random.default_rng(seed=seed)
         self.a_matrix = rng.uniform(size=(n_params, n_params))
-        self._n_params = n_params
+        if hessian_type not in ("dense", "sparse", "linop"):
+            msg = f"Invalid hessian_type '{hessian_type}'."
+            raise ValueError(msg)
+        self.hessian_type = hessian_type
 
     @property
     def n_params(self):
@@ -58,10 +68,62 @@ class Dummy(Objective):
         return self.a_matrix.T @ self.a_matrix @ model
 
     def hessian(self, model):  # noqa: ARG002
-        return self.a_matrix.T @ self.a_matrix
+        match self.hessian_type:
+            case "dense":
+                hessian = self.a_matrix.T @ self.a_matrix
+            case "sparse":
+                a_sparse = dia_array(self.a_matrix)
+                hessian = a_sparse.T @ a_sparse
+            case "linop":
+                a_linop = aslinearoperator(self.a_matrix)
+                hessian = a_linop.T @ a_linop
+            case _:
+                msg = f"Invalid hessian_type '{self.hessian_type}'."
+                raise ValueError(msg)
+        return hessian
 
     def hessian_diagonal(self, model):  # noqa: ARG002
         return (self.a_matrix.T @ self.a_matrix).diagonal()
+
+
+def assert_equal_linear_operators(a, b, to_dense=False, seed=None, **kwargs):
+    """
+    Check if two linear operators are the same.
+
+    If ``a`` and ``b`` are ``LinearOperator``s, they will be compared by computing the
+    dot product with random arrays. Only the ``matvec`` and ``rmatvec`` will be tested.
+
+    Parameters
+    ----------
+    a, b : arrays, sparse arrays, or linear operators
+        Arrays or linear operators that will be tested.
+    to_dense : bool, optional
+        If True, sparse arrays will be converted to dense arrays for testing.
+        Use False for big matrices that can be too large to fit in memory.
+    seed : int or None, optional
+        Random seed used to define a random vector to test ``LinearOperator``s.
+        This argument will be ignored if ``a`` and ``b`` are not ``LinearOperator``s.
+    **kwargs : dict
+        Extra keyword arguments that will be passed to
+        :func:`numpy.testing.assert_equal`.
+    """
+    if to_dense:
+        if isinstance(a, sparray):
+            a = a.toarray()
+        if isinstance(b, sparray):
+            b = b.toarray()
+    if isinstance(a, np.ndarray) and isinstance(b, np.ndarray):
+        np.testing.assert_equal(a, b, **kwargs)
+    else:
+        assert a.dtype == b.dtype
+        assert a.shape == b.shape
+        # matvec
+        rng = np.random.default_rng(seed=seed)
+        vector = rng.uniform(size=a.shape[1])
+        np.testing.assert_equal(a @ vector, b @ vector, **kwargs)
+        # rmatvec
+        vector = rng.uniform(size=a.shape[0])
+        np.testing.assert_equal(a.T @ vector, b.T @ vector, **kwargs)
 
 
 class TestObjectiveOperations:
@@ -446,16 +508,35 @@ class TestComboMethods:
             combo.gradient(model), phi_a.gradient(model) + phi_b.gradient(model)
         )
 
-    def test_hessian(self, model):
+    @pytest.mark.parametrize(
+        "hessian_types",
+        [
+            pytest.param((type_a, type_b), id=f"{type_a}-{type_b}")
+            for type_a, type_b in itertools.combinations_with_replacement(
+                ("dense", "sparse", "linop"), 2
+            )
+        ],
+    )
+    def test_hessian(self, model, hessian_types):
         """
         Test the hessian method of Combo objective functions.
         """
-        # TODO: extend this test to sparse arrays
-        phi_a, phi_b = Dummy(self.n_params, seed=42), Dummy(self.n_params, seed=43)
+        type_a, type_b = hessian_types
+        phi_a = Dummy(self.n_params, seed=42, hessian_type=type_a)
+        phi_b = Dummy(self.n_params, seed=43, hessian_type=type_b)
         combo = phi_a + phi_b
-        np.testing.assert_allclose(
-            combo.hessian(model), phi_a.hessian(model) + phi_b.hessian(model)
-        )
+
+        # Expected hessian
+        hessian_a = phi_a.hessian(model)
+        hessian_b = phi_b.hessian(model)
+        if isinstance(hessian_a, LinearOperator) or isinstance(
+            hessian_b, LinearOperator
+        ):
+            hessian_a, hessian_b = (
+                aslinearoperator(hessian_a),
+                aslinearoperator(hessian_b),
+            )
+        assert_equal_linear_operators(combo.hessian(model), hessian_a + hessian_b)
 
     def test_hessian_diagonal(self, model):
         """
@@ -501,14 +582,14 @@ class TestScaledMethods:
             scaled.gradient(model), self.scalar * phi.gradient(model)
         )
 
-    def test_hessian(self, model):
+    @pytest.mark.parametrize("hessian_type", ["dense", "sparse", "linop"])
+    def test_hessian(self, model, hessian_type):
         """
         Test the hessian method of Scaled objective functions.
         """
-        # TODO: extend this test to sparse arrays
-        phi = Dummy(self.n_params)
+        phi = Dummy(self.n_params, hessian_type=hessian_type)
         scaled = self.scalar * phi
-        np.testing.assert_allclose(
+        assert_equal_linear_operators(
             scaled.hessian(model), self.scalar * phi.hessian(model)
         )
 

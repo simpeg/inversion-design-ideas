@@ -5,19 +5,18 @@ Define functions that can be use to minimize an objective function in a single c
 """
 
 import warnings
-from collections.abc import Callable
 
 from scipy.sparse.linalg import cg
 
 from ..base import Objective
 from ..errors import ConvergenceWarning
-from ..typing import Model, Preconditioner
+from ..typing import CanBeUpdated, Model, Preconditioner
 
 
 def conjugate_gradient(
     objective: Objective,
     initial_model: Model,
-    preconditioner: Preconditioner | Callable[[Model], Preconditioner] | None = None,
+    preconditioner: Preconditioner | None = None,
     **kwargs,
 ) -> Model:
     r"""
@@ -33,12 +32,11 @@ def conjugate_gradient(
         Objective function to be minimized.
     initial_model : (n_params) array
         Initial model used to start the minimization.
-    preconditioner : (n_params, n_params) array, sparse array or LinearOperator or Callable, optional
+    preconditioner : (n_params, n_params) array, sparse array or LinearOperator, optional
         Matrix used as preconditioner in the conjugant gradient algorithm.
         If None, no preconditioner will be used.
-        A callable can be passed to build the preconditioner dynamically: such
-        callable should take a single ``initial_model`` argument and return an
-        array, sparse array or a `LinearOperator`.
+        If the preconditioner implements an ``initialize`` method, the preconditioner
+        will be initialized before being used in the conjugate gradient algorithm.
     kwargs : dict
         Extra arguments that will be passed to the :func:`scipy.sparse.linalg.cg`
         function.
@@ -65,8 +63,8 @@ def conjugate_gradient(
         raise ValueError(msg)
 
     if preconditioner is not None:
-        if callable(preconditioner):
-            preconditioner = preconditioner(initial_model)
+        if isinstance(preconditioner, CanBeUpdated):
+            preconditioner = preconditioner.update(initial_model)
         kwargs["M"] = preconditioner
 
     # TODO: maybe it would be nice to add a `is_linear` attribute to the objective

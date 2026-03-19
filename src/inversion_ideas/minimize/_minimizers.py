@@ -11,7 +11,7 @@ from scipy.sparse.linalg import cg
 
 from ..base import Condition, Minimizer, Objective
 from ..errors import ConvergenceWarning
-from ..typing import Model, Preconditioner
+from ..typing import CanBeUpdated, Model, Preconditioner
 from ..utils import get_logger
 from ._utils import backtracking_line_search
 
@@ -62,25 +62,29 @@ class GaussNewtonConjugateGradient(Minimizer):
         self,
         objective: Objective,
         initial_model: Model,
-        preconditioner: Preconditioner
-        | Callable[[Model], Preconditioner]
-        | None = None,
+        preconditioner: Preconditioner | None = None,
     ) -> Generator[Model]:
         """
         Create iterator over Gauss-Newton minimization.
-        """
-        # Define a static preconditioner for all Gauss-Newton iterations
-        cg_kwargs = self.cg_kwargs.copy()
 
+        Parameters
+        ----------
+        objective : Objective
+            Objective function to be minimized.
+        initial_model : (n_params) array
+            Initial model used to start the minimization.
+        preconditioner : (n_params, n_params) array, sparse array or LinearOperator, optional
+            Matrix used as preconditioner in the conjugant gradient algorithm.
+            If None, no preconditioner will be used.
+            If the preconditioner implements an ``update`` method, the preconditioner
+            will be updated **before** every conjugate gradient minimization.
+        """
+        # Add the preconditioner to kwargs that will be passed to the cg function
+        cg_kwargs = self.cg_kwargs.copy()
         if preconditioner is not None:
             if "M" in self.cg_kwargs:
                 msg = "Cannot simultanously pass `preconditioner` and `M`."
                 raise ValueError(msg)
-            preconditioner = (
-                preconditioner
-                if not callable(preconditioner)
-                else preconditioner(initial_model)
-            )
             cg_kwargs["M"] = preconditioner
 
         # Perform Gauss-Newton iterations
@@ -113,8 +117,14 @@ class GaussNewtonConjugateGradient(Minimizer):
             if self.stopping_criteria is not None and self.stopping_criteria(model):
                 break
 
-            # Apply Conjugate Gradient to get search direction
+            # Compute gradient and hessian
             gradient, hessian = objective.gradient(model), objective.hessian(model)
+
+            # Update preconditioner before running cg
+            if isinstance(preconditioner, CanBeUpdated):
+                preconditioner.update(model)
+
+            # Apply Conjugate Gradient to get search direction
             search_direction, info = cg(hessian, -gradient, **cg_kwargs)
             if info != 0:
                 warnings.warn(
@@ -147,5 +157,5 @@ class GaussNewtonConjugateGradient(Minimizer):
             phi_prev_value = phi_value
             iteration += 1
 
-            # Yield inverted model for the current Gauss-Newon iteration
+            # Yield inverted model for the current Gauss-Newton iteration
             yield model

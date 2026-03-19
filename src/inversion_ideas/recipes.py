@@ -3,6 +3,7 @@ Recipe functions to easily build commonly used inversions and objective function
 """
 
 from collections.abc import Callable
+from typing import Literal
 
 import numpy as np
 import numpy.typing as npt
@@ -30,7 +31,7 @@ def create_l2_inversion(
     chi_target: float = 1.0,
     max_iterations: int | None = None,
     cache_models: bool = True,
-    preconditioner: Preconditioner | Callable[[Model], Preconditioner] | None = None,
+    preconditioner: Literal["jacobi"] | Preconditioner | None = None,
 ) -> Inversion:
     r"""
     Create inversion of the form :math:`\phi_d + \beta \phi_m`.
@@ -66,12 +67,10 @@ def create_l2_inversion(
         no limit on the total amount of iterations.
     cache_models : bool, optional
         Whether to cache models after each iteration in the inversion.
-    preconditioner : {"jacobi"} or 2d array or sparse array or LinearOperator or callable or None, optional
+    preconditioner : {"jacobi"} or 2d array or sparse array or LinearOperator or None, optional
         Preconditioner that will be passed to the ``minimizer`` on every call during the
-        inversion. The preconditioner can be a predefined 2d array, a sparse array or
-        a LinearOperator. Alternatively, it can be a callable that takes the ``model``
-        as argument and returns a preconditioner matrix (same types listed before). If
-        ``"jacobi"``, a default Jacobi preconditioner that will get updated on every
+        inversion.
+        If ``"jacobi"``, a default Jacobi preconditioner that will get updated on every
         iteration will be defined for the inversion. If None, no preconditioner will be
         passed.
 
@@ -134,7 +133,7 @@ def create_sparse_inversion(
     model_norm_rtol: float = 1e-3,
     max_iterations: int | None = None,
     cache_models: bool = True,
-    preconditioner: Preconditioner | Callable[[Model], Preconditioner] | None = None,
+    preconditioner: Literal["jacobi"] | Preconditioner | None = None,
 ) -> Inversion:
     r"""
     Create sparse norm inversion of the form: :math:`\phi_d + \beta \phi_m`.
@@ -182,12 +181,10 @@ def create_sparse_inversion(
         no limit on the total amount of iterations.
     cache_models : bool, optional
         Whether to cache models after each iteration in the inversion.
-    preconditioner : {"jacobi"} or 2d array or sparse array or LinearOperator or callable or None, optional
+    preconditioner : {"jacobi"} or 2d array or sparse array or LinearOperator or None, optional
         Preconditioner that will be passed to the ``minimizer`` on every call during the
-        inversion. The preconditioner can be a predefined 2d array, a sparse array or
-        a LinearOperator. Alternatively, it can be a callable that takes the ``model``
-        as argument and returns a preconditioner matrix (same types listed before). If
-        ``"jacobi"``, a default Jacobi preconditioner that will get updated on every
+        inversion.
+        If ``"jacobi"``, a default Jacobi preconditioner that will get updated on every
         iteration will be defined for the inversion. If None, no preconditioner will be
         passed.
 

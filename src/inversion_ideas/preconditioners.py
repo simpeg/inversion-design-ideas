@@ -2,9 +2,11 @@
 Classes and functions to build preconditioners.
 """
 
+import warnings
+
 import numpy as np
 import numpy.typing as npt
-from scipy.sparse import diags_array, eye_array
+from scipy.sparse import dia_array, diags_array
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from .base import Objective
@@ -12,46 +14,55 @@ from .operators import Identity
 from .typing import Model, SparseArray
 
 
-class JacobiPreconditioner:
+class JacobiPreconditioner(LinearOperator):
     """
     Jacobi preconditioner for a given objective function.
 
     Use this class to define a dynamic Jacobi preconditioner from an objective function.
-    This class is a callable that will update the preconditioner for the given model
-    each time it gets called. Use this class if you want to update the preconditioner
-    on every iteration of the `Inversion`.
+    This class implements the ``update`` method that can be used by minimizers to
+    dynamically update the preconditioner.
 
     Parameters
     ----------
     objective_function : Objective
         Objective function for which the Jacobi preconditioner will be built.
+    dtype : dtype, optional
+        Data type of the matrix.
 
     See Also
     --------
     get_jacobi_preconditioner
     """
 
-    def __init__(self, objective_function: Objective):
+    def __init__(self, objective_function: Objective, dtype=np.float64):
         self.objective_function = objective_function
+        n = self.objective_function.n_params
+        super().__init__(shape=(n, n), dtype=dtype)
 
-    def __call__(self, model: Model) -> SparseArray:
+    @property
+    def A(self) -> dia_array:
+        if not hasattr(self, "_preconditioner"):
+            msg = (
+                f"Preconditioner {self} doesn't have a `A` attribute "
+                "since it hasn't been initialized yet."
+            )
+            raise AttributeError(msg)
+        return self._preconditioner
+
+    def update(self, model: Model):
         """
-        Generate a Jacobi preconditioner as a sparse diagonal array for a given model.
-
-        Parameters
-        ----------
-        model : (n_params) array
-            Model that will be used to build the Jacobi preconditioner from the
-            ``objective_function``.
-
-        Returns
-        -------
-        dia_array
+        Update the preconditioner.
         """
-        return get_jacobi_preconditioner(self.objective_function, model)
+        self._preconditioner = get_jacobi_preconditioner(self.objective_function, model)
+
+    def _matvec(self, x):
+        return self.A @ x
+
+    def _rmatvec(self, x):
+        return self.A.T @ x
 
 
-def get_jacobi_preconditioner(objective_function: Objective, model: Model):
+def get_jacobi_preconditioner(objective_function: Objective, model: Model) -> dia_array:
     r"""
     Obtain a Jacobi preconditioner from an objective function.
 
@@ -89,25 +100,24 @@ def get_jacobi_preconditioner(objective_function: Objective, model: Model):
     return diags_array(hessian_diag)
 
 
-class BFGSPreconditioner:
+class BFGSPreconditioner(LinearOperator):
     r"""
     BFGS Preconditioner.
 
     Use this class to define a dynamic BFGS preconditioner from an objective function.
-
-    .. important::
-
-        The preconditioner will get updated every time it gets called.
-        Don't use this class on multiple
+    This class implements the ``update`` method that can be used by minimizers to
+    dynamically update the preconditioner.
 
     Parameters
     ----------
     objective_function : Objective
         Objective function for which the Jacobi preconditioner will be built.
-    initial_preconditioner : array or sparray or None, optional
+    initial_matrix : array or sparray or LinearOperator or None, optional
         Square matrix that will be used as the initial estimate of the inverse of the
         Hessian of the ``objective_function``.
         If None, the identity matrix will be used.
+    dtype : dtype, optional
+        Data type of the matrix.
 
     Notes
     -----
@@ -145,67 +155,105 @@ class BFGSPreconditioner:
     def __init__(
         self,
         objective_function: Objective,
-        initial_preconditioner: (
+        initial_matrix: (
             npt.NDArray[np.float64] | SparseArray | LinearOperator | None
         ) = None,
+        dtype=np.float64,
     ):
+        n = objective_function.n_params
         self.objective_function = objective_function
-        if initial_preconditioner is None:
-            initial_preconditioner = eye_array(self.objective_function.n_params)
-        self.initial_preconditioner = initial_preconditioner
-        self._h = aslinearoperator(initial_preconditioner)
+        super().__init__(shape=(n, n), dtype=dtype)
+        self.initial_matrix = (
+            initial_matrix if initial_matrix is not None else Identity(n)
+        )
+        self._index = None
 
     @property
-    def h(self) -> LinearOperator:
+    def index(self) -> int | None:
+        """
+        Current index of the BFGS update algorithm.
+        """
+        return self._index
+
+    @property
+    def matrix(self) -> LinearOperator:
         """
         Current preconditioner matrix :math:`H_k`.
         """
-        return self._h
+        if not hasattr(self, "_matrix"):
+            # msg = (
+            #     f"Preconditioner {self} doesn't have a `matrix` attribute "
+            #     "since it hasn't been initialized yet. "
+            #     "Run the `initialize` or the `update` method first."
+            # )
+            # raise AttributeError(msg)
+            return aslinearoperator(self.initial_matrix)
+        return self._matrix
 
-    @property
-    def initialized(self) -> bool:
-        """
-        Whether the BFGS preconditioner has been initialized.
-        """
-        return getattr(self, "_initialized", False)
+    def _matvec(self, x):
+        return self.matrix @ x
 
-    def __call__(self, model: Model) -> LinearOperator:
+    def _rmatvec(self, x):
+        return self.matrix.T @ x
+
+    def reset(self):
         """
-        Update the BFGS matrix and return the preconditioner.
+        Reset the BFGS preconditioner.
+
+        Ditch the current preconditioner matrix estimation and start over with the
+        initial matrix. Resets the ``index`` to None.
+        """
+        self._index = None
+        del self._matrix
+        del self._model_k
+        del self._gradient_k
+
+    def update(self, model: Model):
+        """
+        Update the BFGS preconditioner.
 
         Parameters
         ----------
-        model : (n_params) array
-            Model that will be used to update the BFGS matrix.
-
-        Returns
-        -------
-        array or SparseArray
+        model : (n_params,) array
+            Model array.
         """
-        # Compute gradient with passed model. Make model and gradient vertical vectors.
-        new_model = model[:, None]
+        # Get new model and gradient (cast model and gradient as vertical vectors).
+        new_model = model[:, None].copy()
         new_gradient = self.objective_function.gradient(model)[:, None]
 
-        if not self.initialized:
-            # Initialize the preconditioner for further calls.
-            self._initialized = True
-            self._model_k = new_model
-            self._gradient_k = new_gradient
+        if self.index is None:
+            # Define the first matrix as a LinearOperator containing the initial matrix
+            self._matrix = aslinearoperator(self.initial_matrix)
+            self._index = 0
         else:
+            # Compute variables to update the preconditioner
             s_k = new_model - self._model_k
             y_k = new_gradient - self._gradient_k
-            (rho_k,) = (
-                1 / (y_k.T @ s_k).ravel()
-            )  # extract the single element from the 2d array
+            (y_dot_s,) = (
+                y_k.T @ s_k
+            ).ravel()  # extract the single element from the 2d array
+            rho_k = 1 / y_dot_s
             s_k, y_k = aslinearoperator(y_k), aslinearoperator(s_k)
-
             eye = Identity(self.objective_function.n_params)
-            self._h = (eye - rho_k * s_k @ y_k.T) @ self.h @ (
-                eye - rho_k * y_k @ s_k.T
-            ) + rho_k * s_k @ s_k.T
 
-            # Cache model and gradient
-            self._model_k = new_model
-            self._gradient_k = new_gradient
+            if y_dot_s <= 0:
+                # TODO: rethink about the skipping process
+                msg = (
+                    "Found `y.T @ s <= 0` while updating BFGS preconditioner. "
+                    "Skipping updating step."
+                    "The skipping process is still in experimental phase, "
+                    "please open an issue if you received this warning!"
+                )
+                warnings.warn(msg, stacklevel=2)
+                return
 
-        return self.h
+            # Update the preconditioner
+            left = eye - rho_k * (s_k @ y_k.T)
+            right = eye - rho_k * (y_k @ s_k.T)
+            self._matrix = left @ self._matrix @ right + rho_k * (s_k @ s_k.T)
+
+            self._index += 1
+
+        # Cache model and gradient
+        self._model_k = new_model
+        self._gradient_k = new_gradient

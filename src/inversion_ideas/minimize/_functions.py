@@ -64,7 +64,7 @@ def conjugate_gradient(
 
     if preconditioner is not None:
         if isinstance(preconditioner, CanBeUpdated):
-            preconditioner = preconditioner.update(initial_model)
+            preconditioner.update(initial_model)
         kwargs["M"] = preconditioner
 
     # TODO: maybe it would be nice to add a `is_linear` attribute to the objective

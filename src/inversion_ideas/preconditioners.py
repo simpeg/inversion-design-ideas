@@ -237,7 +237,6 @@ class BFGSPreconditioner(LinearOperator):
             eye = Identity(self.objective_function.n_params)
 
             if y_dot_s <= 0:
-                # TODO: rethink about the skipping process
                 msg = (
                     "Found `y.T @ s <= 0` while updating BFGS preconditioner. "
                     "Skipping updating step."
@@ -245,6 +244,10 @@ class BFGSPreconditioner(LinearOperator):
                     "please open an issue if you received this warning!"
                 )
                 warnings.warn(msg, stacklevel=2)
+
+                # Cache model and gradient
+                self._model_k = new_model
+                self._gradient_k = new_gradient
                 return
 
             # Update the preconditioner

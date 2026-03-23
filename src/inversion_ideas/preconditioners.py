@@ -248,6 +248,7 @@ class BFGSPreconditioner(LinearOperator):
                 # Cache model and gradient
                 self._model_k = new_model
                 self._gradient_k = new_gradient
+                self._index += 1
                 return
 
             # Update the preconditioner

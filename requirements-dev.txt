@@ -6,5 +6,5 @@ ruff
 mypy
 scipy-stubs
 discretize==0.12.0
-simpeg==0.25.0
+simpeg==0.25.2
 pymatsolver==0.4.0

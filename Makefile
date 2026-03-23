@@ -35,4 +35,3 @@ mypy:
 format:
 	ruff format $(CHECK_STYLE)
 	ruff check --fix $(CHECK_STYLE)
-

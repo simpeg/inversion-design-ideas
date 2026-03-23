@@ -32,6 +32,5 @@ mypy:
 	mypy $(CHECK_TYPE)
 
 format:
-	ruff check --fix $(CHECK_STYLE)
 	ruff format $(CHECK_STYLE)
-
+	ruff check --fix $(CHECK_STYLE)

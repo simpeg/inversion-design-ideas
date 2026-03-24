@@ -33,12 +33,12 @@ def conjugate_gradient(
         Objective function to be minimized.
     initial_model : (n_params) array
         Initial model used to start the minimization.
-    preconditioner : (n_params, n_params) array, sparray or LinearOperator or Callable, optional
+    preconditioner : (n_params, n_params) array, sparse array or LinearOperator or Callable, optional
         Matrix used as preconditioner in the conjugant gradient algorithm.
         If None, no preconditioner will be used.
         A callable can be passed to build the preconditioner dynamically: such
         callable should take a single ``initial_model`` argument and return an
-        array, `sparray` or a `LinearOperator`.
+        array, sparse array or a `LinearOperator`.
     kwargs : dict
         Extra arguments that will be passed to the :func:`scipy.sparse.linalg.cg`
         function.

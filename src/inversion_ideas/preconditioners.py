@@ -2,10 +2,10 @@
 Classes and functions to build preconditioners.
 """
 
-from scipy.sparse import diags_array, sparray
+from scipy.sparse import diags_array
 
 from .base import Objective
-from .typing import Model
+from .typing import Model, SparseArray
 
 
 class JacobiPreconditioner:
@@ -30,7 +30,7 @@ class JacobiPreconditioner:
     def __init__(self, objective_function: Objective):
         self.objective_function = objective_function
 
-    def __call__(self, model: Model) -> sparray:
+    def __call__(self, model: Model) -> SparseArray:
         """
         Generate a Jacobi preconditioner as a sparse diagonal array for a given model.
 

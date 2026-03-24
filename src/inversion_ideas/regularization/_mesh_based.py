@@ -48,6 +48,23 @@ class _MeshBasedRegularization(Objective):
                 "It must be an array or a dictionary."
             )
             raise TypeError(msg)
+        if isinstance(value, np.ndarray) and value.size != self.n_params:
+            msg = (
+                f"Invalid cell_weights array with '{value.size}' elements. "
+                f"It must have '{self.n_params}' elements, "
+                "equal to the number of active cells."
+            )
+            raise ValueError(msg)
+        if isinstance(value, dict):
+            for key, array in value.items():
+                if array.size != self.n_params:
+                    msg = (
+                        f"Invalid cell_weights array '{key}' with "
+                        f"'{array.size}' elements. "
+                        f"It must have '{self.n_params}' elements, "
+                        "equal to the number of active cells."
+                    )
+                    raise ValueError(msg)
         self._cell_weights = value
 
 
@@ -61,8 +78,9 @@ class Smallness(_MeshBasedRegularization):
     ----------
     mesh : discretize.base.BaseMesh
         Mesh to use in the regularization.
-    active_cells : (n_params) array or None, optional
-        Array full of bools that indicate the active cells in the mesh.
+    active_cells : (n_cells) array or None, optional
+        Array full of bools that indicate the active cells in the mesh. It must have the
+        same amount of elements as cells in the mesh.
     cell_weights : (n_params) array or dict of (n_params) arrays or None, optional
         Array with cell weights.
         For multiple cell weights, pass a dictionary where keys are strings and values
@@ -215,30 +233,6 @@ class Smallness(_MeshBasedRegularization):
         return self.hessian(model).diagonal()
 
     @property
-    def cell_weights(
-        self,
-    ) -> npt.NDArray[np.float64] | dict[str, npt.NDArray[np.float64]]:
-        """
-        Regularization weights on cells.
-        """
-        return self._cell_weights
-
-    @cell_weights.setter
-    def cell_weights(
-        self, value: npt.NDArray[np.float64] | dict[str, npt.NDArray[np.float64]]
-    ):
-        """
-        Setter for weights on cells.
-        """
-        if not isinstance(value, np.ndarray | dict):
-            msg = (
-                f"Invalid weights of type {type(value)}. "
-                "It must be an array or a dictionary."
-            )
-            raise TypeError(msg)
-        self._cell_weights = value
-
-    @property
     def weights_matrix(self) -> dia_array:
         """
         Diagonal matrix with the square root of regularization weights on cells.
@@ -273,8 +267,9 @@ class Flatness(_MeshBasedRegularization):
         Mesh to use in the regularization.
     direction : {"x", "y", "z"}
         Direction of the spatial derivative.
-    active_cells : (n_params) array or None, optional
-        Array full of bools that indicate the active cells in the mesh.
+    active_cells : (n_cells) array or None, optional
+        Array full of bools that indicate the active cells in the mesh. It must have the
+        same amount of elements as cells in the mesh.
     cell_weights : (n_params) array or dict of (n_params) arrays or None, optional
         Array with cell weights.
         For multiple cell weights, pass a dictionary where keys are strings and values
@@ -447,30 +442,6 @@ class Flatness(_MeshBasedRegularization):
         return self.hessian(model).diagonal()
 
     @property
-    def cell_weights(
-        self,
-    ) -> npt.NDArray[np.float64] | dict[str, npt.NDArray[np.float64]]:
-        """
-        Regularization weights on cells.
-        """
-        return self._cell_weights
-
-    @cell_weights.setter
-    def cell_weights(
-        self, value: npt.NDArray[np.float64] | dict[str, npt.NDArray[np.float64]]
-    ):
-        """
-        Setter for weights on cells.
-        """
-        if not isinstance(value, np.ndarray | dict):
-            msg = (
-                f"Invalid weights of type {type(value)}. "
-                "It must be an array or a dictionary."
-            )
-            raise TypeError(msg)
-        self._cell_weights = value
-
-    @property
     def weights_matrix(self) -> dia_array:
         """
         Diagonal matrix with the square root of cell weights averaged on faces.
@@ -528,8 +499,9 @@ class SparseSmallness(_MeshBasedRegularization):
         Mesh to use in the regularization.
     norm : float
         Norm used in the regularization (p).
-    active_cells : (n_params) array or None, optional
-        Array full of bools that indicate the active cells in the mesh.
+    active_cells : (n_cells) array or None, optional
+        Array full of bools that indicate the active cells in the mesh. It must have the
+        same amount of elements as cells in the mesh.
     cell_weights : (n_params) array or dict of (n_params) arrays or None, optional
         Array with cell weights.
         For multiple cell weights, pass a dictionary where keys are strings and values

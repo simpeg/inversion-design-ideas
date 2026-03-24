@@ -3,17 +3,16 @@ Classes to represent objective functions.
 """
 
 from abc import ABC, abstractmethod
-from collections.abc import Iterable, Iterator
+from collections.abc import Iterable, Iterator, Sequence
 from copy import copy
 from numbers import Real
 from typing import Self
 
 import numpy as np
 import numpy.typing as npt
-from scipy.sparse import sparray
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
-from ..typing import Model
+from ..typing import Model, SparseArray
 
 
 class Objective(ABC):
@@ -51,7 +50,7 @@ class Objective(ABC):
     @abstractmethod
     def hessian(
         self, model: Model
-    ) -> npt.NDArray[np.float64] | sparray | LinearOperator:
+    ) -> npt.NDArray[np.float64] | SparseArray | LinearOperator:
         """
         Evaluate the hessian of the objective function for a given model.
         """
@@ -94,14 +93,14 @@ class Objective(ABC):
     def __radd__(self, other) -> "Combo":
         return Combo([other, self])
 
-    def __mul__(self, value) -> "Scaled":
+    def __mul__(self, value: Real) -> "Scaled":
         return Scaled(value, self)
 
     def __rmul__(self, value):
         return self.__mul__(value)
 
-    def __truediv__(self, denominator):
-        return self * (1.0 / denominator)
+    def __truediv__(self, denominator: Real):
+        return self * (1.0 / denominator)  # type: ignore[operator]
 
     def __floordiv__(self, denominator):
         msg = "Floor division is not implemented for objective functions."
@@ -111,11 +110,11 @@ class Objective(ABC):
         msg = "Inplace addition is not implemented for this class."
         raise TypeError(msg)
 
-    def __imul__(self, other) -> Self:
+    def __imul__(self, other: Real) -> Self:
         msg = "Inplace multiplication is not implemented for this class."
         raise TypeError(msg)
 
-    def __itruediv__(self, value) -> Self:
+    def __itruediv__(self, value: Real) -> Self:
         msg = "Inplace division is not implemented for this class."
         raise TypeError(msg)
 
@@ -150,7 +149,7 @@ class Scaled(Objective):
 
     def hessian(
         self, model: Model
-    ) -> npt.NDArray[np.float64] | sparray | LinearOperator:
+    ) -> npt.NDArray[np.float64] | SparseArray | LinearOperator:
         """
         Evaluate the hessian of the objective function for a given model.
         """
@@ -203,7 +202,22 @@ class Combo(Objective):
     """
 
     def __init__(self, functions: list[Objective]):
-        _get_n_params(functions)  # check if functions have the same n_params
+        if not isinstance(functions, Sequence):
+            msg = (
+                f"Invalid 'functions' argument of type '{type(functions).__name__}'. "
+                "It must be a sequence of `Objective` functions."
+            )
+            raise TypeError(msg)
+        if not functions:
+            msg = (
+                "Invalid empty 'functions' argument. "
+                "The list of objective functions must contain at least one function."
+            )
+            raise ValueError(msg)
+
+        # Call the _get_n_params function to check if functions have the same n_params
+        _get_n_params(functions)
+
         self._functions = functions
 
     def __iter__(self):
@@ -220,6 +234,9 @@ class Combo(Objective):
         """
         List of objective functions in the sum.
         """
+        if not self._functions:
+            msg = "Invalid empty `Combo` without functions."
+            raise ValueError(msg)
         return self._functions
 
     @property
@@ -239,11 +256,11 @@ class Combo(Objective):
         """
         Evaluate the gradient of the objective function for a given model.
         """
-        return sum(f.gradient(model) for f in self.functions)
+        return sum(f.gradient(model) for f in self.functions)  # type: ignore[return-value]
 
     def hessian(
         self, model: Model
-    ) -> npt.NDArray[np.float64] | sparray | LinearOperator:
+    ) -> npt.NDArray[np.float64] | SparseArray | LinearOperator:
         """
         Evaluate the hessian of the objective function for a given model.
         """
@@ -253,9 +270,6 @@ class Combo(Objective):
         """
         Diagonal of the Hessian.
         """
-        if not self.functions:
-            msg = "Invalid empty Combo when summing."
-            raise ValueError(msg)
         return _sum_arrays(f.hessian_diagonal(model) for f in self.functions)
 
     def flatten(self) -> "Combo":
@@ -356,14 +370,19 @@ def _get_n_params(functions: list) -> int:
     n_params_list = [f.n_params for f in functions]
     n_params = n_params_list[0]
     if not all(p == n_params for p in n_params_list):
-        msg = "Invalid objective functions with different n_params."
+        functions_str = ", ".join(str(f) for f in functions)
+        n_params_str = ", ".join(str(n) for n in n_params_list)
+        msg = (
+            f"Invalid objective functions {functions_str} with different n_params: "
+            f"{n_params_str}, respectively."
+        )
         raise ValueError(msg)
     return n_params
 
 
 def _sum(
-    operators: Iterator[npt.NDArray | sparray | LinearOperator],
-) -> npt.NDArray | sparray | LinearOperator:
+    operators: Iterator[npt.NDArray | SparseArray | LinearOperator],
+) -> npt.NDArray | SparseArray | LinearOperator:
     """
     Sum objects within an iterator.
 
@@ -377,10 +396,10 @@ def _sum(
     result = copy(next(operators))
     for operator in operators:
         if isinstance(operator, LinearOperator) or isinstance(result, LinearOperator):
-            result = aslinearoperator(result)
-            result += aslinearoperator(operator)
+            result = aslinearoperator(result)  # type: ignore[arg-type]
+            result += aslinearoperator(operator)  # type: ignore[arg-type]
         else:
-            result += operator
+            result += operator  # type: ignore[operator]
     return result
 
 

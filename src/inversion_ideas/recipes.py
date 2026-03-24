@@ -66,7 +66,7 @@ def create_l2_inversion(
         no limit on the total amount of iterations.
     cache_models : bool, optional
         Whether to cache models after each iteration in the inversion.
-    preconditioner : {"jacobi"} or 2d array or sparray or LinearOperator or callable or None, optional
+    preconditioner : {"jacobi"} or 2d array or sparse array or LinearOperator or callable or None, optional
         Preconditioner that will be passed to the ``minimizer`` on every call during the
         inversion. The preconditioner can be a predefined 2d array, a sparse array or
         a LinearOperator. Alternatively, it can be a callable that takes the ``model``
@@ -182,7 +182,7 @@ def create_sparse_inversion(
         no limit on the total amount of iterations.
     cache_models : bool, optional
         Whether to cache models after each iteration in the inversion.
-    preconditioner : {"jacobi"} or 2d array or sparray or LinearOperator or callable or None, optional
+    preconditioner : {"jacobi"} or 2d array or sparse array or LinearOperator or callable or None, optional
         Preconditioner that will be passed to the ``minimizer`` on every call during the
         inversion. The preconditioner can be a predefined 2d array, a sparse array or
         a LinearOperator. Alternatively, it can be a callable that takes the ``model``
@@ -284,8 +284,9 @@ def create_tikhonov_regularization(
     ----------
     mesh : discretize.base.BaseMesh
         Mesh to use in the regularization.
-    active_cells : (n_params) array or None, optional
-        Array full of bools that indicate the active cells in the mesh.
+    active_cells : (n_cells) array or None, optional
+        Array full of bools that indicate the active cells in the mesh. It must have the
+        same amount of elements as cells in the mesh.
     cell_weights : (n_params) array or dict of (n_params) arrays or None, optional
         Array with cell weights.
         For multiple cell weights, pass a dictionary where keys are strings and values

@@ -317,6 +317,9 @@ class InversionLogRich(InversionLog):
 class MinimizerLog:
     """Class to store results of a minimizer in the form of a log."""
 
+    # Hide these columns in table
+    hide = ("model",)
+
     def update(self, minimizer_result: MinimizerResult):
         """
         Use as callback for :class:`inversion_ideas.base.Minimizer`.
@@ -349,7 +352,8 @@ class MinimizerLog:
             self._table = Table()
         if not self._table.columns:
             for column_name in self.log:
-                self._table.add_column(column_name)
+                if column_name not in self.hide:
+                    self._table.add_column(column_name)
         return self._table
 
     def _update_table(self):
@@ -361,7 +365,9 @@ class MinimizerLog:
         model : (n_params) array
         """
         row = []
-        for values in self.log.values():
+        for key, values in self.log.items():
+            if key in self.hide:
+                continue
             value = values[-1]  # last element in the log
             fmt = _get_fmt(value)
             row.append(f"{value:{fmt}}")

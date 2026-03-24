@@ -12,7 +12,7 @@ from scipy.sparse.linalg import cg
 from ..base import Condition, Minimizer, MinimizerResult, Objective
 from ..errors import ConvergenceWarning
 from ..typing import Model, Preconditioner
-from ..utils import get_logger
+from ..utils import CountCalls, Counter, get_logger
 from ._utils import backtracking_line_search
 
 
@@ -63,9 +63,9 @@ class GaussNewtonConjugateGradient(Minimizer):
         objective: Objective,
         initial_model: Model,
         *,
-        preconditioner: Preconditioner
-        | Callable[[Model], Preconditioner]
-        | None = None,
+        preconditioner: (
+            Preconditioner | Callable[[Model], Preconditioner] | None
+        ) = None,
         callback: Callable[[MinimizerResult], None] | None = None,
     ) -> Generator[Model]:
         """
@@ -112,9 +112,10 @@ class GaussNewtonConjugateGradient(Minimizer):
                 iteration=iteration,
                 model=model,
                 objective_value=objective(model),
-                conj_grad_code=0,
-                line_search_iters=0,
-                step_norm=0,
+                cg_iters=None,
+                cg_converged=None,
+                line_search_iters=None,
+                step_norm=None,
             )
             callback(minimizer_result)
 
@@ -143,13 +144,26 @@ class GaussNewtonConjugateGradient(Minimizer):
             if self.stopping_criteria is not None and self.stopping_criteria(model):
                 break
 
+            # Add a counter for conjugate-gradient iterations
+            if (key := "callback") not in cg_kwargs:
+                counter = Counter()
+                cg_kwargs[key] = counter
+            else:
+                # Decorate callback to count cg calls
+                cg_kwargs[key] = CountCalls(cg_kwargs[key])
+
             # Apply Conjugate Gradient to get search direction
             gradient, hessian = objective.gradient(model), objective.hessian(model)
-            search_direction, cg_iters = cg(hessian, -gradient, **cg_kwargs)
-            if cg_iters != 0:
+            search_direction, cg_code = cg(hessian, -gradient, **cg_kwargs)
+
+            # Get number of cg iterations from callback
+            cg_iters = cg_kwargs["callback"].counts
+            # Raise warning if cg didn't converge
+            cg_converged = cg_code == 0
+            if not cg_converged:
                 warnings.warn(
                     "Conjugate gradient convergence to tolerance not achieved after "
-                    f"{cg_iters} number of iterations.",
+                    f"{cg_code} number of iterations.",
                     ConvergenceWarning,
                     stacklevel=2,
                 )
@@ -184,7 +198,8 @@ class GaussNewtonConjugateGradient(Minimizer):
                     iteration=iteration,
                     model=model,
                     objective_value=phi_value,
-                    conj_grad_code=cg_iters,
+                    cg_iters=cg_iters,
+                    cg_converged=cg_converged,
                     line_search_iters=line_search_iters,
                     step_norm=float(np.linalg.norm(step)),
                 )

@@ -164,9 +164,7 @@ class Inversion:
 
             # Unpack the generator and keep only the last model
             *_, model = self.minimizer(
-                self.objective_function,
-                self.model,
-                **minimizer_kwargs,
+                self.objective_function, self.model, **minimizer_kwargs
             )
         else:
             model = self.minimizer(

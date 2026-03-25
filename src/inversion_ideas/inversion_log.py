@@ -251,20 +251,6 @@ class InversionLogRich(InversionLog):
         """
         return self.table
 
-    # def update_group(self, iteration: int):
-    #     self.update_table()
-    #
-    #     # Create a tree to add the minimizer log
-    #     if self.minimizer_logs is not None:
-    #         minimizer_log = self.minimizer_logs[iteration]
-    #         if minimizer_log is not None:
-    #             tree = Tree(self.table)
-    #             tree.add(Panel(minimizer_log, title="Minimizer log"))
-    #             self.group.renderables.append(tree)
-    #             return
-    #
-    #     self.group.renderables.append(panel)
-
     @property
     def table(self) -> Table:
         """

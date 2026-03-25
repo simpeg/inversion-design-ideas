@@ -259,6 +259,7 @@ class Inversion:
         """
         if show_log and self.log is not None:
             if not isinstance(self.log, RenderableType):
+                # TODO: Add message
                 raise NotImplementedError()
 
             spinner = Spinner(

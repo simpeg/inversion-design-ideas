@@ -206,9 +206,7 @@ class Inversion:
         encountered..
         Code ``None``: the inversion is still running or hasn't started yet.
         """
-        if not hasattr(self, "_stop_code"):
-            return None
-        return self._stop_code
+        return getattr(self, "_stop_code", None)
 
     @property
     def counter(self) -> int:

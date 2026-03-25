@@ -7,12 +7,16 @@ modify the objective function after each iteration and optionally a logger.
 """
 
 import typing
+import warnings
 from collections.abc import Callable
 
 from rich.console import Group, RenderableType
 from rich.live import Live
 from rich.spinner import Spinner
+from rich.text import Text
 from rich.tree import Tree
+
+from inversion_ideas.errors import ConvergenceWarning
 
 from .base import Condition, Directive, Minimizer, Objective
 from .inversion_log import InversionLog, InversionLogRich, MinimizerLog
@@ -124,17 +128,21 @@ class Inversion:
 
         # Check for stopping criteria before trying to run the iteration
         if self.stopping_criteria(self.model):
-            get_logger().info(
+            get_logger().debug(
                 "🎉 Inversion successfully finished due to stopping criteria."
             )
+            self._stop_code = 0
             raise StopIteration
 
         # Check if maximum number of iterations have been reached
         if self.max_iterations is not None and self.counter >= self.max_iterations:
-            get_logger().info(
+            msg = (
                 "⚠️ Inversion finished after reaching maximum number of iterations "
                 f"({self.max_iterations})."
             )
+            get_logger().debug(msg)
+            warnings.warn(msg, ConvergenceWarning, stacklevel=2)
+            self._stop_code = 1
             raise StopIteration
 
         # Update stopping criteria (if necessary)
@@ -185,7 +193,22 @@ class Inversion:
         return self.model
 
     def __iter__(self):
+        self._stop_code = None
         return self
+
+    @property
+    def stop_code(self) -> int | None:
+        """
+        Code obtained after inversion stopped.
+
+        Code 0: the stopping criteria was met.
+        Code 1: the inversion stopped due to that the maximum number of iterations was
+        encountered..
+        Code ``None``: the inversion is still running or hasn't started yet.
+        """
+        if not hasattr(self, "_stop_code"):
+            return None
+        return self._stop_code
 
     @property
     def counter(self) -> int:
@@ -255,7 +278,21 @@ class Inversion:
                             )
                             log.add(renderable)
                     spinner.text = f"Running iteration {self.counter + 1}..."
-                group.renderables.pop(-1)
+
+                # Finish inversion
+                group.renderables.pop(-1)  # remove spinner
+                if self.stop_code == 0:
+                    text = Text(
+                        "🎉 Inversion successfully finished due to stopping criteria."
+                    )
+                elif self.stop_code == 1:
+                    text = Text(
+                        "⚠️ Inversion finished after reaching maximum number of iterations "
+                        f"({self.max_iterations})."
+                    )
+                else:
+                    text = Text(f"⚠️ Invalid stop code '{self.stop_code}'.")
+                group.renderables.append(text)
                 live.refresh()
 
         else:

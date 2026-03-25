@@ -193,7 +193,6 @@ class Inversion:
         return self.model
 
     def __iter__(self):
-        self._stop_code = None
         return self
 
     @property

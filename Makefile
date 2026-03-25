@@ -1,5 +1,6 @@
-PYTEST_TARGETS=src
-CHECK_STYLE=src notebooks
+PYTEST_TARGETS=src tests
+PYTEST_ARGS=--cov-report=term-missing --cov --doctest-modules --verbose
+CHECK_STYLE=src notebooks tests
 CHECK_TYPE=src
 
 .PHONY: help install test check check-format check_style format mypy
@@ -18,7 +19,7 @@ install:
 	python -m pip install --no-deps --editable .
 
 test:
-	pytest --verbose --doctest-modules $(PYTEST_TARGETS)
+	pytest $(PYTEST_ARGS) $(PYTEST_TARGETS)
 
 check: check-format check-style
 
@@ -32,6 +33,5 @@ mypy:
 	mypy $(CHECK_TYPE)
 
 format:
-	ruff check --fix $(CHECK_STYLE)
 	ruff format $(CHECK_STYLE)
-
+	ruff check --fix $(CHECK_STYLE)

@@ -3,7 +3,7 @@ Classes to represent objective functions.
 """
 
 from abc import ABC, abstractmethod
-from collections.abc import Iterable, Iterator
+from collections.abc import Iterable, Iterator, Sequence
 from copy import copy
 from numbers import Real
 from typing import Self
@@ -202,7 +202,22 @@ class Combo(Objective):
     """
 
     def __init__(self, functions: list[Objective]):
-        _get_n_params(functions)  # check if functions have the same n_params
+        if not isinstance(functions, Sequence):
+            msg = (
+                f"Invalid 'functions' argument of type '{type(functions).__name__}'. "
+                "It must be a sequence of `Objective` functions."
+            )
+            raise TypeError(msg)
+        if not functions:
+            msg = (
+                "Invalid empty 'functions' argument. "
+                "The list of objective functions must contain at least one function."
+            )
+            raise ValueError(msg)
+
+        # Call the _get_n_params function to check if functions have the same n_params
+        _get_n_params(functions)
+
         self._functions = functions
 
     def __iter__(self):
@@ -219,6 +234,9 @@ class Combo(Objective):
         """
         List of objective functions in the sum.
         """
+        if not self._functions:
+            msg = "Invalid empty `Combo` without functions."
+            raise ValueError(msg)
         return self._functions
 
     @property
@@ -252,9 +270,6 @@ class Combo(Objective):
         """
         Diagonal of the Hessian.
         """
-        if not self.functions:
-            msg = "Invalid empty Combo when summing."
-            raise ValueError(msg)
         return _sum_arrays(f.hessian_diagonal(model) for f in self.functions)
 
     def flatten(self) -> "Combo":
@@ -355,7 +370,12 @@ def _get_n_params(functions: list) -> int:
     n_params_list = [f.n_params for f in functions]
     n_params = n_params_list[0]
     if not all(p == n_params for p in n_params_list):
-        msg = "Invalid objective functions with different n_params."
+        functions_str = ", ".join(str(f) for f in functions)
+        n_params_str = ", ".join(str(n) for n in n_params_list)
+        msg = (
+            f"Invalid objective functions {functions_str} with different n_params: "
+            f"{n_params_str}, respectively."
+        )
         raise ValueError(msg)
     return n_params
 

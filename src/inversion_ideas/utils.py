@@ -213,3 +213,67 @@ def support_model_slice(func):
         return result
 
     return wrapper
+
+
+class Counter:
+    """
+    Simple counter callable class.
+
+    Count how many times the object gets called.
+
+    Parameters
+    ----------
+    initial_value : int, optional
+        Initial value used in the counts.
+    """
+
+    def __init__(self, initial_value=0):
+        self._counts = initial_value
+
+    @property
+    def counts(self) -> int:
+        """
+        Return current amount of counts.
+        """
+        return self._counts
+
+    def __call__(self, *args, **kwargs):  # noqa: ARG002
+        """
+        Increase ``counts`` by one.
+
+        Parameters
+        ----------
+        *args :
+            Position-based arguments that will be ignored.
+        **kwargs :
+            Keyword arguments that will be ignored.
+        """
+        self._counts += 1
+
+
+class CountCalls:
+    """
+    Class decorator to count function calls.
+
+    Examples
+    --------
+    >>> @CountCalls
+    ... def my_function(x):
+    ...     return x**2
+    >>> my_function(1)
+    1
+    >>> my_function(2)
+    4
+    >>> my_function.counts
+    2
+    """
+
+    def __init__(self, func):
+        functools.update_wrapper(self, func)
+        self.func = func
+        self.counts = 0
+
+    def __call__(self, *args, **kwargs):
+        result = self.func(*args, **kwargs)
+        self.counts += 1
+        return result

@@ -234,7 +234,7 @@ class Inversion:
 
     @property
     def log_minimizers(self) -> bool:
-        """Whether if minimizers will be logged or not."""
+        """Whether minimizers will be logged or not."""
         return self._log_minimizers and isinstance(self.minimizer, Minimizer)
 
     @property

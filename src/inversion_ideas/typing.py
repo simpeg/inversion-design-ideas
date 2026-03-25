@@ -7,35 +7,13 @@ from typing import TYPE_CHECKING, Protocol, TypeAlias
 
 import numpy as np
 import numpy.typing as npt
-from scipy.sparse import (
-    bsr_array,
-    bsr_matrix,
-    coo_array,
-    coo_matrix,
-    csc_array,
-    csc_matrix,
-    csr_array,
-    csr_matrix,
-    dia_array,
-    dia_matrix,
-)
+from scipy.sparse import bsr_array, coo_array, csc_array, csr_array, dia_array
 from scipy.sparse.linalg import LinearOperator
 
 if TYPE_CHECKING:
     from .base import MinimizerResult
 
-SparseArray: TypeAlias = (
-    bsr_array
-    | bsr_matrix
-    | coo_array
-    | coo_matrix
-    | csc_array
-    | csc_matrix
-    | csr_array
-    | csr_matrix
-    | dia_array
-    | dia_matrix
-)
+SparseArray: TypeAlias = bsr_array | coo_array | csc_array | csr_array | dia_array
 """
 Type alias to represent sparse arrays.
 """

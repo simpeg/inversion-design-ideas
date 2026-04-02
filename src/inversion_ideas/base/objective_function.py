@@ -22,11 +22,10 @@ class Objective(ABC):
 
     _base_str = "φ"
     _base_latex = r"\phi"
-    name = None
 
     @abstractmethod
     def __init__(self):
-        pass
+        pass  # pragma: no cover
 
     @property
     @abstractmethod
@@ -61,19 +60,32 @@ class Objective(ABC):
         Diagonal of the Hessian.
         """
 
-    def set_name(self, value):
+    @property
+    def name(self) -> str | None:
         """
-        Set name for the objective function.
+        Name of the objective function.
         """
-        if not (isinstance(value, str) or value is None):
+        return getattr(self, "_name", None)
+
+    @name.setter
+    def name(self, value: str | None):
+        """
+        Setter for the name property.
+        """
+        if not isinstance(value, str | None):
             msg = (
-                f"Invalid name '{value}' of type {type(value)}. "
+                f"Invalid name '{value}' of type '{type(value).__name__}'. "
                 "Please provide a string or None."
             )
             raise TypeError(msg)
+        self._name = value
+
+    def set_name(self, value: str | None):
+        """
+        Set name for the objective function.
+        """
         self.name = value
-        # Return self so we can pipe this method
-        return self
+        return self  # return self so we can pipe this method
 
     def __repr__(self):
         repr_ = f"{self._base_str}"

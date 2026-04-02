@@ -602,3 +602,42 @@ class TestScaledMethods:
         np.testing.assert_allclose(
             scaled.hessian_diagonal(model), self.scalar * phi.hessian_diagonal(model)
         )
+
+
+class TestObjectiveFunRepresentations:
+    """
+    Test representations of the objective function.
+    """
+
+    def test_name_setter(self):
+        # Test the setter
+        phi = Dummy(10)
+        assert phi.name is None
+        dummy_name = "blah"
+        phi.set_name(dummy_name)
+        assert phi.name == dummy_name
+
+        # Test the set_name method
+        phi = Dummy(10)
+        returned_phi = phi.set_name(dummy_name)
+        assert phi.name == dummy_name
+        assert returned_phi is phi
+
+        # Test None
+        phi = Dummy(10).set_name(None)
+        assert phi.name is None
+        phi = Dummy(10)
+        phi.name = None
+        assert phi.name is None
+
+    def test_invalid_name(self):
+        phi = Dummy(3)
+        invalid_name = 32
+        msg = re.escape(
+            f"Invalid name '{invalid_name}' of type 'int'. "
+            "Please provide a string or None."
+        )
+        with pytest.raises(TypeError, match=msg):
+            phi.name = invalid_name
+        with pytest.raises(TypeError, match=msg):
+            phi.set_name(invalid_name)

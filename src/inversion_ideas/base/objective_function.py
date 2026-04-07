@@ -2,6 +2,7 @@
 Classes to represent objective functions.
 """
 
+import sys
 from abc import ABC, abstractmethod
 from collections.abc import Iterable, Iterator, Sequence
 from copy import copy
@@ -101,6 +102,19 @@ class Objective(ABC):
             repr_ += rf"_{{{self.name}}}"
         return f"${repr_} (m)$"
 
+    def info(self):
+        """Get information about the objective function."""
+        type_ = type(self)
+        class_name = type_.__name__
+        info = f"{class_name}\n"
+        info += "-" * len(class_name) + "\n"
+        info += f" • Class: {type_.__module__}.{type_.__name__}\n"
+        info += f" • Memory address: {hex(id(self))}\n"
+        info += f" • String representation: {self}\n"
+        info += f" • name: {self.name}\n"
+        info += f" • n_params: {self.n_params}"
+        sys.stdout.write(info + "\n")
+
     def __add__(self, other) -> "Combo":
         return Combo([self, other])
 
@@ -174,6 +188,19 @@ class Scaled(Objective):
         Diagonal of the Hessian.
         """
         return self.multiplier * self.function.hessian_diagonal(model)
+
+    def info(self):
+        type_ = type(self)
+        class_name = type_.__name__
+        info = f"{class_name}\n"
+        info += "-" * len(class_name) + "\n"
+        info += f" • Class: {type_.__module__}.{type_.__name__}\n"
+        info += f" • Memory address: {hex(id(self))}\n"
+        info += f" • String representation: {self}\n"
+        info += f" • n_params: {self.n_params}\n"
+        info += f" • multiplier: {self.multiplier}\n"
+        info += f" • function: {self.function} ({type(self.function).__name__})"
+        sys.stdout.write(info + "\n")
 
     def __repr__(self):
         multiplier = _float_to_str(self.multiplier)
@@ -294,6 +321,25 @@ class Combo(Objective):
         Check if the ``Combo`` contains the given objective function, recursively.
         """
         return _contains(self, objective)
+
+    def info(self):
+        """Get information about the combo objective function."""
+        type_ = type(self)
+        class_name = type_.__name__
+        info = f"{class_name}\n"
+        info += "-" * len(class_name) + "\n"
+        info += f" • Class: {type_.__module__}.{type_.__name__}\n"
+        info += f" • Memory address: {hex(id(self))}\n"
+        info += f" • String representation: {self}\n"
+        info += f" • n_params: {self.n_params}\n"
+        info += f" • size: {len(self)}\n"
+        info += " • functions:\n"
+        for i, function in enumerate(self):
+            info += (
+                f"   {i:2d}) {function}: "
+                f"{type(function).__name__} at {hex(id(function))}\n"
+            )
+        sys.stdout.write(info)
 
     def __repr__(self):
         functions = []

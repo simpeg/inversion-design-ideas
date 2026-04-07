@@ -11,6 +11,7 @@ from scipy.sparse import dia_array, sparray
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from inversion_ideas.base import Combo, Objective, Scaled
+from inversion_ideas.base.objective_function import _float_to_str
 
 
 class Dummy(Objective):
@@ -602,3 +603,203 @@ class TestScaledMethods:
         np.testing.assert_allclose(
             scaled.hessian_diagonal(model), self.scalar * phi.hessian_diagonal(model)
         )
+
+
+class TestObjectiveFunRepresentations:
+    """
+    Test representations of the objective function.
+    """
+
+    def test_name_setter(self):
+        # Test the setter
+        phi = Dummy(10)
+        assert phi.name is None
+        dummy_name = "blah"
+        phi.set_name(dummy_name)
+        assert phi.name == dummy_name
+
+        # Test the set_name method
+        phi = Dummy(10)
+        returned_phi = phi.set_name(dummy_name)
+        assert phi.name == dummy_name
+        assert returned_phi is phi
+
+        # Test None
+        phi = Dummy(10).set_name(None)
+        assert phi.name is None
+        phi = Dummy(10)
+        phi.name = None
+        assert phi.name is None
+
+    def test_invalid_name(self):
+        phi = Dummy(3)
+        invalid_name = 32
+        msg = re.escape(
+            f"Invalid name '{invalid_name}' of type 'int'. "
+            "Please provide a string or None."
+        )
+        with pytest.raises(TypeError, match=msg):
+            phi.name = invalid_name
+        with pytest.raises(TypeError, match=msg):
+            phi.set_name(invalid_name)
+
+    def test_repr(self):
+        phi = Dummy(3)
+        assert repr(phi) == f"{phi._base_str}(m)"
+        phi = Dummy(3).set_name("a")
+        assert repr(phi) == f"{phi._base_str}a(m)"
+
+    def test_repr_latex(self):
+        phi = Dummy(3)
+        assert phi._repr_latex_() == f"${phi._base_latex} (m)$"
+        phi = Dummy(3).set_name("a")
+        assert phi._repr_latex_() == f"${phi._base_latex}_{{a}} (m)$"
+
+
+class TestScaledRepresentations:
+    """
+    Test representations of the scaled objective function.
+    """
+
+    @pytest.mark.parametrize(
+        ("multiplier", "multiplier_str"),
+        [
+            (3.4, "3.4"),
+            (-3.4, "-3.4"),
+            (0.0, "0."),
+            (1e3, "1000."),
+            (1e-3, "0.001"),
+            (1e4, "1.e+04"),
+            (1e-4, "1.e-04"),
+            (3e-5, "3.e-05"),
+            (3e5, "3.e+05"),
+        ],
+    )
+    def test_repr(self, multiplier: float, multiplier_str: str):
+        phi = Dummy(3).set_name("a")
+        scaled = multiplier * phi
+        assert repr(scaled) == f"{multiplier_str} {phi}"
+
+    @pytest.mark.parametrize(
+        ("multiplier", "multiplier_str"),
+        [
+            (3.4, "3.4"),
+            (-3.4, "-3.4"),
+            (0.0, "0."),
+            (1e3, "1000."),
+            (1e-3, "0.001"),
+            (1e4, "1.e+04"),
+            (1e-4, "1.e-04"),
+            (3e-5, "3.e-05"),
+            (3e5, "3.e+05"),
+        ],
+    )
+    def test_repr_with_combo(self, multiplier: float, multiplier_str: str):
+        combo = Dummy(3).set_name("a") + Dummy(3).set_name("b")
+        scaled = multiplier * combo
+        assert repr(scaled) == f"{multiplier_str} [{combo}]"
+
+    def test_repr_latex(self):
+        phi = Dummy(3).set_name("a")
+        phi_latex = phi._repr_latex_().strip("$")
+
+        multiplier, multiplier_str = 3.4, "3.4"
+        scaled = multiplier * phi
+        assert scaled._repr_latex_() == f"${multiplier_str} \\, {phi_latex}$"
+
+        multiplier, multiplier_str = 5.8e3, "5.8 \\cdot 10^{3}"
+        scaled = multiplier * phi
+        assert scaled._repr_latex_() == f"${multiplier_str} \\, {phi_latex}$"
+
+
+class TestComboRepresentations:
+    """
+    Test representations of the combo objective function.
+    """
+
+    def test_repr(self):
+        phi_a, phi_b = Dummy(3).set_name("a"), Dummy(3).set_name("b")
+        combo = phi_a + phi_b
+        assert repr(combo) == f"{phi_a} + {phi_b}"
+
+        phi_c = Dummy(3).set_name("c")
+        combo = phi_a + phi_b + phi_c
+        assert repr(combo) == f"[{phi_a} + {phi_b}] + {phi_c}"
+
+        combo = (phi_a + phi_b + phi_c).flatten()
+        assert repr(combo) == f"{phi_a} + {phi_b} + {phi_c}"
+
+        phi_d = Dummy(3).set_name("d")
+        combo = (phi_a + phi_b) + (phi_c + phi_d)
+        assert repr(combo) == f"[{phi_a} + {phi_b}] + [{phi_c} + {phi_d}]"
+
+    def test_repr_latex(self):
+        phi_a, phi_b = Dummy(3).set_name("a"), Dummy(3).set_name("b")
+        combo = phi_a + phi_b
+
+        phi_a_latex = phi_a._repr_latex_().strip("$")
+        phi_b_latex = phi_b._repr_latex_().strip("$")
+        assert combo._repr_latex_() == f"${phi_a_latex} + {phi_b_latex}$"
+
+        phi_c = Dummy(3).set_name("c")
+        phi_c_latex = phi_c._repr_latex_().strip("$")
+        combo = phi_a + phi_b + phi_c
+        assert (
+            combo._repr_latex_() == f"$[{phi_a_latex} + {phi_b_latex}] + {phi_c_latex}$"
+        )
+
+        combo = (phi_a + phi_b + phi_c).flatten()
+        assert (
+            combo._repr_latex_() == f"${phi_a_latex} + {phi_b_latex} + {phi_c_latex}$"
+        )
+
+        phi_d = Dummy(3).set_name("d")
+        phi_d_latex = phi_d._repr_latex_().strip("$")
+        combo = (phi_a + phi_b) + (phi_c + phi_d)
+        assert (
+            combo._repr_latex_()
+            == f"$[{phi_a_latex} + {phi_b_latex}] + [{phi_c_latex} + {phi_d_latex}]$"
+        )
+
+
+class TestFloatToString:
+    """Test the ``_float_to_str`` private function."""
+
+    @pytest.mark.parametrize("precision", [0, -1])
+    def test_invalid_precision(self, precision):
+        msg = re.escape(f"Invalid precision value '{precision}'")
+        with pytest.raises(ValueError, match=msg):
+            _float_to_str(3.1416, precision)
+
+    @pytest.mark.parametrize(
+        ("number", "string"),
+        [
+            # Zero
+            (0, "0."),
+            # Positional
+            (3.14, "3.14"),
+            (3.1416, "3.142"),
+            (-3.14, "-3.14"),
+            (-3.1416, "-3.142"),
+            (0.001, "0.001"),
+            (-0.001, "-0.001"),
+            (0.123456, "0.123"),
+            (1000.0, "1000."),
+            (-1000.0, "-1000."),
+            (999.123, "999.123"),
+            (999.1235, "999.124"),
+            (-999.123, "-999.123"),
+            (-999.1235, "-999.124"),
+            # Scientific
+            (3e-5, "3.e-05"),
+            (-3e-5, "-3.e-05"),
+            (3.1416e-5, "3.142e-05"),
+            (-3.1416e-5, "-3.142e-05"),
+            (0.0001, "1.e-04"),
+            (-0.0001, "-1.e-04"),
+            (1000.123, "1.000e+03"),
+            (-1000.123, "-1.000e+03"),
+        ],
+    )
+    def test_float_to_str(self, number, string):
+        assert _float_to_str(number) == string

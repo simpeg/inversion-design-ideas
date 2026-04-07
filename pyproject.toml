@@ -86,3 +86,14 @@ ignore = [
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
+
+[tool.coverage.run]
+source = ["inversion_ideas"]
+omit = [
+    "**/_version.py",
+    "**/__init__.py",
+]
+branch = true
+
+[tool.coverage.report]
+show_missing = true

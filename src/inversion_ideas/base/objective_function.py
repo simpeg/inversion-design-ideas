@@ -14,6 +14,8 @@ from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from ..typing import Model, SparseArray
 
+FLOAT_TO_STR_PRECISION = 3
+
 
 class Objective(ABC):
     """
@@ -88,10 +90,10 @@ class Objective(ABC):
         return self  # return self so we can pipe this method
 
     def __repr__(self):
-        repr_ = f"{self._base_str}"
+        title = f"{self._base_str}"
         if self.name is not None:
-            repr_ += f"{self.name}"
-        return f"{repr_}(m)"
+            title += f"{self.name}"
+        return f"{title}(m)"
 
     def _repr_latex_(self):
         repr_ = f"{self._base_latex}"
@@ -174,30 +176,25 @@ class Scaled(Objective):
         return self.multiplier * self.function.hessian_diagonal(model)
 
     def __repr__(self):
-        fmt = ".2e" if np.abs(self.multiplier) > 1e3 else ".2f"
+        multiplier = _float_to_str(self.multiplier)
         phi_repr = f"{self.function}"
         # Add brackets in case that the function has a multiplier or is a Combo
         if isinstance(self.function, Iterable) or hasattr(self.function, "multiplier"):
             phi_repr = f"[{phi_repr}]"
-        return f"{self.multiplier:{fmt}} {phi_repr}"
+        return f"{multiplier:} {phi_repr}"
 
     def _repr_latex_(self):
-        fmt = (
-            ".2e"
-            if np.abs(self.multiplier) > 1e2 or np.abs(self.multiplier) < 1e-2
-            else ".2f"
-        )
-        multiplier_str = f"{self.multiplier:{fmt}}"
-        if "e" in multiplier_str:
-            base, exp = multiplier_str.split("e")
+        multiplier = _float_to_str(self.multiplier)
+        if "e" in multiplier:
+            base, exp = multiplier.split("e")
             exp = exp.replace("+", "")
             exp = str(int(exp))
-            multiplier_str = rf"{base} \cdot 10^{{{exp}}}"
+            multiplier = rf"{base} \cdot 10^{{{exp}}}"
         phi_str = self.function._repr_latex_().strip("$")
         # Add brackets in case that the function has a multiplier or is a Combo
         if isinstance(self.function, Iterable) or hasattr(self.function, "multiplier"):
             phi_str = f"[ {phi_str} ]"
-        return rf"${multiplier_str} \, {phi_str}$"
+        return rf"${multiplier} \, {phi_str}$"
 
     def __imul__(self, value: Real) -> Self:
         self.multiplier *= value
@@ -303,7 +300,7 @@ class Combo(Objective):
         for function in self.functions:
             function_str = repr(function)
             if isinstance(function, Iterable):
-                function_str = f"[ {function_str} ]"
+                function_str = f"[{function_str}]"
             functions.append(function_str)
         return " + ".join(functions)
 
@@ -312,10 +309,10 @@ class Combo(Objective):
         for function in self.functions:
             function_str = function._repr_latex_().strip("$")
             if isinstance(function, Iterable):
-                function_str = f"[ {function_str} ]"
+                function_str = f"[{function_str}]"
             functions.append(function_str)
         phi_str = " + ".join(functions)
-        return f"$ {phi_str} $"
+        return f"${phi_str}$"
 
     def __iadd__(self, other) -> Self:
         if other.n_params != self.n_params:
@@ -436,3 +433,37 @@ def _sum_arrays(arrays: Iterator[npt.NDArray]) -> npt.NDArray:
     for array in arrays:
         result += array
     return result
+
+
+def _float_to_str(number: float, precision: int = FLOAT_TO_STR_PRECISION) -> str:
+    """
+    Format float to string.
+
+    Formats a floating point number into string.
+
+    Parameters
+    ----------
+    number : float
+        Floating point number to represent as a string.
+    precision : int
+        Decimal point precision for positional and scientific representation. The
+        ``precision`` is used to choose between a positional representation (e.g. 1.013)
+        and a scientific notation. If the absolute value of the number is between
+        ``10**(-precision)`` and ``10**precision``, then the positional representation
+        will be used, otherwise the scientific notation will be chosen.
+        It must be a positive integer.
+
+    Returns
+    -------
+    str
+        String representation of the floating point number.
+    """
+    if precision <= 0:
+        msg = f"Invalid precision value '{precision}'. It must be a positive integer."
+        raise ValueError(msg)
+    if number == 0.0:
+        return "0."
+    min_bound, max_bound = 10 ** (-precision), 10**precision
+    if min_bound <= np.abs(number) <= max_bound:
+        return np.format_float_positional(number, precision=precision)
+    return np.format_float_scientific(number, precision=precision)

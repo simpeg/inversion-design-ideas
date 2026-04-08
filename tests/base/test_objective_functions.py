@@ -803,3 +803,39 @@ class TestFloatToString:
     )
     def test_float_to_str(self, number, string):
         assert _float_to_str(number) == string
+
+
+class TestInfo:
+    """
+    Test the ``info`` method of objective functions.
+    """
+
+    def test_objective(self, capsys):
+        """
+        Test the ``info`` method of objective functions.
+        """
+        phi = Dummy(3)
+        phi.info()
+        captured = capsys.readouterr()
+        first_line, *_ = captured.out.splitlines()
+        assert first_line == "Dummy"
+
+    def test_scaled(self, capsys):
+        """
+        Test the ``info`` method of scaled objective functions.
+        """
+        phi = 3.2 * Dummy(3)
+        phi.info()
+        captured = capsys.readouterr()
+        first_line, *_ = captured.out.splitlines()
+        assert first_line == "Scaled"
+
+    def test_combo(self, capsys):
+        """
+        Test the ``info`` method of scaled objective functions.
+        """
+        phi = 3.2 * Dummy(3) + 3.4 * Dummy(3)
+        phi.info()
+        captured = capsys.readouterr()
+        first_line, *_ = captured.out.splitlines()
+        assert first_line == "Combo"

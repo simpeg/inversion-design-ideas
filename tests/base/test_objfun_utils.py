@@ -112,6 +112,11 @@ class TestSum:
         expected = factor * a + b + c if index == 0 else a + factor * b + c
         np.testing.assert_allclose(result @ vector, expected @ vector)
 
+    def test_error_empty_operators(self):
+        msg = "Invalid empty 'operators' iterator when summing."
+        with pytest.raises(ValueError, match=msg):
+            _sum([])
+
 
 class TestFloatToString:
     """Test the ``_float_to_str`` private function."""

@@ -448,7 +448,7 @@ def _sum(
     sparse arrays.
     """
     if not operators:
-        msg = "Invalid empty 'operators' array when summing."
+        msg = "Invalid empty 'operators' iterator when summing."
         raise ValueError(msg)
 
     result = copy(next(operators))

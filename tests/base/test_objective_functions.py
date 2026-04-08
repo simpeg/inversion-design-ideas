@@ -896,3 +896,37 @@ class TestEquality:
         combo_1 = (phi_a + phi_b + phi_c) + phi_d
         combo_2 = (phi_a + phi_b) + (phi_c + phi_d)
         assert combo_1 != combo_2
+
+
+class TestHash:
+    """
+    Test hash operations for objective functions.
+
+    The ``Objective`` and ``Scaled`` objects are hashable, but the ``Combo`` is not,
+    since it behaves like a list.
+    """
+
+    def test_objective(self):
+        phi_a, phi_b = Dummy(3), Dummy(3)
+        assert hash(phi_a) == hash(phi_a)
+        assert hash(phi_a) != hash(phi_b)
+
+    def test_scaled(self):
+        scaled_a, scaled_b = 3.0 * Dummy(3), 3.0 * Dummy(3)
+        assert hash(scaled_a) == hash(scaled_a)
+        assert hash(scaled_a) != hash(scaled_b)
+
+        phi = Dummy(3)
+        scaled_a = 3.0 * phi
+        scaled_b = 3.0 * phi
+        assert hash(scaled_a) == hash(scaled_b)
+
+    def test_combo(self):
+        """
+        Test that Combo is not hashable.
+        """
+        phi_a, phi_b = Dummy(3), Dummy(3)
+        combo = phi_a + phi_b
+        assert combo.__hash__ is None
+        with pytest.raises(TypeError):
+            hash(combo)

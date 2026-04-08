@@ -803,3 +803,98 @@ class TestFloatToString:
     )
     def test_float_to_str(self, number, string):
         assert _float_to_str(number) == string
+
+
+class TestEquality:
+    """Test equality conditions between objective functions."""
+
+    def test_equal_objective(self):
+        phi_a = Dummy(3)
+        phi_b = phi_a
+        assert phi_a == phi_b
+        phi_c = Dummy(3)
+        assert phi_a != phi_c
+
+    def test_equal_scaled(self):
+        phi_a = Dummy(3)
+        scaled_a = 3.0 * phi_a
+        scaled_b = 3.0 * phi_a
+        assert scaled_a == scaled_b
+
+        scaled_a = 3.0 * phi_a
+        scaled_b = -3.0 * phi_a
+        assert scaled_a != scaled_b
+
+        phi_b = Dummy(3)
+        scaled_a = 3.0 * phi_a
+        scaled_b = 3.0 * phi_b
+        assert scaled_a != scaled_b
+
+        scaled_a = 3.0 * phi_a
+        scaled_b = 2.0 * phi_b
+        assert scaled_a != scaled_b
+
+        scaled = 5.0 * phi_a
+        assert scaled != phi_a
+        scaled = 1.0 * phi_a
+        assert scaled != phi_a
+
+    def test_equal_combo(self):
+        phi_a, phi_b, phi_c = [Dummy(3) for _ in range(3)]
+
+        # Two different combos with same functions are equal
+        combo_1 = phi_a + phi_b
+        combo_2 = phi_a + phi_b
+        assert combo_1 == combo_2
+        combo_1 = phi_a + phi_b + phi_c
+        combo_2 = phi_a + phi_b + phi_c
+        assert combo_1 == combo_2
+
+        # Combos with same functions but different structure are not equal
+        combo_1 = (phi_a + phi_b + phi_c).flatten()
+        combo_2 = (phi_a + phi_b) + phi_c
+        assert combo_1 != combo_2
+
+        # Combos with scaled with same multipliers are equal
+        combo_1 = 3.0 * phi_a + 2.1 * phi_b
+        combo_2 = 3.0 * phi_a + 2.1 * phi_b
+        assert combo_1 == combo_2
+
+        # Combos with scaled with different multipliers are not equal
+        combo_1 = 3.0 * phi_a + 2.1 * phi_b
+        combo_2 = 6.0 * phi_a + 4.1 * phi_b
+        assert combo_1 != combo_2
+
+        # Combos are never equal to non-combos
+        combo = phi_a + phi_b
+        assert combo != phi_a
+        assert combo != 3.0 * phi_a
+
+        # Combos with different lengths are not equal
+        combo_1 = phi_a + phi_b + phi_c
+        combo_2 = phi_a + phi_b
+        assert combo_1 != combo_2
+
+        # Combos with functions in different order are not equal
+        combo_1 = phi_a + phi_b
+        combo_2 = phi_b + phi_a
+        assert combo_1 != combo_2
+
+    def test_equal_nested_combo(self):
+        phi_a, phi_b, phi_c, phi_d = [Dummy(3) for _ in range(4)]
+
+        # Nested combos should be the same if they have the same structure
+        combo_1 = (phi_a + phi_b) + (phi_c + phi_d)
+        combo_2 = (phi_a + phi_b) + (phi_c + phi_d)
+        assert combo_1 == combo_2
+
+        # Nested combos with different structures should be different
+        combo_1 = (phi_b + phi_a) + (phi_c + phi_d)
+        combo_2 = (phi_a + phi_b) + (phi_c + phi_d)
+        assert combo_1 != combo_2
+        combo_1 = (phi_a + phi_b) + (phi_d + phi_c)
+        combo_2 = (phi_a + phi_b) + (phi_c + phi_d)
+        assert combo_1 != combo_2
+        combo_1 = (phi_a + phi_b + phi_c) + phi_d
+        combo_2 = (phi_a + phi_b) + (phi_c + phi_d)
+        assert combo_1 != combo_2

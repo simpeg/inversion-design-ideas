@@ -223,6 +223,14 @@ class Scaled(Objective):
             phi_str = f"[ {phi_str} ]"
         return rf"${multiplier} \, {phi_str}$"
 
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, Scaled):
+            return False
+        return self.multiplier == other.multiplier and self.function == other.function
+
+    def __hash__(self):
+        return hash((self.multiplier, self.function))
+
     def __imul__(self, value: Real) -> Self:
         self.multiplier *= value
         return self
@@ -236,6 +244,9 @@ class Combo(Objective):
     """
     Sum of objective functions.
     """
+
+    # Combo behaves like a list and therefore it's not hashable
+    __hash__ = None
 
     def __init__(self, functions: list[Objective]):
         if not isinstance(functions, Sequence):
@@ -359,6 +370,16 @@ class Combo(Objective):
             functions.append(function_str)
         phi_str = " + ".join(functions)
         return f"${phi_str}$"
+
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, Combo):
+            return False
+        if len(self) != len(other):
+            return False
+        for self_term, other_term in zip(self, other, strict=True):
+            if self_term != other_term:
+                return False
+        return True
 
     def __iadd__(self, other) -> Self:
         if other.n_params != self.n_params:

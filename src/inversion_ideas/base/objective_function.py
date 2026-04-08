@@ -6,7 +6,7 @@ import sys
 from abc import ABC, abstractmethod
 from collections.abc import Iterable, Iterator, Sequence
 from copy import copy
-from numbers import Real
+from numbers import Integral, Real
 from typing import Self
 
 import numpy as np
@@ -115,10 +115,30 @@ class Objective(ABC):
         info += f" • n_params: {self.n_params}"
         sys.stdout.write(info + "\n")
 
-    def __add__(self, other) -> "Combo":
+    def __add__(self, other) -> "Combo | Self":
+        # Allow to add a zero to the objective function.
+        # This is needed to add objective functions with the sum() function.
+        if isinstance(other, Integral):
+            if other != 0:
+                msg = (
+                    f"Cannot add objective function '{self}' with '{other}'."
+                    "Objective functions cannot be added to integers other than zero."
+                )
+                raise ValueError(msg)
+            return self
         return Combo([self, other])
 
-    def __radd__(self, other) -> "Combo":
+    def __radd__(self, other) -> "Combo | Self":
+        # Allow to add a zero to the objective function.
+        # This is needed to add objective functions with the sum() function.
+        if isinstance(other, Integral):
+            if other != 0:
+                msg = (
+                    f"Cannot add objective function '{self}' with '{other}'."
+                    "Objective functions cannot be added to integers other than zero."
+                )
+                raise ValueError(msg)
+            return self
         return Combo([other, self])
 
     def __mul__(self, value: Real) -> "Scaled":

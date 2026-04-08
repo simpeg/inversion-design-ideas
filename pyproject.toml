@@ -9,7 +9,7 @@ dependencies = [
     "numpy>=2.0.0",
     "scipy",
     "rich",
-    "simpeg==0.25.0",
+    "simpeg>=0.25.0,<0.26",
     "pymatsolver==0.4.0",
     "discretize==0.12.0",
 ]
@@ -86,3 +86,14 @@ ignore = [
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
+
+[tool.coverage.run]
+source = ["inversion_ideas"]
+omit = [
+    "**/_version.py",
+    "**/__init__.py",
+]
+branch = true
+
+[tool.coverage.report]
+show_missing = true

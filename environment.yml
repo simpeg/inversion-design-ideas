@@ -8,7 +8,7 @@ dependencies:
   - numpy>=2.0.0
   - scipy
   - rich
-  - simpeg==0.25
+  - simpeg==0.25.2
   - pymatsolver==0.4.0
   - discretize==0.12.0
   # Required by notebooks
@@ -19,6 +19,8 @@ dependencies:
   - jupyter
   # Dev
   - pytest
+  - pytest-cov
+  - coverage
   - ruff
   - mypy
   - scipy-stubs

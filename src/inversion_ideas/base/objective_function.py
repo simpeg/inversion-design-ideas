@@ -2,8 +2,9 @@
 Classes to represent objective functions.
 """
 
+import sys
 from abc import ABC, abstractmethod
-from collections.abc import Iterable, Iterator
+from collections.abc import Iterable, Iterator, Sequence
 from copy import copy
 from numbers import Real
 from typing import Self
@@ -14,6 +15,8 @@ from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from ..typing import Model, SparseArray
 
+FLOAT_TO_STR_PRECISION = 3
+
 
 class Objective(ABC):
     """
@@ -22,11 +25,10 @@ class Objective(ABC):
 
     _base_str = "φ"
     _base_latex = r"\phi"
-    name = None
 
     @abstractmethod
     def __init__(self):
-        pass
+        pass  # pragma: no cover
 
     @property
     @abstractmethod
@@ -61,31 +63,57 @@ class Objective(ABC):
         Diagonal of the Hessian.
         """
 
-    def set_name(self, value):
+    @property
+    def name(self) -> str | None:
         """
-        Set name for the objective function.
+        Name of the objective function.
         """
-        if not (isinstance(value, str) or value is None):
+        return getattr(self, "_name", None)
+
+    @name.setter
+    def name(self, value: str | None):
+        """
+        Setter for the name property.
+        """
+        if not isinstance(value, str | None):
             msg = (
-                f"Invalid name '{value}' of type {type(value)}. "
+                f"Invalid name '{value}' of type '{type(value).__name__}'. "
                 "Please provide a string or None."
             )
             raise TypeError(msg)
+        self._name = value
+
+    def set_name(self, value: str | None):
+        """
+        Set name for the objective function.
+        """
         self.name = value
-        # Return self so we can pipe this method
-        return self
+        return self  # return self so we can pipe this method
 
     def __repr__(self):
-        repr_ = f"{self._base_str}"
+        title = f"{self._base_str}"
         if self.name is not None:
-            repr_ += f"{self.name}"
-        return f"{repr_}(m)"
+            title += f"{self.name}"
+        return f"{title}(m)"
 
     def _repr_latex_(self):
         repr_ = f"{self._base_latex}"
         if self.name is not None:
             repr_ += rf"_{{{self.name}}}"
         return f"${repr_} (m)$"
+
+    def info(self):
+        """Get information about the objective function."""
+        type_ = type(self)
+        class_name = type_.__name__
+        info = f"{class_name}\n"
+        info += "-" * len(class_name) + "\n"
+        info += f" • Class: {type_.__module__}.{type_.__name__}\n"
+        info += f" • Memory address: {hex(id(self))}\n"
+        info += f" • String representation: {self}\n"
+        info += f" • name: {self.name}\n"
+        info += f" • n_params: {self.n_params}"
+        sys.stdout.write(info + "\n")
 
     def __add__(self, other) -> "Combo | Self":
         # Allow to add a zero to the objective function.
@@ -175,31 +203,39 @@ class Scaled(Objective):
         """
         return self.multiplier * self.function.hessian_diagonal(model)
 
+    def info(self):
+        type_ = type(self)
+        class_name = type_.__name__
+        info = f"{class_name}\n"
+        info += "-" * len(class_name) + "\n"
+        info += f" • Class: {type_.__module__}.{type_.__name__}\n"
+        info += f" • Memory address: {hex(id(self))}\n"
+        info += f" • String representation: {self}\n"
+        info += f" • n_params: {self.n_params}\n"
+        info += f" • multiplier: {self.multiplier}\n"
+        info += f" • function: {self.function} ({type(self.function).__name__})"
+        sys.stdout.write(info + "\n")
+
     def __repr__(self):
-        fmt = ".2e" if np.abs(self.multiplier) > 1e3 else ".2f"
+        multiplier = _float_to_str(self.multiplier)
         phi_repr = f"{self.function}"
         # Add brackets in case that the function has a multiplier or is a Combo
         if isinstance(self.function, Iterable) or hasattr(self.function, "multiplier"):
             phi_repr = f"[{phi_repr}]"
-        return f"{self.multiplier:{fmt}} {phi_repr}"
+        return f"{multiplier:} {phi_repr}"
 
     def _repr_latex_(self):
-        fmt = (
-            ".2e"
-            if np.abs(self.multiplier) > 1e2 or np.abs(self.multiplier) < 1e-2
-            else ".2f"
-        )
-        multiplier_str = f"{self.multiplier:{fmt}}"
-        if "e" in multiplier_str:
-            base, exp = multiplier_str.split("e")
+        multiplier = _float_to_str(self.multiplier)
+        if "e" in multiplier:
+            base, exp = multiplier.split("e")
             exp = exp.replace("+", "")
             exp = str(int(exp))
-            multiplier_str = rf"{base} \cdot 10^{{{exp}}}"
+            multiplier = rf"{base} \cdot 10^{{{exp}}}"
         phi_str = self.function._repr_latex_().strip("$")
         # Add brackets in case that the function has a multiplier or is a Combo
         if isinstance(self.function, Iterable) or hasattr(self.function, "multiplier"):
             phi_str = f"[ {phi_str} ]"
-        return rf"${multiplier_str} \, {phi_str}$"
+        return rf"${multiplier} \, {phi_str}$"
 
     def __imul__(self, value: Real) -> Self:
         self.multiplier *= value
@@ -216,7 +252,22 @@ class Combo(Objective):
     """
 
     def __init__(self, functions: list[Objective]):
-        _get_n_params(functions)  # check if functions have the same n_params
+        if not isinstance(functions, Sequence):
+            msg = (
+                f"Invalid 'functions' argument of type '{type(functions).__name__}'. "
+                "It must be a sequence of `Objective` functions."
+            )
+            raise TypeError(msg)
+        if not functions:
+            msg = (
+                "Invalid empty 'functions' argument. "
+                "The list of objective functions must contain at least one function."
+            )
+            raise ValueError(msg)
+
+        # Call the _get_n_params function to check if functions have the same n_params
+        _get_n_params(functions)
+
         self._functions = functions
 
     def __iter__(self):
@@ -233,6 +284,9 @@ class Combo(Objective):
         """
         List of objective functions in the sum.
         """
+        if not self._functions:
+            msg = "Invalid empty `Combo` without functions."
+            raise ValueError(msg)
         return self._functions
 
     @property
@@ -266,9 +320,6 @@ class Combo(Objective):
         """
         Diagonal of the Hessian.
         """
-        if not self.functions:
-            msg = "Invalid empty Combo when summing."
-            raise ValueError(msg)
         return _sum_arrays(f.hessian_diagonal(model) for f in self.functions)
 
     def flatten(self) -> "Combo":
@@ -285,12 +336,31 @@ class Combo(Objective):
         """
         return _contains(self, objective)
 
+    def info(self):
+        """Get information about the combo objective function."""
+        type_ = type(self)
+        class_name = type_.__name__
+        info = f"{class_name}\n"
+        info += "-" * len(class_name) + "\n"
+        info += f" • Class: {type_.__module__}.{type_.__name__}\n"
+        info += f" • Memory address: {hex(id(self))}\n"
+        info += f" • String representation: {self}\n"
+        info += f" • n_params: {self.n_params}\n"
+        info += f" • size: {len(self)}\n"
+        info += " • functions:\n"
+        for i, function in enumerate(self):
+            info += (
+                f"   {i:2d}) {function}: "
+                f"{type(function).__name__} at {hex(id(function))}\n"
+            )
+        sys.stdout.write(info)
+
     def __repr__(self):
         functions = []
         for function in self.functions:
             function_str = repr(function)
             if isinstance(function, Iterable):
-                function_str = f"[ {function_str} ]"
+                function_str = f"[{function_str}]"
             functions.append(function_str)
         return " + ".join(functions)
 
@@ -299,10 +369,10 @@ class Combo(Objective):
         for function in self.functions:
             function_str = function._repr_latex_().strip("$")
             if isinstance(function, Iterable):
-                function_str = f"[ {function_str} ]"
+                function_str = f"[{function_str}]"
             functions.append(function_str)
         phi_str = " + ".join(functions)
-        return f"$ {phi_str} $"
+        return f"${phi_str}$"
 
     def __iadd__(self, other) -> Self:
         if other.n_params != self.n_params:
@@ -369,7 +439,12 @@ def _get_n_params(functions: list) -> int:
     n_params_list = [f.n_params for f in functions]
     n_params = n_params_list[0]
     if not all(p == n_params for p in n_params_list):
-        msg = "Invalid objective functions with different n_params."
+        functions_str = ", ".join(str(f) for f in functions)
+        n_params_str = ", ".join(str(n) for n in n_params_list)
+        msg = (
+            f"Invalid objective functions {functions_str} with different n_params: "
+            f"{n_params_str}, respectively."
+        )
         raise ValueError(msg)
     return n_params
 
@@ -418,3 +493,37 @@ def _sum_arrays(arrays: Iterator[npt.NDArray]) -> npt.NDArray:
     for array in arrays:
         result += array
     return result
+
+
+def _float_to_str(number: float, precision: int = FLOAT_TO_STR_PRECISION) -> str:
+    """
+    Format float to string.
+
+    Formats a floating point number into string.
+
+    Parameters
+    ----------
+    number : float
+        Floating point number to represent as a string.
+    precision : int
+        Decimal point precision for positional and scientific representation. The
+        ``precision`` is used to choose between a positional representation (e.g. 1.013)
+        and a scientific notation. If the absolute value of the number is between
+        ``10**(-precision)`` and ``10**precision``, then the positional representation
+        will be used, otherwise the scientific notation will be chosen.
+        It must be a positive integer.
+
+    Returns
+    -------
+    str
+        String representation of the floating point number.
+    """
+    if precision <= 0:
+        msg = f"Invalid precision value '{precision}'. It must be a positive integer."
+        raise ValueError(msg)
+    if number == 0.0:
+        return "0."
+    min_bound, max_bound = 10 ** (-precision), 10**precision
+    if min_bound <= np.abs(number) <= max_bound:
+        return np.format_float_positional(number, precision=precision)
+    return np.format_float_scientific(number, precision=precision)

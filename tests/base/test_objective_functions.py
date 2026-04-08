@@ -157,6 +157,34 @@ class TestObjectiveOperations:
         assert combo[0] is a
         assert combo[1] is b
 
+    def test_add_zero(self):
+        """
+        Test adding objective functions to the zero integer.
+
+        This feature is useful for adding a collection of objective functions through
+        the ``sum()`` built-in function.
+        """
+        phi = Dummy(3)
+        # Test __add__
+        result = phi + 0
+        assert result is phi
+        # Test __radd__
+        result = 0 + phi
+        assert result is phi
+
+    def test_add_error_no_zero(self):
+        """
+        Test error when adding integer different than zero to objective function.
+        """
+        phi = Dummy(3)
+        # Test add
+        msg = re.escape(f"Cannot add objective function '{phi}' with '1'.")
+        with pytest.raises(ValueError, match=msg):
+            phi + 1
+        # Test radd
+        with pytest.raises(ValueError, match=msg):
+            1 + phi
+
     def test_add_n(self):
         """
         Test addition of multiple objective functions into nested Combos.
@@ -339,6 +367,26 @@ class TestObjectiveOperations:
         )
         with pytest.raises(ValueError, match=msg):
             combo += phi_c
+
+    def test_sum(self):
+        """
+        Test adding a collection of objective functions through ``sum()``.
+        """
+        # Sum two objective functions
+        phi_a, phi_b, phi_c, phi_d = [
+            Dummy(3).set_name(n) for n in ("a", "b", "c", "d")
+        ]
+        collection = [phi_a, phi_b, phi_c, phi_d]
+        combo = sum(collection)
+        expected = phi_a + phi_b + phi_c + phi_d
+        assert len(combo) == len(expected)
+        for term, term_expected in zip(combo, expected, strict=True):
+            assert term is term_expected
+
+        # Sum more than two objective functions
+        # Sum with scaled in the collection
+        # Sum with combo in the collection
+        # Sum with multiple combos (nested) in the collection
 
 
 class TestComboExtraMethods:

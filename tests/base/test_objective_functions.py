@@ -163,7 +163,7 @@ class TestObjectiveOperations:
         This feature is useful for adding a collection of objective functions through
         the ``sum()`` built-in function.
         """
-        phi = Dummy(3)
+        phi = Dummy(self.n_params)
         # Test __add__
         result = phi + 0
         assert result is phi
@@ -175,7 +175,7 @@ class TestObjectiveOperations:
         """
         Test error when adding integer different than zero to objective function.
         """
-        phi = Dummy(3)
+        phi = Dummy(self.n_params)
         # Test add
         msg = re.escape(f"Cannot add objective function '{phi}' with '1'.")
         with pytest.raises(ValueError, match=msg):
@@ -371,21 +371,56 @@ class TestObjectiveOperations:
         """
         Test adding a collection of objective functions through ``sum()``.
         """
-        # Sum two objective functions
+        # Add multiple objective functions
+        # --------------------------------
         phi_a, phi_b, phi_c, phi_d = [
-            Dummy(3).set_name(n) for n in ("a", "b", "c", "d")
+            Dummy(self.n_params).set_name(n) for n in ("a", "b", "c", "d")
         ]
         collection = [phi_a, phi_b, phi_c, phi_d]
+
         combo = sum(collection)
         expected = phi_a + phi_b + phi_c + phi_d
-        assert len(combo) == len(expected)
-        for term, term_expected in zip(combo, expected, strict=True):
-            assert term is term_expected
+        assert combo == expected
 
-        # Sum more than two objective functions
-        # Sum with scaled in the collection
-        # Sum with combo in the collection
-        # Sum with multiple combos (nested) in the collection
+        combo = sum(collection).flatten()
+        expected = (phi_a + phi_b + phi_c + phi_d).flatten()
+        assert combo == expected
+
+        # Add objective functions including scaled in the collection
+        # ----------------------------------------------------------
+        scaled_a, scaled_d = 3.0 * phi_a, 5.2 * phi_d
+        collection = [scaled_a, phi_b, phi_c, scaled_d]
+
+        combo = sum(collection)
+        expected = scaled_a + phi_b + phi_c + scaled_d
+        assert combo == expected
+
+        combo = sum(collection).flatten()
+        expected = (scaled_a + phi_b + phi_c + scaled_d).flatten()
+        assert combo == expected
+
+        # Add objective functions including combos in the collection
+        # ----------------------------------------------------------
+        combo_a = phi_a + phi_b
+        collection = [combo_a, phi_c, phi_d]
+
+        combo = sum(collection)
+        expected = combo_a + phi_c + phi_d
+        assert combo == expected
+
+        combo = sum(collection).flatten()
+        expected = (combo_a + phi_c + phi_d).flatten()
+        assert combo == expected
+
+        # Check that order in collection matters
+        # --------------------------------------
+        collection = [phi_a, phi_b, phi_c, phi_d]
+        combo = phi_d + phi_c + phi_a + phi_b
+        assert combo != sum(collection)
+
+        collection = [phi_a, phi_b, phi_c, phi_d]
+        combo = (phi_d + phi_c + phi_a + phi_b).flatten()
+        assert combo != sum(collection).flatten()
 
 
 class TestComboExtraMethods:

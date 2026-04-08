@@ -11,7 +11,6 @@ from scipy.sparse import dia_array, sparray
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from inversion_ideas.base import Combo, Objective, Scaled
-from inversion_ideas.base.objective_function import _float_to_str
 
 
 class Dummy(Objective):
@@ -759,6 +758,12 @@ class TestScaledRepresentations:
         scaled = multiplier * phi
         assert scaled._repr_latex_() == f"${multiplier_str} \\, {phi_latex}$"
 
+        multiplier, multiplier_str = 3.4, "3.4"
+        combo = phi + Dummy(3).set_name("b")
+        combo_latex = combo._repr_latex_().strip("$")
+        scaled = multiplier * combo
+        assert scaled._repr_latex_() == f"${multiplier_str} \\, [{combo_latex}]$"
+
 
 class TestComboRepresentations:
     """
@@ -810,44 +815,166 @@ class TestComboRepresentations:
         )
 
 
-class TestFloatToString:
-    """Test the ``_float_to_str`` private function."""
+class TestInfo:
+    """
+    Test the ``info`` method of objective functions.
+    """
 
-    @pytest.mark.parametrize("precision", [0, -1])
-    def test_invalid_precision(self, precision):
-        msg = re.escape(f"Invalid precision value '{precision}'")
-        with pytest.raises(ValueError, match=msg):
-            _float_to_str(3.1416, precision)
+    def test_objective(self, capsys):
+        """
+        Test the ``info`` method of objective functions.
+        """
+        phi = Dummy(3)
+        phi.info()
+        captured = capsys.readouterr()
+        first_line, *_ = captured.out.splitlines()
+        assert first_line == "Dummy"
 
-    @pytest.mark.parametrize(
-        ("number", "string"),
-        [
-            # Zero
-            (0, "0."),
-            # Positional
-            (3.14, "3.14"),
-            (3.1416, "3.142"),
-            (-3.14, "-3.14"),
-            (-3.1416, "-3.142"),
-            (0.001, "0.001"),
-            (-0.001, "-0.001"),
-            (0.123456, "0.123"),
-            (1000.0, "1000."),
-            (-1000.0, "-1000."),
-            (999.123, "999.123"),
-            (999.1235, "999.124"),
-            (-999.123, "-999.123"),
-            (-999.1235, "-999.124"),
-            # Scientific
-            (3e-5, "3.e-05"),
-            (-3e-5, "-3.e-05"),
-            (3.1416e-5, "3.142e-05"),
-            (-3.1416e-5, "-3.142e-05"),
-            (0.0001, "1.e-04"),
-            (-0.0001, "-1.e-04"),
-            (1000.123, "1.000e+03"),
-            (-1000.123, "-1.000e+03"),
-        ],
-    )
-    def test_float_to_str(self, number, string):
-        assert _float_to_str(number) == string
+    def test_scaled(self, capsys):
+        """
+        Test the ``info`` method of scaled objective functions.
+        """
+        phi = 3.2 * Dummy(3)
+        phi.info()
+        captured = capsys.readouterr()
+        first_line, *_ = captured.out.splitlines()
+        assert first_line == "Scaled"
+
+    def test_combo(self, capsys):
+        """
+        Test the ``info`` method of scaled objective functions.
+        """
+        phi = 3.2 * Dummy(3) + 3.4 * Dummy(3)
+        phi.info()
+        captured = capsys.readouterr()
+        first_line, *_ = captured.out.splitlines()
+        assert first_line == "Combo"
+
+
+class TestEquality:
+    """Test equality conditions between objective functions."""
+
+    def test_equal_objective(self):
+        phi_a = Dummy(3)
+        phi_b = phi_a
+        assert phi_a == phi_b
+        phi_c = Dummy(3)
+        assert phi_a != phi_c
+
+    def test_equal_scaled(self):
+        phi_a = Dummy(3)
+        scaled_a = 3.0 * phi_a
+        scaled_b = 3.0 * phi_a
+        assert scaled_a == scaled_b
+
+        scaled_a = 3.0 * phi_a
+        scaled_b = -3.0 * phi_a
+        assert scaled_a != scaled_b
+
+        phi_b = Dummy(3)
+        scaled_a = 3.0 * phi_a
+        scaled_b = 3.0 * phi_b
+        assert scaled_a != scaled_b
+
+        scaled_a = 3.0 * phi_a
+        scaled_b = 2.0 * phi_b
+        assert scaled_a != scaled_b
+
+        scaled = 5.0 * phi_a
+        assert scaled != phi_a
+        scaled = 1.0 * phi_a
+        assert scaled != phi_a
+
+    def test_equal_combo(self):
+        phi_a, phi_b, phi_c = [Dummy(3) for _ in range(3)]
+
+        # Two different combos with same functions are equal
+        combo_1 = phi_a + phi_b
+        combo_2 = phi_a + phi_b
+        assert combo_1 == combo_2
+        combo_1 = phi_a + phi_b + phi_c
+        combo_2 = phi_a + phi_b + phi_c
+        assert combo_1 == combo_2
+
+        # Combos with same functions but different structure are not equal
+        combo_1 = (phi_a + phi_b + phi_c).flatten()
+        combo_2 = (phi_a + phi_b) + phi_c
+        assert combo_1 != combo_2
+
+        # Combos with scaled with same multipliers are equal
+        combo_1 = 3.0 * phi_a + 2.1 * phi_b
+        combo_2 = 3.0 * phi_a + 2.1 * phi_b
+        assert combo_1 == combo_2
+
+        # Combos with scaled with different multipliers are not equal
+        combo_1 = 3.0 * phi_a + 2.1 * phi_b
+        combo_2 = 6.0 * phi_a + 4.1 * phi_b
+        assert combo_1 != combo_2
+
+        # Combos are never equal to non-combos
+        combo = phi_a + phi_b
+        assert combo != phi_a
+        assert combo != 3.0 * phi_a
+
+        # Combos with different lengths are not equal
+        combo_1 = phi_a + phi_b + phi_c
+        combo_2 = phi_a + phi_b
+        assert combo_1 != combo_2
+
+        # Combos with functions in different order are not equal
+        combo_1 = phi_a + phi_b
+        combo_2 = phi_b + phi_a
+        assert combo_1 != combo_2
+
+    def test_equal_nested_combo(self):
+        phi_a, phi_b, phi_c, phi_d = [Dummy(3) for _ in range(4)]
+
+        # Nested combos should be the same if they have the same structure
+        combo_1 = (phi_a + phi_b) + (phi_c + phi_d)
+        combo_2 = (phi_a + phi_b) + (phi_c + phi_d)
+        assert combo_1 == combo_2
+
+        # Nested combos with different structures should be different
+        combo_1 = (phi_b + phi_a) + (phi_c + phi_d)
+        combo_2 = (phi_a + phi_b) + (phi_c + phi_d)
+        assert combo_1 != combo_2
+        combo_1 = (phi_a + phi_b) + (phi_d + phi_c)
+        combo_2 = (phi_a + phi_b) + (phi_c + phi_d)
+        assert combo_1 != combo_2
+        combo_1 = (phi_a + phi_b + phi_c) + phi_d
+        combo_2 = (phi_a + phi_b) + (phi_c + phi_d)
+        assert combo_1 != combo_2
+
+
+class TestHash:
+    """
+    Test hash operations for objective functions.
+
+    The ``Objective`` and ``Scaled`` objects are hashable, but the ``Combo`` is not,
+    since it behaves like a list.
+    """
+
+    def test_objective(self):
+        phi_a, phi_b = Dummy(3), Dummy(3)
+        assert hash(phi_a) == hash(phi_a)
+        assert hash(phi_a) != hash(phi_b)
+
+    def test_scaled(self):
+        scaled_a, scaled_b = 3.0 * Dummy(3), 3.0 * Dummy(3)
+        assert hash(scaled_a) == hash(scaled_a)
+        assert hash(scaled_a) != hash(scaled_b)
+
+        phi = Dummy(3)
+        scaled_a = 3.0 * phi
+        scaled_b = 3.0 * phi
+        assert hash(scaled_a) == hash(scaled_b)
+
+    def test_combo(self):
+        """
+        Test that Combo is not hashable.
+        """
+        phi_a, phi_b = Dummy(3), Dummy(3)
+        combo = phi_a + phi_b
+        assert combo.__hash__ is None
+        with pytest.raises(TypeError):
+            hash(combo)

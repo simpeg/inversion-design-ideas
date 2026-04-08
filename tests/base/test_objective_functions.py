@@ -710,6 +710,12 @@ class TestScaledRepresentations:
         scaled = multiplier * phi
         assert scaled._repr_latex_() == f"${multiplier_str} \\, {phi_latex}$"
 
+        multiplier, multiplier_str = 3.4, "3.4"
+        combo = phi + Dummy(3).set_name("b")
+        combo_latex = combo._repr_latex_().strip("$")
+        scaled = multiplier * combo
+        assert scaled._repr_latex_() == f"${multiplier_str} \\, [{combo_latex}]$"
+
 
 class TestComboRepresentations:
     """

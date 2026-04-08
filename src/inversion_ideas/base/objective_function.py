@@ -220,7 +220,7 @@ class Scaled(Objective):
         phi_str = self.function._repr_latex_().strip("$")
         # Add brackets in case that the function has a multiplier or is a Combo
         if isinstance(self.function, Iterable) or hasattr(self.function, "multiplier"):
-            phi_str = f"[ {phi_str} ]"
+            phi_str = f"[{phi_str}]"
         return rf"${multiplier} \, {phi_str}$"
 
     def __imul__(self, value: Real) -> Self:

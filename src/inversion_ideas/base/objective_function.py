@@ -306,7 +306,10 @@ class Combo(Objective):
         """
         Diagonal of the Hessian.
         """
-        return _sum_arrays(f.hessian_diagonal(model) for f in self.functions)
+        return sum(
+            (f.hessian_diagonal(model) for f in self.functions),
+            start=np.zeros(self.n_params),
+        )
 
     def flatten(self) -> "Combo":
         """
@@ -441,7 +444,7 @@ def _sum(
     """
     Sum objects within an iterator.
 
-    This function supports summing together ``LinearOperators`` with Numpy arrays and
+    This function supports summing together ``LinearOperator``s with Numpy arrays and
     sparse arrays.
     """
     if not operators:
@@ -455,29 +458,6 @@ def _sum(
             result += aslinearoperator(operator)  # type: ignore[arg-type]
         else:
             result += operator  # type: ignore[operator]
-    return result
-
-
-def _sum_arrays(arrays: Iterator[npt.NDArray]) -> npt.NDArray:
-    """
-    Sum arrays within an iterator.
-
-    Parameters
-    ----------
-    arrays : Iterator
-        Iterator with arrays.
-
-    See Also
-    --------
-    _sum : Supports summing arrays, sparse arrays and ``LinearOperator``s.
-    """
-    if not arrays:
-        msg = "Invalid empty 'arrays' array when summing."
-        raise ValueError(msg)
-
-    result = copy(next(arrays))
-    for array in arrays:
-        result += array
     return result
 
 

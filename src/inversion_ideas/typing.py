@@ -3,7 +3,7 @@ Custom types used for type hints.
 """
 
 from collections.abc import Callable
-from typing import TYPE_CHECKING, Protocol, TypeAlias
+from typing import TYPE_CHECKING, Protocol, TypeAlias, runtime_checkable
 
 import numpy as np
 import numpy.typing as npt
@@ -56,4 +56,14 @@ class Log(Protocol):
         raise NotImplementedError
 
     def get_minimizer_callback(self) -> Callable[["MinimizerResult"], None]:
+        raise NotImplementedError
+
+
+@runtime_checkable
+class HasDiagonal(Protocol):
+    """
+    Protocol to define abstract array-like objects that has a ``diagonal`` method.
+    """
+
+    def diagonal(self) -> npt.NDArray[np.float64]:
         raise NotImplementedError

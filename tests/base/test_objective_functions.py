@@ -82,9 +82,6 @@ class Dummy(Objective):
                 raise ValueError(msg)
         return hessian
 
-    def hessian_diagonal(self, model):  # noqa: ARG002
-        return (self.a_matrix.T @ self.a_matrix).diagonal()
-
 
 def assert_equal_linear_operators(a, b, to_dense=False, seed=None, **kwargs):
     """
@@ -423,6 +420,37 @@ class TestObjectiveOperations:
         assert combo != sum(collection).flatten()
 
 
+class TestObjectiveHessianApprox:
+    """
+    Test the default implementation of ``Objective.hessian_approx``.
+    """
+
+    n_params = 5
+
+    @pytest.fixture
+    def model(self):
+        rng = np.random.default_rng(seed=42)
+        model = rng.uniform(size=self.n_params)
+        return model
+
+    @pytest.mark.parametrize("hessian_type", ["dense", "sparse"])
+    def test_hessian_approx(self, model, hessian_type):
+        """
+        Test if the default implementation returns the Hessian.
+        """
+        phi = Dummy(3, seed=42, hessian_type=hessian_type)
+        assert_equal_linear_operators(phi.hessian(model), phi.hessian_approx(model))
+
+    def test_hessian_approx_linop_error(self, model):
+        """
+        Test error on hessian_approx if hessian is a LinearOperator.
+        """
+        phi = Dummy(3, seed=42, hessian_type="linop")
+        msg = re.escape("Cannot build a 'hessian_approx' for objective function")
+        with pytest.raises(TypeError, match=msg):
+            phi.hessian_approx(model)
+
+
 class TestComboExtraMethods:
     """
     Test additional methods of the Combo class.
@@ -621,15 +649,28 @@ class TestComboMethods:
             )
         assert_equal_linear_operators(combo.hessian(model), hessian_a + hessian_b)
 
-    def test_hessian_diagonal(self, model):
+    @pytest.mark.parametrize(
+        "hessian_types",
+        [
+            pytest.param((type_a, type_b), id=f"{type_a}-{type_b}")
+            for type_a, type_b in itertools.combinations_with_replacement(
+                ("dense", "sparse"), 2
+            )
+        ],
+    )
+    def test_hessian_approx(self, model, hessian_types):
         """
-        Test the hessian_diagonal method of Combo objective functions.
+        Test the hessian_approx method of Combo objective functions.
         """
-        phi_a, phi_b = Dummy(self.n_params, seed=42), Dummy(self.n_params, seed=43)
+        type_a, type_b = hessian_types
+        rng = np.random.default_rng(seed=42)
+        phi_a = Dummy(self.n_params, seed=rng, hessian_type=type_a)
+        phi_b = Dummy(self.n_params, seed=rng, hessian_type=type_b)
         combo = phi_a + phi_b
-        np.testing.assert_allclose(
-            combo.hessian_diagonal(model),
-            phi_a.hessian_diagonal(model) + phi_b.hessian_diagonal(model),
+        assert_equal_linear_operators(
+            combo.hessian_approx(model),
+            phi_a.hessian_approx(model) + phi_b.hessian_approx(model),
+            to_dense=True,
         )
 
 
@@ -676,14 +717,17 @@ class TestScaledMethods:
             scaled.hessian(model), self.scalar * phi.hessian(model)
         )
 
-    def test_hessian_diagonal(self, model):
+    @pytest.mark.parametrize("hessian_type", ["dense", "sparse"])
+    def test_hessian_approx(self, model, hessian_type):
         """
-        Test the hessian_diagonal method of Scaled objective functions.
+        Test the hessian_approx method of Scaled objective functions.
         """
-        phi = Dummy(self.n_params)
+        phi = Dummy(self.n_params, seed=42, hessian_type=hessian_type)
         scaled = self.scalar * phi
-        np.testing.assert_allclose(
-            scaled.hessian_diagonal(model), self.scalar * phi.hessian_diagonal(model)
+        assert_equal_linear_operators(
+            scaled.hessian_approx(model),
+            self.scalar * phi.hessian_approx(model),
+            to_dense=True,
         )
 
 

@@ -113,19 +113,34 @@ class DataMisfit(Objective):
         weights_matrix = aslinearoperator(self.weights_matrix)
         return 2 * jac.T @ weights_matrix.T @ weights_matrix @ jac
 
-    def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
+    def hessian_approx(self, model: Model) -> dia_array:
         """
-        Diagonal of the Hessian.
+        Approximate version of the Hessian.
+
+        Approximates the Hessian by a diagonal matrix whose diagonal is the diagonal
+        of the Hessian of the objective function.
+
+        Parameters
+        ----------
+        model : (n_params) array
+            Array with model values.
+
+        Returns
+        -------
+        (n_params, n_params) sparse array
+            2D diagonal sparse array that approximates the Hessian of the objective
+            function.
         """
         jac = self.simulation.jacobian(model)
         if isinstance(jac, LinearOperator):
             msg = (
-                "`DataMisfit.hessian_diagonal()` is not implemented for simulations "
+                "`DataMisfit.hessian_approx` is not implemented for simulations "
                 "that return the jacobian as a LinearOperator."
             )
             raise NotImplementedError(msg)
         jtj_diag = np.einsum("i,ij,ij->j", self.weights_matrix.diagonal(), jac, jac)
-        return 2 * jtj_diag
+        diagonal = 2 * jtj_diag
+        return diags_array(diagonal)
 
     @property
     def n_params(self):

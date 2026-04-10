@@ -156,8 +156,7 @@ class DataMisfit(Objective):
             # Estimate diagonal
             diagonal = get_diagonal(hessian)
         else:
-            jtj_diag = np.einsum("i,ij,ij->j", self.weights, jac, jac)
-            diagonal = 2 * jtj_diag
+            diagonal = 2 * np.einsum("i,ij,ij->j", self.weights, jac, jac)
         return diags_array(diagonal)
 
     @property

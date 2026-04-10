@@ -7,11 +7,20 @@ modify the objective function after each iteration and optionally a logger.
 """
 
 import typing
+import warnings
 from collections.abc import Callable
 
+from rich.console import Group, RenderableType
+from rich.live import Live
+from rich.spinner import Spinner
+from rich.text import Text
+from rich.tree import Tree
+
+from inversion_ideas.errors import ConvergenceWarning
+
 from .base import Condition, Directive, Minimizer, Objective
-from .inversion_log import InversionLog, InversionLogRich
-from .typing import Model
+from .inversion_log import InversionLog, InversionLogRich, MinimizerLog
+from .typing import Log, Model
 from .utils import array_to_str, debug, get_logger
 
 
@@ -40,11 +49,15 @@ class Inversion:
         no limit on the total amount of iterations.
     cache_models : bool, optional
         Whether to cache each model after each iteration.
-    log : InversionLog or bool, optional
-        Instance of :class:`InversionLog` to store information about the inversion.
+    log : Log or bool, optional
+        Instance of :class:`InversionLog` to store information about the inversion,
+        or any object that follows the :class:`inversion_ideas.typing.Log` protocol.
         If `True`, a default :class:`InversionLog` is going to be used.
         If `False`, no log will be assigned to the inversion, and :attr:`Inversion.log`
         will be ``None``.
+    log_minimizers : bool, optional
+        Whether to log the minimizers or not. Logging minimizers is only possible when
+        the ``minimizer`` is an instance of :class:`inversion_ideas.base.Minimizer``.
     minimizer_kwargs : dict, optional
         Extra arguments that will be passed to the ``minimizer`` when called.
     """
@@ -59,7 +72,8 @@ class Inversion:
         stopping_criteria: Condition | Callable[[Model], bool],
         max_iterations: int | None = None,
         cache_models=False,
-        log: "InversionLog | bool" = True,
+        log: Log | InversionLog | bool = True,
+        log_minimizers: bool = True,
         minimizer_kwargs: dict | None = None,
     ):
         self.objective_function = objective_function
@@ -72,6 +86,7 @@ class Inversion:
         if minimizer_kwargs is None:
             minimizer_kwargs = {}
         self.minimizer_kwargs = minimizer_kwargs
+        self._log_minimizers = log_minimizers
 
         # Assign log
         if log is False:
@@ -85,6 +100,11 @@ class Inversion:
 
         # Assign model as a copy of the initial model
         self.model = initial_model.copy()
+
+        # TODO: Support for handling custom callbacks for the minimizer
+        if log is not None and "callback" in self.minimizer_kwargs:
+            msg = "Passing a custom callback for the minimizer is not yet supported."
+            raise NotImplementedError(msg)
 
     def __next__(self):
         """
@@ -116,17 +136,21 @@ class Inversion:
 
         # Check for stopping criteria before trying to run the iteration
         if self.stopping_criteria(self.model):
-            get_logger().info(
+            get_logger().debug(
                 "🎉 Inversion successfully finished due to stopping criteria."
             )
+            self._stop_code = 0
             raise StopIteration
 
         # Check if maximum number of iterations have been reached
         if self.max_iterations is not None and self.counter >= self.max_iterations:
-            get_logger().info(
+            msg = (
                 "⚠️ Inversion finished after reaching maximum number of iterations "
                 f"({self.max_iterations})."
             )
+            get_logger().debug(msg)
+            warnings.warn(msg, ConvergenceWarning, stacklevel=2)
+            self._stop_code = 1
             raise StopIteration
 
         # Update stopping criteria (if necessary)
@@ -157,6 +181,7 @@ class Inversion:
                 directive(self.model, self.counter)
 
         # Minimize objective function
+        # ---------------------------
         # -- Debug --
         msg = (
             f"Minimize objective function '{self.objective_function}' with "
@@ -166,10 +191,18 @@ class Inversion:
             msg += f" With minimizer kwargs: {self.minimizer_kwargs}."
         get_logger().debug(msg)
         # ---
+
         if isinstance(self.minimizer, Minimizer):
-            # Keep only the last model of the minimizer iterator
+            # Generate a new minimizer log for this iteration
+            minimizer_kwargs = self.minimizer_kwargs.copy()
+            if self.log is not None and self.log_minimizers:
+                minimizer_log = MinimizerLog()
+                self.minimizer_logs.append(minimizer_log)
+                minimizer_kwargs["callback"] = minimizer_log.update
+
+            # Unpack the generator and keep only the last model
             *_, model = self.minimizer(
-                self.objective_function, self.model, **self.minimizer_kwargs
+                self.objective_function, self.model, **minimizer_kwargs
             )
         else:
             model = self.minimizer(
@@ -194,6 +227,18 @@ class Inversion:
         return self
 
     @property
+    def stop_code(self) -> int | None:
+        """
+        Code obtained after inversion stopped.
+
+        Code 0: the stopping criteria was met.
+        Code 1: the inversion stopped due to that the maximum number of iterations was
+        encountered..
+        Code ``None``: the inversion is still running or hasn't started yet.
+        """
+        return getattr(self, "_stop_code", None)
+
+    @property
     def counter(self) -> int:
         """
         Iteration counter.
@@ -215,6 +260,22 @@ class Inversion:
             self._models = [self.initial_model]
         return self._models
 
+    @property
+    def log_minimizers(self) -> bool:
+        """Whether minimizers will be logged or not."""
+        return self._log_minimizers and isinstance(self.minimizer, Minimizer)
+
+    @property
+    def minimizer_logs(self) -> list[None | MinimizerLog] | None:
+        """
+        Logs of minimizers.
+        """
+        if not self.log_minimizers:
+            return None
+        if not hasattr(self, "_minimizer_logs"):
+            self._minimizer_logs = [None]
+        return self._minimizer_logs
+
     def run(self, show_log=True) -> Model:
         """
         Run the inversion.
@@ -225,11 +286,44 @@ class Inversion:
             Whether to show the ``log`` (if it's defined) during the inversion.
         """
         if show_log and self.log is not None:
-            if not hasattr(self.log, "live"):
+            if not isinstance(self.log, RenderableType):
+                # TODO: Add message
                 raise NotImplementedError()
-            with self.log.live() as live:
+
+            spinner = Spinner(
+                name="dots", text="Starting inversion...", style="green", speed=1
+            )
+            log = Tree(self.log) if self.log_minimizers else self.log
+            group = Group(log, spinner)
+
+            with Live(group, refresh_per_second=10) as live:
                 for _ in self:
-                    live.refresh()
+                    if self.log_minimizers:
+                        minimizer_log = self.minimizer_logs[self.counter]
+                        if minimizer_log is not None:
+                            renderable = minimizer_log.__rich__()
+                            renderable.title = (
+                                f"Minimizer log for iteration {self.counter}"
+                            )
+                            log.add(renderable)
+                    spinner.text = f"Running iteration {self.counter + 1}..."
+
+                # Finish inversion
+                group.renderables.pop(-1)  # remove spinner
+                if self.stop_code == 0:
+                    text = Text(
+                        "🎉 Inversion successfully finished due to stopping criteria."
+                    )
+                elif self.stop_code == 1:
+                    text = Text(
+                        "⚠️ Inversion finished after reaching maximum number of iterations "
+                        f"({self.max_iterations})."
+                    )
+                else:
+                    text = Text(f"⚠️ Invalid stop code '{self.stop_code}'.")
+                group.renderables.append(text)
+                live.refresh()
+
         else:
             for _ in self:
                 pass

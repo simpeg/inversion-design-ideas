@@ -13,6 +13,17 @@ import numpy.typing as npt
 from inversion_ideas.base.objective_function import Objective, Scaled
 
 
+def array_to_str(array: npt.NDArray, threshold=10, **kwargs):
+    """
+    Reperesent Numpy arrays as strings.
+
+    Use this function to simplify printouts like debug lines.
+    """
+    kwargs["threshold"] = threshold
+    with np.printoptions(**kwargs):
+        return f"{array}"
+
+
 def prod_arrays(arrays: Iterator[npt.NDArray[np.float64]]) -> npt.NDArray[np.float64]:
     """
     Compute product of arrays within an iterator.

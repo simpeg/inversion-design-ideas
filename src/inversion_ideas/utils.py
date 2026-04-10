@@ -1,5 +1,5 @@
 """
-Code utilities.
+Utility functions.
 """
 
 import functools
@@ -9,6 +9,7 @@ import logging
 import numpy as np
 import numpy.typing as npt
 
+from ._utils import array_to_str
 from .typing import SparseArray
 
 __all__ = [
@@ -106,15 +107,62 @@ def cache_on_model(func):
             if hasattr(self, cache_attr):
                 model_hash_cached, cached_result = getattr(self, cache_attr)
                 if model_hash_cached.digest() == model_hash.digest():
+                    # -- Debug log --
+                    msg = (
+                        f"Returning cached object '{array_to_str(cached_result)}' "
+                        f"after calling '{func}' with model with hash "
+                        f"'{model_hash_cached.hexdigest()}'."
+                    )
+                    if args:
+                        msg += f" With args: '{args}'."
+                    if kwargs:
+                        msg += f" With kwargs: '{kwargs}'."
+                    get_logger().debug(msg)
+                    # ---
                     return cached_result
 
             # Compute new result and cache it
             result = func(self, model, *args, **kwargs)
             setattr(self, cache_attr, (model_hash, result))
+            # -- Debug log --
+            msg = (
+                f"Computed new result '{array_to_str(result)}' after "
+                f"calling '{func}' with model with hash '{model_hash.hexdigest()}'. "
+                "Cached the result into the object."
+            )
+            if args:
+                msg += f" With args: '{args}'."
+            if kwargs:
+                msg += f" With kwargs: '{kwargs}'."
+            get_logger().debug(msg)
+            # ---
             return result
 
         # Return result without caching
         return func(self, model, *args, **kwargs)
+
+    return wrapper
+
+
+def debug(func):
+    """
+    Add a debug entry into the logger through a decorator.
+
+    Use this decorator on methods and functions. When such method or function gets
+    called, it will add an entry into the logger as a DEBUG level.
+    """
+    logger = get_logger()
+
+    @functools.wraps(func)
+    def wrapper(self, *args, **kwargs):
+        msg = f"Called '{func}'"
+        if args:
+            msg += f" with arguments '{args}'"
+        if kwargs:
+            msg += f" with keyword arguments '{kwargs}'"
+        msg += "."
+        logger.debug(msg)
+        return func(self, *args, **kwargs)
 
     return wrapper
 

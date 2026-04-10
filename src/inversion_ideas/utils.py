@@ -158,7 +158,7 @@ def debug(func):
         if args:
             msg += f" with arguments '{args}'"
         if kwargs:
-            msg += f" with keyword arguements '{kwargs}'"
+            msg += f" with keyword arguments '{kwargs}'"
         msg += "."
         logger.debug(msg)
         return func(self, *args, **kwargs)

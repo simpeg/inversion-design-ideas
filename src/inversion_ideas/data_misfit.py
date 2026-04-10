@@ -108,17 +108,28 @@ class DataMisfit(Objective):
         Hessian matrix.
         """
         jac = self.simulation.jacobian(model)
+
+        if self.build_hessian and isinstance(jac, LinearOperator):
+            msg = (
+                f"Cannot build Hessian for DataMisfit '{self}' since the Jacobian "
+                f"of {self.simulation} is a LinearOperator. "
+                f"Set `build_hessian` to False in '{self}', or adjust your "
+                "simulation to return a dense or sparse Jacobian matrix."
+            )
+            raise TypeError(msg)
+
         if not self.build_hessian:
             jac = aslinearoperator(jac)
         weights_matrix = aslinearoperator(self.weights_matrix)
         return 2 * jac.T @ weights_matrix.T @ weights_matrix @ jac
 
-    def hessian_approx(self, model: Model) -> dia_array:
+    def hessian_approx(self, model: Model) -> npt.NDArray[np.float64] | SparseArray:
         """
         Approximated version of the Hessian.
 
-        Approximates the Hessian by a diagonal matrix whose diagonal is the diagonal
-        of the Hessian of the objective function.
+        If ``build_hessian`` is True, then the full Hessian will be returned.
+        Otherwise, the Hessian will be approximated by a diagonal sparse matrix, whose
+        main diagonal matches Hessian's diagonal.
 
         Parameters
         ----------
@@ -127,19 +138,28 @@ class DataMisfit(Objective):
 
         Returns
         -------
-        (n_params, n_params) sparse array
+        (n_params, n_params) dense or sparse array
             2D diagonal sparse array that approximates the Hessian of the objective
             function.
         """
+        if self.build_hessian:
+            # Ignore type error: if build_hessian is True, then hessian(model) will
+            # always return a dense or sparse array.
+            return self.hessian(model)  # type: ignore[return-value]
+
         jac = self.simulation.jacobian(model)
         if isinstance(jac, LinearOperator):
-            msg = (
-                "`DataMisfit.hessian_approx` is not implemented for simulations "
-                "that return the jacobian as a LinearOperator."
+            # Repeat hessian implementation here to avoid recomputing the jacobian
+            weights_matrix = aslinearoperator(self.weights_matrix)
+            hessian = 2 * jac.T @ weights_matrix.T @ weights_matrix @ jac
+            # Estimate diagonal
+            basis = np.eye(self.n_params)
+            diagonal = np.fromiter(
+                ((e.T @ hessian @ e) for e in basis), dtype=np.float64
             )
-            raise NotImplementedError(msg)
-        jtj_diag = np.einsum("i,ij,ij->j", self.weights, jac, jac)
-        diagonal = 2 * jtj_diag
+        else:
+            jtj_diag = np.einsum("i,ij,ij->j", self.weights, jac, jac)
+            diagonal = 2 * jtj_diag
         return diags_array(diagonal)
 
     @property

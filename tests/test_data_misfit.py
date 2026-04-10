@@ -16,6 +16,8 @@ from .utils import LinearRegressor, assert_allclose_linear_operators
 class TestDataMisfit:
     """
     Test the DataMisfit class.
+
+    Use a linear regressor as simulation to quickly test things out.
     """
 
     n_params = 10

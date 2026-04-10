@@ -101,17 +101,6 @@ class TikhonovZero(Objective):
         weights_matrix = self.weights_matrix
         return 2 * weights_matrix.T @ weights_matrix
 
-    def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
-        """
-        Diagonal of the Hessian.
-
-        Parameters
-        ----------
-        model : (n_params) array
-            Array with model values.
-        """
-        return self.hessian(model).diagonal()
-
     @property
     def n_params(self):
         """

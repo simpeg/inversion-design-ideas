@@ -7,10 +7,12 @@ import re
 
 import numpy as np
 import pytest
-from scipy.sparse import dia_array, sparray
+from scipy.sparse import dia_array
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from inversion_ideas.base import Combo, Objective, Scaled
+
+from ..utils import assert_equal_linear_operators
 
 
 class Dummy(Objective):
@@ -82,49 +84,6 @@ class Dummy(Objective):
                 raise ValueError(msg)
         return hessian
 
-    def hessian_diagonal(self, model):  # noqa: ARG002
-        return (self.a_matrix.T @ self.a_matrix).diagonal()
-
-
-def assert_equal_linear_operators(a, b, to_dense=False, seed=None, **kwargs):
-    """
-    Check if two linear operators are the same.
-
-    If ``a`` and ``b`` are ``LinearOperator``s, they will be compared by computing the
-    dot product with random arrays. Only the ``matvec`` and ``rmatvec`` will be tested.
-
-    Parameters
-    ----------
-    a, b : arrays, sparse arrays, or linear operators
-        Arrays or linear operators that will be tested.
-    to_dense : bool, optional
-        If True, sparse arrays will be converted to dense arrays for testing.
-        Use False for big matrices that can be too large to fit in memory.
-    seed : int or None, optional
-        Random seed used to define a random vector to test ``LinearOperator``s.
-        This argument will be ignored if ``a`` and ``b`` are not ``LinearOperator``s.
-    **kwargs : dict
-        Extra keyword arguments that will be passed to
-        :func:`numpy.testing.assert_equal`.
-    """
-    if to_dense:
-        if isinstance(a, sparray):
-            a = a.toarray()
-        if isinstance(b, sparray):
-            b = b.toarray()
-    if isinstance(a, np.ndarray) and isinstance(b, np.ndarray):
-        np.testing.assert_equal(a, b, **kwargs)
-    else:
-        assert a.dtype == b.dtype
-        assert a.shape == b.shape
-        # matvec
-        rng = np.random.default_rng(seed=seed)
-        vector = rng.uniform(size=a.shape[1])
-        np.testing.assert_equal(a @ vector, b @ vector, **kwargs)
-        # rmatvec
-        vector = rng.uniform(size=a.shape[0])
-        np.testing.assert_equal(a.T @ vector, b.T @ vector, **kwargs)
-
 
 class TestObjectiveOperations:
     """
@@ -155,6 +114,34 @@ class TestObjectiveOperations:
         assert b in combo
         assert combo[0] is a
         assert combo[1] is b
+
+    def test_add_zero(self):
+        """
+        Test adding objective functions to the zero integer.
+
+        This feature is useful for adding a collection of objective functions through
+        the ``sum()`` built-in function.
+        """
+        phi = Dummy(self.n_params)
+        # Test __add__
+        result = phi + 0
+        assert result is phi
+        # Test __radd__
+        result = 0 + phi
+        assert result is phi
+
+    def test_add_error_no_zero(self):
+        """
+        Test error when adding integer different than zero to objective function.
+        """
+        phi = Dummy(self.n_params)
+        # Test add
+        msg = re.escape(f"Cannot add objective function '{phi}' with '1'.")
+        with pytest.raises(ValueError, match=msg):
+            phi + 1
+        # Test radd
+        with pytest.raises(ValueError, match=msg):
+            1 + phi
 
     def test_add_n(self):
         """
@@ -338,6 +325,92 @@ class TestObjectiveOperations:
         )
         with pytest.raises(ValueError, match=msg):
             combo += phi_c
+
+    def test_sum(self):
+        """
+        Test adding a collection of objective functions through ``sum()``.
+        """
+        # Add multiple objective functions
+        # --------------------------------
+        phi_a, phi_b, phi_c, phi_d = [
+            Dummy(self.n_params).set_name(n) for n in ("a", "b", "c", "d")
+        ]
+        collection = [phi_a, phi_b, phi_c, phi_d]
+
+        combo = sum(collection)
+        expected = phi_a + phi_b + phi_c + phi_d
+        assert combo == expected
+
+        combo = sum(collection).flatten()
+        expected = (phi_a + phi_b + phi_c + phi_d).flatten()
+        assert combo == expected
+
+        # Add objective functions including scaled in the collection
+        # ----------------------------------------------------------
+        scaled_a, scaled_d = 3.0 * phi_a, 5.2 * phi_d
+        collection = [scaled_a, phi_b, phi_c, scaled_d]
+
+        combo = sum(collection)
+        expected = scaled_a + phi_b + phi_c + scaled_d
+        assert combo == expected
+
+        combo = sum(collection).flatten()
+        expected = (scaled_a + phi_b + phi_c + scaled_d).flatten()
+        assert combo == expected
+
+        # Add objective functions including combos in the collection
+        # ----------------------------------------------------------
+        combo_a = phi_a + phi_b
+        collection = [combo_a, phi_c, phi_d]
+
+        combo = sum(collection)
+        expected = combo_a + phi_c + phi_d
+        assert combo == expected
+
+        combo = sum(collection).flatten()
+        expected = (combo_a + phi_c + phi_d).flatten()
+        assert combo == expected
+
+        # Check that order in collection matters
+        # --------------------------------------
+        collection = [phi_a, phi_b, phi_c, phi_d]
+        combo = phi_d + phi_c + phi_a + phi_b
+        assert combo != sum(collection)
+
+        collection = [phi_a, phi_b, phi_c, phi_d]
+        combo = (phi_d + phi_c + phi_a + phi_b).flatten()
+        assert combo != sum(collection).flatten()
+
+
+class TestObjectiveHessianApprox:
+    """
+    Test the default implementation of ``Objective.hessian_approx``.
+    """
+
+    n_params = 5
+
+    @pytest.fixture
+    def model(self):
+        rng = np.random.default_rng(seed=42)
+        model = rng.uniform(size=self.n_params)
+        return model
+
+    @pytest.mark.parametrize("hessian_type", ["dense", "sparse"])
+    def test_hessian_approx(self, model, hessian_type):
+        """
+        Test if the default implementation returns the Hessian.
+        """
+        phi = Dummy(3, seed=42, hessian_type=hessian_type)
+        assert_equal_linear_operators(phi.hessian(model), phi.hessian_approx(model))
+
+    def test_hessian_approx_linop_error(self, model):
+        """
+        Test error on hessian_approx if hessian is a LinearOperator.
+        """
+        phi = Dummy(3, seed=42, hessian_type="linop")
+        msg = re.escape("Cannot build a 'hessian_approx' for objective function")
+        with pytest.raises(TypeError, match=msg):
+            phi.hessian_approx(model)
 
 
 class TestComboExtraMethods:
@@ -538,15 +611,28 @@ class TestComboMethods:
             )
         assert_equal_linear_operators(combo.hessian(model), hessian_a + hessian_b)
 
-    def test_hessian_diagonal(self, model):
+    @pytest.mark.parametrize(
+        "hessian_types",
+        [
+            pytest.param((type_a, type_b), id=f"{type_a}-{type_b}")
+            for type_a, type_b in itertools.combinations_with_replacement(
+                ("dense", "sparse"), 2
+            )
+        ],
+    )
+    def test_hessian_approx(self, model, hessian_types):
         """
-        Test the hessian_diagonal method of Combo objective functions.
+        Test the hessian_approx method of Combo objective functions.
         """
-        phi_a, phi_b = Dummy(self.n_params, seed=42), Dummy(self.n_params, seed=43)
+        type_a, type_b = hessian_types
+        rng = np.random.default_rng(seed=42)
+        phi_a = Dummy(self.n_params, seed=rng, hessian_type=type_a)
+        phi_b = Dummy(self.n_params, seed=rng, hessian_type=type_b)
         combo = phi_a + phi_b
-        np.testing.assert_allclose(
-            combo.hessian_diagonal(model),
-            phi_a.hessian_diagonal(model) + phi_b.hessian_diagonal(model),
+        assert_equal_linear_operators(
+            combo.hessian_approx(model),
+            phi_a.hessian_approx(model) + phi_b.hessian_approx(model),
+            to_dense=True,
         )
 
 
@@ -593,12 +679,343 @@ class TestScaledMethods:
             scaled.hessian(model), self.scalar * phi.hessian(model)
         )
 
-    def test_hessian_diagonal(self, model):
+    @pytest.mark.parametrize("hessian_type", ["dense", "sparse"])
+    def test_hessian_approx(self, model, hessian_type):
         """
-        Test the hessian_diagonal method of Scaled objective functions.
+        Test the hessian_approx method of Scaled objective functions.
         """
-        phi = Dummy(self.n_params)
+        phi = Dummy(self.n_params, seed=42, hessian_type=hessian_type)
         scaled = self.scalar * phi
-        np.testing.assert_allclose(
-            scaled.hessian_diagonal(model), self.scalar * phi.hessian_diagonal(model)
+        assert_equal_linear_operators(
+            scaled.hessian_approx(model),
+            self.scalar * phi.hessian_approx(model),
+            to_dense=True,
         )
+
+
+class TestObjectiveFunRepresentations:
+    """
+    Test representations of the objective function.
+    """
+
+    def test_name_setter(self):
+        # Test the setter
+        phi = Dummy(10)
+        assert phi.name is None
+        dummy_name = "blah"
+        phi.set_name(dummy_name)
+        assert phi.name == dummy_name
+
+        # Test the set_name method
+        phi = Dummy(10)
+        returned_phi = phi.set_name(dummy_name)
+        assert phi.name == dummy_name
+        assert returned_phi is phi
+
+        # Test None
+        phi = Dummy(10).set_name(None)
+        assert phi.name is None
+        phi = Dummy(10)
+        phi.name = None
+        assert phi.name is None
+
+    def test_invalid_name(self):
+        phi = Dummy(3)
+        invalid_name = 32
+        msg = re.escape(
+            f"Invalid name '{invalid_name}' of type 'int'. "
+            "Please provide a string or None."
+        )
+        with pytest.raises(TypeError, match=msg):
+            phi.name = invalid_name
+        with pytest.raises(TypeError, match=msg):
+            phi.set_name(invalid_name)
+
+    def test_repr(self):
+        phi = Dummy(3)
+        assert repr(phi) == f"{phi._base_str}(m)"
+        phi = Dummy(3).set_name("a")
+        assert repr(phi) == f"{phi._base_str}a(m)"
+
+    def test_repr_latex(self):
+        phi = Dummy(3)
+        assert phi._repr_latex_() == f"${phi._base_latex} (m)$"
+        phi = Dummy(3).set_name("a")
+        assert phi._repr_latex_() == f"${phi._base_latex}_{{a}} (m)$"
+
+
+class TestScaledRepresentations:
+    """
+    Test representations of the scaled objective function.
+    """
+
+    @pytest.mark.parametrize(
+        ("multiplier", "multiplier_str"),
+        [
+            (3.4, "3.4"),
+            (-3.4, "-3.4"),
+            (0.0, "0."),
+            (1e3, "1000."),
+            (1e-3, "0.001"),
+            (1e4, "1.e+04"),
+            (1e-4, "1.e-04"),
+            (3e-5, "3.e-05"),
+            (3e5, "3.e+05"),
+        ],
+    )
+    def test_repr(self, multiplier: float, multiplier_str: str):
+        phi = Dummy(3).set_name("a")
+        scaled = multiplier * phi
+        assert repr(scaled) == f"{multiplier_str} {phi}"
+
+    @pytest.mark.parametrize(
+        ("multiplier", "multiplier_str"),
+        [
+            (3.4, "3.4"),
+            (-3.4, "-3.4"),
+            (0.0, "0."),
+            (1e3, "1000."),
+            (1e-3, "0.001"),
+            (1e4, "1.e+04"),
+            (1e-4, "1.e-04"),
+            (3e-5, "3.e-05"),
+            (3e5, "3.e+05"),
+        ],
+    )
+    def test_repr_with_combo(self, multiplier: float, multiplier_str: str):
+        combo = Dummy(3).set_name("a") + Dummy(3).set_name("b")
+        scaled = multiplier * combo
+        assert repr(scaled) == f"{multiplier_str} [{combo}]"
+
+    def test_repr_latex(self):
+        phi = Dummy(3).set_name("a")
+        phi_latex = phi._repr_latex_().strip("$")
+
+        multiplier, multiplier_str = 3.4, "3.4"
+        scaled = multiplier * phi
+        assert scaled._repr_latex_() == f"${multiplier_str} \\, {phi_latex}$"
+
+        multiplier, multiplier_str = 5.8e3, "5.8 \\cdot 10^{3}"
+        scaled = multiplier * phi
+        assert scaled._repr_latex_() == f"${multiplier_str} \\, {phi_latex}$"
+
+        multiplier, multiplier_str = 3.4, "3.4"
+        combo = phi + Dummy(3).set_name("b")
+        combo_latex = combo._repr_latex_().strip("$")
+        scaled = multiplier * combo
+        assert scaled._repr_latex_() == f"${multiplier_str} \\, [{combo_latex}]$"
+
+
+class TestComboRepresentations:
+    """
+    Test representations of the combo objective function.
+    """
+
+    def test_repr(self):
+        phi_a, phi_b = Dummy(3).set_name("a"), Dummy(3).set_name("b")
+        combo = phi_a + phi_b
+        assert repr(combo) == f"{phi_a} + {phi_b}"
+
+        phi_c = Dummy(3).set_name("c")
+        combo = phi_a + phi_b + phi_c
+        assert repr(combo) == f"[{phi_a} + {phi_b}] + {phi_c}"
+
+        combo = (phi_a + phi_b + phi_c).flatten()
+        assert repr(combo) == f"{phi_a} + {phi_b} + {phi_c}"
+
+        phi_d = Dummy(3).set_name("d")
+        combo = (phi_a + phi_b) + (phi_c + phi_d)
+        assert repr(combo) == f"[{phi_a} + {phi_b}] + [{phi_c} + {phi_d}]"
+
+    def test_repr_latex(self):
+        phi_a, phi_b = Dummy(3).set_name("a"), Dummy(3).set_name("b")
+        combo = phi_a + phi_b
+
+        phi_a_latex = phi_a._repr_latex_().strip("$")
+        phi_b_latex = phi_b._repr_latex_().strip("$")
+        assert combo._repr_latex_() == f"${phi_a_latex} + {phi_b_latex}$"
+
+        phi_c = Dummy(3).set_name("c")
+        phi_c_latex = phi_c._repr_latex_().strip("$")
+        combo = phi_a + phi_b + phi_c
+        assert (
+            combo._repr_latex_() == f"$[{phi_a_latex} + {phi_b_latex}] + {phi_c_latex}$"
+        )
+
+        combo = (phi_a + phi_b + phi_c).flatten()
+        assert (
+            combo._repr_latex_() == f"${phi_a_latex} + {phi_b_latex} + {phi_c_latex}$"
+        )
+
+        phi_d = Dummy(3).set_name("d")
+        phi_d_latex = phi_d._repr_latex_().strip("$")
+        combo = (phi_a + phi_b) + (phi_c + phi_d)
+        assert (
+            combo._repr_latex_()
+            == f"$[{phi_a_latex} + {phi_b_latex}] + [{phi_c_latex} + {phi_d_latex}]$"
+        )
+
+
+class TestInfo:
+    """
+    Test the ``info`` method of objective functions.
+    """
+
+    def test_objective(self, capsys):
+        """
+        Test the ``info`` method of objective functions.
+        """
+        phi = Dummy(3)
+        phi.info()
+        captured = capsys.readouterr()
+        first_line, *_ = captured.out.splitlines()
+        assert first_line == "Dummy"
+
+    def test_scaled(self, capsys):
+        """
+        Test the ``info`` method of scaled objective functions.
+        """
+        phi = 3.2 * Dummy(3)
+        phi.info()
+        captured = capsys.readouterr()
+        first_line, *_ = captured.out.splitlines()
+        assert first_line == "Scaled"
+
+    def test_combo(self, capsys):
+        """
+        Test the ``info`` method of scaled objective functions.
+        """
+        phi = 3.2 * Dummy(3) + 3.4 * Dummy(3)
+        phi.info()
+        captured = capsys.readouterr()
+        first_line, *_ = captured.out.splitlines()
+        assert first_line == "Combo"
+
+
+class TestEquality:
+    """Test equality conditions between objective functions."""
+
+    def test_equal_objective(self):
+        phi_a = Dummy(3)
+        phi_b = phi_a
+        assert phi_a == phi_b
+        phi_c = Dummy(3)
+        assert phi_a != phi_c
+
+    def test_equal_scaled(self):
+        phi_a = Dummy(3)
+        scaled_a = 3.0 * phi_a
+        scaled_b = 3.0 * phi_a
+        assert scaled_a == scaled_b
+
+        scaled_a = 3.0 * phi_a
+        scaled_b = -3.0 * phi_a
+        assert scaled_a != scaled_b
+
+        phi_b = Dummy(3)
+        scaled_a = 3.0 * phi_a
+        scaled_b = 3.0 * phi_b
+        assert scaled_a != scaled_b
+
+        scaled_a = 3.0 * phi_a
+        scaled_b = 2.0 * phi_b
+        assert scaled_a != scaled_b
+
+        scaled = 5.0 * phi_a
+        assert scaled != phi_a
+        scaled = 1.0 * phi_a
+        assert scaled != phi_a
+
+    def test_equal_combo(self):
+        phi_a, phi_b, phi_c = [Dummy(3) for _ in range(3)]
+
+        # Two different combos with same functions are equal
+        combo_1 = phi_a + phi_b
+        combo_2 = phi_a + phi_b
+        assert combo_1 == combo_2
+        combo_1 = phi_a + phi_b + phi_c
+        combo_2 = phi_a + phi_b + phi_c
+        assert combo_1 == combo_2
+
+        # Combos with same functions but different structure are not equal
+        combo_1 = (phi_a + phi_b + phi_c).flatten()
+        combo_2 = (phi_a + phi_b) + phi_c
+        assert combo_1 != combo_2
+
+        # Combos with scaled with same multipliers are equal
+        combo_1 = 3.0 * phi_a + 2.1 * phi_b
+        combo_2 = 3.0 * phi_a + 2.1 * phi_b
+        assert combo_1 == combo_2
+
+        # Combos with scaled with different multipliers are not equal
+        combo_1 = 3.0 * phi_a + 2.1 * phi_b
+        combo_2 = 6.0 * phi_a + 4.1 * phi_b
+        assert combo_1 != combo_2
+
+        # Combos are never equal to non-combos
+        combo = phi_a + phi_b
+        assert combo != phi_a
+        assert combo != 3.0 * phi_a
+
+        # Combos with different lengths are not equal
+        combo_1 = phi_a + phi_b + phi_c
+        combo_2 = phi_a + phi_b
+        assert combo_1 != combo_2
+
+        # Combos with functions in different order are not equal
+        combo_1 = phi_a + phi_b
+        combo_2 = phi_b + phi_a
+        assert combo_1 != combo_2
+
+    def test_equal_nested_combo(self):
+        phi_a, phi_b, phi_c, phi_d = [Dummy(3) for _ in range(4)]
+
+        # Nested combos should be the same if they have the same structure
+        combo_1 = (phi_a + phi_b) + (phi_c + phi_d)
+        combo_2 = (phi_a + phi_b) + (phi_c + phi_d)
+        assert combo_1 == combo_2
+
+        # Nested combos with different structures should be different
+        combo_1 = (phi_b + phi_a) + (phi_c + phi_d)
+        combo_2 = (phi_a + phi_b) + (phi_c + phi_d)
+        assert combo_1 != combo_2
+        combo_1 = (phi_a + phi_b) + (phi_d + phi_c)
+        combo_2 = (phi_a + phi_b) + (phi_c + phi_d)
+        assert combo_1 != combo_2
+        combo_1 = (phi_a + phi_b + phi_c) + phi_d
+        combo_2 = (phi_a + phi_b) + (phi_c + phi_d)
+        assert combo_1 != combo_2
+
+
+class TestHash:
+    """
+    Test hash operations for objective functions.
+
+    The ``Objective`` and ``Scaled`` objects are hashable, but the ``Combo`` is not,
+    since it behaves like a list.
+    """
+
+    def test_objective(self):
+        phi_a, phi_b = Dummy(3), Dummy(3)
+        assert hash(phi_a) == hash(phi_a)
+        assert hash(phi_a) != hash(phi_b)
+
+    def test_scaled(self):
+        scaled_a, scaled_b = 3.0 * Dummy(3), 3.0 * Dummy(3)
+        assert hash(scaled_a) == hash(scaled_a)
+        assert hash(scaled_a) != hash(scaled_b)
+
+        phi = Dummy(3)
+        scaled_a = 3.0 * phi
+        scaled_b = 3.0 * phi
+        assert hash(scaled_a) == hash(scaled_b)
+
+    def test_combo(self):
+        """
+        Test that Combo is not hashable.
+        """
+        phi_a, phi_b = Dummy(3), Dummy(3)
+        combo = phi_a + phi_b
+        assert combo.__hash__ is None
+        with pytest.raises(TypeError):
+            hash(combo)

@@ -221,17 +221,6 @@ class Smallness(_MeshBasedRegularization):
             @ cell_volumes_sqrt
         )
 
-    def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
-        """
-        Diagonal of the Hessian.
-
-        Parameters
-        ----------
-        model : (n_params) array
-            Array with model values.
-        """
-        return self.hessian(model).diagonal()
-
     @property
     def weights_matrix(self) -> dia_array:
         """
@@ -429,17 +418,6 @@ class Flatness(_MeshBasedRegularization):
             @ cell_volumes_sqrt
             @ cell_gradient
         )
-
-    def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
-        """
-        Diagonal of the Hessian.
-
-        Parameters
-        ----------
-        model : (n_params) array
-            Array with model values.
-        """
-        return self.hessian(model).diagonal()
 
     @property
     def weights_matrix(self) -> dia_array:
@@ -663,12 +641,6 @@ class SparseSmallness(_MeshBasedRegularization):
             @ cell_volumes_sqrt
             @ r_matrix
         )
-
-    def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
-        """
-        Diagonal of the Hessian.
-        """
-        return self.hessian(model).diagonal()
 
     @property
     def weights_matrix(self) -> dia_array:

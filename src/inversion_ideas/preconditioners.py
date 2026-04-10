@@ -80,6 +80,7 @@ def get_jacobi_preconditioner(objective_function: Objective, model: Model):
 
     # Compute inverse only for non-zero elements
     zeros = hessian_diag == 0.0
-    hessian_diag[~zeros] **= -1
+    preconditioner = hessian_diag.copy()
+    preconditioner[~zeros] **= -1
 
-    return diags_array(hessian_diag)
+    return diags_array(preconditioner)

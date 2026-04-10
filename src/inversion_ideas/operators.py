@@ -37,12 +37,10 @@ class Identity(LinearOperator):
         return self._n
 
     def _matvec(self, x):
-        # TODO: check if we should be copying here
-        return x
+        return x.copy()
 
-    def _rmatvec(self, x):
-        # TODO: check if we should be copying here
-        return x
+    def _adjoint(self):
+        return self
 
     def diagonal(self):
         """

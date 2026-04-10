@@ -59,7 +59,7 @@ class Objective(ABC):
 
     def hessian_approx(self, model: Model) -> npt.NDArray[np.float64] | SparseArray:
         """
-        Approximate version of the Hessian.
+        Approximated version of the Hessian.
 
         Parameters
         ----------

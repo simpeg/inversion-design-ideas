@@ -115,7 +115,7 @@ class DataMisfit(Objective):
 
     def hessian_approx(self, model: Model) -> dia_array:
         """
-        Approximate version of the Hessian.
+        Approximated version of the Hessian.
 
         Approximates the Hessian by a diagonal matrix whose diagonal is the diagonal
         of the Hessian of the objective function.

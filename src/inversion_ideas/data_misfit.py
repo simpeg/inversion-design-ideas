@@ -140,8 +140,8 @@ class DataMisfit(Objective):
         Returns
         -------
         (n_params, n_params) dense or sparse array
-            2D diagonal sparse array that approximates the Hessian of the objective
-            function.
+            2D diagonal dense or sparse array that approximates the Hessian of the
+            objective function.
         """
         if self.build_hessian:
             # Ignore type error: if build_hessian is True, then hessian(model) will

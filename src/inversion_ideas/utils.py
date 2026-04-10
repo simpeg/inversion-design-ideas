@@ -9,9 +9,8 @@ import logging
 import numpy as np
 import numpy.typing as npt
 
-from .typing import SparseArray
-
 from ._utils import array_to_str
+from .typing import SparseArray
 
 __all__ = [
     "cache_on_model",

@@ -26,9 +26,9 @@ def _create_logger():
     logger = logging.getLogger("inversions")
     logger.setLevel(logging.INFO)
     handler = logging.StreamHandler()
-    formatter = logging.Formatter("{levelname}: {message}", style="{")
-    handler.setFormatter(formatter)
     logger.addHandler(handler)
+    formatter = logging.Formatter("[{levelname}] {asctime} | {message}", style="{")
+    handler.setFormatter(formatter)
     return logger
 
 
@@ -46,6 +46,18 @@ def get_logger():
     -------
     logger : :class:`logging.Logger`
         The logger object for SimPEG.
+
+    Examples
+    --------
+    Send an info message to the logger:
+
+    >>> get_logger().info("Testing!")
+
+    Change logging level:
+
+    >>> import logging
+    >>> logger = get_logger()
+    >>> logger.setLevel("DEBUG")
     """
     return LOGGER
 

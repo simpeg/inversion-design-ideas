@@ -57,11 +57,28 @@ class Objective(ABC):
         Evaluate the hessian of the objective function for a given model.
         """
 
-    @abstractmethod
-    def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
+    def hessian_approx(self, model: Model) -> npt.NDArray[np.float64] | SparseArray:
         """
-        Diagonal of the Hessian.
+        Approximated version of the Hessian.
+
+        Parameters
+        ----------
+        model : (n_params) array
+            Array with model values.
+
+        Returns
+        -------
+        (n_params, n_params) array or sparse array
+            2D array that approximates the Hessian of the objective function.
         """
+        hessian = self.hessian(model)
+        if isinstance(hessian, LinearOperator):
+            msg = (
+                f"Cannot build a 'hessian_approx' for objective function '{self}', "
+                "since its Hessian is a LinearOperator."
+            )
+            raise TypeError(msg)
+        return hessian
 
     @property
     def name(self) -> str | None:
@@ -203,11 +220,8 @@ class Scaled(Objective):
         """
         return self.multiplier * self.function.hessian(model)
 
-    def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
-        """
-        Diagonal of the Hessian.
-        """
-        return self.multiplier * self.function.hessian_diagonal(model)
+    def hessian_approx(self, model: Model) -> npt.NDArray[np.float64] | SparseArray:
+        return self.multiplier * self.function.hessian_approx(model)
 
     def info(self):
         type_ = type(self)
@@ -333,13 +347,10 @@ class Combo(Objective):
         """
         return _sum(f.hessian(model) for f in self.functions)
 
-    def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
-        """
-        Diagonal of the Hessian.
-        """
+    def hessian_approx(self, model: Model) -> npt.NDArray[np.float64] | SparseArray:
         return sum(
-            (f.hessian_diagonal(model) for f in self.functions),
-            start=np.zeros(self.n_params),
+            (f.hessian_approx(model) for f in self.functions),
+            start=np.zeros((self.n_params, self.n_params)),
         )
 
     def flatten(self) -> "Combo":

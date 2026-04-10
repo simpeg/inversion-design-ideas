@@ -18,9 +18,6 @@ __all__ = [
     "get_sensitivity_weights",
 ]
 
-LOGGER = logging.Logger("inversions")
-LOGGER.addHandler(logging.StreamHandler())
-
 
 def _create_logger():
     """

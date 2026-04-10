@@ -1,5 +1,5 @@
 """
-Code utilities.
+Utility functions.
 """
 
 import functools
@@ -10,6 +10,8 @@ import numpy as np
 import numpy.typing as npt
 
 from .typing import SparseArray
+
+from ._utils import array_to_str
 
 __all__ = [
     "cache_on_model",
@@ -164,17 +166,6 @@ def debug(func):
         return func(self, *args, **kwargs)
 
     return wrapper
-
-
-def array_to_str(array: npt.NDArray, threshold=10, **kwargs):
-    """
-    Reperesent Numpy arrays as strings.
-
-    Use this function to simplify printouts like debug lines.
-    """
-    kwargs["threshold"] = threshold
-    with np.printoptions(**kwargs):
-        return f"{array}"
 
 
 def get_sensitivity_weights(

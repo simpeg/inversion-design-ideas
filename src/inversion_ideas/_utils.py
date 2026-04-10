@@ -30,6 +30,10 @@ def array_to_str(array: npt.NDArray, *, single_line=True, threshold=10, **kwargs
         repr.
     kwargs : dict
         Extra keyword arguments passed to :func:`numpy.printoptions`.
+
+    Returns
+    -------
+    str
     """
     kwargs["threshold"] = threshold
     with np.printoptions(**kwargs):

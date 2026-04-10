@@ -6,7 +6,14 @@ import discretize
 import numpy as np
 import numpy.typing as npt
 import simpeg
-from scipy.sparse import dia_array, diags_array, eye_array
+from scipy.sparse import (
+    csc_array,
+    csc_matrix,
+    dia_array,
+    diags_array,
+    eye_array,
+    isspmatrix,
+)
 
 from .._utils import prod_arrays
 from ..base import Objective
@@ -450,9 +457,19 @@ class Flatness(_MeshBasedRegularization):
     def _cell_gradient(self):
         """Return the cell gradient matrix operator."""
         if not hasattr(self, "__cell_gradient"):
-            self.__cell_gradient = getattr(
+            cell_gradient = getattr(
                 self._regularization_mesh, f"cell_gradient_{self.direction}"
             )
+            # ---
+            # Ensure that we are returning a sparse array and not a sparse matrix.
+            # This is a patch. We should fix this upstream.
+            if isspmatrix(cell_gradient):
+                if isinstance(cell_gradient, csc_matrix):
+                    cell_gradient = csc_array(cell_gradient)
+                else:
+                    raise TypeError()
+            # ---
+            self.__cell_gradient = cell_gradient
         return self.__cell_gradient
 
     @property

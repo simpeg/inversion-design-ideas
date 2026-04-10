@@ -7,6 +7,8 @@ import numpy.typing as npt
 from scipy.sparse import dia_array, diags_array
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
+from inversion_ideas.utils import get_logger
+
 from .base import Objective
 from .operators import get_diagonal
 from .typing import Model, SparseArray
@@ -153,7 +155,15 @@ class DataMisfit(Objective):
             # Repeat hessian implementation here to avoid recomputing the jacobian
             weights_matrix = aslinearoperator(self.weights_matrix)
             hessian = 2 * jac.T @ weights_matrix.T @ weights_matrix @ jac
-            # Estimate diagonal
+
+            # -- Debug --
+            get_logger().debug(
+                f"Computing the diagonal of the Hessian matrix of '{self}' "
+                "by applying projections to unit vectors of standard basis."
+            )
+            # ---
+
+            # Compute the diagonal
             diagonal = get_diagonal(hessian)
         else:
             diagonal = 2 * np.einsum("i,ij,ij->j", self.weights, jac, jac)

@@ -8,6 +8,7 @@ from scipy.sparse import dia_array, diags_array
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from .base import Objective
+from .operators import get_diagonal
 from .typing import Model, SparseArray
 
 
@@ -153,10 +154,7 @@ class DataMisfit(Objective):
             weights_matrix = aslinearoperator(self.weights_matrix)
             hessian = 2 * jac.T @ weights_matrix.T @ weights_matrix @ jac
             # Estimate diagonal
-            basis = np.eye(self.n_params)
-            diagonal = np.fromiter(
-                ((e.T @ hessian @ e) for e in basis), dtype=np.float64
-            )
+            diagonal = get_diagonal(hessian)
         else:
             jtj_diag = np.einsum("i,ij,ij->j", self.weights, jac, jac)
             diagonal = 2 * jtj_diag

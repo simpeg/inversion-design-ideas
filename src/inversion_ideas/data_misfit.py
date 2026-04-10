@@ -138,7 +138,7 @@ class DataMisfit(Objective):
                 "that return the jacobian as a LinearOperator."
             )
             raise NotImplementedError(msg)
-        jtj_diag = np.einsum("i,ij,ij->j", self.weights_matrix.diagonal(), jac, jac)
+        jtj_diag = np.einsum("i,ij,ij->j", self.weights, jac, jac)
         diagonal = 2 * jtj_diag
         return diags_array(diagonal)
 

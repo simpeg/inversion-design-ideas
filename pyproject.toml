@@ -73,9 +73,12 @@ ignore = [
 "__init__.py" = [
   "F401",   # Disable unused-imports errors on __init__.py
 ]
-"test/**" = [
+"tests/**" = [
   "D",   # Ignore pydocstyle warnings in tests
   "T20", # Allow print statements in tests
+]
+"tests/__init__.py" = [
+    "D104", # Allow no docstring in test __init__ files
 ]
 "notebooks/**.ipynb" = [
   "B018",   # Allow unused expression (prints on notebooks)

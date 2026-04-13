@@ -9,10 +9,10 @@ import pytest
 from scipy.sparse import diags_array, sparray
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
-from inversion_ideas.base.objective_function import _float_to_str, _sum
+from inversion_ideas.base.objective_function import _float_to_str, _sum_operators
 
 
-class TestSum:
+class TestSumOperators:
     """
     Test custom sum for operators.
 
@@ -54,7 +54,7 @@ class TestSum:
 
     def test_all_arrays(self, matrices):
         # Get the sum
-        result = _sum(op for op in matrices)
+        result = _sum_operators(op for op in matrices)
 
         # We should recover a dense array
         assert isinstance(result, np.ndarray)
@@ -73,7 +73,7 @@ class TestSum:
         )
 
         # Get the sum
-        result = _sum(op for op in operators)
+        result = _sum_operators(op for op in operators)
 
         # We should recover a dense array
         assert isinstance(result, np.ndarray)
@@ -84,7 +84,7 @@ class TestSum:
         np.testing.assert_allclose(result, expected)
 
     def test_all_sparse_arrays(self, sparse_arrays):
-        result = _sum(op for op in sparse_arrays)
+        result = _sum_operators(op for op in sparse_arrays)
 
         # We should recover a sparse array
         assert isinstance(result, sparray)
@@ -102,7 +102,7 @@ class TestSum:
         operators[index] = factor * aslinearoperator(operators[index])
 
         # Get the sum
-        result = _sum(op for op in operators)
+        result = _sum_operators(op for op in operators)
 
         # We should recover a linear operator
         assert isinstance(result, LinearOperator)
@@ -115,7 +115,7 @@ class TestSum:
     def test_error_empty_operators(self):
         msg = "Invalid empty 'operators' iterator when summing."
         with pytest.raises(ValueError, match=msg):
-            _sum([])
+            _sum_operators([])
 
 
 class TestFloatToString:

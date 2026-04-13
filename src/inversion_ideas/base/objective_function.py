@@ -11,6 +11,7 @@ from typing import Self
 
 import numpy as np
 import numpy.typing as npt
+from scipy.sparse import spmatrix
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from ..typing import Model, SparseArray
@@ -345,7 +346,7 @@ class Combo(Objective):
         """
         Evaluate the hessian of the objective function for a given model.
         """
-        return _sum(f.hessian(model) for f in self.functions)
+        return _sum_operators(f.hessian(model) for f in self.functions)
 
     def hessian_approx(self, model: Model) -> npt.NDArray[np.float64] | SparseArray:
         return sum(
@@ -490,14 +491,29 @@ def _get_n_params(functions: list) -> int:
     return n_params
 
 
-def _sum(
+def _sum_operators(
     operators: Iterator[npt.NDArray | SparseArray | LinearOperator],
 ) -> npt.NDArray | SparseArray | LinearOperator:
     """
-    Sum objects within an iterator.
+    Sum linear operators within an iterator.
 
-    This function supports summing together ``LinearOperator``s with Numpy arrays and
-    sparse arrays.
+    This function supports summing together
+    :class:`~scipy.sparse.linalg.LinearOperator`s with Numpy arrays and sparse arrays.
+
+    Parameters
+    ----------
+    operators : iterator
+        Iterator containing a mixed collection of Numpy arrays, sparse arrays and
+        :class:`~scipy.sparse.linalg.LinearOperator`s.
+
+    Returns
+    -------
+    array or sparse array or LinearOperator
+
+    Raises
+    ------
+    TypeError : if any operator is a sparse matrix.
+    ValueError : if ``operators`` is empty.
     """
     if not operators:
         msg = "Invalid empty 'operators' iterator when summing."
@@ -505,6 +521,14 @@ def _sum(
 
     result = copy(next(operators))
     for operator in operators:
+        if isinstance(operator, spmatrix):
+            msg = (
+                f"Invalid sparse matrix '{operator}' when summing multiple operators. "
+                "Make sure to use sparse arrays instead "
+                "(https://docs.scipy.org/doc/scipy/reference/"
+                "sparse.migration_to_sparray.html)."
+            )
+            raise TypeError(msg)
         if isinstance(operator, LinearOperator) or isinstance(result, LinearOperator):
             result = aslinearoperator(result)  # type: ignore[arg-type]
             result += aslinearoperator(operator)  # type: ignore[arg-type]

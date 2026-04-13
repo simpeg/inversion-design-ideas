@@ -76,7 +76,7 @@ def get_jacobi_preconditioner(objective_function: Objective, model: Model):
     where :math:`\bar{\bar{\nabla}} \phi(\mathbf{m})` is the Hessian of
     :math:`\phi(\mathbf{m})`.
     """
-    hessian_diag = objective_function.hessian_diagonal(model).diagonal()
+    hessian_diag = objective_function.hessian_diagonal(model)
 
     # Compute inverse only for non-zero elements
     zeros = hessian_diag == 0.0

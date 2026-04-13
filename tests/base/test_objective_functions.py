@@ -678,6 +678,37 @@ class TestComboMethods:
         )
 
 
+class Failed(Objective):
+    """
+    A failed objective function that raises errors on every method.
+
+    This class is used to test that ``Scaled`` methods don't call the underlying
+    objective function methods if the ``multiplier`` is zero.
+    """
+
+    def __init__(self, n_params: int):
+        self._n_params = n_params
+
+    @property
+    def n_params(self):
+        return self._n_params
+
+    def __call__(self, model):
+        raise NotImplementedError()
+
+    def gradient(self, model):
+        raise NotImplementedError()
+
+    def hessian(self, model):
+        raise NotImplementedError()
+
+    def hessian_approx(self, model):
+        raise NotImplementedError()
+
+    def hessian_diagonal(self, model):
+        raise NotImplementedError()
+
+
 class TestScaledMethods:
     """
     Test ``__call__``, ``gradient`` and ``hessian`` for a ``Scaled``.
@@ -745,6 +776,61 @@ class TestScaledMethods:
             scaled.hessian_diagonal(model),
             self.scalar * phi.hessian_diagonal(model),
         )
+
+    def test_call_null(self, model):
+        """Test calling a Scaled with a zero multiplier."""
+        phi = Failed(self.n_params)
+        with pytest.raises(NotImplementedError):
+            phi(model)
+
+        scaled = 0.0 * phi
+        result = scaled(model)
+        assert np.isscalar(result)
+        assert result == 0.0
+
+    def test_gradient_null(self, model):
+        """Test gradient of Scaled with a zero multiplier."""
+        phi = Failed(self.n_params)
+        with pytest.raises(NotImplementedError):
+            phi.gradient(model)
+
+        scaled = 0.0 * phi
+        gradient = scaled.gradient(model)
+        assert gradient.shape == (self.n_params,)
+        np.testing.assert_equal(gradient, 0.0)
+
+    def test_hessian_null(self, model):
+        """Test hessian of Scaled with a zero multiplier."""
+        phi = Failed(self.n_params)
+        with pytest.raises(NotImplementedError):
+            phi.hessian(model)
+
+        scaled = 0.0 * phi
+        hessian = scaled.hessian(model)
+        assert hessian.shape == (self.n_params, self.n_params)
+        np.testing.assert_equal(hessian.toarray(), 0.0)
+
+    def test_hessian_approx_null(self, model):
+        """Test hessian_approx of Scaled with a zero multiplier."""
+        phi = Failed(self.n_params)
+        with pytest.raises(NotImplementedError):
+            phi.hessian_approx(model)
+
+        scaled = 0.0 * phi
+        hessian_approx = scaled.hessian_approx(model)
+        assert hessian_approx.shape == (self.n_params, self.n_params)
+        np.testing.assert_equal(hessian_approx.toarray(), 0.0)
+
+    def test_hessian_diagonal_null(self, model):
+        """Test hessian_diagonal of Scaled with a zero multiplier."""
+        phi = Failed(self.n_params)
+        with pytest.raises(NotImplementedError):
+            phi.hessian_diagonal(model)
+
+        scaled = 0.0 * phi
+        hessian_diagonal = scaled.hessian_diagonal(model)
+        assert hessian_diagonal.shape == (self.n_params,)
+        np.testing.assert_equal(hessian_diagonal, 0.0)
 
 
 class TestObjectiveFunRepresentations:

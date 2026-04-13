@@ -11,7 +11,7 @@ from typing import Self
 
 import numpy as np
 import numpy.typing as npt
-from scipy.sparse import spmatrix
+from scipy.sparse import csr_array, spmatrix
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from ..typing import HasDiagonal, Model, SparseArray
@@ -229,12 +229,16 @@ class Scaled(Objective):
         """
         Evaluate the objective function.
         """
+        if self.multiplier == 0.0:
+            return self.multiplier
         return self.multiplier * self.function(model)
 
     def gradient(self, model: Model) -> npt.NDArray[np.float64]:
         """
         Evaluate the gradient of the objective function for a given model.
         """
+        if self.multiplier == 0.0:
+            return np.zeros(self.n_params, dtype=np.float64)
         return self.multiplier * self.function.gradient(model)
 
     def hessian(
@@ -243,12 +247,21 @@ class Scaled(Objective):
         """
         Evaluate the hessian of the objective function for a given model.
         """
+        if self.multiplier == 0.0:
+            # TODO: replace this with a Zero operator?
+            shape = (self.n_params, self.n_params)
+            return csr_array(shape, dtype=np.float64)
         return self.multiplier * self.function.hessian(model)
 
     def hessian_approx(self, model: Model) -> npt.NDArray[np.float64] | SparseArray:
+        if self.multiplier == 0.0:
+            shape = (self.n_params, self.n_params)
+            return csr_array(shape, dtype=np.float64)
         return self.multiplier * self.function.hessian_approx(model)
 
     def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
+        if self.multiplier == 0.0:
+            return np.zeros(self.n_params, dtype=np.float64)
         return self.multiplier * self.function.hessian_diagonal(model)
 
     def info(self):

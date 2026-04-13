@@ -3,7 +3,6 @@ Utility functions.
 """
 
 import functools
-import hashlib
 import logging
 
 import numpy as np
@@ -11,6 +10,16 @@ import numpy.typing as npt
 
 from ._utils import array_to_str
 from .typing import SparseArray
+
+try:
+    import xxhash
+except ImportError:
+    import hashlib
+
+    HASHING_FUNCTION = hashlib.sha256
+else:
+    HASHING_FUNCTION = xxhash.xxh32
+
 
 __all__ = [
     "cache_on_model",
@@ -110,7 +119,7 @@ def cache_on_model(func):
             raise AttributeError(msg)
 
         if self.cache:
-            model_hash = hashlib.sha256(model)
+            model_hash = HASHING_FUNCTION(model)
 
             # Return cached object if the model hash matches with the cached one
             if hasattr(self, cache_attr):
@@ -136,7 +145,8 @@ def cache_on_model(func):
             # -- Debug log --
             msg = (
                 f"Computed new result '{array_to_str(result)}' after "
-                f"calling '{func}' with model with hash '{model_hash.hexdigest()}'. "
+                f"calling '{func}' with model with hash "
+                f"'{model_hash.name}:{model_hash.hexdigest()}'. "
                 "Cached the result into the object."
             )
             if args:

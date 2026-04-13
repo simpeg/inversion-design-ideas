@@ -10,7 +10,7 @@ from copy import copy
 import numpy as np
 import numpy.typing as npt
 
-from inversion_ideas.base.objective_function import Objective, Scaled
+from .base.objective_function import Objective, Scaled
 
 
 def array_to_str(array: npt.NDArray, *, single_line=True, threshold=10, **kwargs):

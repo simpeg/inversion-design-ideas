@@ -223,7 +223,7 @@ class DataMisfit(Objective):
 
             # -- Debug --
             get_logger().debug(
-                f"Estimating diagonal of the Heessian matrix of '{self}'."
+                f"Estimating diagonal of the Hessian matrix of '{self}'."
             )
             # ---
 

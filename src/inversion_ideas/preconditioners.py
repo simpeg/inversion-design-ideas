@@ -143,7 +143,7 @@ class BFGSPreconditioner(LinearOperator):
 
         \s_k = m_{k+1} - m_k,
 
-    and :math:`\phi(.)` is the objective function that will be inverted.
+    and :math:`\phi(\cdot)` is the objective function that will be inverted.
 
     By default, the :math:`H_0` is set as the identity matrix. Alternatively, the user
     can set an initial value for it through the ``initial_preconditioner`` argument.
@@ -182,12 +182,6 @@ class BFGSPreconditioner(LinearOperator):
         Current preconditioner matrix :math:`H_k`.
         """
         if not hasattr(self, "_matrix"):
-            # msg = (
-            #     f"Preconditioner {self} doesn't have a `matrix` attribute "
-            #     "since it hasn't been initialized yet. "
-            #     "Run the `initialize` or the `update` method first."
-            # )
-            # raise AttributeError(msg)
             return aslinearoperator(self.initial_matrix)
         return self._matrix
 

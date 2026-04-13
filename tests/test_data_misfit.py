@@ -56,8 +56,13 @@ class TestDataMisfit:
 
         # Define data misfit
         simulation = LinearRegressor(regressor_matrix, linop=jacobian_as_linop)
-        data_misfit = DataMisfit(data, uncertainties, simulation)
-
+        data_misfit = DataMisfit(
+            data,
+            uncertainties,
+            simulation,
+            # Enable estimation of hessian diagonal if jacobian is a linop
+            estimate_hessian_diagonal=jacobian_as_linop,
+        )
         # Get approximated hessian
         model = self.rng.uniform(size=self.n_params)
         hessian_approx = data_misfit.hessian_approx(model)

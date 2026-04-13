@@ -746,6 +746,49 @@ class TestScaledMethods:
             self.scalar * phi.hessian_diagonal(model),
         )
 
+    # TODO:
+    # add a Failed objective function that will throw errors when calling its methods.
+    # This way we can make sure that these test don't call the underlying function.
+    def test_call_null(self, model):
+        """Test calling a Scaled with a zero multiplier."""
+        phi = Dummy(self.n_params)
+        scaled = 0.0 * phi
+        result = scaled(model)
+        assert np.isscalar(result)
+        assert result == 0.0
+
+    def test_gradient_null(self, model):
+        """Test gradient of Scaled with a zero multiplier."""
+        phi = Dummy(self.n_params)
+        scaled = 0.0 * phi
+        gradient = scaled.gradient(model)
+        assert gradient.shape == (self.n_params,)
+        np.testing.assert_equal(gradient, 0.0)
+
+    def test_hessian_null(self, model):
+        """Test hessian of Scaled with a zero multiplier."""
+        phi = Dummy(self.n_params)
+        scaled = 0.0 * phi
+        hessian = scaled.hessian(model)
+        assert hessian.shape == (self.n_params, self.n_params)
+        np.testing.assert_equal(hessian.toarray(), 0.0)
+
+    def test_hessian_approx_null(self, model):
+        """Test hessian_approx of Scaled with a zero multiplier."""
+        phi = Dummy(self.n_params)
+        scaled = 0.0 * phi
+        hessian_approx = scaled.hessian_approx(model)
+        assert hessian_approx.shape == (self.n_params, self.n_params)
+        np.testing.assert_equal(hessian_approx.toarray(), 0.0)
+
+    def test_hessian_diagonal_null(self, model):
+        """Test hessian_diagonal of Scaled with a zero multiplier."""
+        phi = Dummy(self.n_params)
+        scaled = 0.0 * phi
+        hessian_diagonal = scaled.hessian_diagonal(model)
+        assert hessian_diagonal.shape == (self.n_params,)
+        np.testing.assert_equal(hessian_diagonal, 0.0)
+
 
 class TestObjectiveFunRepresentations:
     """

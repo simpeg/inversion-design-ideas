@@ -349,10 +349,7 @@ class Combo(Objective):
         return _sum_operators(f.hessian(model) for f in self.functions)
 
     def hessian_approx(self, model: Model) -> npt.NDArray[np.float64] | SparseArray:
-        return sum(
-            (f.hessian_approx(model) for f in self.functions),
-            start=np.zeros((self.n_params, self.n_params)),
-        )
+        return _sum_operators(f.hessian_approx(model) for f in self.functions)
 
     def flatten(self) -> "Combo":
         """

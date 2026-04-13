@@ -33,11 +33,13 @@ class GaussNewtonConjugateGradient(Minimizer):
         Relative tolerance for the objective function. If the relative difference
         between the current and previous value of the objective function is below
         ``rtol``, then the minimization is considered as converged.
-    stopping_criteria : Condition, Callable or None, optional
+    stopping_criterion : Condition, Callable or None, optional
         Additional stopping condition that will make the Gauss-Newton iterations to
         finish. When a condition is passed, the Gauss-Newton iterations will finish if
         the condition is met, the Gauss-Newton converges (relative difference below
         ``rtol``), or if maximum number of iterations are reached.
+        If None, Gauss-Newton iterations will finish if convergence or maximum number of
+        iterations are reached.
     cg_kwargs : dict or None, optional
         Dictionary with extra arguments passed to the :func:`scipy.sparse.linalg.cg`
         function.
@@ -49,13 +51,13 @@ class GaussNewtonConjugateGradient(Minimizer):
         maxiter: int = 100,
         maxiter_line_search: int = 10,
         rtol=1e-5,
-        stopping_criteria: Condition | Callable[[Model], bool] | None = None,
+        stopping_criterion: Condition | Callable[[Model], bool] | None = None,
         cg_kwargs: dict[str, Any] | None = None,
     ):
         self.maxiter = maxiter
         self.maxiter_line_search = maxiter_line_search
         self.rtol = rtol
-        self.stopping_criteria = stopping_criteria
+        self.stopping_criterion = stopping_criterion
         self.cg_kwargs = cg_kwargs if cg_kwargs is not None else {}
 
     def __call__(
@@ -131,8 +133,8 @@ class GaussNewtonConjugateGradient(Minimizer):
             ):
                 break
 
-            # Check for stopping criteria
-            if self.stopping_criteria is not None and self.stopping_criteria(model):
+            # Check for stopping criterion
+            if self.stopping_criterion is not None and self.stopping_criterion(model):
                 break
 
             # Compute gradient and hessian

@@ -56,8 +56,13 @@ class TestDataMisfit:
 
         # Define data misfit
         simulation = LinearRegressor(regressor_matrix, linop=jacobian_as_linop)
-        data_misfit = DataMisfit(data, uncertainties, simulation)
-
+        data_misfit = DataMisfit(
+            data,
+            uncertainties,
+            simulation,
+            # Enable estimation of hessian diagonal if jacobian is a linop
+            estimate_hessian_diagonal=jacobian_as_linop,
+        )
         # Get approximated hessian
         model = self.rng.uniform(size=self.n_params)
         hessian_approx = data_misfit.hessian_approx(model)
@@ -89,6 +94,45 @@ class TestDataMisfit:
         np.testing.assert_equal(
             data_misfit.hessian(model), data_misfit.hessian_approx(model)
         )
+
+    @pytest.mark.parametrize(
+        "jacobian_as_linop", [False, True], ids=["dense-jac", "linop-jac"]
+    )
+    def test_hessian_diagonal(
+        self, data_and_uncertainties, regressor_matrix, jacobian_as_linop
+    ):
+        """
+        Test the ``hessian_diagonal`` method.
+        """
+        data, uncertainties = data_and_uncertainties
+
+        # Define data misfit
+        simulation = LinearRegressor(regressor_matrix, linop=jacobian_as_linop)
+        data_misfit = DataMisfit(
+            data,
+            uncertainties,
+            simulation,
+            # Enable estimation of hessian diagonal if jacobian is a linop
+            estimate_hessian_diagonal=jacobian_as_linop,
+        )
+
+        # Get diagonal of the hessian
+        model = self.rng.uniform(size=self.n_params)
+        hessian_diagonal = data_misfit.hessian_diagonal(model)
+
+        # Compare with expected one
+        expected = (
+            DataMisfit(
+                data,
+                uncertainties,
+                simulation=LinearRegressor(regressor_matrix),
+                build_hessian=True,
+            )
+            .hessian(model)
+            .diagonal()
+        )
+
+        np.testing.assert_allclose(hessian_diagonal, expected)
 
     def test_hessian_error(self, data_and_uncertainties, regressor_matrix):
         """

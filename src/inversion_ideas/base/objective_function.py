@@ -11,6 +11,7 @@ from typing import Self
 
 import numpy as np
 import numpy.typing as npt
+from scipy.sparse import spmatrix
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from ..typing import Model, SparseArray
@@ -345,13 +346,10 @@ class Combo(Objective):
         """
         Evaluate the hessian of the objective function for a given model.
         """
-        return _sum(f.hessian(model) for f in self.functions)
+        return _sum_operators(f.hessian(model) for f in self.functions)
 
     def hessian_approx(self, model: Model) -> npt.NDArray[np.float64] | SparseArray:
-        return sum(
-            (f.hessian_approx(model) for f in self.functions),
-            start=np.zeros((self.n_params, self.n_params)),
-        )
+        return _sum_operators(f.hessian_approx(model) for f in self.functions)
 
     def flatten(self) -> "Combo":
         """
@@ -490,27 +488,64 @@ def _get_n_params(functions: list) -> int:
     return n_params
 
 
-def _sum(
-    operators: Iterator[npt.NDArray | SparseArray | LinearOperator],
+def _sum_operators(
+    operators: Iterable[npt.NDArray | SparseArray | LinearOperator],
 ) -> npt.NDArray | SparseArray | LinearOperator:
     """
-    Sum objects within an iterator.
+    Sum linear operators within an iterator.
 
-    This function supports summing together ``LinearOperator``s with Numpy arrays and
-    sparse arrays.
+    This function supports summing together
+    :class:`~scipy.sparse.linalg.LinearOperator`s with Numpy arrays and sparse arrays.
+
+    Parameters
+    ----------
+    operators : iterator
+        Iterator containing a mixed collection of Numpy arrays, sparse arrays and
+        :class:`~scipy.sparse.linalg.LinearOperator`s.
+
+    Returns
+    -------
+    array or sparse array or LinearOperator
+
+    Raises
+    ------
+    TypeError : if any operator is a sparse matrix.
+    ValueError : if ``operators`` is empty.
     """
-    if not operators:
-        msg = "Invalid empty 'operators' iterator when summing."
-        raise ValueError(msg)
+    if not isinstance(operators, Iterator):
+        operators = iter(operators)
 
-    result = copy(next(operators))
+    # Define result as a copy of the first element in the iterator (if any).
+    try:
+        result = next(operators)
+    except StopIteration as err:
+        msg = "Invalid empty 'operators' iterator when summing."
+        raise ValueError(msg) from err
+    else:
+        _raise_if_sparse_matrix(result)
+        result = copy(result)
+
+    # Sum over operators in the iterator
     for operator in operators:
+        _raise_if_sparse_matrix(operator)
         if isinstance(operator, LinearOperator) or isinstance(result, LinearOperator):
             result = aslinearoperator(result)  # type: ignore[arg-type]
             result += aslinearoperator(operator)  # type: ignore[arg-type]
         else:
             result += operator  # type: ignore[operator]
     return result
+
+
+def _raise_if_sparse_matrix(operator):
+    """Raise TypeError if operator is a sparse matrix."""
+    if isinstance(operator, spmatrix):
+        msg = (
+            f"Invalid sparse matrix '{operator}' when summing multiple operators. "
+            "Make sure to use sparse arrays instead "
+            "(https://docs.scipy.org/doc/scipy/reference/"
+            "sparse.migration_to_sparray.html)."
+        )
+        raise TypeError(msg)
 
 
 def _float_to_str(number: float, precision: int = FLOAT_TO_STR_PRECISION) -> str:

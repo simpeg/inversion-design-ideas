@@ -380,7 +380,7 @@ class Combo(Objective):
 
     def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
         return sum(
-            (f.hessian_approx(model) for f in self.functions),
+            (f.hessian_diagonal(model) for f in self.functions),
             start=np.zeros(self.n_params, dtype=np.float64),
         )
 

@@ -382,9 +382,9 @@ class TestObjectiveOperations:
         assert combo != sum(collection).flatten()
 
 
-class TestObjectiveHessianApprox:
+class TestObjectiveHessian:
     """
-    Test the default implementation of ``Objective.hessian_approx``.
+    Test the default implementation of ``hessian_approx`` and ``hessian_diagonal``.
     """
 
     n_params = 5
@@ -398,19 +398,38 @@ class TestObjectiveHessianApprox:
     @pytest.mark.parametrize("hessian_type", ["dense", "sparse"])
     def test_hessian_approx(self, model, hessian_type):
         """
-        Test if the default implementation returns the Hessian.
+        Test if the default implementation of ``hessian_approx`` returns the Hessian.
         """
         phi = Dummy(3, seed=42, hessian_type=hessian_type)
         assert_equal_linear_operators(phi.hessian(model), phi.hessian_approx(model))
 
     def test_hessian_approx_linop_error(self, model):
         """
-        Test error on hessian_approx if hessian is a LinearOperator.
+        Test error on ``hessian_approx`` if hessian is a LinearOperator.
         """
         phi = Dummy(3, seed=42, hessian_type="linop")
         msg = re.escape("Cannot build a 'hessian_approx' for objective function")
         with pytest.raises(TypeError, match=msg):
             phi.hessian_approx(model)
+
+    @pytest.mark.parametrize("hessian_type", ["dense", "sparse"])
+    def test_hessian_diagonal(self, model, hessian_type):
+        """
+        Test default implementation of ``hessian_diagonal``.
+        """
+        phi = Dummy(3, seed=42, hessian_type=hessian_type)
+        np.testing.assert_equal(
+            phi.hessian(model).diagonal(), phi.hessian_diagonal(model)
+        )
+
+    def test_hessian_diagonal_linop_error(self, model):
+        """
+        Test error on ``hessian_diagonal`` if hessian is a LinearOperator.
+        """
+        phi = Dummy(3, seed=42, hessian_type="linop")
+        msg = re.escape("Cannot get 'hessian_diagonal' for objective function")
+        with pytest.raises(TypeError, match=msg):
+            phi.hessian_diagonal(model)
 
 
 class TestComboExtraMethods:
@@ -635,6 +654,29 @@ class TestComboMethods:
             to_dense=True,
         )
 
+    @pytest.mark.parametrize(
+        "hessian_types",
+        [
+            pytest.param((type_a, type_b), id=f"{type_a}-{type_b}")
+            for type_a, type_b in itertools.combinations_with_replacement(
+                ("dense", "sparse"), 2
+            )
+        ],
+    )
+    def test_hessian_diagonal(self, model, hessian_types):
+        """
+        Test the hessian_diagonal method of Combo objective functions.
+        """
+        type_a, type_b = hessian_types
+        rng = np.random.default_rng(seed=42)
+        phi_a = Dummy(self.n_params, seed=rng, hessian_type=type_a)
+        phi_b = Dummy(self.n_params, seed=rng, hessian_type=type_b)
+        combo = phi_a + phi_b
+        np.testing.assert_equal(
+            combo.hessian_diagonal(model),
+            phi_a.hessian_diagonal(model) + phi_b.hessian_diagonal(model),
+        )
+
 
 class TestScaledMethods:
     """
@@ -682,7 +724,7 @@ class TestScaledMethods:
     @pytest.mark.parametrize("hessian_type", ["dense", "sparse"])
     def test_hessian_approx(self, model, hessian_type):
         """
-        Test the hessian_approx method of Scaled objective functions.
+        Test the ``hessian_approx`` method of Scaled objective functions.
         """
         phi = Dummy(self.n_params, seed=42, hessian_type=hessian_type)
         scaled = self.scalar * phi
@@ -690,6 +732,18 @@ class TestScaledMethods:
             scaled.hessian_approx(model),
             self.scalar * phi.hessian_approx(model),
             to_dense=True,
+        )
+
+    @pytest.mark.parametrize("hessian_type", ["dense", "sparse"])
+    def test_hessian_diagonal(self, model, hessian_type):
+        """
+        Test the ``hessian_diagonal`` method of Scaled objective functions.
+        """
+        phi = Dummy(self.n_params, seed=42, hessian_type=hessian_type)
+        scaled = self.scalar * phi
+        np.testing.assert_equal(
+            scaled.hessian_diagonal(model),
+            self.scalar * phi.hessian_diagonal(model),
         )
 
 

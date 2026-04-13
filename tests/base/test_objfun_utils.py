@@ -6,7 +6,7 @@ import re
 
 import numpy as np
 import pytest
-from scipy.sparse import diags_array, sparray
+from scipy.sparse import diags, diags_array, sparray
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from inversion_ideas.base.objective_function import _float_to_str, _sum_operators
@@ -51,6 +51,15 @@ class TestSumOperators:
     @pytest.fixture
     def vector(self):
         return np.random.default_rng(seed=43).uniform(size=self.shape[1])
+
+    def test_iterator_vs_iterable(self, matrices, sparse_arrays):
+        """
+        Test summing over an iterable vs an iterator.
+        """
+        operators = [*matrices, *sparse_arrays]
+        np.testing.assert_allclose(
+            _sum_operators(operators), _sum_operators(iter(operators))
+        )
 
     def test_all_arrays(self, matrices):
         # Get the sum
@@ -112,10 +121,38 @@ class TestSumOperators:
         expected = factor * a + b + c if index == 0 else a + factor * b + c
         np.testing.assert_allclose(result @ vector, expected @ vector)
 
-    def test_error_empty_operators(self):
-        msg = "Invalid empty 'operators' iterator when summing."
+    @pytest.mark.parametrize("operators_type", ["iterator", "list"])
+    def test_error_empty_operators(self, operators_type):
+        msg = re.escape("Invalid empty 'operators' iterator when summing.")
+        match operators_type:
+            case "list":
+                operators = []
+            case "iterator":
+                operators = iter(range(0))
+            case _:
+                raise ValueError()  # pragma: no cover
         with pytest.raises(ValueError, match=msg):
-            _sum_operators([])
+            _sum_operators(operators)
+
+    @pytest.mark.parametrize("position", [0, -1])
+    def test_error_sparse_matrix(self, position):
+        """Test error raised after having a sparse matrix in the collection."""
+        shape = (10, 15)
+        rng = np.random.default_rng(seed=42)
+        operators = [
+            rng.uniform(size=shape),  # a dense array
+            aslinearoperator(rng.uniform(size=shape)),  # a linear operator
+            diags_array(rng.uniform(size=shape[0]), shape=shape),  # a sparse array
+            diags_array(rng.uniform(size=shape[0]), shape=shape),  # a sparse array
+        ]
+        # Insert a sparse matrix in the list
+        sparse_matrix = diags(rng.uniform(size=shape[0]), shape=shape)
+        operators.insert(position, sparse_matrix)
+        msg = re.escape(
+            f"Invalid sparse matrix '{sparse_matrix}' when summing multiple operators."
+        )
+        with pytest.raises(TypeError, match=msg):
+            _sum_operators(operators)
 
 
 class TestFloatToString:

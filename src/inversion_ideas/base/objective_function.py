@@ -14,7 +14,7 @@ import numpy.typing as npt
 from scipy.sparse import spmatrix
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
-from ..typing import Model, SparseArray
+from ..typing import HasDiagonal, Model, SparseArray
 
 FLOAT_TO_STR_PRECISION = 3
 
@@ -57,6 +57,30 @@ class Objective(ABC):
         """
         Evaluate the hessian of the objective function for a given model.
         """
+
+    def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
+        """
+        Get the main diagonal of the Hessian.
+
+        Parameters
+        ----------
+        model : (n_params) array
+            Array with model values.
+
+        Returns
+        -------
+        (n_params,) array
+            Array containing the diagonal of the Hessian.
+        """
+        hessian = self.hessian(model)
+        if not isinstance(hessian, HasDiagonal):
+            msg = (
+                f"Cannot get 'hessian_diagonal' for objective function '{self}', "
+                f"since its Hessian of type {type(hessian).__name__} doesn't implement "
+                "a `diagonal` method."
+            )
+            raise TypeError(msg)
+        return hessian.diagonal()
 
     def hessian_approx(self, model: Model) -> npt.NDArray[np.float64] | SparseArray:
         """
@@ -224,6 +248,9 @@ class Scaled(Objective):
     def hessian_approx(self, model: Model) -> npt.NDArray[np.float64] | SparseArray:
         return self.multiplier * self.function.hessian_approx(model)
 
+    def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
+        return self.multiplier * self.function.hessian_diagonal(model)
+
     def info(self):
         type_ = type(self)
         class_name = type_.__name__
@@ -350,6 +377,12 @@ class Combo(Objective):
 
     def hessian_approx(self, model: Model) -> npt.NDArray[np.float64] | SparseArray:
         return _sum_operators(f.hessian_approx(model) for f in self.functions)
+
+    def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
+        return sum(
+            (f.hessian_diagonal(model) for f in self.functions),
+            start=np.zeros(self.n_params, dtype=np.float64),
+        )
 
     def flatten(self) -> "Combo":
         """
@@ -499,8 +532,8 @@ def _sum_operators(
 
     Parameters
     ----------
-    operators : iterator
-        Iterator containing a mixed collection of Numpy arrays, sparse arrays and
+    operators : iterable
+        Iterable containing a mixed collection of Numpy arrays, sparse arrays and
         :class:`~scipy.sparse.linalg.LinearOperator`s.
 
     Returns

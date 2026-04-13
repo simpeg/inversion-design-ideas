@@ -41,7 +41,7 @@ class Inversion:
     directives : list of Directive
         List of ``Directive``s used to modify the objective function after each
         iteration.
-    stopping_criteria : Condition or callable
+    stopping_criterion : Condition or callable
         Boolean function that takes the model as argument. If this function returns
         ``True``, then the inversion will stop.
     max_iterations : int, optional
@@ -69,7 +69,7 @@ class Inversion:
         minimizer: Minimizer | Callable[[Objective, Model], Model],
         *,
         directives: typing.Sequence[Directive],
-        stopping_criteria: Condition | Callable[[Model], bool],
+        stopping_criterion: Condition | Callable[[Model], bool],
         max_iterations: int | None = None,
         cache_models=False,
         log: Log | InversionLog | bool = True,
@@ -80,7 +80,7 @@ class Inversion:
         self.initial_model = initial_model
         self.minimizer = minimizer
         self.directives = directives
-        self.stopping_criteria = stopping_criteria
+        self.stopping_criterion = stopping_criterion
         self.max_iterations = max_iterations
         self.cache_models = cache_models
         if minimizer_kwargs is None:
@@ -124,8 +124,8 @@ class Inversion:
                 self.log.update(self.counter, self.model)
 
             # Initialize stopping criteria (if necessary)
-            if hasattr(self.stopping_criteria, "initialize"):
-                self.stopping_criteria.initialize()
+            if hasattr(self.stopping_criterion, "initialize"):
+                self.stopping_criterion.initialize()
 
             # Return the initial model in the zeroth iteration
             return self.model
@@ -135,7 +135,7 @@ class Inversion:
         # ---
 
         # Check for stopping criteria before trying to run the iteration
-        if self.stopping_criteria(self.model):
+        if self.stopping_criterion(self.model):
             get_logger().debug(
                 "🎉 Inversion successfully finished due to stopping criteria."
             )
@@ -154,14 +154,14 @@ class Inversion:
             raise StopIteration
 
         # Update stopping criteria (if necessary)
-        if hasattr(self.stopping_criteria, "update"):
+        if hasattr(self.stopping_criterion, "update"):
             # -- Debug --
             get_logger().debug(
-                f"Update stopping criteria '{self.stopping_criteria}' with "
+                f"Update stopping criteria '{self.stopping_criterion}' with "
                 f"{array_to_str(self.model)} and counter '{self.counter}'."
             )
             # ---
-            self.stopping_criteria.update(self.model)
+            self.stopping_criterion.update(self.model)
 
         # Increase counter by one
         self._counter += 1

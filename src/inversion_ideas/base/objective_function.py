@@ -11,7 +11,7 @@ from typing import Self
 
 import numpy as np
 import numpy.typing as npt
-from scipy.sparse import spmatrix, csr_array
+from scipy.sparse import csr_array, spmatrix
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from ..typing import HasDiagonal, Model, SparseArray

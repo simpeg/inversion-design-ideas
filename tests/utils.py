@@ -4,12 +4,82 @@ Test utilities.
 
 import numpy as np
 from numpy.typing import NDArray
-from scipy.sparse import sparray
-from scipy.sparse.linalg import LinearOperator
+from scipy.sparse import dia_array, sparray
+from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
-from inversion_ideas.base import Simulation
+from inversion_ideas.base import Objective, Simulation
 from inversion_ideas.typing import SparseArray
 from inversion_ideas.utils import cache_on_model
+
+
+class Dummy(Objective):
+    r"""
+    Dummy objective function.
+
+    Define a dummy objective function as:
+
+    .. math::
+
+        \phi(\mathbf{m}) = \mathbf{m}^T \mathbf{A}^T \mathbf{A} \mathbf{m},
+
+    where :math:`\mathbf{A}` is a random ``(n, \n_params)`` matrix.
+
+    It's gradient will therefore be:
+
+    .. math::
+
+        \nabla\phi(\mathbf{m}) = \mathbf{A}^T \mathbf{A} \mathbf{m},
+
+    and its Hessian:
+
+    .. math::
+
+        \bar{\bar{\nabla}}\phi(\mathbf{m}) = \mathbf{A}^T \mathbf{A}.
+
+    Parameters
+    ----------
+    n_params : int
+        Number of parameters for the objective function.
+    seed : int or numpy.random.Generator or numpy.random.RandomState or None, optional
+        Random seed used to define the :math:`\mathbf{A}` matrix.
+    hessian_type : {"dense", "sparse", "linop"}, optional
+        Type of Hessian matrix: "dense" matrix, "sparse" matrix or "linop" as in
+        a ``LinearOperator``.
+    """
+
+    def __init__(self, n_params, seed=None, hessian_type="dense"):
+        self._n_params = n_params
+        rng = np.random.default_rng(seed=seed)
+        self.a_matrix = rng.uniform(size=(n_params, n_params))
+        if hessian_type not in ("dense", "sparse", "linop"):
+            msg = f"Invalid hessian_type '{hessian_type}'."
+            raise ValueError(msg)
+        self.hessian_type = hessian_type
+
+    @property
+    def n_params(self):
+        return self._n_params
+
+    def __call__(self, model):
+        return float(model.T @ self.a_matrix.T @ self.a_matrix @ model)
+
+    def gradient(self, model):
+        return self.a_matrix.T @ self.a_matrix @ model
+
+    def hessian(self, model):  # noqa: ARG002
+        match self.hessian_type:
+            case "dense":
+                hessian = self.a_matrix.T @ self.a_matrix
+            case "sparse":
+                a_sparse = dia_array(self.a_matrix)
+                hessian = a_sparse.T @ a_sparse
+            case "linop":
+                a_linop = aslinearoperator(self.a_matrix)
+                hessian = a_linop.T @ a_linop
+            case _:
+                msg = f"Invalid hessian_type '{self.hessian_type}'."
+                raise ValueError(msg)
+        return hessian
 
 
 def assert_equal_linear_operators(

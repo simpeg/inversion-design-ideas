@@ -36,6 +36,21 @@ class DataMisfit(Objective):
             Hessian matrices are usually very large. Use ``build_hessian=True`` only if
             you need to build it.
 
+    estimate_hessian_diagonal : bool, optional
+        If True, the ``hessian_diagonal`` and the ``hessian_approx`` methods will
+        estimate the diagonal of the Hessian, even if the Jacobian of the ``simulation``
+        is a :class:`~scipy.sparse.linalg.LinearOperator`.
+        If False, an error will be raised when calling the ``hessian_diagonal`` or the
+        ``hessian_approx`` methods in case the Jacobian of the ``simulation`` is
+        a :class:`~scipy.sparse.linalg.LinearOperator`.
+
+        .. important::
+
+            Estimating the diagonal of a :class:`~scipy.sparse.linalg.LinearOperator`
+            require a high number of dot products between the operator and multiple unit
+            vectors. This might lead to very expensive computations. Enable
+            ``estimate_hessian_diagonal`` only if you really need to.
+
     Notes
     -----
     The L2 data misfit objective function is defined as:
@@ -82,6 +97,7 @@ class DataMisfit(Objective):
         simulation,
         *,
         build_hessian=False,
+        estimate_hessian_diagonal=False,
     ):
         # TODO: Check that the data and uncertainties have the size as ndata in the
         #       simulation.
@@ -89,6 +105,7 @@ class DataMisfit(Objective):
         self.uncertainty = uncertainty
         self.simulation = simulation
         self.build_hessian = build_hessian
+        self.estimate_hessian_diagonal = estimate_hessian_diagonal
         self.set_name("d")
 
     def __call__(self, model: Model) -> float:
@@ -134,6 +151,14 @@ class DataMisfit(Objective):
         Otherwise, the Hessian will be approximated by a diagonal sparse matrix, whose
         main diagonal matches Hessian's diagonal.
 
+        .. important::
+
+            If the Jacobian of the ``simulation`` is
+            a :class:`~scipy.sparse.linalg.LinearOperator`, the diagonal of the Hessian
+            will be estimated only if ``estimate_hessian_diagonal`` is True.
+            Diagonal estimations can be expensive computational tasks for large
+            problems. Make sure you to enable diagonal estimations only if you need it.
+
         Parameters
         ----------
         model : (n_params) array
@@ -144,30 +169,73 @@ class DataMisfit(Objective):
         (n_params, n_params) dense or sparse array
             2D diagonal dense or sparse array that approximates the Hessian of the
             objective function.
+
+        See Also
+        --------
+        DataMisfit.hessian_diagonal
         """
         if self.build_hessian:
             # Ignore type error: if build_hessian is True, then hessian(model) will
             # always return a dense or sparse array.
             return self.hessian(model)  # type: ignore[return-value]
+        return diags_array(self.hessian_diagonal(model))
+
+    def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
+        """
+        Get the main diagonal of the Hessian.
+
+        .. important::
+
+            If the Jacobian of the ``simulation`` is
+            a :class:`~scipy.sparse.linalg.LinearOperator`, the diagonal of the Hessian
+            will be estimated only if ``estimate_hessian_diagonal`` is True.
+            Diagonal estimations can be expensive computational tasks for large
+            problems. Make sure you to enable diagonal estimations only if you need it.
+
+        Parameters
+        ----------
+        model : (n_params) array
+            Array with model values.
+
+        Returns
+        -------
+        (n_params,) array
+            Array containing the diagonal of the Hessian.
+        """
+        if self.build_hessian:
+            return self.hessian(model).diagonal()
 
         jac = self.simulation.jacobian(model)
         if isinstance(jac, LinearOperator):
+            if not self.estimate_hessian_diagonal:
+                msg = (
+                    f"Cannot estimate diagonal of Hessian for '{self}' since it "
+                    "has `estimate_hessian_diagonal` set to False. "
+                    "Set `estimate_hessian_diagonal` to True to allow diagonal "
+                    "estimation, or make sure your simulation returns a dense or "
+                    "sparse Jacobian matrix."
+                )
+                raise AttributeError(msg)
+
             # Repeat hessian implementation here to avoid recomputing the jacobian
             weights_matrix = aslinearoperator(self.weights_matrix)
             hessian = 2 * jac.T @ weights_matrix.T @ weights_matrix @ jac
 
             # -- Debug --
             get_logger().debug(
-                f"Computing the diagonal of the Hessian matrix of '{self}' "
-                "by applying projections to unit vectors of standard basis."
+                f"Estimating diagonal of the Heessian matrix of '{self}'."
             )
             # ---
 
-            # Compute the diagonal
+            # TODO: Extend algorithms for estimating the diagonal. Add keyword arguments
+            #       to the constructor of the DataMisfit to choose method and set
+            #       parameters.
+
+            # Compute the diagonal.
             diagonal = get_diagonal(hessian)
         else:
             diagonal = 2 * np.einsum("i,ij,ij->j", self.weights, jac, jac)
-        return diags_array(diagonal)
+        return diagonal
 
     @property
     def n_params(self):

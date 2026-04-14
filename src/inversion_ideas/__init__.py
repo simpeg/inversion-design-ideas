@@ -2,7 +2,7 @@
 Ideas for inversion framework.
 """
 
-from . import base, typing, utils
+from . import base, operators, typing, utils
 from ._version import __version__
 from .conditions import ChiTarget, CustomCondition, ModelChanged, ObjectiveChanged
 from .data_misfit import DataMisfit
@@ -52,6 +52,7 @@ __all__ = [
     "create_sparse_inversion",
     "create_tikhonov_regularization",
     "get_jacobi_preconditioner",
+    "operators",
     "typing",
     "utils",
     "wrap_simulation",

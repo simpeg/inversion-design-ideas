@@ -47,15 +47,6 @@ class SparseRegularization(Protocol):
         raise NotImplementedError
 
 
-@runtime_checkable
-class HasDiagonal(Protocol):
-    """
-    Protocol to define an object that implements the ``diagonal`` method.
-    """
-
-    def diagonal(self) -> npt.NDArray: ...
-
-
 class Log(Protocol):
     """
     Protocol to define inversion and minimizer logs.
@@ -65,4 +56,14 @@ class Log(Protocol):
         raise NotImplementedError
 
     def get_minimizer_callback(self) -> Callable[["MinimizerResult"], None]:
+        raise NotImplementedError
+
+
+@runtime_checkable
+class HasDiagonal(Protocol):
+    """
+    Protocol to define abstract array-like objects that has a ``diagonal`` method.
+    """
+
+    def diagonal(self) -> npt.NDArray[np.float64]:
         raise NotImplementedError

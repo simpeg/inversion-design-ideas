@@ -10,7 +10,37 @@ from copy import copy
 import numpy as np
 import numpy.typing as npt
 
-from inversion_ideas.base.objective_function import Objective, Scaled
+from .base.objective_function import Objective, Scaled
+
+
+def array_to_str(array: npt.NDArray, *, single_line=True, threshold=10, **kwargs):
+    """
+    Represent Numpy arrays as strings.
+
+    Use this function to simplify printouts like debug lines.
+
+    Parameters
+    ----------
+    array : array
+        Numpy array to represent as string.
+    single_line : bool, optional
+        Whether to show the array in a single line or allow Numpy to break lines.
+    threshold : int, optional
+        Total number of array elements which trigger summarization rather than full
+        repr.
+    kwargs : dict
+        Extra keyword arguments passed to :func:`numpy.printoptions`.
+
+    Returns
+    -------
+    str
+    """
+    kwargs["threshold"] = threshold
+    with np.printoptions(**kwargs):
+        string = f"{array}"
+        if single_line:
+            string = string.replace("\n", "")
+        return string
 
 
 def prod_arrays(arrays: Iterator[npt.NDArray[np.float64]]) -> npt.NDArray[np.float64]:

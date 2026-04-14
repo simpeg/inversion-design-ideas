@@ -21,7 +21,7 @@ from inversion_ideas.errors import ConvergenceWarning
 from .base import Condition, Directive, Minimizer, Objective
 from .inversion_log import InversionLog, InversionLogRich, MinimizerLog
 from .typing import Log, Model
-from .utils import get_logger
+from .utils import array_to_str, debug, get_logger
 
 
 class Inversion:
@@ -41,7 +41,7 @@ class Inversion:
     directives : list of Directive
         List of ``Directive``s used to modify the objective function after each
         iteration.
-    stopping_criteria : Condition or callable
+    stopping_criterion : Condition or callable
         Boolean function that takes the model as argument. If this function returns
         ``True``, then the inversion will stop.
     max_iterations : int, optional
@@ -69,7 +69,7 @@ class Inversion:
         minimizer: Minimizer | Callable[[Objective, Model], Model],
         *,
         directives: typing.Sequence[Directive],
-        stopping_criteria: Condition | Callable[[Model], bool],
+        stopping_criterion: Condition | Callable[[Model], bool],
         max_iterations: int | None = None,
         cache_models=False,
         log: Log | InversionLog | bool = True,
@@ -80,7 +80,7 @@ class Inversion:
         self.initial_model = initial_model
         self.minimizer = minimizer
         self.directives = directives
-        self.stopping_criteria = stopping_criteria
+        self.stopping_criterion = stopping_criterion
         self.max_iterations = max_iterations
         self.cache_models = cache_models
         if minimizer_kwargs is None:
@@ -112,6 +112,10 @@ class Inversion:
         """
         # Zeroth iteration
         if not hasattr(self, "_counter"):
+            # -- Debug --
+            get_logger().debug(f"Running 0-th iteration of {self}.")
+            # ---
+
             # Initialize counter to zero
             self._counter = 0
 
@@ -120,14 +124,18 @@ class Inversion:
                 self.log.update(self.counter, self.model)
 
             # Initialize stopping criteria (if necessary)
-            if hasattr(self.stopping_criteria, "initialize"):
-                self.stopping_criteria.initialize()
+            if hasattr(self.stopping_criterion, "initialize"):
+                self.stopping_criterion.initialize()
 
             # Return the initial model in the zeroth iteration
             return self.model
 
+        # -- Debug --
+        get_logger().debug(f"Running {self.counter}-th iteration of {self}.")
+        # ---
+
         # Check for stopping criteria before trying to run the iteration
-        if self.stopping_criteria(self.model):
+        if self.stopping_criterion(self.model):
             get_logger().debug(
                 "🎉 Inversion successfully finished due to stopping criteria."
             )
@@ -146,8 +154,14 @@ class Inversion:
             raise StopIteration
 
         # Update stopping criteria (if necessary)
-        if hasattr(self.stopping_criteria, "update"):
-            self.stopping_criteria.update(self.model)
+        if hasattr(self.stopping_criterion, "update"):
+            # -- Debug --
+            get_logger().debug(
+                f"Update stopping criteria '{self.stopping_criterion}' with "
+                f"{array_to_str(self.model)} and counter '{self.counter}'."
+            )
+            # ---
+            self.stopping_criterion.update(self.model)
 
         # Increase counter by one
         self._counter += 1
@@ -158,10 +172,26 @@ class Inversion:
         # minimizer.
         if self._counter > 1:
             for directive in self.directives:
+                # -- Debug --
+                get_logger().debug(
+                    f"Call directive '{directive}' with {array_to_str(self.model)} and "
+                    f"counter '{self.counter}'."
+                )
+                # ---
                 directive(self.model, self.counter)
 
         # Minimize objective function
         # ---------------------------
+        # -- Debug --
+        msg = (
+            f"Minimize objective function '{self.objective_function}' with "
+            f"{self.minimizer}, and model {array_to_str(self.model)}."
+        )
+        if self.minimizer_kwargs:
+            msg += f" With minimizer kwargs: {self.minimizer_kwargs}."
+        get_logger().debug(msg)
+        # ---
+
         if isinstance(self.minimizer, Minimizer):
             # Generate a new minimizer log for this iteration
             minimizer_kwargs = self.minimizer_kwargs.copy()
@@ -192,8 +222,8 @@ class Inversion:
 
         return self.model
 
+    @debug
     def __iter__(self):
-        self._stop_code = None
         return self
 
     @property

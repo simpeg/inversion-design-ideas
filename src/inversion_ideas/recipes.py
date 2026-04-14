@@ -94,7 +94,7 @@ def create_l2_inversion(
     ]
 
     # Stopping criteria
-    stopping_criteria = ChiTarget(data_misfit, chi_target=chi_target)
+    stopping_criterion = ChiTarget(data_misfit, chi_target=chi_target)
 
     # Preconditioner
     minimizer_kwargs = {}
@@ -113,7 +113,7 @@ def create_l2_inversion(
         initial_model,
         minimizer,
         directives=directives,
-        stopping_criteria=stopping_criteria,
+        stopping_criterion=stopping_criterion,
         cache_models=cache_models,
         max_iterations=max_iterations,
         log=True,
@@ -231,7 +231,7 @@ def create_sparse_inversion(
         initial_model,
         minimizer,
         directives=directives,
-        stopping_criteria=smallness_not_changing,
+        stopping_criterion=smallness_not_changing,
         cache_models=cache_models,
         max_iterations=max_iterations,
         log=True,

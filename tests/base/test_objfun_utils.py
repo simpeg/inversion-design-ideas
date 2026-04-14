@@ -2,15 +2,17 @@
 Test utility functions used by objective functions' code.
 """
 
+import re
+
 import numpy as np
 import pytest
-from scipy.sparse import diags_array, sparray
+from scipy.sparse import diags, diags_array, sparray
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
-from inversion_ideas.base.objective_function import _sum
+from inversion_ideas.base.objective_function import _float_to_str, _sum_operators
 
 
-class TestSum:
+class TestSumOperators:
     """
     Test custom sum for operators.
 
@@ -50,9 +52,18 @@ class TestSum:
     def vector(self):
         return np.random.default_rng(seed=43).uniform(size=self.shape[1])
 
+    def test_iterator_vs_iterable(self, matrices, sparse_arrays):
+        """
+        Test summing over an iterable vs an iterator.
+        """
+        operators = [*matrices, *sparse_arrays]
+        np.testing.assert_allclose(
+            _sum_operators(operators), _sum_operators(iter(operators))
+        )
+
     def test_all_arrays(self, matrices):
         # Get the sum
-        result = _sum(op for op in matrices)
+        result = _sum_operators(op for op in matrices)
 
         # We should recover a dense array
         assert isinstance(result, np.ndarray)
@@ -71,7 +82,7 @@ class TestSum:
         )
 
         # Get the sum
-        result = _sum(op for op in operators)
+        result = _sum_operators(op for op in operators)
 
         # We should recover a dense array
         assert isinstance(result, np.ndarray)
@@ -82,7 +93,7 @@ class TestSum:
         np.testing.assert_allclose(result, expected)
 
     def test_all_sparse_arrays(self, sparse_arrays):
-        result = _sum(op for op in sparse_arrays)
+        result = _sum_operators(op for op in sparse_arrays)
 
         # We should recover a sparse array
         assert isinstance(result, sparray)
@@ -100,7 +111,7 @@ class TestSum:
         operators[index] = factor * aslinearoperator(operators[index])
 
         # Get the sum
-        result = _sum(op for op in operators)
+        result = _sum_operators(op for op in operators)
 
         # We should recover a linear operator
         assert isinstance(result, LinearOperator)
@@ -109,3 +120,79 @@ class TestSum:
         a, b, c = matrices
         expected = factor * a + b + c if index == 0 else a + factor * b + c
         np.testing.assert_allclose(result @ vector, expected @ vector)
+
+    @pytest.mark.parametrize("operators_type", ["iterator", "list"])
+    def test_error_empty_operators(self, operators_type):
+        msg = re.escape("Invalid empty 'operators' iterator when summing.")
+        match operators_type:
+            case "list":
+                operators = []
+            case "iterator":
+                operators = iter(range(0))
+            case _:
+                raise ValueError()  # pragma: no cover
+        with pytest.raises(ValueError, match=msg):
+            _sum_operators(operators)
+
+    @pytest.mark.parametrize("position", [0, -1])
+    def test_error_sparse_matrix(self, position):
+        """Test error raised after having a sparse matrix in the collection."""
+        shape = (10, 15)
+        rng = np.random.default_rng(seed=42)
+        operators = [
+            rng.uniform(size=shape),  # a dense array
+            aslinearoperator(rng.uniform(size=shape)),  # a linear operator
+            diags_array(rng.uniform(size=shape[0]), shape=shape),  # a sparse array
+            diags_array(rng.uniform(size=shape[0]), shape=shape),  # a sparse array
+        ]
+        # Insert a sparse matrix in the list
+        sparse_matrix = diags(rng.uniform(size=shape[0]), shape=shape)
+        operators.insert(position, sparse_matrix)
+        msg = re.escape(
+            f"Invalid sparse matrix '{sparse_matrix}' when summing multiple operators."
+        )
+        with pytest.raises(TypeError, match=msg):
+            _sum_operators(operators)
+
+
+class TestFloatToString:
+    """Test the ``_float_to_str`` private function."""
+
+    @pytest.mark.parametrize("precision", [0, -1])
+    def test_invalid_precision(self, precision):
+        msg = re.escape(f"Invalid precision value '{precision}'")
+        with pytest.raises(ValueError, match=msg):
+            _float_to_str(3.1416, precision)
+
+    @pytest.mark.parametrize(
+        ("number", "string"),
+        [
+            # Zero
+            (0, "0."),
+            # Positional
+            (3.14, "3.14"),
+            (3.1416, "3.142"),
+            (-3.14, "-3.14"),
+            (-3.1416, "-3.142"),
+            (0.001, "0.001"),
+            (-0.001, "-0.001"),
+            (0.123456, "0.123"),
+            (1000.0, "1000."),
+            (-1000.0, "-1000."),
+            (999.123, "999.123"),
+            (999.1235, "999.124"),
+            (-999.123, "-999.123"),
+            (-999.1235, "-999.124"),
+            # Scientific
+            (3e-5, "3.e-05"),
+            (-3e-5, "-3.e-05"),
+            (3.1416e-5, "3.142e-05"),
+            (-3.1416e-5, "-3.142e-05"),
+            (0.0001, "1.e-04"),
+            (-0.0001, "-1.e-04"),
+            (1000.123, "1.000e+03"),
+            (-1000.123, "-1.000e+03"),
+        ],
+    )
+    def test_float_to_str(self, number, string):
+        assert _float_to_str(number) == string

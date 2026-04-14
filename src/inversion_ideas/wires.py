@@ -263,7 +263,7 @@ class MultiSlice(_BaseModelSlice):
             raise ValueError()
 
         shape = (self.size, self.full_size)
-        s = 0
+        s = dia_array(shape)
         row = 0
         for slice_ in self.slices.values():
             offset = slice_.start - row

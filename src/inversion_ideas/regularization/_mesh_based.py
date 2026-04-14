@@ -31,6 +31,10 @@ class _MeshBasedRegularization(Objective):
 
     @property
     def n_params(self) -> int:
+        return self.n_active
+
+    @property
+    def n_active(self) -> int:
         return int(np.sum(self.active_cells))
 
     @property

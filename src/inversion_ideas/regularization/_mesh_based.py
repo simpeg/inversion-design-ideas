@@ -229,7 +229,7 @@ class Smallness(_MeshBasedRegularization):
         )
 
     @property
-    def weights_matrix(self) -> dia_array:
+    def weights_matrix(self) -> dia_array[np.float64]:
         """
         Diagonal matrix with the square root of regularization weights on cells.
         """
@@ -243,7 +243,7 @@ class Smallness(_MeshBasedRegularization):
         return diags_array(np.sqrt(cell_weights))
 
     @property
-    def _volumes_sqrt_matrix(self) -> dia_array:
+    def _volumes_sqrt_matrix(self) -> dia_array[np.float64]:
         """
         Diagonal matrix with the square root of cell volumes.
         """
@@ -427,7 +427,7 @@ class Flatness(_MeshBasedRegularization):
         )
 
     @property
-    def weights_matrix(self) -> dia_array:
+    def weights_matrix(self) -> dia_array[np.float64]:
         """
         Diagonal matrix with the square root of cell weights averaged on faces.
         """
@@ -441,7 +441,7 @@ class Flatness(_MeshBasedRegularization):
         return diags_array(self._average_cells_to_faces @ np.sqrt(cell_weights))
 
     @property
-    def _volumes_sqrt_matrix(self) -> dia_array:
+    def _volumes_sqrt_matrix(self) -> dia_array[np.float64]:
         """
         Diagonal matrix with the square root of cell volumes averaged on faces.
         """

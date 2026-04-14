@@ -17,7 +17,7 @@ from scipy.sparse import (
 
 from .._utils import prod_arrays
 from ..base import Objective
-from ..typing import Model
+from ..typing import Model, SparseArray
 from ..utils import support_model_slice
 from ..wires import ModelSlice, MultiSlice
 
@@ -245,6 +245,16 @@ class Smallness(_MeshBasedRegularization):
         )
         return hessian
 
+    @support_model_slice
+    def hessian_approx(self, model: Model) -> npt.NDArray[np.float64] | SparseArray:
+        # Override parent method to decorate it
+        return super().hessian_approx(model)
+
+    @support_model_slice
+    def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
+        # Override parent method to decorate it
+        return super().hessian_diagonal(model)
+
     @property
     def weights_matrix(self) -> dia_array[np.float64]:
         """
@@ -450,6 +460,16 @@ class Flatness(_MeshBasedRegularization):
             @ cell_gradient
         )
         return hessian
+
+    @support_model_slice
+    def hessian_approx(self, model: Model) -> npt.NDArray[np.float64] | SparseArray:
+        # Override parent method to decorate it
+        return super().hessian_approx(model)
+
+    @support_model_slice
+    def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
+        # Override parent method to decorate it
+        return super().hessian_diagonal(model)
 
     @property
     def weights_matrix(self) -> dia_array[np.float64]:

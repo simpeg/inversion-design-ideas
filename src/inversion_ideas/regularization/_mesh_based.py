@@ -502,21 +502,22 @@ class SparseSmallness(_MeshBasedRegularization):
     active_cells : (n_cells) array or None, optional
         Array full of bools that indicate the active cells in the mesh. It must have the
         same amount of elements as cells in the mesh.
-    cell_weights : (n_params) array or dict of (n_params) arrays or None, optional
+    cell_weights : (n_active) array or dict of (n_active) arrays or None, optional
         Array with cell weights.
         For multiple cell weights, pass a dictionary where keys are strings and values
         are the different weights arrays.
         If None, no cell weights are going to be used.
-    reference_model : (n_params) array, optional
-        Reference model used in the regularization.
+    reference_model : (n_active) array or None, optional
+        Array with values for the reference model. It must have the same number of
+        elements as active cells in the mesh.
     threshold : float, optional
         IRLS threshold. Symbolized with :math:`\epsilon` in
         Fournier and Oldenburg (2019).
     cooling_factor : float, optional
         Factor used to cool down the ``threshold`` when updating the IRLS.
-    model_previous : (n_params) array
+    model_previous : (n_params) array or None, optional
         Array with previous model in the iterations. This model is used to build the
-        ``R`` matrix.
+        ``R`` matrix. If None, an array full of zeros will be assigned.
     irls : bool, optional
         Flag to activate or deactivate IRLS. If False, the class would work as an L2
         smallness term. If True, the R matrix will be built using the
@@ -552,13 +553,13 @@ class SparseSmallness(_MeshBasedRegularization):
         self.cell_weights = (
             cell_weights
             if cell_weights is not None
-            else np.ones(self.n_params, dtype=np.float64)
+            else np.ones(self.n_active, dtype=np.float64)
         )
 
         self.reference_model = (
             reference_model
             if reference_model is not None
-            else np.zeros(self.n_params, dtype=np.float64)
+            else np.zeros(self.n_active, dtype=np.float64)
         )
         self.threshold = threshold
         self.cooling_factor = cooling_factor
@@ -607,7 +608,7 @@ class SparseSmallness(_MeshBasedRegularization):
         R matrix to approximate lp norm using Lawson's algorithm.
         """
         if not self.irls:
-            return eye_array(self.n_params)
+            return eye_array(self.n_active)
         power = self.norm / 4 - 0.5
         diagonal = (self.model_previous**2 + self.threshold**2) ** power
         return diags_array(diagonal)

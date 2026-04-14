@@ -11,7 +11,8 @@ import numpy.typing as npt
 from scipy.sparse import dia_array, diags_array
 from scipy.sparse.linalg import LinearOperator
 
-from .typing import HasDiagonal, Model, SparseArray
+from .operators import BlockSquareMatrix
+from .typing import Model, SparseArray
 
 
 class Wires:
@@ -280,105 +281,3 @@ class MultiSlice(_BaseModelSlice):
             raise ValueError()
         parts = [model[s] for s in self.slices.values()]
         return np.hstack(parts)
-
-
-class BlockSquareMatrix(LinearOperator):
-    r"""
-    Operator that represents a square matrix with a non-zero block surrounded by zeros.
-
-    Use this class to represent hessian matrices that are built from smaller matrices
-    that operate only on a subset of the entire model. Only a block of that hessian will
-    be non-zero (the one related to the relevant model elements for that objective
-    function), while the rest of the matrix will be filled of zeros.
-
-    Parameters
-    ----------
-    block : array, sparse array or LinearOperator
-        Square block matrix.
-    slice_matrix : dia_array
-        Diagonal array to represent the slicing matrix.
-
-    Notes
-    -----
-    This ``LinearOperator`` represents square matrices like:
-
-    .. math::
-
-        \mathbf{H} = \begin{bmatrix}
-            0 & 0          & 0\\
-            0 & \mathbf{B} & 0\\
-            0 & 0          & 0
-            \end{bmatrix}
-
-    where :math:`\mathbf{B}` is a non-zero square block matrix that sits in the diagonal
-    of :math:`\mathbf{H}`. The matrix :math:`\mathbf{H}` can be built as:
-
-    .. math::
-
-        \mathbf{H} = \mathbf{s}^T \mathbf{B} \mathbf{s}
-
-    where :math:`\mathbf{s}` is the *slicing matrix*.
-    """
-
-    def __init__(
-        self,
-        block: npt.NDArray | LinearOperator | SparseArray,
-        slice_matrix: dia_array,
-    ):
-        if block.shape[0] != block.shape[1]:
-            msg = (
-                f"Invalid block matrix '{block}' with shape '{block.shape}'. "
-                "It must be a square matrix."
-            )
-            raise ValueError(msg)
-
-        if slice_matrix.shape[0] != block.shape[1]:
-            msg = (
-                f"Invalid block '{block}' and slice_matrix '{slice_matrix}' with "
-                f"shapes '{block.shape}' and {slice_matrix.shape}."
-            )
-            raise ValueError(msg)
-
-        if slice_matrix.shape[1] <= block.shape[1]:
-            # TODO: improve msg
-            msg = "block is larger than slice matrix"
-            raise ValueError(msg)
-
-        _, full_size = slice_matrix.shape
-        shape = (full_size, full_size)
-        super().__init__(shape=shape, dtype=block.dtype)
-
-        self._block = block
-        self._slice_matrix = slice_matrix
-
-    @property
-    def block(self):
-        return self._block
-
-    @property
-    def slice_matrix(self) -> dia_array:
-        return self._slice_matrix
-
-    def _matvec(self, x):
-        """
-        Dot product between the matrix and a vector.
-        """
-        result = self.slice_matrix.T @ (self.block @ (self.slice_matrix @ x))
-        return result
-
-    def _rmatvec(self, x):
-        """
-        Dot product between the transposed matrix and a vector.
-        """
-        result = self.slice_matrix @ (self.block.T @ (self.slice_matrix.T @ x))
-        return result
-
-    def diagonal(self):
-        """
-        Diagonal of the matrix.
-        """
-        if not isinstance(self.block, HasDiagonal):
-            # TODO: Add msg
-            raise TypeError()
-        diagonal = self.block.diagonal()
-        return self.slice_matrix.T @ diagonal

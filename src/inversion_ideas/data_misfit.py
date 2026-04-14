@@ -152,7 +152,6 @@ class DataMisfit(Objective):
         weights_matrix = aslinearoperator(self.weights_matrix)
         return 2 * jac.T @ weights_matrix.T @ weights_matrix @ jac
 
-    @support_model_slice
     def hessian_approx(self, model: Model) -> npt.NDArray[np.float64] | SparseArray:
         """
         Approximated version of the Hessian.
@@ -190,7 +189,6 @@ class DataMisfit(Objective):
             return self.hessian(model)  # type: ignore[return-value]
         return diags_array(self.hessian_diagonal(model))
 
-    @support_model_slice
     def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
         """
         Get the main diagonal of the Hessian.
@@ -215,6 +213,10 @@ class DataMisfit(Objective):
         """
         if self.build_hessian:
             return self.hessian(model).diagonal()
+
+        # Extract model slice (if model_slice is not None)
+        if self.model_slice is not None:
+            model = self.model_slice.extract(model)
 
         jac = self.simulation.jacobian(model)
         if isinstance(jac, LinearOperator):
@@ -246,6 +248,10 @@ class DataMisfit(Objective):
             diagonal = get_diagonal(hessian)
         else:
             diagonal = 2 * np.einsum("i,ij,ij->j", self.weights, jac, jac)
+
+        # Extend diagonal of the Hessian if model_slice is not None
+        if self.model_slice is not None:
+            diagonal = self.model_slice.expand_array(diagonal)
         return diagonal
 
     @property

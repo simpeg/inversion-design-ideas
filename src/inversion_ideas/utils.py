@@ -244,13 +244,29 @@ def support_model_slice(func):
             # TODO: add msg
             raise AttributeError()
 
-        if self.model_slice is None:
+        # Get model slice
+        model_slice: ModelSlice | MultiSlice = self.model_slice
+
+        # Don't modify the model or the output if the object has no model_slice
+        if model_slice is None:
             return func(self, model, *args, **kwargs)
 
-        model_slice: ModelSlice | MultiSlice = self.model_slice
+        # Don't modify the model or the output if the model is already the reduced one
+        if model.size != model_slice.full_size:
+            if model.size != model_slice.size:
+                msg = (
+                    f"Invalid model of size '{model.size}'. "
+                    f"It should be the full model (size of {model_slice.full_size}) "
+                    f"or the reduced model (size of {model_slice.size})."
+                )
+                raise ValueError(msg)
+            return func(self, model, *args, **kwargs)
+
+        # Reduce the model and compute the output of the function with it
         model_reduced = model_slice.extract(model)
         result = func(self, model_reduced, *args, **kwargs)
 
+        # Extend the outputs, depending on type
         if isinstance(result, float):
             return result
 

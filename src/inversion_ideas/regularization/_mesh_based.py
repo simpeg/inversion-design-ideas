@@ -18,6 +18,8 @@ from scipy.sparse import (
 from .._utils import prod_arrays
 from ..base import Objective
 from ..typing import Model
+from ..utils import support_model_slice
+from ..wires import ModelSlice, MultiSlice
 
 
 class _MeshBasedRegularization(Objective):
@@ -31,6 +33,8 @@ class _MeshBasedRegularization(Objective):
 
     @property
     def n_params(self) -> int:
+        if (model_slice := getattr(self, "model_slice", None)) is not None:
+            return model_slice.full_size
         return self.n_active
 
     @property
@@ -150,6 +154,7 @@ class Smallness(_MeshBasedRegularization):
         active_cells: npt.NDArray[np.bool] | None = None,
         cell_weights: npt.NDArray | dict[str, npt.NDArray] | None = None,
         reference_model: Model | None = None,
+        model_slice: ModelSlice | MultiSlice | None = None,
     ):
         self.mesh = mesh
         self.active_cells = (
@@ -157,6 +162,8 @@ class Smallness(_MeshBasedRegularization):
             if active_cells is not None
             else np.ones(self.mesh.n_cells, dtype=bool)
         )
+        # assign model_slice after active_cells so n_active is correct during __init__
+        self.model_slice = model_slice
 
         # Assign the cell weights through the setter
         self.cell_weights = (
@@ -172,6 +179,7 @@ class Smallness(_MeshBasedRegularization):
         )
         self.set_name("s")
 
+    @support_model_slice
     def __call__(self, model: Model) -> float:
         """
         Evaluate the regularization on a given model.
@@ -193,6 +201,7 @@ class Smallness(_MeshBasedRegularization):
             @ model_diff
         )
 
+    @support_model_slice
     def gradient(self, model: Model):
         """
         Gradient vector.
@@ -205,7 +214,7 @@ class Smallness(_MeshBasedRegularization):
         model_diff = model - self.reference_model
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
-        return (
+        gradient = (
             2
             * cell_volumes_sqrt.T
             @ weights_matrix.T
@@ -213,7 +222,9 @@ class Smallness(_MeshBasedRegularization):
             @ cell_volumes_sqrt
             @ model_diff
         )
+        return gradient
 
+    @support_model_slice
     def hessian(self, model: Model):  # noqa: ARG002
         """
         Hessian matrix.
@@ -225,13 +236,14 @@ class Smallness(_MeshBasedRegularization):
         """
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
-        return (
+        hessian = (
             2
             * cell_volumes_sqrt.T
             @ weights_matrix.T
             @ weights_matrix
             @ cell_volumes_sqrt
         )
+        return hessian
 
     @property
     def weights_matrix(self) -> dia_array[np.float64]:
@@ -338,6 +350,7 @@ class Flatness(_MeshBasedRegularization):
         active_cells: npt.NDArray[np.bool] | None = None,
         cell_weights: npt.NDArray | dict[str, npt.NDArray] | None = None,
         reference_model: Model | None = None,
+        model_slice: ModelSlice | MultiSlice | None = None,
     ):
         self.mesh = mesh
         self.direction = direction
@@ -346,6 +359,8 @@ class Flatness(_MeshBasedRegularization):
             if active_cells is not None
             else np.ones(self.mesh.n_cells, dtype=bool)
         )
+        # assign model_slice after active_cells so n_active is correct during __init__
+        self.model_slice = model_slice
 
         # Assign the cell weights through the setter
         self.cell_weights = (
@@ -361,6 +376,7 @@ class Flatness(_MeshBasedRegularization):
         )
         self.set_name(direction)
 
+    @support_model_slice
     def __call__(self, model: Model) -> float:
         """
         Evaluate the regularization on a given model.
@@ -385,6 +401,7 @@ class Flatness(_MeshBasedRegularization):
             @ model_diff
         )
 
+    @support_model_slice
     def gradient(self, model: Model):
         """
         Gradient vector.
@@ -398,9 +415,9 @@ class Flatness(_MeshBasedRegularization):
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
         cell_gradient = self._cell_gradient
-        return (
+        gradient = (
             2
-            * cell_gradient.T
+            @ cell_gradient.T
             @ cell_volumes_sqrt.T
             @ weights_matrix.T
             @ weights_matrix
@@ -408,7 +425,9 @@ class Flatness(_MeshBasedRegularization):
             @ cell_gradient
             @ model_diff
         )
+        return gradient
 
+    @support_model_slice
     def hessian(self, model: Model):  # noqa: ARG002
         """
         Hessian matrix.
@@ -421,7 +440,7 @@ class Flatness(_MeshBasedRegularization):
         weights_matrix = self.weights_matrix
         cell_gradient = self._cell_gradient
         cell_volumes_sqrt = self._volumes_sqrt_matrix
-        return (
+        hessian = (
             2
             * cell_gradient.T
             @ cell_volumes_sqrt.T
@@ -430,6 +449,7 @@ class Flatness(_MeshBasedRegularization):
             @ cell_volumes_sqrt
             @ cell_gradient
         )
+        return hessian
 
     @property
     def weights_matrix(self) -> dia_array[np.float64]:

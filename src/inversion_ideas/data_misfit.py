@@ -114,7 +114,7 @@ class DataMisfit(Objective):
 
     @support_model_slice
     def __call__(self, model: Model) -> float:
-        residual = self.simulation(model) - self.data
+        residual = self.residual(model)
         weights_matrix = self.weights_matrix
         return residual.T @ weights_matrix.T @ weights_matrix @ residual
 
@@ -264,6 +264,7 @@ class DataMisfit(Objective):
         """
         return self.data.size
 
+    @support_model_slice(expand_return=False)
     def residual(self, model: Model):
         r"""
         Residual vector.
@@ -289,8 +290,6 @@ class DataMisfit(Objective):
         where :math:`\mathbf{d}` is the vector with observed data, :math:`\mathcal{F}`
         is the forward model, and :math:`\mathbf{m}` is the model vector.
         """
-        if self.model_slice is not None:
-            model = self.model_slice.extract(model)
         return self.simulation(model) - self.data
 
     @property

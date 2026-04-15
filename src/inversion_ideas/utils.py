@@ -5,6 +5,7 @@ Utility functions.
 import functools
 import hashlib
 import logging
+import warnings
 
 import numpy as np
 import numpy.typing as npt
@@ -218,14 +219,14 @@ def get_sensitivity_weights(
     return sensitivty_weights
 
 
-def support_model_slice(func):
+def support_model_slice(func_=None, *, extract_model=True, expand_return=True):
     """
     Apply a ``model_slice`` to the input and output of a method.
 
     This decorator will take the full model passed to the decorated method, extract only
-    the relevant slice for the instance based on its ``model_slice``, and then extend
-    the result if it's a 1D array or a 2D matrix, filling non-relevant elements with
-    zeros.
+    the relevant slice for the instance based on its ``model_slice`` (if needed), and
+    then extend the result if it's a 1D array or a 2D square matrix, filling
+    non-relevant elements with zeros.
 
     .. important::
 
@@ -236,55 +237,82 @@ def support_model_slice(func):
 
         The instance needs to have a ``model_slice`` attribute. If it's None, then the
         method will run without any modification.
+
+    Parameters
+    ----------
+    extract_model : bool, optional
+        If True, the ``model`` argument will be reduced using the ``model_slice``
+        attribute of the object before being passed to the decorated function.
+        If False, the ``model`` argument will be passed as is to the decorated function.
+    expand_return : bool, optional
+        If True, 1D arrays and 2D square matrices returned by the decorated function
+        will be expanded to match the size of the full ``model``.
+        If False, the original output of the decorated function will be returned.
     """
+    if not extract_model and not expand_return:
+        # TODO: improve message. Check stacklevel.
+        msg = "Don't decorate the function"
+        warnings.warn(msg, stacklevel=2)
 
-    @functools.wraps(func)
-    def wrapper(self, model, *args, **kwargs):
-        if not hasattr(self, "model_slice"):
-            # TODO: add msg
-            raise AttributeError()
+    def support_model_slice_decorator(func):
 
-        # Get model slice
-        model_slice: ModelSlice | MultiSlice = self.model_slice
+        @functools.wraps(func)
+        def wrapper(self, model, *args, **kwargs):
+            if not hasattr(self, "model_slice"):
+                # TODO: add msg
+                raise AttributeError()
 
-        # Don't modify the model or the output if the object has no model_slice
-        if model_slice is None:
-            return func(self, model, *args, **kwargs)
+            # Get model slice
+            model_slice: ModelSlice | MultiSlice = self.model_slice
 
-        # Don't modify the model or the output if the model is already the reduced one
-        if model.size != model_slice.full_size:
-            if model.size != model_slice.size:
-                msg = (
-                    f"Invalid model of size '{model.size}'. "
-                    f"It should be the full model (size of {model_slice.full_size}) "
-                    f"or the reduced model (size of {model_slice.size})."
-                )
-                raise ValueError(msg)
-            return func(self, model, *args, **kwargs)
+            # Don't modify the model or the output if the object has no model_slice
+            if model_slice is None:
+                return func(self, model, *args, **kwargs)
 
-        # Reduce the model and compute the output of the function with it
-        model_reduced = model_slice.extract(model)
-        result = func(self, model_reduced, *args, **kwargs)
+            # Don't modify the model or the output if the model is already the
+            # reduced one
+            if model.size != model_slice.full_size:
+                if model.size != model_slice.size:
+                    msg = (
+                        f"Invalid model of size '{model.size}'. "
+                        f"It should be the full model "
+                        f"(size of {model_slice.full_size}) "
+                        f"or the reduced model (size of {model_slice.size})."
+                    )
+                    raise ValueError(msg)
+                return func(self, model, *args, **kwargs)
 
-        # Extend the outputs, depending on type
-        if isinstance(result, float):
+            # Extract model using the model slice
+            # -----------------------------------
+            if extract_model:
+                # Reduce the model and compute the output of the function with it
+                model_reduced = model_slice.extract(model)
+                result = func(self, model_reduced, *args, **kwargs)
+            else:
+                # Don't reduce the model, just compute the result of the function
+                result = func(self, model, *args, **kwargs)
+
+            # Extend return of function
+            # -------------------------
+            if expand_return:
+                if hasattr(result, "ndim"):
+                    if result.ndim == 1:
+                        result = model_slice.expand_array(result)
+                    elif result.ndim == 2:
+                        result = model_slice.expand_matrix(result)
+                    else:
+                        # TODO: add msg
+                        raise ValueError()
+                else:
+                    # TODO: add msg
+                    raise TypeError()
             return result
 
-        if hasattr(result, "ndim"):
-            if result.ndim == 1:
-                result = model_slice.expand_array(result)
-            elif result.ndim == 2:
-                result = model_slice.expand_matrix(result)
-            else:
-                # TODO: add msg
-                raise ValueError()
-        else:
-            # TODO: add msg
-            raise TypeError()
+        return wrapper
 
-        return result
-
-    return wrapper
+    if func_ is None:
+        return support_model_slice_decorator
+    return support_model_slice_decorator(func_)
 
 
 class Counter:

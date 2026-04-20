@@ -15,7 +15,11 @@ from .errors import ConvergenceWarning
 from .inversion import Inversion
 from .inversion_log import InversionLog, InversionLogRich
 from .minimize import GaussNewtonConjugateGradient, conjugate_gradient
-from .preconditioners import JacobiPreconditioner, get_jacobi_preconditioner
+from .preconditioners import (
+    BFGSPreconditioner,
+    JacobiPreconditioner,
+    get_jacobi_preconditioner,
+)
 from .recipes import (
     create_l2_inversion,
     create_sparse_inversion,
@@ -25,6 +29,7 @@ from .regularization import Flatness, Smallness, SparseSmallness, TikhonovZero
 from .simulations import wrap_simulation
 
 __all__ = [
+    "BFGSPreconditioner",
     "ChiTarget",
     "ConvergenceWarning",
     "CustomCondition",

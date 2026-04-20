@@ -3,6 +3,7 @@ Recipe functions to easily build commonly used inversions and objective function
 """
 
 from collections.abc import Callable
+from typing import Literal
 
 import numpy as np
 import numpy.typing as npt
@@ -13,7 +14,11 @@ from .data_misfit import DataMisfit
 from .directives import Irls, MultiplierCooler
 from .inversion import Inversion
 from .inversion_log import Column
-from .preconditioners import JacobiPreconditioner
+from .preconditioners import (
+    BFGSPreconditioner,
+    JacobiPreconditioner,
+    get_jacobi_preconditioner,
+)
 from .regularization import Flatness, Smallness
 from .typing import Model, Preconditioner
 
@@ -30,7 +35,7 @@ def create_l2_inversion(
     chi_target: float = 1.0,
     max_iterations: int | None = None,
     cache_models: bool = True,
-    preconditioner: Preconditioner | Callable[[Model], Preconditioner] | None = None,
+    preconditioner: Literal["bfgs", "jacobi"] | Preconditioner | None = None,
 ) -> Inversion:
     r"""
     Create inversion of the form :math:`\phi_d + \beta \phi_m`.
@@ -66,14 +71,15 @@ def create_l2_inversion(
         no limit on the total amount of iterations.
     cache_models : bool, optional
         Whether to cache models after each iteration in the inversion.
-    preconditioner : {"jacobi"} or 2d array or sparse array or LinearOperator or callable or None, optional
+    preconditioner : {"jacobi"} or 2d array or sparse array or LinearOperator or None, optional
         Preconditioner that will be passed to the ``minimizer`` on every call during the
-        inversion. The preconditioner can be a predefined 2d array, a sparse array or
-        a LinearOperator. Alternatively, it can be a callable that takes the ``model``
-        as argument and returns a preconditioner matrix (same types listed before). If
-        ``"jacobi"``, a default Jacobi preconditioner that will get updated on every
-        iteration will be defined for the inversion. If None, no preconditioner will be
-        passed.
+        inversion.
+        If ``"bfgs"``, a default BFGS preconditioner will be used, where the initial
+        estimate for it will be set as the Jacobi preconditioner of the ``model_norm``
+        times the ``starting_beta``.
+        If ``"jacobi"``, a default Jacobi preconditioner that will get updated on every
+        iteration will be defined for the inversion.
+        If None, no preconditioner will be passed.
 
     Returns
     -------
@@ -99,8 +105,14 @@ def create_l2_inversion(
     minimizer_kwargs = {}
     if preconditioner is not None:
         if isinstance(preconditioner, str):
+            preconditioner = preconditioner.lower()
             if preconditioner == "jacobi":
                 preconditioner = JacobiPreconditioner(objective_function)
+            elif preconditioner == "bfgs":
+                initial_matrix = get_jacobi_preconditioner(
+                    starting_beta * model_norm, initial_model
+                )
+                preconditioner = BFGSPreconditioner(objective_function, initial_matrix)
             else:
                 msg = f"Invalid preconditioner '{preconditioner}'."
                 raise ValueError(msg)
@@ -134,7 +146,7 @@ def create_sparse_inversion(
     model_norm_rtol: float = 1e-3,
     max_iterations: int | None = None,
     cache_models: bool = True,
-    preconditioner: Preconditioner | Callable[[Model], Preconditioner] | None = None,
+    preconditioner: Literal["bfgs", "jacobi"] | Preconditioner | None = None,
 ) -> Inversion:
     r"""
     Create sparse norm inversion of the form: :math:`\phi_d + \beta \phi_m`.
@@ -182,14 +194,15 @@ def create_sparse_inversion(
         no limit on the total amount of iterations.
     cache_models : bool, optional
         Whether to cache models after each iteration in the inversion.
-    preconditioner : {"jacobi"} or 2d array or sparse array or LinearOperator or callable or None, optional
+    preconditioner : {"jacobi"} or 2d array or sparse array or LinearOperator or None, optional
         Preconditioner that will be passed to the ``minimizer`` on every call during the
-        inversion. The preconditioner can be a predefined 2d array, a sparse array or
-        a LinearOperator. Alternatively, it can be a callable that takes the ``model``
-        as argument and returns a preconditioner matrix (same types listed before). If
-        ``"jacobi"``, a default Jacobi preconditioner that will get updated on every
-        iteration will be defined for the inversion. If None, no preconditioner will be
-        passed.
+        inversion.
+        If ``"bfgs"``, a default BFGS preconditioner will be used, where the initial
+        estimate for it will be set as the Jacobi preconditioner of the ``model_norm``
+        times the ``starting_beta``.
+        If ``"jacobi"``, a default Jacobi preconditioner that will get updated on every
+        iteration will be defined for the inversion.
+        If None, no preconditioner will be passed.
 
     Returns
     -------
@@ -217,8 +230,14 @@ def create_sparse_inversion(
     minimizer_kwargs = {}
     if preconditioner is not None:
         if isinstance(preconditioner, str):
+            preconditioner = preconditioner.lower()
             if preconditioner == "jacobi":
                 preconditioner = JacobiPreconditioner(objective_function)
+            elif preconditioner == "bfgs":
+                initial_matrix = get_jacobi_preconditioner(
+                    starting_beta * model_norm, initial_model
+                )
+                preconditioner = BFGSPreconditioner(objective_function, initial_matrix)
             else:
                 msg = f"Invalid preconditioner '{preconditioner}'."
                 raise ValueError(msg)

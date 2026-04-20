@@ -11,7 +11,7 @@ from scipy.sparse.linalg import cg
 
 from ..base import Condition, Minimizer, MinimizerResult, Objective
 from ..errors import ConvergenceWarning
-from ..typing import Model, Preconditioner
+from ..typing import CanBeUpdated, Model, Preconditioner
 from ..utils import CountCalls, Counter, get_logger
 from ._utils import backtracking_line_search
 
@@ -65,9 +65,7 @@ class GaussNewtonConjugateGradient(Minimizer):
         objective: Objective,
         initial_model: Model,
         *,
-        preconditioner: (
-            Preconditioner | Callable[[Model], Preconditioner] | None
-        ) = None,
+        preconditioner: Preconditioner | None = None,
         callback: Callable[[MinimizerResult], None] | None = None,
     ) -> Generator[Model]:
         """
@@ -76,30 +74,23 @@ class GaussNewtonConjugateGradient(Minimizer):
         Parameters
         ----------
         objective : Objective
-            Objective function that will get minimized.
+            Objective function to be minimized.
         initial_model : (n_params) array
-            Initial model to start the minimization.
-        preconditioner : (n_params, n_params) array, sparray or LinearOperator or Callable, optional
+            Initial model used to start the minimization.
+        preconditioner : (n_params, n_params) array, sparse array or LinearOperator, optional
             Matrix used as preconditioner in the conjugant gradient algorithm.
             If None, no preconditioner will be used.
-            A callable can be passed to build the preconditioner dynamically: such
-            callable should take a single ``initial_model`` argument and return an
-            array, `sparray` or a `LinearOperator`.
+            If the preconditioner implements an ``update`` method, the preconditioner
+            will be updated **before** every conjugate gradient minimization.
         callback : callable, optional
             Callable that gets called after each iteration.
         """
+        # Add the preconditioner to kwargs that will be passed to the cg function
         cg_kwargs = self.cg_kwargs.copy()
-
-        # Define a static preconditioner for all Gauss-Newton iterations
         if preconditioner is not None:
             if "M" in self.cg_kwargs:
                 msg = "Cannot simultanously pass `preconditioner` and `M`."
                 raise ValueError(msg)
-            preconditioner = (
-                preconditioner
-                if not callable(preconditioner)
-                else preconditioner(initial_model)
-            )
             cg_kwargs["M"] = preconditioner
 
         # Perform Gauss-Newton iterations
@@ -146,6 +137,13 @@ class GaussNewtonConjugateGradient(Minimizer):
             if self.stopping_criterion is not None and self.stopping_criterion(model):
                 break
 
+            # Compute gradient and hessian
+            gradient, hessian = objective.gradient(model), objective.hessian(model)
+
+            # Update preconditioner before running cg
+            if isinstance(preconditioner, CanBeUpdated):
+                preconditioner.update(model)
+
             # Add a counter for conjugate-gradient iterations
             if (key := "callback") not in cg_kwargs:
                 counter = Counter()
@@ -160,6 +158,7 @@ class GaussNewtonConjugateGradient(Minimizer):
 
             # Get number of cg iterations from callback
             cg_iters = cg_kwargs["callback"].counts
+
             # Raise warning if cg didn't converge
             cg_converged = cg_code == 0
             if not cg_converged:

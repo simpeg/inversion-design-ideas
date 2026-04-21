@@ -11,7 +11,7 @@ import numpy.typing as npt
 from scipy.sparse import dia_array, diags_array
 from scipy.sparse.linalg import LinearOperator
 
-from .operators import BlockSquareMatrix
+from .operators import BlockSquareMatrix, ExpandedSquareMatrix
 from .typing import Model, SparseArray
 
 
@@ -246,6 +246,10 @@ class _BaseModelSlice(ABC):
 
     @property
     @abstractmethod
+    def slice(self) -> slice | list[slice]: ...
+
+    @property
+    @abstractmethod
     def slice_matrix(self) -> dia_array[np.float64]: ...
 
     def expand_array(self, array: npt.NDArray) -> npt.NDArray:
@@ -267,7 +271,8 @@ class _BaseModelSlice(ABC):
 
     def expand_matrix(
         self, matrix: npt.NDArray | LinearOperator | SparseArray
-    ) -> "BlockSquareMatrix":
+    ) -> "ExpandedSquareMatrix":
+        # ) -> "BlockSquareMatrix":
         """
         Expand a square matrix into a ``BlockSquareMatrix`` filling blocks with zeros.
 
@@ -282,7 +287,9 @@ class _BaseModelSlice(ABC):
             LinearOperator that represents the matrix filled with zeros outside of the
             block.
         """
-        return BlockSquareMatrix(block=matrix, slice_matrix=self.slice_matrix)
+        shape = (self.full_size, self.full_size)
+        return ExpandedSquareMatrix(matrix=matrix, shape=shape, slice_=self.slice)
+        # return BlockSquareMatrix(block=matrix, slice_matrix=self.slice_matrix)
 
 
 class ModelSlice(_BaseModelSlice):
@@ -368,6 +375,10 @@ class MultiSlice(_BaseModelSlice):
     @property
     def slices(self) -> dict[str, slice]:
         return self._slices
+
+    @property
+    def slice(self) -> list[slice]:
+        return list(self._slices.values())
 
     @property
     def wires(self) -> Wires:

@@ -78,7 +78,7 @@ class GaussNewtonConjugateGradient(Minimizer):
         initial_model : (n_params) array
             Initial model used to start the minimization.
         preconditioner : (n_params, n_params) array, sparse array or LinearOperator, optional
-            Matrix used as preconditioner in the conjugant gradient algorithm.
+            Matrix used as preconditioner in the conjugate gradient algorithm.
             If None, no preconditioner will be used.
             If the preconditioner implements an ``update`` method, the preconditioner
             will be updated **before** every conjugate gradient minimization.

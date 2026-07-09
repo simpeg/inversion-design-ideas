@@ -31,6 +31,10 @@ class _MeshBasedRegularization(Objective):
 
     @property
     def n_params(self) -> int:
+        return self.n_active
+
+    @property
+    def n_active(self) -> int:
         return int(np.sum(self.active_cells))
 
     @property
@@ -55,20 +59,20 @@ class _MeshBasedRegularization(Objective):
                 "It must be an array or a dictionary."
             )
             raise TypeError(msg)
-        if isinstance(value, np.ndarray) and value.size != self.n_params:
+        if isinstance(value, np.ndarray) and value.size != self.n_active:
             msg = (
                 f"Invalid cell_weights array with '{value.size}' elements. "
-                f"It must have '{self.n_params}' elements, "
+                f"It must have '{self.n_active}' elements, "
                 "equal to the number of active cells."
             )
             raise ValueError(msg)
         if isinstance(value, dict):
             for key, array in value.items():
-                if array.size != self.n_params:
+                if array.size != self.n_active:
                     msg = (
                         f"Invalid cell_weights array '{key}' with "
                         f"'{array.size}' elements. "
-                        f"It must have '{self.n_params}' elements, "
+                        f"It must have '{self.n_active}' elements, "
                         "equal to the number of active cells."
                     )
                     raise ValueError(msg)
@@ -88,13 +92,14 @@ class Smallness(_MeshBasedRegularization):
     active_cells : (n_cells) array or None, optional
         Array full of bools that indicate the active cells in the mesh. It must have the
         same amount of elements as cells in the mesh.
-    cell_weights : (n_params) array or dict of (n_params) arrays or None, optional
+    cell_weights : (n_active) array or dict of (n_active) arrays or None, optional
         Array with cell weights.
         For multiple cell weights, pass a dictionary where keys are strings and values
         are the different weights arrays.
         If None, no cell weights are going to be used.
-    reference_model : (n_params) array or None, optional
-        Array with values for the reference model.
+    reference_model : (n_active) array or None, optional
+        Array with values for the reference model. It must have the same number of
+        elements as active cells in the mesh.
 
     Notes
     -----
@@ -157,13 +162,13 @@ class Smallness(_MeshBasedRegularization):
         self.cell_weights = (
             cell_weights
             if cell_weights is not None
-            else np.ones(self.n_params, dtype=np.float64)
+            else np.ones(self.n_active, dtype=np.float64)
         )
 
         self.reference_model = (
             reference_model
             if reference_model is not None
-            else np.zeros(self.n_params, dtype=np.float64)
+            else np.zeros(self.n_active, dtype=np.float64)
         )
         self.set_name("s")
 
@@ -229,7 +234,7 @@ class Smallness(_MeshBasedRegularization):
         )
 
     @property
-    def weights_matrix(self) -> dia_array:
+    def weights_matrix(self) -> dia_array[np.float64]:
         """
         Diagonal matrix with the square root of regularization weights on cells.
         """
@@ -243,7 +248,7 @@ class Smallness(_MeshBasedRegularization):
         return diags_array(np.sqrt(cell_weights))
 
     @property
-    def _volumes_sqrt_matrix(self) -> dia_array:
+    def _volumes_sqrt_matrix(self) -> dia_array[np.float64]:
         """
         Diagonal matrix with the square root of cell volumes.
         """
@@ -266,12 +271,12 @@ class Flatness(_MeshBasedRegularization):
     active_cells : (n_cells) array or None, optional
         Array full of bools that indicate the active cells in the mesh. It must have the
         same amount of elements as cells in the mesh.
-    cell_weights : (n_params) array or dict of (n_params) arrays or None, optional
+    cell_weights : (n_active) array or dict of (n_active) arrays or None, optional
         Array with cell weights.
         For multiple cell weights, pass a dictionary where keys are strings and values
         are the different weights arrays.
         If None, no cell weights are going to be used.
-    reference_model : (n_params) array or None, optional
+    reference_model : (n_active) array or None, optional
         Array with values for the reference model.
 
     Notes
@@ -346,13 +351,13 @@ class Flatness(_MeshBasedRegularization):
         self.cell_weights = (
             cell_weights
             if cell_weights is not None
-            else np.ones(self.n_params, dtype=np.float64)
+            else np.ones(self.n_active, dtype=np.float64)
         )
 
         self.reference_model = (
             reference_model
             if reference_model is not None
-            else np.zeros(self.n_params, dtype=np.float64)
+            else np.zeros(self.n_active, dtype=np.float64)
         )
         self.set_name(direction)
 
@@ -427,7 +432,7 @@ class Flatness(_MeshBasedRegularization):
         )
 
     @property
-    def weights_matrix(self) -> dia_array:
+    def weights_matrix(self) -> dia_array[np.float64]:
         """
         Diagonal matrix with the square root of cell weights averaged on faces.
         """
@@ -441,7 +446,7 @@ class Flatness(_MeshBasedRegularization):
         return diags_array(self._average_cells_to_faces @ np.sqrt(cell_weights))
 
     @property
-    def _volumes_sqrt_matrix(self) -> dia_array:
+    def _volumes_sqrt_matrix(self) -> dia_array[np.float64]:
         """
         Diagonal matrix with the square root of cell volumes averaged on faces.
         """
@@ -497,21 +502,22 @@ class SparseSmallness(_MeshBasedRegularization):
     active_cells : (n_cells) array or None, optional
         Array full of bools that indicate the active cells in the mesh. It must have the
         same amount of elements as cells in the mesh.
-    cell_weights : (n_params) array or dict of (n_params) arrays or None, optional
+    cell_weights : (n_active) array or dict of (n_active) arrays or None, optional
         Array with cell weights.
         For multiple cell weights, pass a dictionary where keys are strings and values
         are the different weights arrays.
         If None, no cell weights are going to be used.
-    reference_model : (n_params) array, optional
-        Reference model used in the regularization.
+    reference_model : (n_active) array or None, optional
+        Array with values for the reference model. It must have the same number of
+        elements as active cells in the mesh.
     threshold : float, optional
         IRLS threshold. Symbolized with :math:`\epsilon` in
         Fournier and Oldenburg (2019).
     cooling_factor : float, optional
         Factor used to cool down the ``threshold`` when updating the IRLS.
-    model_previous : (n_params) array
+    model_previous : (n_params) array or None, optional
         Array with previous model in the iterations. This model is used to build the
-        ``R`` matrix.
+        ``R`` matrix. If None, an array full of zeros will be assigned.
     irls : bool, optional
         Flag to activate or deactivate IRLS. If False, the class would work as an L2
         smallness term. If True, the R matrix will be built using the
@@ -547,13 +553,13 @@ class SparseSmallness(_MeshBasedRegularization):
         self.cell_weights = (
             cell_weights
             if cell_weights is not None
-            else np.ones(self.n_params, dtype=np.float64)
+            else np.ones(self.n_active, dtype=np.float64)
         )
 
         self.reference_model = (
             reference_model
             if reference_model is not None
-            else np.zeros(self.n_params, dtype=np.float64)
+            else np.zeros(self.n_active, dtype=np.float64)
         )
         self.threshold = threshold
         self.cooling_factor = cooling_factor
@@ -602,7 +608,7 @@ class SparseSmallness(_MeshBasedRegularization):
         R matrix to approximate lp norm using Lawson's algorithm.
         """
         if not self.irls:
-            return eye_array(self.n_params)
+            return eye_array(self.n_active)
         power = self.norm / 4 - 0.5
         diagonal = (self.model_previous**2 + self.threshold**2) ** power
         return diags_array(diagonal)

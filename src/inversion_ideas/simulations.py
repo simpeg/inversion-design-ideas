@@ -7,8 +7,8 @@ import numpy.typing as npt
 from scipy.sparse.linalg import LinearOperator
 
 from .base import Simulation
+from .decorators import cache_on_model
 from .typing import Model
-from .utils import cache_on_model
 
 
 def wrap_simulation(simulation, *, store_jacobian=False):

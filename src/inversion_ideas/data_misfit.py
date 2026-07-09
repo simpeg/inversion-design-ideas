@@ -10,9 +10,9 @@ from scipy.sparse.linalg import LinearOperator, aslinearoperator
 from inversion_ideas.utils import get_logger
 
 from .base import Objective
+from .decorators import expand_output, slice_model
 from .operators import get_diagonal
 from .typing import Model, SparseArray
-from .utils import expand_output, slice_model
 from .wires import ModelSlice, MultiSlice
 
 

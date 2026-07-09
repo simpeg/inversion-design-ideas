@@ -17,8 +17,8 @@ from scipy.sparse import (
 
 from .._utils import prod_arrays
 from ..base import Objective
+from ..decorators import expand_output, slice_model
 from ..typing import Model
-from ..utils import expand_output, slice_model
 from ..wires import ModelSlice, MultiSlice
 
 

@@ -12,7 +12,7 @@ from inversion_ideas.utils import get_logger
 from .base import Objective
 from .operators import get_diagonal
 from .typing import Model, SparseArray
-from .utils import support_model_slice
+from .utils import expand_output, slice_model
 from .wires import ModelSlice, MultiSlice
 
 
@@ -112,13 +112,14 @@ class DataMisfit(Objective):
         self.estimate_hessian_diagonal = estimate_hessian_diagonal
         self.set_name("d")
 
-    @support_model_slice
+    @slice_model
     def __call__(self, model: Model) -> float:
         residual = self.residual(model)
         weights_matrix = self.weights_matrix
         return residual.T @ weights_matrix.T @ weights_matrix @ residual
 
-    @support_model_slice
+    @slice_model
+    @expand_output
     def gradient(self, model: Model) -> npt.NDArray[np.float64]:
         """
         Gradient vector.
@@ -129,7 +130,8 @@ class DataMisfit(Objective):
         gradient = 2 * jac.T @ (weights_matrix.T @ weights_matrix @ residual)
         return gradient
 
-    @support_model_slice
+    @slice_model
+    @expand_output
     def hessian(
         self, model: Model
     ) -> npt.NDArray[np.float64] | SparseArray | LinearOperator:
@@ -152,7 +154,8 @@ class DataMisfit(Objective):
         weights_matrix = aslinearoperator(self.weights_matrix)
         return 2 * jac.T @ weights_matrix.T @ weights_matrix @ jac
 
-    @support_model_slice
+    @slice_model
+    @expand_output
     def hessian_approx(self, model: Model) -> npt.NDArray[np.float64] | SparseArray:
         """
         Approximated version of the Hessian.
@@ -190,7 +193,8 @@ class DataMisfit(Objective):
             return self.hessian(model)  # type: ignore[return-value]
         return diags_array(self.hessian_diagonal(model))
 
-    @support_model_slice
+    @slice_model
+    @expand_output
     def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
         """
         Get the main diagonal of the Hessian.
@@ -264,7 +268,7 @@ class DataMisfit(Objective):
         """
         return self.data.size
 
-    @support_model_slice(expand_return=False)
+    @slice_model
     def residual(self, model: Model):
         r"""
         Residual vector.

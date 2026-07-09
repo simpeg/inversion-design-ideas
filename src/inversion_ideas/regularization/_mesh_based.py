@@ -18,7 +18,7 @@ from scipy.sparse import (
 from .._utils import prod_arrays
 from ..base import Objective
 from ..typing import Model
-from ..utils import support_model_slice
+from ..utils import expand_output, slice_model
 from ..wires import ModelSlice, MultiSlice
 
 
@@ -179,7 +179,7 @@ class Smallness(_MeshBasedRegularization):
         )
         self.set_name("s")
 
-    @support_model_slice
+    @slice_model
     def __call__(self, model: Model) -> float:
         """
         Evaluate the regularization on a given model.
@@ -201,7 +201,8 @@ class Smallness(_MeshBasedRegularization):
             @ model_diff
         )
 
-    @support_model_slice
+    @slice_model
+    @expand_output
     def gradient(self, model: Model):
         """
         Gradient vector.
@@ -224,7 +225,8 @@ class Smallness(_MeshBasedRegularization):
         )
         return gradient
 
-    @support_model_slice
+    @slice_model
+    @expand_output
     def hessian(self, model: Model):  # noqa: ARG002
         """
         Hessian matrix.
@@ -376,7 +378,8 @@ class Flatness(_MeshBasedRegularization):
         )
         self.set_name(direction)
 
-    @support_model_slice
+    @slice_model
+    @expand_output
     def __call__(self, model: Model) -> float:
         """
         Evaluate the regularization on a given model.
@@ -401,7 +404,8 @@ class Flatness(_MeshBasedRegularization):
             @ model_diff
         )
 
-    @support_model_slice
+    @slice_model
+    @expand_output
     def gradient(self, model: Model):
         """
         Gradient vector.
@@ -427,7 +431,8 @@ class Flatness(_MeshBasedRegularization):
         )
         return gradient
 
-    @support_model_slice
+    @slice_model
+    @expand_output
     def hessian(self, model: Model):  # noqa: ARG002
         """
         Hessian matrix.

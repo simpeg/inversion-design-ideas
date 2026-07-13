@@ -379,7 +379,6 @@ class Flatness(_MeshBasedRegularization):
         self.set_name(direction)
 
     @slice_model
-    @expand_output
     def __call__(self, model: Model) -> float:
         """
         Evaluate the regularization on a given model.
@@ -421,7 +420,7 @@ class Flatness(_MeshBasedRegularization):
         cell_gradient = self._cell_gradient
         gradient = (
             2
-            @ cell_gradient.T
+            * cell_gradient.T
             @ cell_volumes_sqrt.T
             @ weights_matrix.T
             @ weights_matrix

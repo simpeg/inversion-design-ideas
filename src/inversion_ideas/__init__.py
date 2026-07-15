@@ -2,7 +2,7 @@
 Ideas for inversion framework.
 """
 
-from . import base, operators, typing, utils
+from . import base, errors, operators, typing, utils
 from ._version import __version__
 from .conditions import ChiTarget, CustomCondition, ModelChanged, ObjectiveChanged
 from .data_misfit import DataMisfit
@@ -11,7 +11,6 @@ from .directives import (
     MultiplierCooler,
     UpdateSensitivityWeights,
 )
-from .errors import ConvergenceWarning
 from .inversion import Inversion
 from .inversion_log import InversionLog, InversionLogRich
 from .minimize import GaussNewtonConjugateGradient, conjugate_gradient
@@ -31,7 +30,6 @@ from .simulations import wrap_simulation
 __all__ = [
     "BFGSPreconditioner",
     "ChiTarget",
-    "ConvergenceWarning",
     "CustomCondition",
     "DataMisfit",
     "Flatness",
@@ -54,6 +52,7 @@ __all__ = [
     "create_l2_inversion",
     "create_sparse_inversion",
     "create_tikhonov_regularization",
+    "errors",
     "get_jacobi_preconditioner",
     "operators",
     "typing",

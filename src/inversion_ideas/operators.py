@@ -8,6 +8,10 @@ from scipy.sparse.linalg import LinearOperator
 
 from inversion_ideas.typing import HasDiagonal, SparseArray
 
+__all__ = [
+    "Identity",
+]
+
 
 class Identity(LinearOperator):
     """

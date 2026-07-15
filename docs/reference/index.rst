@@ -119,7 +119,8 @@ Custom linear operators
 .. autosummary::
    :toctree: api/
 
-   operators
+   operators.Identity
+   operators.get_diagonal
 
 Utilities
 ---------
@@ -127,7 +128,9 @@ Utilities
 .. autosummary::
    :toctree: api/
 
-   utils
+   utils.cache_on_model
+   utils.get_logger
+   utils.get_sensitivity_weights
 
 Errors and warnings
 -------------------
@@ -135,7 +138,8 @@ Errors and warnings
 .. autosummary::
    :toctree: api/
 
-   ConvergenceWarning
+   errors.ConvergenceWarning
+   errors.NotInitializedError
 
 
 Base submodule

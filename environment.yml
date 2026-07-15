@@ -24,3 +24,7 @@ dependencies:
   - ruff
   - mypy
   - scipy-stubs
+  # Docs
+  - sphinx
+  - numpydoc
+  - pydata-sphinx-theme

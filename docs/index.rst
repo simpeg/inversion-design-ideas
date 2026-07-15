@@ -19,4 +19,4 @@ The main goal of this repository is to build a working prototype of a new invers
    :hidden:
 
    install.rst
-   api/index.rst
+   reference/index.rst

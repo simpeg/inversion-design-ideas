@@ -13,10 +13,10 @@ on:
 permissions: {}
 
 jobs:
-  #############################################################################
-  # Build the docs
   build:
     runs-on: ubuntu-latest
+    permissions:
+        contents: write
     env:
       PYTHON: "3.13"
 

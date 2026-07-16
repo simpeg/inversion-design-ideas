@@ -1,7 +1,6 @@
 """
 Utility functions.
 """
-from scipy.sparse.linalg import LinearOperator
 
 import functools
 import hashlib
@@ -9,6 +8,7 @@ import logging
 
 import numpy as np
 import numpy.typing as npt
+from scipy.sparse.linalg import LinearOperator
 
 from ._utils import array_to_str
 from .typing import SparseArray

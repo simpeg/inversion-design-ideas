@@ -59,7 +59,11 @@ class DataMisfit(Objective):
 
         \phi_d(\mathbf{m}) =
         \sum\limits_{i=1}^N
-        \frac{\lvert d_i^\text{obs} - f_i(\mathbf{m}) \rvert^2}{\epsilon_i^2}
+        \frac{
+            \left\lvert f_i(\mathbf{m}) - d_i^\text{obs} \right\rvert^2
+        }{
+            \epsilon_i^2
+        }
 
     where :math:`\mathbf{m}` is the model vector, :math:`d_i^\text{obs}` is the
     :math:`i`-th observed datum, :math:`f_i(\mathbf{m})` is the forward modelling
@@ -73,16 +77,16 @@ class DataMisfit(Objective):
 
         \phi_d(\mathbf{m}) =
         \sum\limits_{i=1}^N
-        w_i \lvert d_i^\text{obs} - f_i(\mathbf{m}) \rvert^2
+        w_i \left\lvert f_i(\mathbf{m}) - d_i^\text{obs} \right\rvert^2
 
     And also in matrix form:
 
     .. math::
 
         \phi_d(\mathbf{m}) =
-        \lVert
-        \mathbf{W} \left[ \mathbf{d}^\text{obs} - f(\mathbf{m}) \right]
-        \rVert^2
+        \left\lVert
+        \mathbf{W} \left[ f(\mathbf{m}) - \mathbf{d}^\text{obs} \right]
+        \right\rVert^2
 
     where :math:`\mathbf{W}` is a diagonal matrix with the square root of the weights,
     :math:`\mathbf{d}^\text{obs}` is the vector of observed data, and

@@ -1,0 +1,25 @@
+﻿inversion\_ideas.conditions.ModelChanged
+========================================
+
+.. currentmodule:: inversion_ideas.conditions
+
+.. autoclass:: ModelChanged
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ModelChanged.__init__
+      ~ModelChanged.info
+      ~ModelChanged.initialize
+      ~ModelChanged.update
+   
+   
+
+   
+   
+   

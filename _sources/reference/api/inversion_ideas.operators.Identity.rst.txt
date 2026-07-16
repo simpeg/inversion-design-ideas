@@ -1,0 +1,40 @@
+﻿inversion\_ideas.operators.Identity
+===================================
+
+.. currentmodule:: inversion_ideas.operators
+
+.. autoclass:: Identity
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Identity.__init__
+      ~Identity.adjoint
+      ~Identity.diagonal
+      ~Identity.dot
+      ~Identity.matmat
+      ~Identity.matvec
+      ~Identity.rdot
+      ~Identity.rmatmat
+      ~Identity.rmatvec
+      ~Identity.transpose
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Identity.H
+      ~Identity.T
+      ~Identity.n
+      ~Identity.ndim
+   
+   

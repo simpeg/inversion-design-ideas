@@ -1,0 +1,6 @@
+﻿inversion\_ideas.utils.get\_sensitivity\_weights
+================================================
+
+.. currentmodule:: inversion_ideas.utils
+
+.. autofunction:: get_sensitivity_weights

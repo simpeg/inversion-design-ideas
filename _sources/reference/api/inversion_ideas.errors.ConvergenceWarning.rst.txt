@@ -1,0 +1,6 @@
+﻿inversion\_ideas.errors.ConvergenceWarning
+==========================================
+
+.. currentmodule:: inversion_ideas.errors
+
+.. autoexception:: ConvergenceWarning

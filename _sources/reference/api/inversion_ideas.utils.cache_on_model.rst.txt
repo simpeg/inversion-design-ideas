@@ -1,0 +1,6 @@
+﻿inversion\_ideas.utils.cache\_on\_model
+=======================================
+
+.. currentmodule:: inversion_ideas.utils
+
+.. autofunction:: cache_on_model

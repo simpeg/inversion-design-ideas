@@ -1,0 +1,6 @@
+﻿inversion\_ideas.base
+=====================
+
+.. automodule:: inversion_ideas.base
+
+   

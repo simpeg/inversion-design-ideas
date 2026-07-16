@@ -1,0 +1,14 @@
+﻿inversion\_ideas.directives
+===========================
+
+.. automodule:: inversion_ideas.directives
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      Irls
+      MultiplierCooler
+      UpdateSensitivityWeights
+   

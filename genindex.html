@@ -1,0 +1,732 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Index &#8212; inversion-ideas  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="_static/documentation_options.js?v=8a448e45"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'genindex';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="#" />
+    <link rel="search" title="Search" href="search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="_static/searchtools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">⚠️ This repo contains an experimental prototype for SimPEG's new inversion framework. </div>
+</aside>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">inversion-ideas  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="getting-started/index.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="user-guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="reference/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/simpeg/inversion-design-ideas" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="getting-started/index.html">
+    Getting Started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="user-guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="reference/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/simpeg/inversion-design-ideas" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none"></div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+
+<h1 id="index">Index</h1>
+
+<div class="genindex-jumpbox">
+ <a href="#_"><strong>_</strong></a>
+ | <a href="#B"><strong>B</strong></a>
+ | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
+ | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
+ | <a href="#I"><strong>I</strong></a>
+ | <a href="#J"><strong>J</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
+ | <a href="#O"><strong>O</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
+ | <a href="#U"><strong>U</strong></a>
+ | <a href="#W"><strong>W</strong></a>
+ 
+</div>
+<h2 id="_">_</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/api/inversion_ideas.base.Combo.html#inversion_ideas.base.Combo.__init__">__init__() (inversion_ideas.base.Combo method)</a>
+
+      <ul>
+        <li><a href="reference/api/inversion_ideas.base.Condition.html#inversion_ideas.base.Condition.__init__">(inversion_ideas.base.Condition method)</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.base.Directive.html#inversion_ideas.base.Directive.__init__">(inversion_ideas.base.Directive method)</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.base.Minimizer.html#inversion_ideas.base.Minimizer.__init__">(inversion_ideas.base.Minimizer method)</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.base.MinimizerResult.html#inversion_ideas.base.MinimizerResult.__init__">(inversion_ideas.base.MinimizerResult method)</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.base.Objective.html#inversion_ideas.base.Objective.__init__">(inversion_ideas.base.Objective method)</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.base.Scaled.html#inversion_ideas.base.Scaled.__init__">(inversion_ideas.base.Scaled method)</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.base.Simulation.html#inversion_ideas.base.Simulation.__init__">(inversion_ideas.base.Simulation method)</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.BFGSPreconditioner.html#inversion_ideas.BFGSPreconditioner.__init__">(inversion_ideas.BFGSPreconditioner method)</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.conditions.ChiTarget.html#inversion_ideas.conditions.ChiTarget.__init__">(inversion_ideas.conditions.ChiTarget method)</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.conditions.CustomCondition.html#inversion_ideas.conditions.CustomCondition.__init__">(inversion_ideas.conditions.CustomCondition method)</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.conditions.ModelChanged.html#inversion_ideas.conditions.ModelChanged.__init__">(inversion_ideas.conditions.ModelChanged method)</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.conditions.ObjectiveChanged.html#inversion_ideas.conditions.ObjectiveChanged.__init__">(inversion_ideas.conditions.ObjectiveChanged method)</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.DataMisfit.html#inversion_ideas.DataMisfit.__init__">(inversion_ideas.DataMisfit method)</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.directives.Irls.html#inversion_ideas.directives.Irls.__init__">(inversion_ideas.directives.Irls method)</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.directives.MultiplierCooler.html#inversion_ideas.directives.MultiplierCooler.__init__">(inversion_ideas.directives.MultiplierCooler method)</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.directives.UpdateSensitivityWeights.html#inversion_ideas.directives.UpdateSensitivityWeights.__init__">(inversion_ideas.directives.UpdateSensitivityWeights method)</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.Flatness.html#inversion_ideas.Flatness.__init__">(inversion_ideas.Flatness method)</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.GaussNewtonConjugateGradient.html#inversion_ideas.GaussNewtonConjugateGradient.__init__">(inversion_ideas.GaussNewtonConjugateGradient method)</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.Inversion.html#inversion_ideas.Inversion.__init__">(inversion_ideas.Inversion method)</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.InversionLog.html#inversion_ideas.InversionLog.__init__">(inversion_ideas.InversionLog method)</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.InversionLogRich.html#inversion_ideas.InversionLogRich.__init__">(inversion_ideas.InversionLogRich method)</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.JacobiPreconditioner.html#inversion_ideas.JacobiPreconditioner.__init__">(inversion_ideas.JacobiPreconditioner method)</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.operators.Identity.html#inversion_ideas.operators.Identity.__init__">(inversion_ideas.operators.Identity method)</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.Smallness.html#inversion_ideas.Smallness.__init__">(inversion_ideas.Smallness method)</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.SparseSmallness.html#inversion_ideas.SparseSmallness.__init__">(inversion_ideas.SparseSmallness method)</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.TikhonovZero.html#inversion_ideas.TikhonovZero.__init__">(inversion_ideas.TikhonovZero method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/api/inversion_ideas.BFGSPreconditioner.html#inversion_ideas.BFGSPreconditioner">BFGSPreconditioner (class in inversion_ideas)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/api/inversion_ideas.utils.cache_on_model.html#inversion_ideas.utils.cache_on_model">cache_on_model() (in module inversion_ideas.utils)</a>
+</li>
+      <li><a href="reference/api/inversion_ideas.conditions.ChiTarget.html#inversion_ideas.conditions.ChiTarget">ChiTarget (class in inversion_ideas.conditions)</a>
+</li>
+      <li><a href="reference/api/inversion_ideas.base.Combo.html#inversion_ideas.base.Combo">Combo (class in inversion_ideas.base)</a>
+</li>
+      <li><a href="reference/api/inversion_ideas.base.Condition.html#inversion_ideas.base.Condition">Condition (class in inversion_ideas.base)</a>
+</li>
+      <li><a href="reference/api/inversion_ideas.conjugate_gradient.html#inversion_ideas.conjugate_gradient">conjugate_gradient() (in module inversion_ideas)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/api/inversion_ideas.errors.ConvergenceWarning.html#inversion_ideas.errors.ConvergenceWarning">ConvergenceWarning</a>
+</li>
+      <li><a href="reference/api/inversion_ideas.create_l2_inversion.html#inversion_ideas.create_l2_inversion">create_l2_inversion() (in module inversion_ideas)</a>
+</li>
+      <li><a href="reference/api/inversion_ideas.create_sparse_inversion.html#inversion_ideas.create_sparse_inversion">create_sparse_inversion() (in module inversion_ideas)</a>
+</li>
+      <li><a href="reference/api/inversion_ideas.create_tikhonov_regularization.html#inversion_ideas.create_tikhonov_regularization">create_tikhonov_regularization() (in module inversion_ideas)</a>
+</li>
+      <li><a href="reference/api/inversion_ideas.conditions.CustomCondition.html#inversion_ideas.conditions.CustomCondition">CustomCondition (class in inversion_ideas.conditions)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="D">D</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/api/inversion_ideas.DataMisfit.html#inversion_ideas.DataMisfit">DataMisfit (class in inversion_ideas)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/api/inversion_ideas.base.Directive.html#inversion_ideas.base.Directive">Directive (class in inversion_ideas.base)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/api/inversion_ideas.Flatness.html#inversion_ideas.Flatness">Flatness (class in inversion_ideas)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/api/inversion_ideas.GaussNewtonConjugateGradient.html#inversion_ideas.GaussNewtonConjugateGradient">GaussNewtonConjugateGradient (class in inversion_ideas)</a>
+</li>
+      <li><a href="reference/api/inversion_ideas.operators.get_diagonal.html#inversion_ideas.operators.get_diagonal">get_diagonal() (in module inversion_ideas.operators)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/api/inversion_ideas.get_jacobi_preconditioner.html#inversion_ideas.get_jacobi_preconditioner">get_jacobi_preconditioner() (in module inversion_ideas)</a>
+</li>
+      <li><a href="reference/api/inversion_ideas.utils.get_logger.html#inversion_ideas.utils.get_logger">get_logger() (in module inversion_ideas.utils)</a>
+</li>
+      <li><a href="reference/api/inversion_ideas.utils.get_sensitivity_weights.html#inversion_ideas.utils.get_sensitivity_weights">get_sensitivity_weights() (in module inversion_ideas.utils)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/api/inversion_ideas.operators.Identity.html#inversion_ideas.operators.Identity">Identity (class in inversion_ideas.operators)</a>
+</li>
+      <li><a href="reference/api/inversion_ideas.Inversion.html#inversion_ideas.Inversion">Inversion (class in inversion_ideas)</a>
+</li>
+      <li>
+    inversion_ideas.base
+
+      <ul>
+        <li><a href="reference/api/inversion_ideas.base.html#module-inversion_ideas.base">module</a>
+</li>
+      </ul></li>
+      <li>
+    inversion_ideas.conditions
+
+      <ul>
+        <li><a href="reference/api/inversion_ideas.conditions.html#module-inversion_ideas.conditions">module</a>
+</li>
+      </ul></li>
+      <li>
+    inversion_ideas.directives
+
+      <ul>
+        <li><a href="reference/api/inversion_ideas.directives.html#module-inversion_ideas.directives">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    inversion_ideas.errors
+
+      <ul>
+        <li><a href="reference/api/inversion_ideas.errors.html#module-inversion_ideas.errors">module</a>
+</li>
+      </ul></li>
+      <li>
+    inversion_ideas.operators
+
+      <ul>
+        <li><a href="reference/api/inversion_ideas.operators.html#module-inversion_ideas.operators">module</a>
+</li>
+      </ul></li>
+      <li>
+    inversion_ideas.utils
+
+      <ul>
+        <li><a href="reference/api/inversion_ideas.utils.html#module-inversion_ideas.utils">module</a>
+</li>
+      </ul></li>
+      <li><a href="reference/api/inversion_ideas.InversionLog.html#inversion_ideas.InversionLog">InversionLog (class in inversion_ideas)</a>
+</li>
+      <li><a href="reference/api/inversion_ideas.InversionLogRich.html#inversion_ideas.InversionLogRich">InversionLogRich (class in inversion_ideas)</a>
+</li>
+      <li><a href="reference/api/inversion_ideas.directives.Irls.html#inversion_ideas.directives.Irls">Irls (class in inversion_ideas.directives)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="J">J</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/api/inversion_ideas.JacobiPreconditioner.html#inversion_ideas.JacobiPreconditioner">JacobiPreconditioner (class in inversion_ideas)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/api/inversion_ideas.base.Minimizer.html#inversion_ideas.base.Minimizer">Minimizer (class in inversion_ideas.base)</a>
+</li>
+      <li><a href="reference/api/inversion_ideas.base.MinimizerResult.html#inversion_ideas.base.MinimizerResult">MinimizerResult (class in inversion_ideas.base)</a>
+</li>
+      <li><a href="reference/api/inversion_ideas.conditions.ModelChanged.html#inversion_ideas.conditions.ModelChanged">ModelChanged (class in inversion_ideas.conditions)</a>
+</li>
+      <li>
+    module
+
+      <ul>
+        <li><a href="reference/api/inversion_ideas.base.html#module-inversion_ideas.base">inversion_ideas.base</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.conditions.html#module-inversion_ideas.conditions">inversion_ideas.conditions</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.directives.html#module-inversion_ideas.directives">inversion_ideas.directives</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.errors.html#module-inversion_ideas.errors">inversion_ideas.errors</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.operators.html#module-inversion_ideas.operators">inversion_ideas.operators</a>
+</li>
+        <li><a href="reference/api/inversion_ideas.utils.html#module-inversion_ideas.utils">inversion_ideas.utils</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/api/inversion_ideas.directives.MultiplierCooler.html#inversion_ideas.directives.MultiplierCooler">MultiplierCooler (class in inversion_ideas.directives)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/api/inversion_ideas.errors.NotInitializedError.html#inversion_ideas.errors.NotInitializedError">NotInitializedError</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="O">O</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/api/inversion_ideas.base.Objective.html#inversion_ideas.base.Objective">Objective (class in inversion_ideas.base)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/api/inversion_ideas.conditions.ObjectiveChanged.html#inversion_ideas.conditions.ObjectiveChanged">ObjectiveChanged (class in inversion_ideas.conditions)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/api/inversion_ideas.base.Scaled.html#inversion_ideas.base.Scaled">Scaled (class in inversion_ideas.base)</a>
+</li>
+      <li><a href="reference/api/inversion_ideas.base.Simulation.html#inversion_ideas.base.Simulation">Simulation (class in inversion_ideas.base)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/api/inversion_ideas.Smallness.html#inversion_ideas.Smallness">Smallness (class in inversion_ideas)</a>
+</li>
+      <li><a href="reference/api/inversion_ideas.SparseSmallness.html#inversion_ideas.SparseSmallness">SparseSmallness (class in inversion_ideas)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/api/inversion_ideas.TikhonovZero.html#inversion_ideas.TikhonovZero">TikhonovZero (class in inversion_ideas)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="U">U</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/api/inversion_ideas.directives.UpdateSensitivityWeights.html#inversion_ideas.directives.UpdateSensitivityWeights">UpdateSensitivityWeights (class in inversion_ideas.directives)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/api/inversion_ideas.wrap_simulation.html#inversion_ideas.wrap_simulation">wrap_simulation() (in module inversion_ideas)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, SimPEG Developers.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

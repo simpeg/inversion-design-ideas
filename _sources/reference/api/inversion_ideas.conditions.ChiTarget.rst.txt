@@ -1,0 +1,25 @@
+﻿inversion\_ideas.conditions.ChiTarget
+=====================================
+
+.. currentmodule:: inversion_ideas.conditions
+
+.. autoclass:: ChiTarget
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ChiTarget.__init__
+      ~ChiTarget.info
+      ~ChiTarget.initialize
+      ~ChiTarget.update
+   
+   
+
+   
+   
+   

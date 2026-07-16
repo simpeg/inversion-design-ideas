@@ -1,0 +1,6 @@
+﻿inversion\_ideas.errors.NotInitializedError
+===========================================
+
+.. currentmodule:: inversion_ideas.errors
+
+.. autoexception:: NotInitializedError

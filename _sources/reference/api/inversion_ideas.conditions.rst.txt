@@ -1,0 +1,15 @@
+﻿inversion\_ideas.conditions
+===========================
+
+.. automodule:: inversion_ideas.conditions
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ChiTarget
+      CustomCondition
+      ModelChanged
+      ObjectiveChanged
+   

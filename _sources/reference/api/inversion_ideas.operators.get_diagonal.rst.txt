@@ -1,0 +1,6 @@
+﻿inversion\_ideas.operators.get\_diagonal
+========================================
+
+.. currentmodule:: inversion_ideas.operators
+
+.. autofunction:: get_diagonal

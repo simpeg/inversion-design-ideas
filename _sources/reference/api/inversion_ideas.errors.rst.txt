@@ -1,0 +1,13 @@
+﻿inversion\_ideas.errors
+=======================
+
+.. automodule:: inversion_ideas.errors
+
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+   
+      ConvergenceWarning
+      NotInitializedError
+   

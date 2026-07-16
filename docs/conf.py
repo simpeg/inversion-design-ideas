@@ -46,6 +46,11 @@ html_theme_options = {
     "use_edit_page_button": False,
     "collapse_navigation": False,
     "navigation_with_keys": True,
+    "announcement": (
+        "⚠️ This repo contains an experimental prototype for SimPEG's "
+        "new inversion framework. "
+    ),
+    "show_version_warning_banner": True,
 }
 
 html_context = {

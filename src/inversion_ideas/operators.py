@@ -10,6 +10,7 @@ from inversion_ideas.typing import HasDiagonal, SparseArray
 
 __all__ = [
     "Identity",
+    "get_diagonal",
 ]
 
 

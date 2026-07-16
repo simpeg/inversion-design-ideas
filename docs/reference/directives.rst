@@ -8,6 +8,7 @@ Directives
 .. autosummary::
    :toctree: api/
 
-   Irls
-   MultiplierCooler
-   UpdateSensitivityWeights
+   directives
+   directives.Irls
+   directives.MultiplierCooler
+   directives.UpdateSensitivityWeights

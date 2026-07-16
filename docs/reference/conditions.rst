@@ -8,7 +8,8 @@ Conditions
 .. autosummary::
    :toctree: api/
 
-   ChiTarget
-   CustomCondition
-   ObjectiveChanged
-   ModelChanged
+   conditions
+   conditions.ChiTarget
+   conditions.CustomCondition
+   conditions.ObjectiveChanged
+   conditions.ModelChanged

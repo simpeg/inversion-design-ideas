@@ -5,38 +5,114 @@
 
 .. autoclass:: BFGSPreconditioner
 
-   
-   .. automethod:: __init__
 
-   
-   .. rubric:: Methods
 
-   .. autosummary::
-   
-      ~BFGSPreconditioner.__init__
-      ~BFGSPreconditioner.adjoint
-      ~BFGSPreconditioner.dot
-      ~BFGSPreconditioner.matmat
-      ~BFGSPreconditioner.matvec
-      ~BFGSPreconditioner.rdot
-      ~BFGSPreconditioner.reset
-      ~BFGSPreconditioner.rmatmat
-      ~BFGSPreconditioner.rmatvec
-      ~BFGSPreconditioner.transpose
-      ~BFGSPreconditioner.update
-   
-   
+Attributes
+----------
 
-   
-   
-   .. rubric:: Attributes
 
-   .. autosummary::
-   
-      ~BFGSPreconditioner.H
-      ~BFGSPreconditioner.T
-      ~BFGSPreconditioner.index
-      ~BFGSPreconditioner.matrix
-      ~BFGSPreconditioner.ndim
-   
-   
+
+.. autoattribute:: BFGSPreconditioner.H
+
+
+
+.. autoattribute:: BFGSPreconditioner.T
+
+
+
+.. autoattribute:: BFGSPreconditioner.index
+
+
+
+.. autoattribute:: BFGSPreconditioner.matrix
+
+
+
+.. autoattribute:: BFGSPreconditioner.ndim
+
+
+
+
+
+Methods
+-------
+
+.. rubric:: Methods documentation
+
+
+
+
+
+.. automethod:: BFGSPreconditioner.adjoint
+
+----
+
+
+
+
+.. automethod:: BFGSPreconditioner.dot
+
+----
+
+
+
+
+.. automethod:: BFGSPreconditioner.matmat
+
+----
+
+
+
+
+.. automethod:: BFGSPreconditioner.matvec
+
+----
+
+
+
+
+.. automethod:: BFGSPreconditioner.rdot
+
+----
+
+
+
+
+.. automethod:: BFGSPreconditioner.reset
+
+----
+
+
+
+
+.. automethod:: BFGSPreconditioner.rmatmat
+
+----
+
+
+
+
+.. automethod:: BFGSPreconditioner.rmatvec
+
+----
+
+
+
+
+.. automethod:: BFGSPreconditioner.transpose
+
+----
+
+
+
+
+.. automethod:: BFGSPreconditioner.update
+
+----
+
+
+
+
+.. raw:: html
+
+     <div style='clear:both'></div>

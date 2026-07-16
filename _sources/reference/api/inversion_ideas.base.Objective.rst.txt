@@ -5,31 +5,74 @@
 
 .. autoclass:: Objective
 
-   
-   .. automethod:: __init__
 
-   
-   .. rubric:: Methods
 
-   .. autosummary::
-   
-      ~Objective.__init__
-      ~Objective.gradient
-      ~Objective.hessian
-      ~Objective.hessian_approx
-      ~Objective.hessian_diagonal
-      ~Objective.info
-      ~Objective.set_name
-   
-   
+Attributes
+----------
 
-   
-   
-   .. rubric:: Attributes
 
-   .. autosummary::
-   
-      ~Objective.n_params
-      ~Objective.name
-   
-   
+
+.. autoattribute:: Objective.n_params
+
+
+
+.. autoattribute:: Objective.name
+
+
+
+
+
+Methods
+-------
+
+.. rubric:: Methods documentation
+
+
+
+
+
+.. automethod:: Objective.gradient
+
+----
+
+
+
+
+.. automethod:: Objective.hessian
+
+----
+
+
+
+
+.. automethod:: Objective.hessian_approx
+
+----
+
+
+
+
+.. automethod:: Objective.hessian_diagonal
+
+----
+
+
+
+
+.. automethod:: Objective.info
+
+----
+
+
+
+
+.. automethod:: Objective.set_name
+
+----
+
+
+
+
+.. raw:: html
+
+     <div style='clear:both'></div>

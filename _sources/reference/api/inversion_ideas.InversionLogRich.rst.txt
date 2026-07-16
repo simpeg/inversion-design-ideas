@@ -5,34 +5,89 @@
 
 .. autoclass:: InversionLogRich
 
-   
-   .. automethod:: __init__
 
-   
-   .. rubric:: Methods
 
-   .. autosummary::
-   
-      ~InversionLogRich.__init__
-      ~InversionLogRich.add_column
-      ~InversionLogRich.create_from
-      ~InversionLogRich.live
-      ~InversionLogRich.show
-      ~InversionLogRich.to_pandas
-      ~InversionLogRich.update
-      ~InversionLogRich.update_table
-   
-   
+Attributes
+----------
 
-   
-   
-   .. rubric:: Attributes
 
-   .. autosummary::
-   
-      ~InversionLogRich.columns
-      ~InversionLogRich.has_records
-      ~InversionLogRich.log
-      ~InversionLogRich.table
-   
-   
+
+.. autoattribute:: InversionLogRich.columns
+
+
+
+.. autoattribute:: InversionLogRich.has_records
+
+
+
+.. autoattribute:: InversionLogRich.log
+
+
+
+.. autoattribute:: InversionLogRich.table
+
+
+
+
+
+Methods
+-------
+
+.. rubric:: Methods documentation
+
+
+
+
+
+.. automethod:: InversionLogRich.add_column
+
+----
+
+
+
+
+.. automethod:: InversionLogRich.create_from
+
+----
+
+
+
+
+.. automethod:: InversionLogRich.live
+
+----
+
+
+
+
+.. automethod:: InversionLogRich.show
+
+----
+
+
+
+
+.. automethod:: InversionLogRich.to_pandas
+
+----
+
+
+
+
+.. automethod:: InversionLogRich.update
+
+----
+
+
+
+
+.. automethod:: InversionLogRich.update_table
+
+----
+
+
+
+
+.. raw:: html
+
+     <div style='clear:both'></div>

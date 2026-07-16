@@ -497,16 +497,16 @@ If None, the identity matrix will be used.</p>
 <p class="rubric">Attributes</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">H</span></code></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.BFGSPreconditioner.H" title="inversion_ideas.BFGSPreconditioner.H"><code class="xref py py-obj docutils literal notranslate"><span class="pre">H</span></code></a></p></td>
 <td><p>Hermitian adjoint.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.BFGSPreconditioner.T" title="inversion_ideas.BFGSPreconditioner.T"><code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code></a></p></td>
 <td><p>Transpose.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">index</span></code></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.BFGSPreconditioner.index" title="inversion_ideas.BFGSPreconditioner.index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">index</span></code></a></p></td>
 <td><p>Current index of the BFGS update algorithm.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">matrix</span></code></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.BFGSPreconditioner.matrix" title="inversion_ideas.BFGSPreconditioner.matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">matrix</span></code></a></p></td>
 <td><p>Current preconditioner matrix <span class="math notranslate nohighlight">\(H_k\)</span>.</p></td>
 </tr>
 </tbody>
@@ -518,34 +518,34 @@ If None, the identity matrix will be used.</p>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(x)</p></td>
 <td><p>Apply this linear operator.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">adjoint</span></code>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.BFGSPreconditioner.adjoint" title="inversion_ideas.BFGSPreconditioner.adjoint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">adjoint</span></code></a>()</p></td>
 <td><p>Hermitian adjoint.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dot</span></code>(x)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.BFGSPreconditioner.dot" title="inversion_ideas.BFGSPreconditioner.dot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dot</span></code></a>(x)</p></td>
 <td><p>Multi-purpose multiplication method.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">matmat</span></code>(X)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.BFGSPreconditioner.matmat" title="inversion_ideas.BFGSPreconditioner.matmat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">matmat</span></code></a>(X)</p></td>
 <td><p>Matrix-matrix multiplication.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">matvec</span></code>(x)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.BFGSPreconditioner.matvec" title="inversion_ideas.BFGSPreconditioner.matvec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">matvec</span></code></a>(x)</p></td>
 <td><p>Matrix-vector multiplication.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rdot</span></code>(x)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.BFGSPreconditioner.rdot" title="inversion_ideas.BFGSPreconditioner.rdot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rdot</span></code></a>(x)</p></td>
 <td><p>Multi-purpose multiplication method from the right.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.BFGSPreconditioner.reset" title="inversion_ideas.BFGSPreconditioner.reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code></a>()</p></td>
 <td><p>Reset the BFGS preconditioner.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rmatmat</span></code>(X)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.BFGSPreconditioner.rmatmat" title="inversion_ideas.BFGSPreconditioner.rmatmat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rmatmat</span></code></a>(X)</p></td>
 <td><p>Adjoint matrix-matrix multiplication.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rmatvec</span></code>(x)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.BFGSPreconditioner.rmatvec" title="inversion_ideas.BFGSPreconditioner.rmatvec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rmatvec</span></code></a>(x)</p></td>
 <td><p>Adjoint matrix-vector multiplication.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">transpose</span></code>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.BFGSPreconditioner.transpose" title="inversion_ideas.BFGSPreconditioner.transpose"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transpose</span></code></a>()</p></td>
 <td><p>Transpose.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code>(model)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.BFGSPreconditioner.update" title="inversion_ideas.BFGSPreconditioner.update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code></a>(model)</p></td>
 <td><p>Update the BFGS preconditioner.</p></td>
 </tr>
 </tbody>
@@ -568,76 +568,367 @@ eq. 8.16):</p>
 can set an initial value for it through the <code class="docutils literal notranslate"><span class="pre">initial_preconditioner</span></code> argument.</p>
 <p class="rubric">References</p>
 <p>Nocedal, J., &amp; Wright, S. J. (1999). Numerical optimization. Springer.</p>
+</dd></dl>
+
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading">#</a></h2>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner.H">
+<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">H</span></span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.H" title="Link to this definition">#</a></dt>
+<dd><p>Hermitian adjoint.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse.linalg.LinearOperator.adjoint</span></code></dt><dd><p>Equivalent method.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner.T">
+<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">T</span></span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.T" title="Link to this definition">#</a></dt>
+<dd><p>Transpose.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse.linalg.LinearOperator.transpose</span></code></dt><dd><p>Equivalent method.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner.index">
+<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">index</span></span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.index" title="Link to this definition">#</a></dt>
+<dd><p>Current index of the BFGS update algorithm.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner.matrix">
+<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">matrix</span></span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.matrix" title="Link to this definition">#</a></dt>
+<dd><p>Current preconditioner matrix <span class="math notranslate nohighlight">\(H_k\)</span>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner.ndim">
+<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">ndim</span></span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.ndim" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Link to this heading">#</a></h2>
+<p class="rubric">Methods documentation</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objective_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="inversion_ideas.base.Objective.html#inversion_ideas.base.Objective" title="inversion_ideas.base.objective_function.Objective"><span class="pre">Objective</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bsr_array</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">coo_array</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">csc_array</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">csr_array</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dia_array</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">LinearOperator</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;class</span> <span class="pre">'numpy.float64'&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.__init__" title="Link to this definition">#</a></dt>
-<dd><p>Initialize this LinearOperator.</p>
-<p>To be called by subclasses. <code class="docutils literal notranslate"><span class="pre">dtype</span></code> may be None; <code class="docutils literal notranslate"><span class="pre">shape</span></code> should
-be convertible to a length &gt;=2 tuple.</p>
-</dd></dl>
-
-<p class="rubric">Methods</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.BFGSPreconditioner.__init__" title="inversion_ideas.BFGSPreconditioner.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(objective_function, initial_matrix)</p></td>
-<td><p>Initialize this LinearOperator.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">adjoint</span></code>()</p></td>
-<td><p>Hermitian adjoint.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dot</span></code>(x)</p></td>
-<td><p>Multi-purpose multiplication method.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">matmat</span></code>(X)</p></td>
-<td><p>Matrix-matrix multiplication.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">matvec</span></code>(x)</p></td>
-<td><p>Matrix-vector multiplication.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rdot</span></code>(x)</p></td>
-<td><p>Multi-purpose multiplication method from the right.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code>()</p></td>
-<td><p>Reset the BFGS preconditioner.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rmatmat</span></code>(X)</p></td>
-<td><p>Adjoint matrix-matrix multiplication.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rmatvec</span></code>(x)</p></td>
-<td><p>Adjoint matrix-vector multiplication.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">transpose</span></code>()</p></td>
-<td><p>Transpose.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code>(model)</p></td>
-<td><p>Update the BFGS preconditioner.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p class="rubric">Attributes</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">H</span></code></p></td>
-<td><p>Hermitian adjoint.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code></p></td>
-<td><p>Transpose.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">index</span></code></p></td>
-<td><p>Current index of the BFGS update algorithm.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">matrix</span></code></p></td>
-<td><p>Current preconditioner matrix <span class="math notranslate nohighlight">\(H_k\)</span>.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndim</span></code></p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
+<dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner.adjoint">
+<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">adjoint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.adjoint" title="Link to this definition">#</a></dt>
+<dd><p>Hermitian adjoint.</p>
+<p>Returns the Hermitian adjoint of this linear operator,
+also known as the Hermitian
+conjugate or Hermitian transpose. For a complex matrix, the
+Hermitian adjoint is equal to the conjugate transpose.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><cite>LinearOperator</cite></dt><dd><p>Hermitian adjoint of self.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-attr docutils literal notranslate"><span class="pre">H</span></code></dt><dd><p>Equivalent attribute.</p>
+</dd>
+</dl>
 </div>
 </dd></dl>
 
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner.dot">
+<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.dot" title="Link to this definition">#</a></dt>
+<dd><p>Multi-purpose multiplication method.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>x</strong><span class="classifier">array_like or <cite>LinearOperator</cite> or scalar</span></dt><dd><p>Array-like input will be interpreted as a 1-D row vector or
+2-D matrix (or batch of matrices)
+depending on its shape. See the Returns section for details.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>Ax</strong><span class="classifier">array or <cite>LinearOperator</cite></span></dt><dd><ul class="simple">
+<li><p>For <cite>LinearOperator</cite> input, operator composition is performed.</p></li>
+<li><p>For scalar input, a lazily scaled operator is returned.</p></li>
+<li><p>Otherwise, the input is expected to take the form of a dense
+1-D vector or 2-D matrix (or batch of matrices),
+interpreted as follows
+(where <code class="docutils literal notranslate"><span class="pre">self</span></code> is an <code class="docutils literal notranslate"><span class="pre">M</span></code> by <code class="docutils literal notranslate"><span class="pre">N</span></code> linear operator):</p>
+<ul>
+<li><p>If <cite>x</cite> has shape <code class="docutils literal notranslate"><span class="pre">(N,)</span></code>
+it is interpreted as a row vector
+and <cite>matvec</cite> is called.</p></li>
+<li><p>If <cite>x</cite> has shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">N,</span> <span class="pre">K)</span></code> for some
+integer <code class="docutils literal notranslate"><span class="pre">K</span></code>, it is interpreted as a matrix
+(or batch of matrices if there are batch dimensions)
+and <cite>matmat</cite> is called.</p></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">__mul__</span></code></dt><dd><p>Equivalent method used by the <code class="docutils literal notranslate"><span class="pre">*</span></code> operator.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">__matmul__</span></code></dt><dd><p>Method used by the <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> operator which rejects scalar input before calling this method.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>To perform matrix-vector multiplication on batches of vectors,
+use <cite>matvec</cite>.</p>
+<p>For clarity, it is recommended to use the <cite>matvec</cite> or
+<cite>matmat</cite> methods directly instead of this method
+when interacting with dense vectors and matrices.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner.matmat">
+<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">matmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.matmat" title="Link to this definition">#</a></dt>
+<dd><p>Matrix-matrix multiplication.</p>
+<p>Performs the operation <code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">&#64;</span> <span class="pre">X</span></code> where <code class="docutils literal notranslate"><span class="pre">A</span></code> is an <code class="docutils literal notranslate"><span class="pre">M</span></code> x <code class="docutils literal notranslate"><span class="pre">N</span></code>
+linear operator (or batch of linear operators)
+and <cite>X</cite> is a dense <code class="docutils literal notranslate"><span class="pre">N</span></code> x <code class="docutils literal notranslate"><span class="pre">K</span></code> matrix
+(or batch of dense matrices).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">{matrix, ndarray}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">N,</span> <span class="pre">K)</span></code> representing the dense matrix
+(or batch of dense matrices).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>Y</strong><span class="classifier">{matrix, ndarray}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">M,</span> <span class="pre">K)</span></code>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This method wraps any user-specified <code class="docutils literal notranslate"><span class="pre">matmat</span></code> routine or overridden
+<code class="docutils literal notranslate"><span class="pre">_matmat</span></code> method to ensure that <cite>Y</cite> has the correct type.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner.matvec">
+<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">matvec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.matvec" title="Link to this definition">#</a></dt>
+<dd><p>Matrix-vector multiplication.</p>
+<p>Applies <code class="docutils literal notranslate"><span class="pre">A</span></code> to <cite>x</cite>, where <code class="docutils literal notranslate"><span class="pre">A</span></code> is an <code class="docutils literal notranslate"><span class="pre">M</span></code> x <code class="docutils literal notranslate"><span class="pre">N</span></code>
+linear operator (or batch of linear operators)
+and <cite>x</cite> is a row vector (or batch of such vectors).</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>x</strong><span class="classifier">{matrix, ndarray}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">N)</span></code> representing a row vector
+(or batch of row vectors).</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.18.0: </span>A <code class="docutils literal notranslate"><span class="pre">FutureWarning</span></code> is emitted for column vector input of shape
+<code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">1)</span></code>, for which an array with shape <code class="docutils literal notranslate"><span class="pre">(M,</span> <span class="pre">1)</span></code> is returned.
+<cite>matmat</cite> can be called instead for identical behaviour on such input.</p>
+</div>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>y</strong><span class="classifier">{matrix, ndarray}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">M)</span></code>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This method wraps the user-specified <code class="docutils literal notranslate"><span class="pre">matvec</span></code> routine or overridden
+<code class="docutils literal notranslate"><span class="pre">_matvec</span></code> method to ensure that <cite>y</cite> has the correct shape and type.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner.rdot">
+<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">rdot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.rdot" title="Link to this definition">#</a></dt>
+<dd><p>Multi-purpose multiplication method from the right.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method returns <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">A</span></code>.
+To perform adjoint multiplication instead, use one of
+<cite>rmatvec</cite> or <cite>rmatmat</cite>, or take the adjoint first,
+like <code class="docutils literal notranslate"><span class="pre">self.H.rdot(x)</span></code> or <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">*</span> <span class="pre">self.H</span></code>.</p>
+</div>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>x</strong><span class="classifier">array_like or <cite>LinearOperator</cite> or scalar</span></dt><dd><p>Array-like input will be interpreted as a 1-D row vector or
+2-D matrix (or batch of matrices)
+depending on its shape. See the Returns section for details.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>xA</strong><span class="classifier">array or <cite>LinearOperator</cite></span></dt><dd><ul class="simple">
+<li><p>For <cite>LinearOperator</cite> input, operator composition is performed.</p></li>
+<li><p>For scalar input, a lazily scaled operator is returned.</p></li>
+<li><p>Otherwise, the input is expected to take the form of a dense
+1-D vector or 2-D matrix (or batch of matrices),
+interpreted as follows
+(where <code class="docutils literal notranslate"><span class="pre">self</span></code> is an <code class="docutils literal notranslate"><span class="pre">M</span></code> by <code class="docutils literal notranslate"><span class="pre">N</span></code> linear operator):</p>
+<ul>
+<li><p>If <cite>x</cite> has shape <code class="docutils literal notranslate"><span class="pre">(M,)</span></code>
+it is interpreted as a row vector.</p></li>
+<li><p>If <cite>x</cite> has shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">K,</span> <span class="pre">M)</span></code> for some
+integer <code class="docutils literal notranslate"><span class="pre">K</span></code>, it is interpreted as a matrix
+(or batch of matrices if there are batch dimensions).</p></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#inversion_ideas.BFGSPreconditioner.dot" title="inversion_ideas.BFGSPreconditioner.dot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dot</span></code></a></dt><dd><p>Multi-purpose multiplication method from the left.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">__rmul__</span></code></dt><dd><p>Equivalent method, used by the <code class="docutils literal notranslate"><span class="pre">*</span></code> operator from the right.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">__rmatmul__</span></code></dt><dd><p>Method used by the <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> operator from the right which rejects scalar input before calling this method.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner.reset">
+<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.reset" title="Link to this definition">#</a></dt>
+<dd><p>Reset the BFGS preconditioner.</p>
+<p>Ditch the current preconditioner matrix estimation and start over with the
+initial matrix. Resets the <code class="docutils literal notranslate"><span class="pre">index</span></code> to None.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner.rmatmat">
+<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">rmatmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.rmatmat" title="Link to this definition">#</a></dt>
+<dd><p>Adjoint matrix-matrix multiplication.</p>
+<p>Performs the operation <code class="docutils literal notranslate"><span class="pre">A^H</span> <span class="pre">&#64;</span> <span class="pre">X</span></code> where <code class="docutils literal notranslate"><span class="pre">A</span></code> is an <code class="docutils literal notranslate"><span class="pre">M</span></code> x <code class="docutils literal notranslate"><span class="pre">N</span></code>
+linear operator (or batch of linear operators)
+and <cite>X</cite> is a dense <code class="docutils literal notranslate"><span class="pre">M</span></code> x <code class="docutils literal notranslate"><span class="pre">K</span></code> matrix
+(or batch of dense matrices).
+The default implementation defers to the adjoint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">{matrix, ndarray}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">M,</span> <span class="pre">K)</span></code> representing the dense matrix
+(or batch of dense matrices).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>Y</strong><span class="classifier">{matrix, ndarray}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">N,</span> <span class="pre">K)</span></code>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This method wraps any user-specified <code class="docutils literal notranslate"><span class="pre">rmatmat</span></code> routine or overridden
+<code class="docutils literal notranslate"><span class="pre">_rmatmat</span></code> method to ensure that <cite>Y</cite> has the correct type.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner.rmatvec">
+<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">rmatvec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.rmatvec" title="Link to this definition">#</a></dt>
+<dd><p>Adjoint matrix-vector multiplication.</p>
+<p>Applies <code class="docutils literal notranslate"><span class="pre">A^H</span></code> to <cite>x</cite>, where <code class="docutils literal notranslate"><span class="pre">A</span></code> is an
+<code class="docutils literal notranslate"><span class="pre">M</span></code> x <code class="docutils literal notranslate"><span class="pre">N</span></code> linear operator (or batch of linear operators)
+and <cite>x</cite> is a row vector (or batch of such vectors).</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>x</strong><span class="classifier">{matrix, ndarray}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">M)</span></code> representing a row vector
+(or batch of row vectors),
+or an array with shape <code class="docutils literal notranslate"><span class="pre">(M,</span> <span class="pre">1)</span></code> representing a column vector.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.18.0: </span>A <code class="docutils literal notranslate"><span class="pre">FutureWarning</span></code> is now emitted for column vector input of shape
+<code class="docutils literal notranslate"><span class="pre">(M,</span> <span class="pre">1)</span></code>, for which an array with shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">1)</span></code> is returned.
+<cite>rmatmat</cite> can be called instead for identical behaviour on such input.</p>
+</div>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>y</strong><span class="classifier">{matrix, ndarray}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">N)</span></code>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This method wraps the user-specified <code class="docutils literal notranslate"><span class="pre">rmatvec</span></code> routine or overridden
+<code class="docutils literal notranslate"><span class="pre">_rmatvec</span></code> method to ensure that <cite>y</cite> has the correct shape and type.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner.transpose">
+<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">transpose</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.transpose" title="Link to this definition">#</a></dt>
+<dd><p>Transpose.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><cite>LinearOperator</cite></dt><dd><p>Transpose of the linear operator.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-attr docutils literal notranslate"><span class="pre">T</span></code></dt><dd><p>Equivalent attribute.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner.update">
+<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.update" title="Link to this definition">#</a></dt>
+<dd><p>Update the BFGS preconditioner.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model</strong><span class="classifier">(n_params,) array</span></dt><dd><p>Model array.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<div style='clear:both'></div></section>
 </section>
 
 
@@ -687,8 +978,26 @@ be convertible to a length &gt;=2 tuple.</p>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.BFGSPreconditioner"><code class="docutils literal notranslate"><span class="pre">BFGSPreconditioner</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.BFGSPreconditioner.__init__"><code class="docutils literal notranslate"><span class="pre">BFGSPreconditioner.__init__()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.BFGSPreconditioner"><code class="docutils literal notranslate"><span class="pre">BFGSPreconditioner</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#attributes">Attributes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.BFGSPreconditioner.H"><code class="docutils literal notranslate"><span class="pre">BFGSPreconditioner.H</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.BFGSPreconditioner.T"><code class="docutils literal notranslate"><span class="pre">BFGSPreconditioner.T</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.BFGSPreconditioner.index"><code class="docutils literal notranslate"><span class="pre">BFGSPreconditioner.index</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.BFGSPreconditioner.matrix"><code class="docutils literal notranslate"><span class="pre">BFGSPreconditioner.matrix</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.BFGSPreconditioner.ndim"><code class="docutils literal notranslate"><span class="pre">BFGSPreconditioner.ndim</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#methods">Methods</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.BFGSPreconditioner.adjoint"><code class="docutils literal notranslate"><span class="pre">BFGSPreconditioner.adjoint()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.BFGSPreconditioner.dot"><code class="docutils literal notranslate"><span class="pre">BFGSPreconditioner.dot()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.BFGSPreconditioner.matmat"><code class="docutils literal notranslate"><span class="pre">BFGSPreconditioner.matmat()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.BFGSPreconditioner.matvec"><code class="docutils literal notranslate"><span class="pre">BFGSPreconditioner.matvec()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.BFGSPreconditioner.rdot"><code class="docutils literal notranslate"><span class="pre">BFGSPreconditioner.rdot()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.BFGSPreconditioner.reset"><code class="docutils literal notranslate"><span class="pre">BFGSPreconditioner.reset()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.BFGSPreconditioner.rmatmat"><code class="docutils literal notranslate"><span class="pre">BFGSPreconditioner.rmatmat()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.BFGSPreconditioner.rmatvec"><code class="docutils literal notranslate"><span class="pre">BFGSPreconditioner.rmatvec()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.BFGSPreconditioner.transpose"><code class="docutils literal notranslate"><span class="pre">BFGSPreconditioner.transpose()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.BFGSPreconditioner.update"><code class="docutils literal notranslate"><span class="pre">BFGSPreconditioner.update()</span></code></a></li>
 </ul>
 </li>
 </ul>

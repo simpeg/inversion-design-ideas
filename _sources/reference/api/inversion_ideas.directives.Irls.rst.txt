@@ -5,24 +5,28 @@
 
 .. autoclass:: Irls
 
-   
-   .. automethod:: __init__
 
-   
-   .. rubric:: Methods
 
-   .. autosummary::
-   
-      ~Irls.__init__
-   
-   
+Attributes
+----------
 
-   
-   
-   .. rubric:: Attributes
 
-   .. autosummary::
-   
-      ~Irls.beta_cooling_factor
-   
-   
+
+.. autoattribute:: Irls.beta_cooling_factor
+
+
+
+
+
+Methods
+-------
+
+.. rubric:: Methods documentation
+
+
+
+
+
+.. raw:: html
+
+     <div style='clear:both'></div>

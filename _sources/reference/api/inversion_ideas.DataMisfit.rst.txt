@@ -5,36 +5,100 @@
 
 .. autoclass:: DataMisfit
 
-   
-   .. automethod:: __init__
 
-   
-   .. rubric:: Methods
 
-   .. autosummary::
-   
-      ~DataMisfit.__init__
-      ~DataMisfit.chi_factor
-      ~DataMisfit.gradient
-      ~DataMisfit.hessian
-      ~DataMisfit.hessian_approx
-      ~DataMisfit.hessian_diagonal
-      ~DataMisfit.info
-      ~DataMisfit.residual
-      ~DataMisfit.set_name
-   
-   
+Attributes
+----------
 
-   
-   
-   .. rubric:: Attributes
 
-   .. autosummary::
-   
-      ~DataMisfit.n_data
-      ~DataMisfit.n_params
-      ~DataMisfit.name
-      ~DataMisfit.weights
-      ~DataMisfit.weights_matrix
-   
-   
+
+.. autoattribute:: DataMisfit.n_data
+
+
+
+.. autoattribute:: DataMisfit.n_params
+
+
+
+.. autoattribute:: DataMisfit.name
+
+
+
+.. autoattribute:: DataMisfit.weights
+
+
+
+.. autoattribute:: DataMisfit.weights_matrix
+
+
+
+
+
+Methods
+-------
+
+.. rubric:: Methods documentation
+
+
+
+
+
+.. automethod:: DataMisfit.chi_factor
+
+----
+
+
+
+
+.. automethod:: DataMisfit.gradient
+
+----
+
+
+
+
+.. automethod:: DataMisfit.hessian
+
+----
+
+
+
+
+.. automethod:: DataMisfit.hessian_approx
+
+----
+
+
+
+
+.. automethod:: DataMisfit.hessian_diagonal
+
+----
+
+
+
+
+.. automethod:: DataMisfit.info
+
+----
+
+
+
+
+.. automethod:: DataMisfit.residual
+
+----
+
+
+
+
+.. automethod:: DataMisfit.set_name
+
+----
+
+
+
+
+.. raw:: html
+
+     <div style='clear:both'></div>

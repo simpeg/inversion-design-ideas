@@ -475,7 +475,7 @@
 <h1>inversion_ideas.conditions.ObjectiveChanged<a class="headerlink" href="#inversion-ideas-conditions-objectivechanged" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="inversion_ideas.conditions.ObjectiveChanged">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inversion_ideas.conditions.</span></span><span class="sig-name descname"><span class="pre">ObjectiveChanged</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objective_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="inversion_ideas.base.Objective.html#inversion_ideas.base.Objective" title="inversion_ideas.base.objective_function.Objective"><span class="pre">Objective</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rtol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.conditions.ObjectiveChanged" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inversion_ideas.conditions.</span></span><span class="sig-name descname"><span class="pre">ObjectiveChanged</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objective_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rtol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.conditions.ObjectiveChanged" title="Link to this definition">#</a></dt>
 <dd><p>Stopping criteria for when an objective function didn’t changed above a tolerance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -497,16 +497,16 @@ enough.</p>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(model)</p></td>
 <td><p>Call self as a function.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code>(model)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.conditions.ObjectiveChanged.info" title="inversion_ideas.conditions.ObjectiveChanged.info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code></a>(model)</p></td>
 <td><p>Display information about the condition for a given model.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">initialize</span></code>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.conditions.ObjectiveChanged.initialize" title="inversion_ideas.conditions.ObjectiveChanged.initialize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initialize</span></code></a>()</p></td>
 <td><p>Initialize condition and clean <code class="docutils literal notranslate"><span class="pre">previous</span></code> attribute.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ratio</span></code>(model)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.conditions.ObjectiveChanged.ratio" title="inversion_ideas.conditions.ObjectiveChanged.ratio"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ratio</span></code></a>(model)</p></td>
 <td><p>Ratio <code class="docutils literal notranslate"><span class="pre">|φ(m)</span> <span class="pre">-</span> <span class="pre">φ(m_prev)|/|φ(m_prev)|</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code>(model)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.conditions.ObjectiveChanged.update" title="inversion_ideas.conditions.ObjectiveChanged.update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code></a>(model)</p></td>
 <td><p>Cache value of objective function with model as the <code class="docutils literal notranslate"><span class="pre">previous</span></code> one.</p></td>
 </tr>
 </tbody>
@@ -530,34 +530,40 @@ and <span class="math notranslate nohighlight">\(\delta_r\)</span> and <span cla
 whose values are given by <code class="docutils literal notranslate"><span class="pre">rtol</span></code> and <code class="docutils literal notranslate"><span class="pre">atol</span></code>, respectively.</p>
 <p>When called, if any of those inequalities hold, the stopping criteria will return
 <code class="docutils literal notranslate"><span class="pre">True</span></code>, and <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="inversion_ideas.conditions.ObjectiveChanged.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objective_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="inversion_ideas.base.Objective.html#inversion_ideas.base.Objective" title="inversion_ideas.base.objective_function.Objective"><span class="pre">Objective</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rtol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.conditions.ObjectiveChanged.__init__" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<p class="rubric">Methods</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.conditions.ObjectiveChanged.__init__" title="inversion_ideas.conditions.ObjectiveChanged.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(objective_function[, rtol, atol])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code>(model)</p></td>
-<td><p>Display information about the condition for a given model.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">initialize</span></code>()</p></td>
-<td><p>Initialize condition and clean <code class="docutils literal notranslate"><span class="pre">previous</span></code> attribute.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ratio</span></code>(model)</p></td>
-<td><p>Ratio <code class="docutils literal notranslate"><span class="pre">|φ(m)</span> <span class="pre">-</span> <span class="pre">φ(m_prev)|/|φ(m_prev)|</span></code>.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code>(model)</p></td>
-<td><p>Cache value of objective function with model as the <code class="docutils literal notranslate"><span class="pre">previous</span></code> one.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
 </dd></dl>
 
+<section id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Link to this heading">#</a></h2>
+<p class="rubric">Methods documentation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.conditions.ObjectiveChanged.info">
+<span class="sig-prename descclassname"><span class="pre">ObjectiveChanged.</span></span><span class="sig-name descname"><span class="pre">info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.conditions.ObjectiveChanged.info" title="Link to this definition">#</a></dt>
+<dd><p>Display information about the condition for a given model.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.conditions.ObjectiveChanged.initialize">
+<span class="sig-prename descclassname"><span class="pre">ObjectiveChanged.</span></span><span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.conditions.ObjectiveChanged.initialize" title="Link to this definition">#</a></dt>
+<dd><p>Initialize condition and clean <code class="docutils literal notranslate"><span class="pre">previous</span></code> attribute.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.conditions.ObjectiveChanged.ratio">
+<span class="sig-prename descclassname"><span class="pre">ObjectiveChanged.</span></span><span class="sig-name descname"><span class="pre">ratio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.conditions.ObjectiveChanged.ratio" title="Link to this definition">#</a></dt>
+<dd><p>Ratio <code class="docutils literal notranslate"><span class="pre">|φ(m)</span> <span class="pre">-</span> <span class="pre">φ(m_prev)|/|φ(m_prev)|</span></code>.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.conditions.ObjectiveChanged.update">
+<span class="sig-prename descclassname"><span class="pre">ObjectiveChanged.</span></span><span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.conditions.ObjectiveChanged.update" title="Link to this definition">#</a></dt>
+<dd><p>Cache value of objective function with model as the <code class="docutils literal notranslate"><span class="pre">previous</span></code> one.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<div style='clear:both'></div></section>
 </section>
 
 
@@ -607,8 +613,12 @@ whose values are given by <code class="docutils literal notranslate"><span class
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.conditions.ObjectiveChanged"><code class="docutils literal notranslate"><span class="pre">ObjectiveChanged</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.conditions.ObjectiveChanged.__init__"><code class="docutils literal notranslate"><span class="pre">ObjectiveChanged.__init__()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.conditions.ObjectiveChanged"><code class="docutils literal notranslate"><span class="pre">ObjectiveChanged</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#methods">Methods</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.conditions.ObjectiveChanged.info"><code class="docutils literal notranslate"><span class="pre">ObjectiveChanged.info()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.conditions.ObjectiveChanged.initialize"><code class="docutils literal notranslate"><span class="pre">ObjectiveChanged.initialize()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.conditions.ObjectiveChanged.ratio"><code class="docutils literal notranslate"><span class="pre">ObjectiveChanged.ratio()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.conditions.ObjectiveChanged.update"><code class="docutils literal notranslate"><span class="pre">ObjectiveChanged.update()</span></code></a></li>
 </ul>
 </li>
 </ul>

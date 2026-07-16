@@ -5,34 +5,92 @@
 
 .. autoclass:: Combo
 
-   
-   .. automethod:: __init__
 
-   
-   .. rubric:: Methods
 
-   .. autosummary::
-   
-      ~Combo.__init__
-      ~Combo.contains
-      ~Combo.flatten
-      ~Combo.gradient
-      ~Combo.hessian
-      ~Combo.hessian_approx
-      ~Combo.hessian_diagonal
-      ~Combo.info
-      ~Combo.set_name
-   
-   
+Attributes
+----------
 
-   
-   
-   .. rubric:: Attributes
 
-   .. autosummary::
-   
-      ~Combo.functions
-      ~Combo.n_params
-      ~Combo.name
-   
-   
+
+.. autoattribute:: Combo.functions
+
+
+
+.. autoattribute:: Combo.n_params
+
+
+
+.. autoattribute:: Combo.name
+
+
+
+
+
+Methods
+-------
+
+.. rubric:: Methods documentation
+
+
+
+
+
+.. automethod:: Combo.contains
+
+----
+
+
+
+
+.. automethod:: Combo.flatten
+
+----
+
+
+
+
+.. automethod:: Combo.gradient
+
+----
+
+
+
+
+.. automethod:: Combo.hessian
+
+----
+
+
+
+
+.. automethod:: Combo.hessian_approx
+
+----
+
+
+
+
+.. automethod:: Combo.hessian_diagonal
+
+----
+
+
+
+
+.. automethod:: Combo.info
+
+----
+
+
+
+
+.. automethod:: Combo.set_name
+
+----
+
+
+
+
+.. raw:: html
+
+     <div style='clear:both'></div>

@@ -5,36 +5,103 @@
 
 .. autoclass:: Identity
 
-   
-   .. automethod:: __init__
 
-   
-   .. rubric:: Methods
 
-   .. autosummary::
-   
-      ~Identity.__init__
-      ~Identity.adjoint
-      ~Identity.diagonal
-      ~Identity.dot
-      ~Identity.matmat
-      ~Identity.matvec
-      ~Identity.rdot
-      ~Identity.rmatmat
-      ~Identity.rmatvec
-      ~Identity.transpose
-   
-   
+Attributes
+----------
 
-   
-   
-   .. rubric:: Attributes
 
-   .. autosummary::
-   
-      ~Identity.H
-      ~Identity.T
-      ~Identity.n
-      ~Identity.ndim
-   
-   
+
+.. autoattribute:: Identity.H
+
+
+
+.. autoattribute:: Identity.T
+
+
+
+.. autoattribute:: Identity.n
+
+
+
+.. autoattribute:: Identity.ndim
+
+
+
+
+
+Methods
+-------
+
+.. rubric:: Methods documentation
+
+
+
+
+
+.. automethod:: Identity.adjoint
+
+----
+
+
+
+
+.. automethod:: Identity.diagonal
+
+----
+
+
+
+
+.. automethod:: Identity.dot
+
+----
+
+
+
+
+.. automethod:: Identity.matmat
+
+----
+
+
+
+
+.. automethod:: Identity.matvec
+
+----
+
+
+
+
+.. automethod:: Identity.rdot
+
+----
+
+
+
+
+.. automethod:: Identity.rmatmat
+
+----
+
+
+
+
+.. automethod:: Identity.rmatvec
+
+----
+
+
+
+
+.. automethod:: Identity.transpose
+
+----
+
+
+
+
+.. raw:: html
+
+     <div style='clear:both'></div>

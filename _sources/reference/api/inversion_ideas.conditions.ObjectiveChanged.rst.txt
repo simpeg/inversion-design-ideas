@@ -5,22 +5,45 @@
 
 .. autoclass:: ObjectiveChanged
 
-   
-   .. automethod:: __init__
 
-   
-   .. rubric:: Methods
 
-   .. autosummary::
-   
-      ~ObjectiveChanged.__init__
-      ~ObjectiveChanged.info
-      ~ObjectiveChanged.initialize
-      ~ObjectiveChanged.ratio
-      ~ObjectiveChanged.update
-   
-   
+Methods
+-------
 
-   
-   
-   
+.. rubric:: Methods documentation
+
+
+
+
+
+.. automethod:: ObjectiveChanged.info
+
+----
+
+
+
+
+.. automethod:: ObjectiveChanged.initialize
+
+----
+
+
+
+
+.. automethod:: ObjectiveChanged.ratio
+
+----
+
+
+
+
+.. automethod:: ObjectiveChanged.update
+
+----
+
+
+
+
+.. raw:: html
+
+     <div style='clear:both'></div>

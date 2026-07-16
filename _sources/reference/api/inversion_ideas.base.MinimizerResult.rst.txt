@@ -5,29 +5,94 @@
 
 .. autoclass:: MinimizerResult
 
-   
-   .. automethod:: __init__
 
-   
-   .. rubric:: Methods
 
-   .. autosummary::
-   
-      ~MinimizerResult.__init__
-      ~MinimizerResult.clear
-      ~MinimizerResult.copy
-      ~MinimizerResult.fromkeys
-      ~MinimizerResult.get
-      ~MinimizerResult.items
-      ~MinimizerResult.keys
-      ~MinimizerResult.pop
-      ~MinimizerResult.popitem
-      ~MinimizerResult.setdefault
-      ~MinimizerResult.update
-      ~MinimizerResult.values
-   
-   
+Methods
+-------
 
-   
-   
-   
+.. rubric:: Methods documentation
+
+
+
+
+
+.. automethod:: MinimizerResult.clear
+
+----
+
+
+
+
+.. automethod:: MinimizerResult.copy
+
+----
+
+
+
+
+.. automethod:: MinimizerResult.fromkeys
+
+----
+
+
+
+
+.. automethod:: MinimizerResult.get
+
+----
+
+
+
+
+.. automethod:: MinimizerResult.items
+
+----
+
+
+
+
+.. automethod:: MinimizerResult.keys
+
+----
+
+
+
+
+.. automethod:: MinimizerResult.pop
+
+----
+
+
+
+
+.. automethod:: MinimizerResult.popitem
+
+----
+
+
+
+
+.. automethod:: MinimizerResult.setdefault
+
+----
+
+
+
+
+.. automethod:: MinimizerResult.update
+
+----
+
+
+
+
+.. automethod:: MinimizerResult.values
+
+----
+
+
+
+
+.. raw:: html
+
+     <div style='clear:both'></div>

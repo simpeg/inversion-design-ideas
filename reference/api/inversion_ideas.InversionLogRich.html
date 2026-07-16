@@ -43,6 +43,7 @@
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'reference/api/inversion_ideas.InversionLogRich';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -474,7 +475,7 @@
 <h1>inversion_ideas.InversionLogRich<a class="headerlink" href="#inversion-ideas-inversionlogrich" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="inversion_ideas.InversionLogRich">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inversion_ideas.</span></span><span class="sig-name descname"><span class="pre">InversionLogRich</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Column</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.InversionLogRich" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inversion_ideas.</span></span><span class="sig-name descname"><span class="pre">InversionLogRich</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">columns</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.InversionLogRich" title="Link to this definition">#</a></dt>
 <dd><p>Log the outputs of an inversion.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -493,16 +494,16 @@ two arguments: <code class="docutils literal notranslate"><span class="pre">iter
 <p class="rubric">Attributes</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">columns</span></code></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.InversionLogRich.columns" title="inversion_ideas.InversionLogRich.columns"><code class="xref py py-obj docutils literal notranslate"><span class="pre">columns</span></code></a></p></td>
 <td><p>Column specifiers.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_records</span></code></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.InversionLogRich.has_records" title="inversion_ideas.InversionLogRich.has_records"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_records</span></code></a></p></td>
 <td><p>Whether the log has recorded values or not.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">log</span></code></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.InversionLogRich.log" title="inversion_ideas.InversionLogRich.log"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log</span></code></a></p></td>
 <td><p>Inversion log.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">table</span></code></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.InversionLogRich.table" title="inversion_ideas.InversionLogRich.table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">table</span></code></a></p></td>
 <td><p>Table for the inversion log.</p></td>
 </tr>
 </tbody>
@@ -511,85 +512,158 @@ two arguments: <code class="docutils literal notranslate"><span class="pre">iter
 <p class="rubric">Methods</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_column</span></code>(name, column)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.InversionLogRich.add_column" title="inversion_ideas.InversionLogRich.add_column"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_column</span></code></a>(name, column)</p></td>
 <td><p>Add column to the log.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_from</span></code>(objective_function, **kwargs)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.InversionLogRich.create_from" title="inversion_ideas.InversionLogRich.create_from"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_from</span></code></a>(objective_function, **kwargs)</p></td>
 <td><p>Create the standard log for a classic inversion.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">live</span></code>(**kwargs)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.InversionLogRich.live" title="inversion_ideas.InversionLogRich.live"><code class="xref py py-obj docutils literal notranslate"><span class="pre">live</span></code></a>(**kwargs)</p></td>
 <td><p>Context manager for live update of the table.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">show</span></code>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.InversionLogRich.show" title="inversion_ideas.InversionLogRich.show"><code class="xref py py-obj docutils literal notranslate"><span class="pre">show</span></code></a>()</p></td>
 <td><p>Show log through a Rich console.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_pandas</span></code>([index_col])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.InversionLogRich.to_pandas" title="inversion_ideas.InversionLogRich.to_pandas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_pandas</span></code></a>([index_col])</p></td>
 <td><p>Generate a <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> out of the log.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code>(iteration, model)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.InversionLogRich.update" title="inversion_ideas.InversionLogRich.update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code></a>(iteration, model)</p></td>
 <td><p>Update the log.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_table</span></code>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.InversionLogRich.update_table" title="inversion_ideas.InversionLogRich.update_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_table</span></code></a>()</p></td>
 <td><p>Add row to the table given the latest inverted model.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<dl class="py method">
-<dt class="sig sig-object py" id="inversion_ideas.InversionLogRich.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Column</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.InversionLogRich.__init__" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<p class="rubric">Methods</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.InversionLogRich.__init__" title="inversion_ideas.InversionLogRich.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(columns, **kwargs)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_column</span></code>(name, column)</p></td>
-<td><p>Add column to the log.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_from</span></code>(objective_function, **kwargs)</p></td>
-<td><p>Create the standard log for a classic inversion.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">live</span></code>(**kwargs)</p></td>
-<td><p>Context manager for live update of the table.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">show</span></code>()</p></td>
-<td><p>Show log through a Rich console.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_pandas</span></code>([index_col])</p></td>
-<td><p>Generate a <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> out of the log.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code>(iteration, model)</p></td>
-<td><p>Update the log.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_table</span></code>()</p></td>
-<td><p>Add row to the table given the latest inverted model.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p class="rubric">Attributes</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">columns</span></code></p></td>
-<td><p>Column specifiers.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_records</span></code></p></td>
-<td><p>Whether the log has recorded values or not.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">log</span></code></p></td>
-<td><p>Inversion log.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">table</span></code></p></td>
-<td><p>Table for the inversion log.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 </dd></dl>
 
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading">#</a></h2>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="inversion_ideas.InversionLogRich.columns">
+<span class="sig-prename descclassname"><span class="pre">InversionLogRich.</span></span><span class="sig-name descname"><span class="pre">columns</span></span><a class="headerlink" href="#inversion_ideas.InversionLogRich.columns" title="Link to this definition">#</a></dt>
+<dd><p>Column specifiers.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="inversion_ideas.InversionLogRich.has_records">
+<span class="sig-prename descclassname"><span class="pre">InversionLogRich.</span></span><span class="sig-name descname"><span class="pre">has_records</span></span><a class="headerlink" href="#inversion_ideas.InversionLogRich.has_records" title="Link to this definition">#</a></dt>
+<dd><p>Whether the log has recorded values or not.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="inversion_ideas.InversionLogRich.log">
+<span class="sig-prename descclassname"><span class="pre">InversionLogRich.</span></span><span class="sig-name descname"><span class="pre">log</span></span><a class="headerlink" href="#inversion_ideas.InversionLogRich.log" title="Link to this definition">#</a></dt>
+<dd><p>Inversion log.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="inversion_ideas.InversionLogRich.table">
+<span class="sig-prename descclassname"><span class="pre">InversionLogRich.</span></span><span class="sig-name descname"><span class="pre">table</span></span><a class="headerlink" href="#inversion_ideas.InversionLogRich.table" title="Link to this definition">#</a></dt>
+<dd><p>Table for the inversion log.</p>
+</dd></dl>
+
+</section>
+<section id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Link to this heading">#</a></h2>
+<p class="rubric">Methods documentation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.InversionLogRich.add_column">
+<span class="sig-prename descclassname"><span class="pre">InversionLogRich.</span></span><span class="sig-name descname"><span class="pre">add_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.InversionLogRich.add_column" title="Link to this definition">#</a></dt>
+<dd><p>Add column to the log.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>name</strong><span class="classifier">str</span></dt><dd><p>Name of the column, used in the <a class="reference internal" href="inversion_ideas.InversionLog.html#inversion_ideas.InversionLog.log" title="inversion_ideas.InversionLog.log"><code class="xref py py-attr docutils literal notranslate"><span class="pre">InversionLog.log</span></code></a> dictionary to
+access the recorded values.</p>
+</dd>
+<dt><strong>column</strong><span class="classifier">Callable | Column</span></dt><dd><p>A callable that takes the <code class="docutils literal notranslate"><span class="pre">iteration</span></code> and the <code class="docutils literal notranslate"><span class="pre">model</span></code> as arguments, or
+a <code class="docutils literal notranslate"><span class="pre">Column</span></code>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>self</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.InversionLogRich.create_from">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">InversionLogRich.</span></span><span class="sig-name descname"><span class="pre">create_from</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objective_function</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.InversionLogRich.create_from" title="Link to this definition">#</a></dt>
+<dd><p>Create the standard log for a classic inversion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>objective_function</strong><span class="classifier">Combo</span></dt><dd><p>Combo objective function with two elements: the data misfit and the
+regularization (including a trade-off parameter).</p>
+</dd>
+<dt><strong>kwargs</strong><span class="classifier">dict</span></dt><dd><p>Keyword arguments passed to the constructor of the class.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>Self</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The objective function should be of the type:</p>
+<div class="math notranslate nohighlight">
+\[\phi(\mathbf{m}) = \phi_d(\mathbf{m}) + \beta \phi_m(\mathbf{m})\]</div>
+<p>where <span class="math notranslate nohighlight">\(\phi_d(m)\)</span> is the data misfit term, <span class="math notranslate nohighlight">\(\phi_m(\mathbf{m})\)</span> is
+the model norm, and <span class="math notranslate nohighlight">\(\beta\)</span> is the trade-off parameter.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.InversionLogRich.live">
+<span class="sig-prename descclassname"><span class="pre">InversionLogRich.</span></span><span class="sig-name descname"><span class="pre">live</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.InversionLogRich.live" title="Link to this definition">#</a></dt>
+<dd><p>Context manager for live update of the table.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.InversionLogRich.show">
+<span class="sig-prename descclassname"><span class="pre">InversionLogRich.</span></span><span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.InversionLogRich.show" title="Link to this definition">#</a></dt>
+<dd><p>Show log through a Rich console.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.InversionLogRich.to_pandas">
+<span class="sig-prename descclassname"><span class="pre">InversionLogRich.</span></span><span class="sig-name descname"><span class="pre">to_pandas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.InversionLogRich.to_pandas" title="Link to this definition">#</a></dt>
+<dd><p>Generate a <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> out of the log.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.InversionLogRich.update">
+<span class="sig-prename descclassname"><span class="pre">InversionLogRich.</span></span><span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iteration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.InversionLogRich.update" title="Link to this definition">#</a></dt>
+<dd><p>Update the log.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.InversionLogRich.update_table">
+<span class="sig-prename descclassname"><span class="pre">InversionLogRich.</span></span><span class="sig-name descname"><span class="pre">update_table</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.InversionLogRich.update_table" title="Link to this definition">#</a></dt>
+<dd><p>Add row to the table given the latest inverted model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model</strong><span class="classifier">(n_params) array</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<div style='clear:both'></div></section>
 </section>
 
 
@@ -639,8 +713,22 @@ two arguments: <code class="docutils literal notranslate"><span class="pre">iter
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.InversionLogRich"><code class="docutils literal notranslate"><span class="pre">InversionLogRich</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.InversionLogRich.__init__"><code class="docutils literal notranslate"><span class="pre">InversionLogRich.__init__()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.InversionLogRich"><code class="docutils literal notranslate"><span class="pre">InversionLogRich</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#attributes">Attributes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.InversionLogRich.columns"><code class="docutils literal notranslate"><span class="pre">InversionLogRich.columns</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.InversionLogRich.has_records"><code class="docutils literal notranslate"><span class="pre">InversionLogRich.has_records</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.InversionLogRich.log"><code class="docutils literal notranslate"><span class="pre">InversionLogRich.log</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.InversionLogRich.table"><code class="docutils literal notranslate"><span class="pre">InversionLogRich.table</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#methods">Methods</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.InversionLogRich.add_column"><code class="docutils literal notranslate"><span class="pre">InversionLogRich.add_column()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.InversionLogRich.create_from"><code class="docutils literal notranslate"><span class="pre">InversionLogRich.create_from()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.InversionLogRich.live"><code class="docutils literal notranslate"><span class="pre">InversionLogRich.live()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.InversionLogRich.show"><code class="docutils literal notranslate"><span class="pre">InversionLogRich.show()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.InversionLogRich.to_pandas"><code class="docutils literal notranslate"><span class="pre">InversionLogRich.to_pandas()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.InversionLogRich.update"><code class="docutils literal notranslate"><span class="pre">InversionLogRich.update()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.InversionLogRich.update_table"><code class="docutils literal notranslate"><span class="pre">InversionLogRich.update_table()</span></code></a></li>
 </ul>
 </li>
 </ul>

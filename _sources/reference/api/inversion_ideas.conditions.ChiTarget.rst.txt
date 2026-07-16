@@ -5,21 +5,38 @@
 
 .. autoclass:: ChiTarget
 
-   
-   .. automethod:: __init__
 
-   
-   .. rubric:: Methods
 
-   .. autosummary::
-   
-      ~ChiTarget.__init__
-      ~ChiTarget.info
-      ~ChiTarget.initialize
-      ~ChiTarget.update
-   
-   
+Methods
+-------
 
-   
-   
-   
+.. rubric:: Methods documentation
+
+
+
+
+
+.. automethod:: ChiTarget.info
+
+----
+
+
+
+
+.. automethod:: ChiTarget.initialize
+
+----
+
+
+
+
+.. automethod:: ChiTarget.update
+
+----
+
+
+
+
+.. raw:: html
+
+     <div style='clear:both'></div>

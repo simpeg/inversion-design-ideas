@@ -5,35 +5,90 @@
 
 .. autoclass:: Smallness
 
-   
-   .. automethod:: __init__
 
-   
-   .. rubric:: Methods
 
-   .. autosummary::
-   
-      ~Smallness.__init__
-      ~Smallness.gradient
-      ~Smallness.hessian
-      ~Smallness.hessian_approx
-      ~Smallness.hessian_diagonal
-      ~Smallness.info
-      ~Smallness.set_name
-   
-   
+Attributes
+----------
 
-   
-   
-   .. rubric:: Attributes
 
-   .. autosummary::
-   
-      ~Smallness.cell_weights
-      ~Smallness.n_active
-      ~Smallness.n_params
-      ~Smallness.name
-      ~Smallness.weights_matrix
-      ~Smallness.active_cells
-   
-   
+
+.. autoattribute:: Smallness.cell_weights
+
+
+
+.. autoattribute:: Smallness.n_active
+
+
+
+.. autoattribute:: Smallness.n_params
+
+
+
+.. autoattribute:: Smallness.name
+
+
+
+.. autoattribute:: Smallness.weights_matrix
+
+
+
+.. autoattribute:: Smallness.active_cells
+
+
+
+
+
+Methods
+-------
+
+.. rubric:: Methods documentation
+
+
+
+
+
+.. automethod:: Smallness.gradient
+
+----
+
+
+
+
+.. automethod:: Smallness.hessian
+
+----
+
+
+
+
+.. automethod:: Smallness.hessian_approx
+
+----
+
+
+
+
+.. automethod:: Smallness.hessian_diagonal
+
+----
+
+
+
+
+.. automethod:: Smallness.info
+
+----
+
+
+
+
+.. automethod:: Smallness.set_name
+
+----
+
+
+
+
+.. raw:: html
+
+     <div style='clear:both'></div>

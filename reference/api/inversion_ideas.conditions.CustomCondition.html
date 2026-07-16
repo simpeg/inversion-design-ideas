@@ -474,7 +474,7 @@
 <h1>inversion_ideas.conditions.CustomCondition<a class="headerlink" href="#inversion-ideas-conditions-customcondition" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="inversion_ideas.conditions.CustomCondition">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inversion_ideas.conditions.</span></span><span class="sig-name descname"><span class="pre">CustomCondition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.conditions.CustomCondition" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inversion_ideas.conditions.</span></span><span class="sig-name descname"><span class="pre">CustomCondition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.conditions.CustomCondition" title="Link to this definition">#</a></dt>
 <dd><p>Define a custom <a class="reference internal" href="inversion_ideas.base.Condition.html#inversion_ideas.base.Condition" title="inversion_ideas.base.Condition"><code class="xref py py-class docutils literal notranslate"><span class="pre">Condition</span></code></a> object through a function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -492,42 +492,16 @@ particular model.</p>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(model)</p></td>
 <td><p>Call self as a function.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">create</span></code>(func)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.conditions.CustomCondition.create" title="inversion_ideas.conditions.CustomCondition.create"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create</span></code></a>(func)</p></td>
 <td><p>Create a <code class="docutils literal notranslate"><span class="pre">CustomCondition</span></code> object directly from a function.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code>(model)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.conditions.CustomCondition.info" title="inversion_ideas.conditions.CustomCondition.info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code></a>(model)</p></td>
 <td><p>Display information about the condition for a given model.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">initialize</span></code>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.conditions.CustomCondition.initialize" title="inversion_ideas.conditions.CustomCondition.initialize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initialize</span></code></a>()</p></td>
 <td><p>Initialize the condition.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code>(model)</p></td>
-<td><p>Update the condition.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<dl class="py method">
-<dt class="sig sig-object py" id="inversion_ideas.conditions.CustomCondition.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.conditions.CustomCondition.__init__" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<p class="rubric">Methods</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.conditions.CustomCondition.__init__" title="inversion_ideas.conditions.CustomCondition.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(func)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">create</span></code>(func)</p></td>
-<td><p>Create a <code class="docutils literal notranslate"><span class="pre">CustomCondition</span></code> object directly from a function.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code>(model)</p></td>
-<td><p>Display information about the condition for a given model.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">initialize</span></code>()</p></td>
-<td><p>Initialize the condition.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code>(model)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.conditions.CustomCondition.update" title="inversion_ideas.conditions.CustomCondition.update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code></a>(model)</p></td>
 <td><p>Update the condition.</p></td>
 </tr>
 </tbody>
@@ -535,6 +509,70 @@ particular model.</p>
 </div>
 </dd></dl>
 
+<section id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Link to this heading">#</a></h2>
+<p class="rubric">Methods documentation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.conditions.CustomCondition.create">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">CustomCondition.</span></span><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.conditions.CustomCondition.create" title="Link to this definition">#</a></dt>
+<dd><p>Create a <code class="docutils literal notranslate"><span class="pre">CustomCondition</span></code> object directly from a function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>func</strong><span class="classifier">Callable</span></dt><dd><p>Function to use as the condition. It should take a model as only argument
+and return a bool to evaluate whether the condition is valid or not for that
+particular model.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>CustomCondition</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">is_all_positive</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">model</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">condition</span> <span class="o">=</span> <span class="n">CustomCondition</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">is_all_positive</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">condition</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">condition</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.conditions.CustomCondition.info">
+<span class="sig-prename descclassname"><span class="pre">CustomCondition.</span></span><span class="sig-name descname"><span class="pre">info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.conditions.CustomCondition.info" title="Link to this definition">#</a></dt>
+<dd><p>Display information about the condition for a given model.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.conditions.CustomCondition.initialize">
+<span class="sig-prename descclassname"><span class="pre">CustomCondition.</span></span><span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.conditions.CustomCondition.initialize" title="Link to this definition">#</a></dt>
+<dd><p>Initialize the condition.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.conditions.CustomCondition.update">
+<span class="sig-prename descclassname"><span class="pre">CustomCondition.</span></span><span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.conditions.CustomCondition.update" title="Link to this definition">#</a></dt>
+<dd><p>Update the condition.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<div style='clear:both'></div></section>
 </section>
 
 
@@ -584,8 +622,12 @@ particular model.</p>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.conditions.CustomCondition"><code class="docutils literal notranslate"><span class="pre">CustomCondition</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.conditions.CustomCondition.__init__"><code class="docutils literal notranslate"><span class="pre">CustomCondition.__init__()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.conditions.CustomCondition"><code class="docutils literal notranslate"><span class="pre">CustomCondition</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#methods">Methods</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.conditions.CustomCondition.create"><code class="docutils literal notranslate"><span class="pre">CustomCondition.create()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.conditions.CustomCondition.info"><code class="docutils literal notranslate"><span class="pre">CustomCondition.info()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.conditions.CustomCondition.initialize"><code class="docutils literal notranslate"><span class="pre">CustomCondition.initialize()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.conditions.CustomCondition.update"><code class="docutils literal notranslate"><span class="pre">CustomCondition.update()</span></code></a></li>
 </ul>
 </li>
 </ul>

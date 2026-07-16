@@ -492,10 +492,10 @@ dynamically update the preconditioner.</p>
 <p class="rubric">Attributes</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">H</span></code></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.JacobiPreconditioner.H" title="inversion_ideas.JacobiPreconditioner.H"><code class="xref py py-obj docutils literal notranslate"><span class="pre">H</span></code></a></p></td>
 <td><p>Hermitian adjoint.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.JacobiPreconditioner.T" title="inversion_ideas.JacobiPreconditioner.T"><code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code></a></p></td>
 <td><p>Transpose.</p></td>
 </tr>
 </tbody>
@@ -515,31 +515,31 @@ dynamically update the preconditioner.</p>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(x)</p></td>
 <td><p>Apply this linear operator.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">adjoint</span></code>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.JacobiPreconditioner.adjoint" title="inversion_ideas.JacobiPreconditioner.adjoint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">adjoint</span></code></a>()</p></td>
 <td><p>Hermitian adjoint.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dot</span></code>(x)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.JacobiPreconditioner.dot" title="inversion_ideas.JacobiPreconditioner.dot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dot</span></code></a>(x)</p></td>
 <td><p>Multi-purpose multiplication method.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">matmat</span></code>(X)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.JacobiPreconditioner.matmat" title="inversion_ideas.JacobiPreconditioner.matmat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">matmat</span></code></a>(X)</p></td>
 <td><p>Matrix-matrix multiplication.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">matvec</span></code>(x)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.JacobiPreconditioner.matvec" title="inversion_ideas.JacobiPreconditioner.matvec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">matvec</span></code></a>(x)</p></td>
 <td><p>Matrix-vector multiplication.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rdot</span></code>(x)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.JacobiPreconditioner.rdot" title="inversion_ideas.JacobiPreconditioner.rdot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rdot</span></code></a>(x)</p></td>
 <td><p>Multi-purpose multiplication method from the right.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rmatmat</span></code>(X)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.JacobiPreconditioner.rmatmat" title="inversion_ideas.JacobiPreconditioner.rmatmat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rmatmat</span></code></a>(X)</p></td>
 <td><p>Adjoint matrix-matrix multiplication.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rmatvec</span></code>(x)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.JacobiPreconditioner.rmatvec" title="inversion_ideas.JacobiPreconditioner.rmatvec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rmatvec</span></code></a>(x)</p></td>
 <td><p>Adjoint matrix-vector multiplication.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">transpose</span></code>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.JacobiPreconditioner.transpose" title="inversion_ideas.JacobiPreconditioner.transpose"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transpose</span></code></a>()</p></td>
 <td><p>Transpose.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code>(model)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.JacobiPreconditioner.update" title="inversion_ideas.JacobiPreconditioner.update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code></a>(model)</p></td>
 <td><p>Update the preconditioner.</p></td>
 </tr>
 </tbody>
@@ -551,70 +551,343 @@ dynamically update the preconditioner.</p>
 <dt><a class="reference internal" href="inversion_ideas.get_jacobi_preconditioner.html#inversion_ideas.get_jacobi_preconditioner" title="inversion_ideas.get_jacobi_preconditioner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_jacobi_preconditioner</span></code></a></dt><dd></dd>
 </dl>
 </div>
+</dd></dl>
+
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading">#</a></h2>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="inversion_ideas.JacobiPreconditioner.A">
+<span class="sig-prename descclassname"><span class="pre">JacobiPreconditioner.</span></span><span class="sig-name descname"><span class="pre">A</span></span><a class="headerlink" href="#inversion_ideas.JacobiPreconditioner.A" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="inversion_ideas.JacobiPreconditioner.H">
+<span class="sig-prename descclassname"><span class="pre">JacobiPreconditioner.</span></span><span class="sig-name descname"><span class="pre">H</span></span><a class="headerlink" href="#inversion_ideas.JacobiPreconditioner.H" title="Link to this definition">#</a></dt>
+<dd><p>Hermitian adjoint.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse.linalg.LinearOperator.adjoint</span></code></dt><dd><p>Equivalent method.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="inversion_ideas.JacobiPreconditioner.T">
+<span class="sig-prename descclassname"><span class="pre">JacobiPreconditioner.</span></span><span class="sig-name descname"><span class="pre">T</span></span><a class="headerlink" href="#inversion_ideas.JacobiPreconditioner.T" title="Link to this definition">#</a></dt>
+<dd><p>Transpose.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse.linalg.LinearOperator.transpose</span></code></dt><dd><p>Equivalent method.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="inversion_ideas.JacobiPreconditioner.ndim">
+<span class="sig-prename descclassname"><span class="pre">JacobiPreconditioner.</span></span><span class="sig-name descname"><span class="pre">ndim</span></span><a class="headerlink" href="#inversion_ideas.JacobiPreconditioner.ndim" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Link to this heading">#</a></h2>
+<p class="rubric">Methods documentation</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="inversion_ideas.JacobiPreconditioner.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objective_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="inversion_ideas.base.Objective.html#inversion_ideas.base.Objective" title="inversion_ideas.base.objective_function.Objective"><span class="pre">Objective</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;class</span> <span class="pre">'numpy.float64'&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.JacobiPreconditioner.__init__" title="Link to this definition">#</a></dt>
-<dd><p>Initialize this LinearOperator.</p>
-<p>To be called by subclasses. <code class="docutils literal notranslate"><span class="pre">dtype</span></code> may be None; <code class="docutils literal notranslate"><span class="pre">shape</span></code> should
-be convertible to a length &gt;=2 tuple.</p>
-</dd></dl>
-
-<p class="rubric">Methods</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.JacobiPreconditioner.__init__" title="inversion_ideas.JacobiPreconditioner.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(objective_function[, dtype])</p></td>
-<td><p>Initialize this LinearOperator.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">adjoint</span></code>()</p></td>
-<td><p>Hermitian adjoint.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dot</span></code>(x)</p></td>
-<td><p>Multi-purpose multiplication method.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">matmat</span></code>(X)</p></td>
-<td><p>Matrix-matrix multiplication.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">matvec</span></code>(x)</p></td>
-<td><p>Matrix-vector multiplication.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rdot</span></code>(x)</p></td>
-<td><p>Multi-purpose multiplication method from the right.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rmatmat</span></code>(X)</p></td>
-<td><p>Adjoint matrix-matrix multiplication.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rmatvec</span></code>(x)</p></td>
-<td><p>Adjoint matrix-vector multiplication.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">transpose</span></code>()</p></td>
-<td><p>Transpose.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code>(model)</p></td>
-<td><p>Update the preconditioner.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p class="rubric">Attributes</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">A</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">H</span></code></p></td>
-<td><p>Hermitian adjoint.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code></p></td>
-<td><p>Transpose.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndim</span></code></p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
+<dt class="sig sig-object py" id="inversion_ideas.JacobiPreconditioner.adjoint">
+<span class="sig-prename descclassname"><span class="pre">JacobiPreconditioner.</span></span><span class="sig-name descname"><span class="pre">adjoint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.JacobiPreconditioner.adjoint" title="Link to this definition">#</a></dt>
+<dd><p>Hermitian adjoint.</p>
+<p>Returns the Hermitian adjoint of this linear operator,
+also known as the Hermitian
+conjugate or Hermitian transpose. For a complex matrix, the
+Hermitian adjoint is equal to the conjugate transpose.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><cite>LinearOperator</cite></dt><dd><p>Hermitian adjoint of self.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-attr docutils literal notranslate"><span class="pre">H</span></code></dt><dd><p>Equivalent attribute.</p>
+</dd>
+</dl>
 </div>
 </dd></dl>
 
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.JacobiPreconditioner.dot">
+<span class="sig-prename descclassname"><span class="pre">JacobiPreconditioner.</span></span><span class="sig-name descname"><span class="pre">dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.JacobiPreconditioner.dot" title="Link to this definition">#</a></dt>
+<dd><p>Multi-purpose multiplication method.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>x</strong><span class="classifier">array_like or <cite>LinearOperator</cite> or scalar</span></dt><dd><p>Array-like input will be interpreted as a 1-D row vector or
+2-D matrix (or batch of matrices)
+depending on its shape. See the Returns section for details.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>Ax</strong><span class="classifier">array or <cite>LinearOperator</cite></span></dt><dd><ul class="simple">
+<li><p>For <cite>LinearOperator</cite> input, operator composition is performed.</p></li>
+<li><p>For scalar input, a lazily scaled operator is returned.</p></li>
+<li><p>Otherwise, the input is expected to take the form of a dense
+1-D vector or 2-D matrix (or batch of matrices),
+interpreted as follows
+(where <code class="docutils literal notranslate"><span class="pre">self</span></code> is an <code class="docutils literal notranslate"><span class="pre">M</span></code> by <code class="docutils literal notranslate"><span class="pre">N</span></code> linear operator):</p>
+<ul>
+<li><p>If <cite>x</cite> has shape <code class="docutils literal notranslate"><span class="pre">(N,)</span></code>
+it is interpreted as a row vector
+and <cite>matvec</cite> is called.</p></li>
+<li><p>If <cite>x</cite> has shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">N,</span> <span class="pre">K)</span></code> for some
+integer <code class="docutils literal notranslate"><span class="pre">K</span></code>, it is interpreted as a matrix
+(or batch of matrices if there are batch dimensions)
+and <cite>matmat</cite> is called.</p></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">__mul__</span></code></dt><dd><p>Equivalent method used by the <code class="docutils literal notranslate"><span class="pre">*</span></code> operator.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">__matmul__</span></code></dt><dd><p>Method used by the <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> operator which rejects scalar input before calling this method.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>To perform matrix-vector multiplication on batches of vectors,
+use <cite>matvec</cite>.</p>
+<p>For clarity, it is recommended to use the <cite>matvec</cite> or
+<cite>matmat</cite> methods directly instead of this method
+when interacting with dense vectors and matrices.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.JacobiPreconditioner.matmat">
+<span class="sig-prename descclassname"><span class="pre">JacobiPreconditioner.</span></span><span class="sig-name descname"><span class="pre">matmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.JacobiPreconditioner.matmat" title="Link to this definition">#</a></dt>
+<dd><p>Matrix-matrix multiplication.</p>
+<p>Performs the operation <code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">&#64;</span> <span class="pre">X</span></code> where <code class="docutils literal notranslate"><span class="pre">A</span></code> is an <code class="docutils literal notranslate"><span class="pre">M</span></code> x <code class="docutils literal notranslate"><span class="pre">N</span></code>
+linear operator (or batch of linear operators)
+and <cite>X</cite> is a dense <code class="docutils literal notranslate"><span class="pre">N</span></code> x <code class="docutils literal notranslate"><span class="pre">K</span></code> matrix
+(or batch of dense matrices).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">{matrix, ndarray}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">N,</span> <span class="pre">K)</span></code> representing the dense matrix
+(or batch of dense matrices).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>Y</strong><span class="classifier">{matrix, ndarray}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">M,</span> <span class="pre">K)</span></code>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This method wraps any user-specified <code class="docutils literal notranslate"><span class="pre">matmat</span></code> routine or overridden
+<code class="docutils literal notranslate"><span class="pre">_matmat</span></code> method to ensure that <cite>Y</cite> has the correct type.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.JacobiPreconditioner.matvec">
+<span class="sig-prename descclassname"><span class="pre">JacobiPreconditioner.</span></span><span class="sig-name descname"><span class="pre">matvec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.JacobiPreconditioner.matvec" title="Link to this definition">#</a></dt>
+<dd><p>Matrix-vector multiplication.</p>
+<p>Applies <code class="docutils literal notranslate"><span class="pre">A</span></code> to <cite>x</cite>, where <code class="docutils literal notranslate"><span class="pre">A</span></code> is an <code class="docutils literal notranslate"><span class="pre">M</span></code> x <code class="docutils literal notranslate"><span class="pre">N</span></code>
+linear operator (or batch of linear operators)
+and <cite>x</cite> is a row vector (or batch of such vectors).</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>x</strong><span class="classifier">{matrix, ndarray}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">N)</span></code> representing a row vector
+(or batch of row vectors).</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.18.0: </span>A <code class="docutils literal notranslate"><span class="pre">FutureWarning</span></code> is emitted for column vector input of shape
+<code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">1)</span></code>, for which an array with shape <code class="docutils literal notranslate"><span class="pre">(M,</span> <span class="pre">1)</span></code> is returned.
+<cite>matmat</cite> can be called instead for identical behaviour on such input.</p>
+</div>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>y</strong><span class="classifier">{matrix, ndarray}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">M)</span></code>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This method wraps the user-specified <code class="docutils literal notranslate"><span class="pre">matvec</span></code> routine or overridden
+<code class="docutils literal notranslate"><span class="pre">_matvec</span></code> method to ensure that <cite>y</cite> has the correct shape and type.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.JacobiPreconditioner.rdot">
+<span class="sig-prename descclassname"><span class="pre">JacobiPreconditioner.</span></span><span class="sig-name descname"><span class="pre">rdot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.JacobiPreconditioner.rdot" title="Link to this definition">#</a></dt>
+<dd><p>Multi-purpose multiplication method from the right.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method returns <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">A</span></code>.
+To perform adjoint multiplication instead, use one of
+<cite>rmatvec</cite> or <cite>rmatmat</cite>, or take the adjoint first,
+like <code class="docutils literal notranslate"><span class="pre">self.H.rdot(x)</span></code> or <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">*</span> <span class="pre">self.H</span></code>.</p>
+</div>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>x</strong><span class="classifier">array_like or <cite>LinearOperator</cite> or scalar</span></dt><dd><p>Array-like input will be interpreted as a 1-D row vector or
+2-D matrix (or batch of matrices)
+depending on its shape. See the Returns section for details.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>xA</strong><span class="classifier">array or <cite>LinearOperator</cite></span></dt><dd><ul class="simple">
+<li><p>For <cite>LinearOperator</cite> input, operator composition is performed.</p></li>
+<li><p>For scalar input, a lazily scaled operator is returned.</p></li>
+<li><p>Otherwise, the input is expected to take the form of a dense
+1-D vector or 2-D matrix (or batch of matrices),
+interpreted as follows
+(where <code class="docutils literal notranslate"><span class="pre">self</span></code> is an <code class="docutils literal notranslate"><span class="pre">M</span></code> by <code class="docutils literal notranslate"><span class="pre">N</span></code> linear operator):</p>
+<ul>
+<li><p>If <cite>x</cite> has shape <code class="docutils literal notranslate"><span class="pre">(M,)</span></code>
+it is interpreted as a row vector.</p></li>
+<li><p>If <cite>x</cite> has shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">K,</span> <span class="pre">M)</span></code> for some
+integer <code class="docutils literal notranslate"><span class="pre">K</span></code>, it is interpreted as a matrix
+(or batch of matrices if there are batch dimensions).</p></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#inversion_ideas.JacobiPreconditioner.dot" title="inversion_ideas.JacobiPreconditioner.dot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dot</span></code></a></dt><dd><p>Multi-purpose multiplication method from the left.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">__rmul__</span></code></dt><dd><p>Equivalent method, used by the <code class="docutils literal notranslate"><span class="pre">*</span></code> operator from the right.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">__rmatmul__</span></code></dt><dd><p>Method used by the <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> operator from the right which rejects scalar input before calling this method.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.JacobiPreconditioner.rmatmat">
+<span class="sig-prename descclassname"><span class="pre">JacobiPreconditioner.</span></span><span class="sig-name descname"><span class="pre">rmatmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.JacobiPreconditioner.rmatmat" title="Link to this definition">#</a></dt>
+<dd><p>Adjoint matrix-matrix multiplication.</p>
+<p>Performs the operation <code class="docutils literal notranslate"><span class="pre">A^H</span> <span class="pre">&#64;</span> <span class="pre">X</span></code> where <code class="docutils literal notranslate"><span class="pre">A</span></code> is an <code class="docutils literal notranslate"><span class="pre">M</span></code> x <code class="docutils literal notranslate"><span class="pre">N</span></code>
+linear operator (or batch of linear operators)
+and <cite>X</cite> is a dense <code class="docutils literal notranslate"><span class="pre">M</span></code> x <code class="docutils literal notranslate"><span class="pre">K</span></code> matrix
+(or batch of dense matrices).
+The default implementation defers to the adjoint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">{matrix, ndarray}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">M,</span> <span class="pre">K)</span></code> representing the dense matrix
+(or batch of dense matrices).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>Y</strong><span class="classifier">{matrix, ndarray}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">N,</span> <span class="pre">K)</span></code>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This method wraps any user-specified <code class="docutils literal notranslate"><span class="pre">rmatmat</span></code> routine or overridden
+<code class="docutils literal notranslate"><span class="pre">_rmatmat</span></code> method to ensure that <cite>Y</cite> has the correct type.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.JacobiPreconditioner.rmatvec">
+<span class="sig-prename descclassname"><span class="pre">JacobiPreconditioner.</span></span><span class="sig-name descname"><span class="pre">rmatvec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.JacobiPreconditioner.rmatvec" title="Link to this definition">#</a></dt>
+<dd><p>Adjoint matrix-vector multiplication.</p>
+<p>Applies <code class="docutils literal notranslate"><span class="pre">A^H</span></code> to <cite>x</cite>, where <code class="docutils literal notranslate"><span class="pre">A</span></code> is an
+<code class="docutils literal notranslate"><span class="pre">M</span></code> x <code class="docutils literal notranslate"><span class="pre">N</span></code> linear operator (or batch of linear operators)
+and <cite>x</cite> is a row vector (or batch of such vectors).</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>x</strong><span class="classifier">{matrix, ndarray}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">M)</span></code> representing a row vector
+(or batch of row vectors),
+or an array with shape <code class="docutils literal notranslate"><span class="pre">(M,</span> <span class="pre">1)</span></code> representing a column vector.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.18.0: </span>A <code class="docutils literal notranslate"><span class="pre">FutureWarning</span></code> is now emitted for column vector input of shape
+<code class="docutils literal notranslate"><span class="pre">(M,</span> <span class="pre">1)</span></code>, for which an array with shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">1)</span></code> is returned.
+<cite>rmatmat</cite> can be called instead for identical behaviour on such input.</p>
+</div>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>y</strong><span class="classifier">{matrix, ndarray}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">N)</span></code>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This method wraps the user-specified <code class="docutils literal notranslate"><span class="pre">rmatvec</span></code> routine or overridden
+<code class="docutils literal notranslate"><span class="pre">_rmatvec</span></code> method to ensure that <cite>y</cite> has the correct shape and type.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.JacobiPreconditioner.transpose">
+<span class="sig-prename descclassname"><span class="pre">JacobiPreconditioner.</span></span><span class="sig-name descname"><span class="pre">transpose</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.JacobiPreconditioner.transpose" title="Link to this definition">#</a></dt>
+<dd><p>Transpose.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><cite>LinearOperator</cite></dt><dd><p>Transpose of the linear operator.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-attr docutils literal notranslate"><span class="pre">T</span></code></dt><dd><p>Equivalent attribute.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.JacobiPreconditioner.update">
+<span class="sig-prename descclassname"><span class="pre">JacobiPreconditioner.</span></span><span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.JacobiPreconditioner.update" title="Link to this definition">#</a></dt>
+<dd><p>Update the preconditioner.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<div style='clear:both'></div></section>
 </section>
 
 
@@ -664,8 +937,24 @@ be convertible to a length &gt;=2 tuple.</p>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.JacobiPreconditioner"><code class="docutils literal notranslate"><span class="pre">JacobiPreconditioner</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.JacobiPreconditioner.__init__"><code class="docutils literal notranslate"><span class="pre">JacobiPreconditioner.__init__()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.JacobiPreconditioner"><code class="docutils literal notranslate"><span class="pre">JacobiPreconditioner</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#attributes">Attributes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.JacobiPreconditioner.A"><code class="docutils literal notranslate"><span class="pre">JacobiPreconditioner.A</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.JacobiPreconditioner.H"><code class="docutils literal notranslate"><span class="pre">JacobiPreconditioner.H</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.JacobiPreconditioner.T"><code class="docutils literal notranslate"><span class="pre">JacobiPreconditioner.T</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.JacobiPreconditioner.ndim"><code class="docutils literal notranslate"><span class="pre">JacobiPreconditioner.ndim</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#methods">Methods</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.JacobiPreconditioner.adjoint"><code class="docutils literal notranslate"><span class="pre">JacobiPreconditioner.adjoint()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.JacobiPreconditioner.dot"><code class="docutils literal notranslate"><span class="pre">JacobiPreconditioner.dot()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.JacobiPreconditioner.matmat"><code class="docutils literal notranslate"><span class="pre">JacobiPreconditioner.matmat()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.JacobiPreconditioner.matvec"><code class="docutils literal notranslate"><span class="pre">JacobiPreconditioner.matvec()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.JacobiPreconditioner.rdot"><code class="docutils literal notranslate"><span class="pre">JacobiPreconditioner.rdot()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.JacobiPreconditioner.rmatmat"><code class="docutils literal notranslate"><span class="pre">JacobiPreconditioner.rmatmat()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.JacobiPreconditioner.rmatvec"><code class="docutils literal notranslate"><span class="pre">JacobiPreconditioner.rmatvec()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.JacobiPreconditioner.transpose"><code class="docutils literal notranslate"><span class="pre">JacobiPreconditioner.transpose()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.JacobiPreconditioner.update"><code class="docutils literal notranslate"><span class="pre">JacobiPreconditioner.update()</span></code></a></li>
 </ul>
 </li>
 </ul>

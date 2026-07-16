@@ -5,14 +5,16 @@
 Inversions and Recipes
 ======================
 
-Inversion class:
+Inversion class
+---------------
 
 .. autosummary::
    :toctree: api/
 
    Inversion
 
-Inversion logs:
+Inversion logs
+--------------
 
 .. autosummary::
    :toctree: api/
@@ -20,7 +22,8 @@ Inversion logs:
    InversionLog
    InversionLogRich
 
-Recipes:
+Recipes
+-------
 
 .. autosummary::
    :toctree: api/

@@ -1,6 +1,7 @@
 """
 Utility functions.
 """
+from scipy.sparse.linalg import LinearOperator
 
 import functools
 import hashlib
@@ -177,7 +178,7 @@ def debug(func):
 
 
 def get_sensitivity_weights(
-    jacobian: npt.NDArray[np.float64],
+    jacobian: npt.NDArray[np.float64] | SparseArray,
     *,
     data_weights: npt.NDArray[np.float64] | SparseArray | None = None,
     volumes: npt.NDArray[np.float64] | None = None,
@@ -188,8 +189,9 @@ def get_sensitivity_weights(
 
     Parameters
     ----------
-    jacobian : (n_data, n_params) array
-        Jacobian matrix used to compute sensitivity weights.
+    jacobian : (n_data, n_params) array or sparse array
+        Jacobian matrix used to compute sensitivity weights. It must be a dense or
+        sparse array.
     data_weights : (n_data, n_data) array or None, optional
         Data weights matrix used to compute the sensitivity weights.
     volumes : (n_params) array
@@ -201,6 +203,12 @@ def get_sensitivity_weights(
     Notes
     -----
     """
+    if isinstance(jacobian, LinearOperator):
+        msg = (
+            f"Invalid jacobian '{jacobian}' of type {type(jacobian).__name__}. "
+            "It must be a dense or sparse array."
+        )
+        raise TypeError(msg)
     matrix = data_weights @ jacobian if data_weights is not None else jacobian
     sensitivty_weights = np.sqrt(np.sum(matrix**2, axis=0))
 

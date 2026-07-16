@@ -2,16 +2,9 @@
 Ideas for inversion framework.
 """
 
-from . import base, decorators, operators, typing, utils
+from . import base, conditions, decorators, directives, errors, operators, typing, utils
 from ._version import __version__
-from .conditions import ChiTarget, CustomCondition, ModelChanged, ObjectiveChanged
 from .data_misfit import DataMisfit
-from .directives import (
-    Irls,
-    MultiplierCooler,
-    UpdateSensitivityWeights,
-)
-from .errors import ConvergenceWarning
 from .inversion import Inversion
 from .inversion_log import InversionLog, InversionLogRich
 from .minimize import GaussNewtonConjugateGradient, conjugate_gradient
@@ -31,24 +24,16 @@ from .wires import Wires
 
 __all__ = [
     "BFGSPreconditioner",
-    "ChiTarget",
-    "ConvergenceWarning",
-    "CustomCondition",
     "DataMisfit",
     "Flatness",
     "GaussNewtonConjugateGradient",
     "Inversion",
     "InversionLog",
     "InversionLogRich",
-    "Irls",
     "JacobiPreconditioner",
-    "ModelChanged",
-    "MultiplierCooler",
-    "ObjectiveChanged",
     "Smallness",
     "SparseSmallness",
     "TikhonovZero",
-    "UpdateSensitivityWeights",
     "Wires",
     "__version__",
     "base",
@@ -57,6 +42,8 @@ __all__ = [
     "create_sparse_inversion",
     "create_tikhonov_regularization",
     "decorators",
+    "directives",
+    "errors",
     "get_jacobi_preconditioner",
     "operators",
     "typing",

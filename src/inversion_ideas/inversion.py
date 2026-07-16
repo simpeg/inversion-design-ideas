@@ -71,7 +71,7 @@ class Inversion:
         directives: typing.Sequence[Directive],
         stopping_criterion: Condition | Callable[[Model], bool],
         max_iterations: int | None = None,
-        cache_models=False,
+        cache_models=True,
         log: Log | InversionLog | bool = True,
         log_minimizers: bool = True,
         minimizer_kwargs: dict | None = None,

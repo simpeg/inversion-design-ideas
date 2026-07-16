@@ -16,6 +16,7 @@ author = 'SimPEG Developers'
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
+    "sphinx_design",
     "numpydoc",
 ]
 

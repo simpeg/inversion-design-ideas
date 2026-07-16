@@ -13,3 +13,4 @@ pymatsolver==0.4.0
 sphinx
 numpydoc
 pydata-sphinx-theme
+sphinx_design

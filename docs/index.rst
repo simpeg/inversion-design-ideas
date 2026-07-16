@@ -1,7 +1,5 @@
-.. inversion-ideas documentation master file, created by
-   sphinx-quickstart on Tue Jul 14 15:42:39 2026.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+:html_theme.sidebar_secondary.remove: true
+
 
 SimPEG's new inversion framework
 ================================
@@ -13,10 +11,58 @@ The main goal of this repository is to build a working prototype of a new invers
 .. important:: This repository will never host a **stable** and **maintained** codebase. Its sole purpose is to have a place to experiment with design ideas for the new framework.
 
 
+.. grid:: 1 2 2 2
+    :margin: 3 3 0 0
+    :padding: 0 0 0 0
+    :gutter: 4
+
+    .. grid-item-card:: :fas:`book-open` Getting Started
+        :text-align: center
+        :class-title: sd-fs-5
+        :class-card: sd-p-3
+
+        Start using the framework.
+
+        .. button-ref:: getting-started
+            :ref-type: ref
+            :click-parent:
+            :color: primary
+            :shadow:
+            :expand:
+
+    .. grid-item-card:: :fas:`book-open` User Guide
+        :text-align: center
+        :class-title: sd-fs-5
+        :class-card: sd-p-3
+
+        Learn how to use the framework.
+
+        .. button-ref:: user-guide
+            :ref-type: ref
+            :click-parent:
+            :color: primary
+            :shadow:
+            :expand:
+
+    .. grid-item-card:: :fas:`code` API Reference
+        :text-align: center
+        :class-title: sd-fs-5
+        :class-card: sd-p-3
+
+        A list of modules, classes and functions.
+
+        .. button-ref:: api
+            :ref-type: ref
+            :color: primary
+            :shadow:
+            :expand:
+
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
    :hidden:
 
-   install.rst
+   getting-started/index.rst
+   user-guide/index.rst
    reference/index.rst

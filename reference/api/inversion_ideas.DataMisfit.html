@@ -571,7 +571,11 @@ vectors. This might lead to very expensive computations. Enable
 <div class="math notranslate nohighlight">
 \[\phi_d(\mathbf{m}) =
 \sum\limits_{i=1}^N
-\frac{\lvert d_i^\text{obs} - f_i(\mathbf{m}) \rvert^2}{\epsilon_i^2}\]</div>
+\frac{
+    \left\lvert f_i(\mathbf{m}) - d_i^\text{obs} \right\rvert^2
+}{
+    \epsilon_i^2
+}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\mathbf{m}\)</span> is the model vector, <span class="math notranslate nohighlight">\(d_i^\text{obs}\)</span> is the
 <span class="math notranslate nohighlight">\(i\)</span>-th observed datum, <span class="math notranslate nohighlight">\(f_i(\mathbf{m})\)</span> is the forward modelling
 function for the <span class="math notranslate nohighlight">\(i\)</span>-th datum, and <span class="math notranslate nohighlight">\(\epsilon_i\)</span> is the uncertainty of
@@ -581,13 +585,13 @@ the <span class="math notranslate nohighlight">\(i\)</span>-th datum.</p>
 <div class="math notranslate nohighlight">
 \[\phi_d(\mathbf{m}) =
 \sum\limits_{i=1}^N
-w_i \lvert d_i^\text{obs} - f_i(\mathbf{m}) \rvert^2\]</div>
+w_i \left\lvert f_i(\mathbf{m}) - d_i^\text{obs} \right\rvert^2\]</div>
 <p>And also in matrix form:</p>
 <div class="math notranslate nohighlight">
 \[\phi_d(\mathbf{m}) =
-\lVert
-\mathbf{W} \left[ \mathbf{d}^\text{obs} - f(\mathbf{m}) \right]
-\rVert^2\]</div>
+\left\lVert
+\mathbf{W} \left[ f(\mathbf{m}) - \mathbf{d}^\text{obs} \right]
+\right\rVert^2\]</div>
 <p>where <span class="math notranslate nohighlight">\(\mathbf{W}\)</span> is a diagonal matrix with the square root of the weights,
 <span class="math notranslate nohighlight">\(\mathbf{d}^\text{obs}\)</span> is the vector of observed data, and
 <span class="math notranslate nohighlight">\(f(\mathbf{m})\)</span> is the forward modelling vector.</p>

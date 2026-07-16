@@ -11,6 +11,12 @@ from .data_misfit import DataMisfit
 from .typing import Model, SparseRegularization
 from .utils import get_logger, get_sensitivity_weights
 
+__all__ = [
+    "Irls",
+    "MultiplierCooler",
+    "UpdateSensitivityWeights",
+]
+
 
 class MultiplierCooler(Directive):
     r"""

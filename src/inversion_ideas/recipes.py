@@ -58,7 +58,7 @@ def create_l2_inversion(
         the inversion.
     beta_cooling_factor : float, optional
         Cooling factor for the trade-off parameter :math:`\beta`. Every
-        ``beta_cooling_rate`` iterations, the :math:`\beta` will be _cooled down_ by
+        ``beta_cooling_rate`` iterations, the :math:`\beta` will be *cooled down* by
         dividing it by the ``beta_cooling_factor``.
     beta_cooling_rate : int, optional
         Cooling rate for the trade-off parameter :math:`\beta`. The trade-off parameter
@@ -178,7 +178,7 @@ def create_sparse_inversion(
         the inversion.
     beta_cooling_factor : float, optional
         Cooling factor for the trade-off parameter :math:`\beta`. Every
-        ``beta_cooling_rate`` iterations, the :math:`\beta` will be _cooled down_ by
+        ``beta_cooling_rate`` iterations, the :math:`\beta` will be *cooled down* by
         dividing it by the ``beta_cooling_factor``.
     data_misfit_rtol : float, optional
         Tolerance for the data misfit. This value is used to determine whether to cool

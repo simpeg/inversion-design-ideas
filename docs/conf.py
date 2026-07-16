@@ -54,4 +54,5 @@ html_context = {
     "github_version": "main",
     "doc_path": "docs",
 }
+html_static_path = []  # avoid warning by overwriting the default ["_static"]
 

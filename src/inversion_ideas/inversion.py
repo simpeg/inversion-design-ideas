@@ -52,12 +52,12 @@ class Inversion:
     log : Log or bool, optional
         Instance of :class:`InversionLog` to store information about the inversion,
         or any object that follows the :class:`inversion_ideas.typing.Log` protocol.
-        If `True`, a default :class:`InversionLog` is going to be used.
-        If `False`, no log will be assigned to the inversion, and :attr:`Inversion.log`
-        will be ``None``.
+        If ``True``, a default :class:`InversionLog` is going to be used.
+        If ``False``, no log will be assigned to the inversion, and
+        :attr:`Inversion.log` will be ``None``.
     log_minimizers : bool, optional
         Whether to log the minimizers or not. Logging minimizers is only possible when
-        the ``minimizer`` is an instance of :class:`inversion_ideas.base.Minimizer``.
+        the ``minimizer`` is an instance of :class:`inversion_ideas.base.Minimizer`.
     minimizer_kwargs : dict, optional
         Extra arguments that will be passed to the ``minimizer`` when called.
     """

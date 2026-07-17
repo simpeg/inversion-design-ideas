@@ -37,12 +37,12 @@ class DataMisfit(Objective):
             you need to build it.
 
     estimate_hessian_diagonal : bool, optional
-        If True, the ``hessian_diagonal`` and the ``hessian_approx`` methods will
-        estimate the diagonal of the Hessian, even if the Jacobian of the ``simulation``
-        is a :class:`~scipy.sparse.linalg.LinearOperator`.
-        If False, an error will be raised when calling the ``hessian_diagonal`` or the
-        ``hessian_approx`` methods in case the Jacobian of the ``simulation`` is
-        a :class:`~scipy.sparse.linalg.LinearOperator`.
+        If True, the ``hessian_diagonal`` method will estimate the
+        diagonal of the Hessian, even if the Jacobian of the ``simulation`` is a
+        :class:`~scipy.sparse.linalg.LinearOperator`.
+        If False, an error will be raised when calling the ``hessian_diagonal`` method
+        in case the Jacobian of the ``simulation`` is a
+        :class:`~scipy.sparse.linalg.LinearOperator`.
 
         .. important::
 
@@ -146,43 +146,6 @@ class DataMisfit(Objective):
             jac = aslinearoperator(jac)
         weights_matrix = aslinearoperator(self.weights_matrix)
         return 2 * jac.T @ weights_matrix.T @ weights_matrix @ jac
-
-    def hessian_approx(self, model: Model) -> npt.NDArray[np.float64] | SparseArray:
-        """
-        Approximated version of the Hessian.
-
-        If ``build_hessian`` is True, then the full Hessian will be returned.
-        Otherwise, the Hessian will be approximated by a diagonal sparse matrix, whose
-        main diagonal matches Hessian's diagonal.
-
-        .. important::
-
-            If the Jacobian of the ``simulation`` is
-            a :class:`~scipy.sparse.linalg.LinearOperator`, the diagonal of the Hessian
-            will be estimated only if ``estimate_hessian_diagonal`` is True.
-            Diagonal estimations can be expensive computational tasks for large
-            problems. Make sure you to enable diagonal estimations only if you need it.
-
-        Parameters
-        ----------
-        model : (n_params) array
-            Array with model values.
-
-        Returns
-        -------
-        (n_params, n_params) dense or sparse array
-            2D diagonal dense or sparse array that approximates the Hessian of the
-            objective function.
-
-        See Also
-        --------
-        DataMisfit.hessian_diagonal
-        """
-        if self.build_hessian:
-            # Ignore type error: if build_hessian is True, then hessian(model) will
-            # always return a dense or sparse array.
-            return self.hessian(model)  # type: ignore[return-value]
-        return diags_array(self.hessian_diagonal(model))
 
     def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
         """

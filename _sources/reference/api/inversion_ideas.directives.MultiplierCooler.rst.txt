@@ -16,6 +16,80 @@ Methods
 
 
 
+
+
+.. automethod:: MultiplierCooler.__call__
+
+----
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .. raw:: html
 
      <div style='clear:both'></div>

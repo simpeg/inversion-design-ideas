@@ -526,7 +526,7 @@ elements as active cells in the mesh.</p>
 <p class="rubric">Methods</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(model)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.Smallness.__call__" title="inversion_ideas.Smallness.__call__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code></a>(model)</p></td>
 <td><p>Evaluate the regularization on a given model.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.Smallness.gradient" title="inversion_ideas.Smallness.gradient"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gradient</span></code></a>(model)</p></td>
@@ -623,6 +623,21 @@ are the model and reference model vectors, respectively.</p>
 <section id="methods">
 <h2>Methods<a class="headerlink" href="#methods" title="Link to this heading">#</a></h2>
 <p class="rubric">Methods documentation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.Smallness.__call__">
+<span class="sig-prename descclassname"><span class="pre">Smallness.</span></span><span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.Smallness.__call__" title="Link to this definition">#</a></dt>
+<dd><p>Evaluate the regularization on a given model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Array with model values.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.Smallness.gradient">
 <span class="sig-prename descclassname"><span class="pre">Smallness.</span></span><span class="sig-name descname"><span class="pre">gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.Smallness.gradient" title="Link to this definition">#</a></dt>
@@ -770,6 +785,7 @@ are the model and reference model vectors, respectively.</p>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#methods">Methods</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.Smallness.__call__"><code class="docutils literal notranslate"><span class="pre">Smallness.__call__()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.Smallness.gradient"><code class="docutils literal notranslate"><span class="pre">Smallness.gradient()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.Smallness.hessian"><code class="docutils literal notranslate"><span class="pre">Smallness.hessian()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.Smallness.hessian_approx"><code class="docutils literal notranslate"><span class="pre">Smallness.hessian_approx()</span></code></a></li>

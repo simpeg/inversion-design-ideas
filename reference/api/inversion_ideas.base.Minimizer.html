@@ -479,7 +479,7 @@
 <p class="rubric">Methods</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(objective, initial_model, *[, callback])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.base.Minimizer.__call__" title="inversion_ideas.base.Minimizer.__call__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code></a>(objective, initial_model, *[, callback])</p></td>
 <td><p>Minimize objective function.</p></td>
 </tr>
 </tbody>
@@ -490,6 +490,32 @@
 <section id="methods">
 <h2>Methods<a class="headerlink" href="#methods" title="Link to this heading">#</a></h2>
 <p class="rubric">Methods documentation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.base.Minimizer.__call__">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">Minimizer.</span></span><span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objective</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_model</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.base.Minimizer.__call__" title="Link to this definition">#</a></dt>
+<dd><p>Minimize objective function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>objective</strong><span class="classifier">Objective</span></dt><dd><p>Objective function to be minimized.</p>
+</dd>
+<dt><strong>initial_model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Initial model used to start the minimization.</p>
+</dd>
+<dt><strong>callback</strong><span class="classifier">callable, optional</span></dt><dd><p>Callable that gets called after each iteration.
+Takes a <a class="reference internal" href="inversion_ideas.base.MinimizerResult.html#inversion_ideas.base.MinimizerResult" title="inversion_ideas.base.MinimizerResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">inversion_ideas.base.MinimizerResult</span></code></a> as argument.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>Generator[Model]</dt><dd><p>Generator that yields models after each iteration of the minimizer.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
 <div style='clear:both'></div></section>
 </section>
 
@@ -541,7 +567,10 @@
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.base.Minimizer"><code class="docutils literal notranslate"><span class="pre">Minimizer</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#methods">Methods</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#methods">Methods</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.base.Minimizer.__call__"><code class="docutils literal notranslate"><span class="pre">Minimizer.__call__()</span></code></a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 

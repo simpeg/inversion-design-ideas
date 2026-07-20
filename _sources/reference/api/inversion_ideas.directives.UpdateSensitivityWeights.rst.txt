@@ -16,6 +16,86 @@ Methods
 
 
 
+
+
+.. automethod:: UpdateSensitivityWeights.__call__
+
+----
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .. raw:: html
 
      <div style='clear:both'></div>

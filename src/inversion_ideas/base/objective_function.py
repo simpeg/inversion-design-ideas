@@ -27,10 +27,6 @@ class Objective(ABC):
     _base_str = "φ"
     _base_latex = r"\phi"
 
-    @abstractmethod
-    def __init__(self):
-        pass  # pragma: no cover
-
     @property
     @abstractmethod
     def n_params(self) -> int:

@@ -10,8 +10,10 @@ from scipy.sparse.linalg import LinearOperator, aslinearoperator
 from inversion_ideas.utils import get_logger
 
 from .base import Objective
+from .decorators import expand_output, slice_model
 from .operators import get_diagonal
 from .typing import Model, SparseArray
+from .wires import ModelSlice, MultiSlice
 
 
 class DataMisfit(Objective):
@@ -100,6 +102,7 @@ class DataMisfit(Objective):
         uncertainty: npt.NDArray[np.float64],
         simulation,
         *,
+        model_slice: ModelSlice | MultiSlice | None = None,
         build_hessian=False,
         estimate_hessian_diagonal=False,
     ):
@@ -108,23 +111,31 @@ class DataMisfit(Objective):
         self.data = data
         self.uncertainty = uncertainty
         self.simulation = simulation
+        self.model_slice = model_slice
         self.build_hessian = build_hessian
         self.estimate_hessian_diagonal = estimate_hessian_diagonal
         self.set_name("d")
 
+    @slice_model
     def __call__(self, model: Model) -> float:
         residual = self.residual(model)
         weights_matrix = self.weights_matrix
         return residual.T @ weights_matrix.T @ weights_matrix @ residual
 
+    @slice_model
+    @expand_output
     def gradient(self, model: Model) -> npt.NDArray[np.float64]:
         """
         Gradient vector.
         """
         jac = self.simulation.jacobian(model)
         weights_matrix = self.weights_matrix
-        return 2 * jac.T @ (weights_matrix.T @ weights_matrix @ self.residual(model))
+        residual = self.simulation(model) - self.data
+        gradient = 2 * jac.T @ (weights_matrix.T @ weights_matrix @ residual)
+        return gradient
 
+    @slice_model
+    @expand_output
     def hessian(
         self, model: Model
     ) -> npt.NDArray[np.float64] | SparseArray | LinearOperator:
@@ -147,6 +158,8 @@ class DataMisfit(Objective):
         weights_matrix = aslinearoperator(self.weights_matrix)
         return 2 * jac.T @ weights_matrix.T @ weights_matrix @ jac
 
+    @slice_model
+    @expand_output
     def hessian_approx(self, model: Model) -> npt.NDArray[np.float64] | SparseArray:
         """
         Approximated version of the Hessian.
@@ -184,6 +197,8 @@ class DataMisfit(Objective):
             return self.hessian(model)  # type: ignore[return-value]
         return diags_array(self.hessian_diagonal(model))
 
+    @slice_model
+    @expand_output
     def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
         """
         Get the main diagonal of the Hessian.
@@ -246,6 +261,8 @@ class DataMisfit(Objective):
         """
         Number of model parameters.
         """
+        if self.model_slice is not None:
+            return self.model_slice.full_size
         return self.simulation.n_params
 
     @property
@@ -255,6 +272,7 @@ class DataMisfit(Objective):
         """
         return self.data.size
 
+    @slice_model
     def residual(self, model: Model):
         r"""
         Residual vector.
@@ -290,7 +308,7 @@ class DataMisfit(Objective):
         return 1 / self.uncertainty**2
 
     @property
-    def weights_matrix(self) -> dia_array:
+    def weights_matrix(self) -> dia_array[np.float64]:
         """
         Diagonal matrix with the square root of the regularization weights.
         """

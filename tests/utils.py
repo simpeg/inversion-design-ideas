@@ -8,8 +8,8 @@ from scipy.sparse import dia_array, sparray
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from inversion_ideas.base import Objective, Simulation
+from inversion_ideas.decorators import cache_on_model
 from inversion_ideas.typing import SparseArray
-from inversion_ideas.utils import cache_on_model
 
 
 class Dummy(Objective):

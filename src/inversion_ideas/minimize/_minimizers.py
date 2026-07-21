@@ -10,9 +10,10 @@ import numpy as np
 from scipy.sparse.linalg import cg
 
 from ..base import Condition, Minimizer, MinimizerResult, Objective
+from ..decorators import CountCalls
 from ..errors import ConvergenceWarning
 from ..typing import CanBeUpdated, Model, Preconditioner
-from ..utils import CountCalls, Counter, get_logger
+from ..utils import Counter, get_logger
 from ._utils import backtracking_line_search
 
 

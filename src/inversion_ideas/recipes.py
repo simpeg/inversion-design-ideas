@@ -21,6 +21,7 @@ from .preconditioners import (
 )
 from .regularization import Flatness, Smallness
 from .typing import Model, Preconditioner
+from .wires import ModelSlice, MultiSlice
 
 
 def create_l2_inversion(
@@ -292,6 +293,7 @@ def create_tikhonov_regularization(
     alpha_y: float | None = None,
     alpha_z: float | None = None,
     reference_model_in_flatness: bool = False,
+    model_slice: ModelSlice | MultiSlice | None = None,
 ) -> Combo:
     """
     Create a linear combination of Tikhonov (L2) regularization terms.
@@ -340,6 +342,7 @@ def create_tikhonov_regularization(
         active_cells=active_cells,
         cell_weights=cell_weights,
         reference_model=reference_model,
+        model_slice=model_slice,
     )
     if alpha_s is not None:
         smallness = alpha_s * smallness
@@ -347,6 +350,7 @@ def create_tikhonov_regularization(
     kwargs = {
         "active_cells": active_cells,
         "cell_weights": cell_weights,
+        "model_slice": model_slice,
     }
     if reference_model_in_flatness:
         kwargs["reference_model"] = reference_model

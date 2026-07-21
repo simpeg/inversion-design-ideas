@@ -18,10 +18,12 @@ from rich.tree import Tree
 
 from inversion_ideas.errors import ConvergenceWarning
 
+from ._utils import array_to_str
 from .base import Condition, Directive, Minimizer, Objective
+from .decorators import debug
 from .inversion_log import InversionLog, InversionLogRich, MinimizerLog
 from .typing import Log, Model
-from .utils import array_to_str, debug, get_logger
+from .utils import get_logger
 
 
 class Inversion:

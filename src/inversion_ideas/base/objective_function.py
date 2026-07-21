@@ -82,29 +82,6 @@ class Objective(ABC):
             raise TypeError(msg)
         return hessian.diagonal()
 
-    def hessian_approx(self, model: Model) -> npt.NDArray[np.float64] | SparseArray:
-        """
-        Approximated version of the Hessian.
-
-        Parameters
-        ----------
-        model : (n_params) array
-            Array with model values.
-
-        Returns
-        -------
-        (n_params, n_params) array or sparse array
-            2D array that approximates the Hessian of the objective function.
-        """
-        hessian = self.hessian(model)
-        if isinstance(hessian, LinearOperator):
-            msg = (
-                f"Cannot build a 'hessian_approx' for objective function '{self}', "
-                "since its Hessian is a LinearOperator."
-            )
-            raise TypeError(msg)
-        return hessian
-
     @property
     def name(self) -> str | None:
         """
@@ -253,12 +230,6 @@ class Scaled(Objective):
             return csr_array(shape, dtype=np.float64)
         return self.multiplier * self.function.hessian(model)
 
-    def hessian_approx(self, model: Model) -> npt.NDArray[np.float64] | SparseArray:
-        if self.multiplier == 0.0:
-            shape = (self.n_params, self.n_params)
-            return csr_array(shape, dtype=np.float64)
-        return self.multiplier * self.function.hessian_approx(model)
-
     def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
         if self.multiplier == 0.0:
             return np.zeros(self.n_params, dtype=np.float64)
@@ -387,9 +358,6 @@ class Combo(Objective):
         Evaluate the hessian of the objective function for a given model.
         """
         return _sum_operators(f.hessian(model) for f in self.functions)
-
-    def hessian_approx(self, model: Model) -> npt.NDArray[np.float64] | SparseArray:
-        return _sum_operators(f.hessian_approx(model) for f in self.functions)
 
     def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
         return sum(

@@ -137,9 +137,6 @@ class GaussNewtonConjugateGradient(Minimizer):
             if self.stopping_criterion is not None and self.stopping_criterion(model):
                 break
 
-            # Compute gradient and hessian
-            gradient, hessian = objective.gradient(model), objective.hessian(model)
-
             # Update preconditioner before running cg
             if isinstance(preconditioner, CanBeUpdated):
                 preconditioner.update(model)
@@ -152,8 +149,10 @@ class GaussNewtonConjugateGradient(Minimizer):
                 # Decorate callback to count cg calls
                 cg_kwargs[key] = CountCalls(cg_kwargs[key])
 
-            # Apply Conjugate Gradient to get search direction
+            # Compute gradient and hessian
             gradient, hessian = objective.gradient(model), objective.hessian(model)
+
+            # Apply Conjugate Gradient to get search direction
             search_direction, cg_code = cg(hessian, -gradient, **cg_kwargs)
 
             # Get number of cg iterations from callback

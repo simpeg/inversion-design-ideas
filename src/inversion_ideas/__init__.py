@@ -18,7 +18,13 @@ from .recipes import (
     create_sparse_inversion,
     create_tikhonov_regularization,
 )
-from .regularization import Flatness, Smallness, SparseSmallness, TikhonovZero
+from .regularization import (
+    Flatness,
+    Smallness,
+    SparseSmallness,
+    TikhonovFirst,
+    TikhonovZero,
+)
 from .simulations import wrap_simulation
 
 __all__ = [
@@ -32,6 +38,7 @@ __all__ = [
     "JacobiPreconditioner",
     "Smallness",
     "SparseSmallness",
+    "TikhonovFirst",
     "TikhonovZero",
     "__version__",
     "base",

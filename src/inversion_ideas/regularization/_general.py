@@ -143,3 +143,113 @@ class TikhonovZero(Objective):
             msg = f"Invalid weights of type '{type(self.weights)}'."
             raise TypeError(msg)
         return diags_array(np.sqrt(weights_array))
+
+
+class TikhonovFirst(Objective):
+    r"""
+    Tikhonov first order regularization.
+
+    Parameters
+    ----------
+    n_params : int
+        Number of elements in the ``model`` array.
+
+    Notes
+    -----
+    Implement a Tikhonov first order regularization as follows:
+
+    .. math::
+
+        \phi(\mathbf{m})
+        = \sum\limits_{i=1}^{M-1} |m_{i+1} - m_{i}|^2
+        = \lVert \mathbf{R} \mathbf{m} \rVert^2
+        = \mathbf{m}^\text{T} \mathbf{R}^\text{T} \mathbf{R} \mathbf{m}
+
+    where :math:`\mathbf{m} = [m_1, \dots, m_M]` is the model, and
+    :math:`\mathbf{R}` is the matrix of finite differences:
+
+    .. math::
+
+        \mathbf{R} =
+        \begin{bmatrix}
+        1      & -1      &        &        &        & 0      \\
+               &  1      & -1     &        &        &        \\
+               &         & \ddots & \ddots &        &        \\
+               &         &        & 1      & -1     &        \\
+        0      &         &        &        & -1     & 1      \\
+        \end{bmatrix}.
+
+    """
+
+    def __init__(self, n_params: int):
+        self._n_params = n_params
+        self.set_name("1")
+
+    @property
+    def n_params(self):
+        """
+        Number of model parameters.
+        """
+        return self._n_params
+
+    def __call__(self, model: Model) -> float:
+        """
+        Evaluate the regularization on a given model.
+
+        Parameters
+        ----------
+        model : (n_params) array
+            Array with model values.
+
+        Returns
+        -------
+        float
+        """
+        r_matrix = self.finite_differences_matrix
+        return model.T @ r_matrix.T @ r_matrix @ model
+
+    def gradient(self, model: Model) -> npt.NDArray[np.float64]:
+        """
+        Gradient vector.
+
+        Parameters
+        ----------
+        model : (n_params) array
+            Array with model values.
+
+        Returns
+        -------
+        (n_params) array
+        """
+        r_matrix = self.finite_differences_matrix
+        return 2 * r_matrix.T @ r_matrix @ model
+
+    def hessian(self, model: Model):  # noqa: ARG002
+        """
+        Hessian matrix.
+
+        Parameters
+        ----------
+        model : (n_params) array
+            Array with model values.
+
+        Returns
+        -------
+        (n_params, n_params) sparray
+        """
+        r_matrix = self.finite_differences_matrix
+        return 2 * r_matrix.T @ r_matrix
+
+    @property
+    def finite_differences_matrix(self):
+        if not hasattr(self, "_finite_differences_matrix"):
+            diagonals = [
+                np.ones(self.n_params - 1),
+                -np.ones(self.n_params - 1),
+            ]
+            offsets = [0, 1]
+            shape = (self.n_params - 1, self.n_params)
+            self._finite_differences_matrix = diags_array(
+                diagonals, offsets=offsets, shape=shape
+            )
+        return self._finite_differences_matrix

@@ -230,7 +230,15 @@ class Counter:
     """
 
     def __init__(self, initial_value=0):
+        self._initial_value = initial_value
         self._counts = initial_value
+
+    @property
+    def initial_value(self):
+        """
+        Initial value for the counter.
+        """
+        return self._initial_value
 
     @property
     def counts(self) -> int:
@@ -238,6 +246,12 @@ class Counter:
         Return current amount of counts.
         """
         return self._counts
+
+    def reset(self):
+        """
+        Reset counter to the initial value.
+        """
+        self._counts = self.initial_value
 
     def __call__(self, *args, **kwargs):  # noqa: ARG002
         """

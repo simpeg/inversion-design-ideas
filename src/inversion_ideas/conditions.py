@@ -1,7 +1,7 @@
 """
 Functions and callable classes that define conditions.
 
-Use these objects as stopping criteria for inversions.
+Use these objects as stopping criterion for inversions.
 """
 
 from collections.abc import Callable
@@ -77,7 +77,7 @@ class CustomCondition(Condition):
 
 class ChiTarget(Condition):
     """
-    Stopping criteria for when chi factor meets the target.
+    Stopping criterion for when chi factor meets the target.
 
     Parameters
     ----------
@@ -111,7 +111,7 @@ class ChiTarget(Condition):
 
 class ModelChanged(Condition):
     r"""
-    Stopping criteria for when model didn't changed above tolerance.
+    Stopping criterion for when model didn't changed above tolerance.
 
     Parameters
     ----------
@@ -124,7 +124,7 @@ class ModelChanged(Condition):
 
     Notes
     -----
-    The stopping criteria evaluates:
+    The stopping criterion evaluates:
 
     .. math::
 
@@ -147,7 +147,7 @@ class ModelChanged(Condition):
     absolute tolerances whose values are given
     by ``rtol`` and ``atol``, respectively.
 
-    When called, if any of those inequalities hold, the stopping criteria will return
+    When called, if any of those inequalities hold, the stopping criterion will return
     ``True``, and ``False`` otherwise.
     """
 
@@ -190,7 +190,7 @@ class ModelChanged(Condition):
 
 class ObjectiveChanged(Condition):
     r"""
-    Stopping criteria for when an objective function didn't changed above a tolerance.
+    Stopping criterion for when an objective function didn't changed above a tolerance.
 
     Parameters
     ----------
@@ -205,7 +205,7 @@ class ObjectiveChanged(Condition):
 
     Notes
     -----
-    The stopping criteria evaluates:
+    The stopping criterion evaluates:
 
     .. math::
 
@@ -227,7 +227,7 @@ class ObjectiveChanged(Condition):
     and :math:`\delta_r` and :math:`\delta_a` are the relative and absolute tolerances
     whose values are given by ``rtol`` and ``atol``, respectively.
 
-    When called, if any of those inequalities hold, the stopping criteria will return
+    When called, if any of those inequalities hold, the stopping criterion will return
     ``True``, and ``False`` otherwise.
     """
 

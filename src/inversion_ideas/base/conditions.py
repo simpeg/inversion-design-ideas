@@ -2,7 +2,7 @@
 Base classes for defining conditions.
 
 Conditions are callable objects that return either a bool when either a certain
-condition is met or not. They are use to define abstract objects like stopping criteria
+condition is met or not. They are use to define abstract objects like stopping criterion
 for inversions. We can use binary operators (and, or, xor) to logically group multiple
 conditions together.
 """

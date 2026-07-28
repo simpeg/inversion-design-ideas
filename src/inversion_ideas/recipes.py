@@ -40,7 +40,7 @@ def create_l2_inversion(
     r"""
     Create inversion of the form :math:`\phi_d + \beta \phi_m`.
 
-    Build an inversion with a beta cooling schedule and a stopping criteria for a chi
+    Build an inversion with a beta cooling schedule and a stopping criterion for a chi
     factor target.
 
     Parameters
@@ -98,7 +98,7 @@ def create_l2_inversion(
         ),
     ]
 
-    # Stopping criteria
+    # Stopping criterion
     stopping_criterion = ChiTarget(data_misfit, chi_target=chi_target)
 
     # Preconditioner
@@ -223,7 +223,7 @@ def create_sparse_inversion(
         )
     ]
 
-    # Stopping criteria
+    # Stopping criterion
     smallness_not_changing = ObjectiveChanged(model_norm, rtol=model_norm_rtol)
 
     # Preconditioner

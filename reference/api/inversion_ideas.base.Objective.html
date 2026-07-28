@@ -500,16 +500,13 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.base.Objective.hessian" title="inversion_ideas.base.Objective.hessian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hessian</span></code></a>(model)</p></td>
 <td><p>Evaluate the hessian of the objective function for a given model.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.base.Objective.hessian_approx" title="inversion_ideas.base.Objective.hessian_approx"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hessian_approx</span></code></a>(model)</p></td>
-<td><p>Approximated version of the Hessian.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.base.Objective.hessian_diagonal" title="inversion_ideas.base.Objective.hessian_diagonal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hessian_diagonal</span></code></a>(model)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.base.Objective.hessian_diagonal" title="inversion_ideas.base.Objective.hessian_diagonal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hessian_diagonal</span></code></a>(model)</p></td>
 <td><p>Get the main diagonal of the Hessian.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.base.Objective.info" title="inversion_ideas.base.Objective.info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.base.Objective.info" title="inversion_ideas.base.Objective.info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code></a>()</p></td>
 <td><p>Get information about the objective function.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.base.Objective.set_name" title="inversion_ideas.base.Objective.set_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_name</span></code></a>(value)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.base.Objective.set_name" title="inversion_ideas.base.Objective.set_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_name</span></code></a>(value)</p></td>
 <td><p>Set name for the objective function.</p></td>
 </tr>
 </tbody>
@@ -553,27 +550,6 @@
 <dt class="sig sig-object py" id="inversion_ideas.base.Objective.hessian">
 <span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">Objective.</span></span><span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.base.Objective.hessian" title="Link to this definition">#</a></dt>
 <dd><p>Evaluate the hessian of the objective function for a given model.</p>
-</dd></dl>
-
-<hr class="docutils" />
-<dl class="py method">
-<dt class="sig sig-object py" id="inversion_ideas.base.Objective.hessian_approx">
-<span class="sig-prename descclassname"><span class="pre">Objective.</span></span><span class="sig-name descname"><span class="pre">hessian_approx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.base.Objective.hessian_approx" title="Link to this definition">#</a></dt>
-<dd><p>Approximated version of the Hessian.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Array with model values.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt>(n_params, n_params) array or sparse array</dt><dd><p>2D array that approximates the Hessian of the objective function.</p>
-</dd>
-</dl>
-</dd>
-</dl>
 </dd></dl>
 
 <hr class="docutils" />
@@ -672,7 +648,6 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.base.Objective.__call__"><code class="docutils literal notranslate"><span class="pre">Objective.__call__()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.base.Objective.gradient"><code class="docutils literal notranslate"><span class="pre">Objective.gradient()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.base.Objective.hessian"><code class="docutils literal notranslate"><span class="pre">Objective.hessian()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.base.Objective.hessian_approx"><code class="docutils literal notranslate"><span class="pre">Objective.hessian_approx()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.base.Objective.hessian_diagonal"><code class="docutils literal notranslate"><span class="pre">Objective.hessian_diagonal()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.base.Objective.info"><code class="docutils literal notranslate"><span class="pre">Objective.info()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.base.Objective.set_name"><code class="docutils literal notranslate"><span class="pre">Objective.set_name()</span></code></a></li>

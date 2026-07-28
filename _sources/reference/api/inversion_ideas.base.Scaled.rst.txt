@@ -143,8 +143,6 @@ Methods
 
 
 
-
-
 .. automethod:: Scaled.gradient
 
 ----
@@ -153,13 +151,6 @@ Methods
 
 
 .. automethod:: Scaled.hessian
-
-----
-
-
-
-
-.. automethod:: Scaled.hessian_approx
 
 ----
 

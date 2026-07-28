@@ -495,12 +495,12 @@ represents the Hessian matrix. Default to False.</p>
 you need to build it.</p>
 </div>
 </dd>
-<dt><strong>estimate_hessian_diagonal</strong><span class="classifier">bool, optional</span></dt><dd><p>If True, the <code class="docutils literal notranslate"><span class="pre">hessian_diagonal</span></code> and the <code class="docutils literal notranslate"><span class="pre">hessian_approx</span></code> methods will
-estimate the diagonal of the Hessian, even if the Jacobian of the <code class="docutils literal notranslate"><span class="pre">simulation</span></code>
-is a <code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code>.
-If False, an error will be raised when calling the <code class="docutils literal notranslate"><span class="pre">hessian_diagonal</span></code> or the
-<code class="docutils literal notranslate"><span class="pre">hessian_approx</span></code> methods in case the Jacobian of the <code class="docutils literal notranslate"><span class="pre">simulation</span></code> is
-a <code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code>.</p>
+<dt><strong>estimate_hessian_diagonal</strong><span class="classifier">bool, optional</span></dt><dd><p>If True, the <code class="docutils literal notranslate"><span class="pre">hessian_diagonal</span></code> method will estimate the
+diagonal of the Hessian, even if the Jacobian of the <code class="docutils literal notranslate"><span class="pre">simulation</span></code> is a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code>.
+If False, an error will be raised when calling the <code class="docutils literal notranslate"><span class="pre">hessian_diagonal</span></code> method
+in case the Jacobian of the <code class="docutils literal notranslate"><span class="pre">simulation</span></code> is a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code>.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
 <p>Estimating the diagonal of a <code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code>
@@ -548,19 +548,16 @@ vectors. This might lead to very expensive computations. Enable
 <tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.DataMisfit.hessian" title="inversion_ideas.DataMisfit.hessian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hessian</span></code></a>(model)</p></td>
 <td><p>Hessian matrix.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.DataMisfit.hessian_approx" title="inversion_ideas.DataMisfit.hessian_approx"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hessian_approx</span></code></a>(model)</p></td>
-<td><p>Approximated version of the Hessian.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.DataMisfit.hessian_diagonal" title="inversion_ideas.DataMisfit.hessian_diagonal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hessian_diagonal</span></code></a>(model)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.DataMisfit.hessian_diagonal" title="inversion_ideas.DataMisfit.hessian_diagonal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hessian_diagonal</span></code></a>(model)</p></td>
 <td><p>Get the main diagonal of the Hessian.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.DataMisfit.info" title="inversion_ideas.DataMisfit.info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.DataMisfit.info" title="inversion_ideas.DataMisfit.info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code></a>()</p></td>
 <td><p>Get information about the objective function.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.DataMisfit.residual" title="inversion_ideas.DataMisfit.residual"><code class="xref py py-obj docutils literal notranslate"><span class="pre">residual</span></code></a>(model)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.DataMisfit.residual" title="inversion_ideas.DataMisfit.residual"><code class="xref py py-obj docutils literal notranslate"><span class="pre">residual</span></code></a>(model)</p></td>
 <td><p>Residual vector.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.DataMisfit.set_name" title="inversion_ideas.DataMisfit.set_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_name</span></code></a>(value)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.DataMisfit.set_name" title="inversion_ideas.DataMisfit.set_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_name</span></code></a>(value)</p></td>
 <td><p>Set name for the objective function.</p></td>
 </tr>
 </tbody>
@@ -666,45 +663,6 @@ w_i \left\lvert f_i(\mathbf{m}) - d_i^\text{obs} \right\rvert^2\]</div>
 <dt class="sig sig-object py" id="inversion_ideas.DataMisfit.hessian">
 <span class="sig-prename descclassname"><span class="pre">DataMisfit.</span></span><span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.DataMisfit.hessian" title="Link to this definition">#</a></dt>
 <dd><p>Hessian matrix.</p>
-</dd></dl>
-
-<hr class="docutils" />
-<dl class="py method">
-<dt class="sig sig-object py" id="inversion_ideas.DataMisfit.hessian_approx">
-<span class="sig-prename descclassname"><span class="pre">DataMisfit.</span></span><span class="sig-name descname"><span class="pre">hessian_approx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.DataMisfit.hessian_approx" title="Link to this definition">#</a></dt>
-<dd><p>Approximated version of the Hessian.</p>
-<p>If <code class="docutils literal notranslate"><span class="pre">build_hessian</span></code> is True, then the full Hessian will be returned.
-Otherwise, the Hessian will be approximated by a diagonal sparse matrix, whose
-main diagonal matches Hessian’s diagonal.</p>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
-<p>If the Jacobian of the <code class="docutils literal notranslate"><span class="pre">simulation</span></code> is
-a <code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code>, the diagonal of the Hessian
-will be estimated only if <code class="docutils literal notranslate"><span class="pre">estimate_hessian_diagonal</span></code> is True.
-Diagonal estimations can be expensive computational tasks for large
-problems. Make sure you to enable diagonal estimations only if you need it.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Array with model values.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt>(n_params, n_params) dense or sparse array</dt><dd><p>2D diagonal dense or sparse array that approximates the Hessian of the
-objective function.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<dl class="simple">
-<dt><a class="reference internal" href="#inversion_ideas.DataMisfit.hessian_diagonal" title="inversion_ideas.DataMisfit.hessian_diagonal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataMisfit.hessian_diagonal</span></code></a></dt><dd></dd>
-</dl>
-</div>
 </dd></dl>
 
 <hr class="docutils" />
@@ -842,7 +800,6 @@ is the forward model, and <span class="math notranslate nohighlight">\(\mathbf{m
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.DataMisfit.chi_factor"><code class="docutils literal notranslate"><span class="pre">DataMisfit.chi_factor()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.DataMisfit.gradient"><code class="docutils literal notranslate"><span class="pre">DataMisfit.gradient()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.DataMisfit.hessian"><code class="docutils literal notranslate"><span class="pre">DataMisfit.hessian()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.DataMisfit.hessian_approx"><code class="docutils literal notranslate"><span class="pre">DataMisfit.hessian_approx()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.DataMisfit.hessian_diagonal"><code class="docutils literal notranslate"><span class="pre">DataMisfit.hessian_diagonal()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.DataMisfit.info"><code class="docutils literal notranslate"><span class="pre">DataMisfit.info()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.DataMisfit.residual"><code class="docutils literal notranslate"><span class="pre">DataMisfit.residual()</span></code></a></li>

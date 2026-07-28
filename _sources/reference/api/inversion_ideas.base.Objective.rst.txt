@@ -143,8 +143,6 @@ Methods
 
 
 
-
-
 .. automethod:: Objective.gradient
 
 ----
@@ -153,13 +151,6 @@ Methods
 
 
 .. automethod:: Objective.hessian
-
-----
-
-
-
-
-.. automethod:: Objective.hessian_approx
 
 ----
 

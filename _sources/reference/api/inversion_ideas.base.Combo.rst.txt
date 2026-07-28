@@ -159,8 +159,6 @@ Methods
 
 
 
-
-
 .. automethod:: Combo.contains
 
 ----
@@ -183,13 +181,6 @@ Methods
 
 
 .. automethod:: Combo.hessian
-
-----
-
-
-
-
-.. automethod:: Combo.hessian_approx
 
 ----
 

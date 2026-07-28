@@ -173,8 +173,6 @@ Methods
 
 
 
-
-
 .. automethod:: Flatness.gradient
 
 ----
@@ -183,13 +181,6 @@ Methods
 
 
 .. automethod:: Flatness.hessian
-
-----
-
-
-
-
-.. automethod:: Flatness.hessian_approx
 
 ----
 

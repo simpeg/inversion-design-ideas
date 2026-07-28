@@ -167,8 +167,6 @@ Methods
 
 
 
-
-
 .. automethod:: Smallness.gradient
 
 ----
@@ -177,13 +175,6 @@ Methods
 
 
 .. automethod:: Smallness.hessian
-
-----
-
-
-
-
-.. automethod:: Smallness.hessian_approx
 
 ----
 

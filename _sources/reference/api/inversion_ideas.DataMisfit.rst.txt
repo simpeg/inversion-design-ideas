@@ -163,8 +163,6 @@ Methods
 
 
 
-
-
 .. automethod:: DataMisfit.chi_factor
 
 ----
@@ -180,13 +178,6 @@ Methods
 
 
 .. automethod:: DataMisfit.hessian
-
-----
-
-
-
-
-.. automethod:: DataMisfit.hessian_approx
 
 ----
 

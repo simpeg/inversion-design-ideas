@@ -155,8 +155,6 @@ Methods
 
 
 
-
-
 .. automethod:: TikhonovZero.gradient
 
 ----
@@ -165,13 +163,6 @@ Methods
 
 
 .. automethod:: TikhonovZero.hessian
-
-----
-
-
-
-
-.. automethod:: TikhonovZero.hessian_approx
 
 ----
 

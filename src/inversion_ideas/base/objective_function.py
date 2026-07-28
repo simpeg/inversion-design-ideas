@@ -27,10 +27,6 @@ class Objective(ABC):
     _base_str = "φ"
     _base_latex = r"\phi"
 
-    @abstractmethod
-    def __init__(self):
-        pass  # pragma: no cover
-
     @property
     @abstractmethod
     def n_params(self) -> int:
@@ -145,6 +141,12 @@ class Objective(ABC):
                 )
                 raise ValueError(msg)
             return self
+        if not isinstance(other, Objective):
+            msg = (
+                f"Cannot add objective function '{self}' with '{other}' of type "
+                f"'{type(other).__name__}'."
+            )
+            raise TypeError(msg)
         return Combo([self, other])
 
     def __radd__(self, other) -> "Combo | Self":
@@ -158,6 +160,12 @@ class Objective(ABC):
                 )
                 raise ValueError(msg)
             return self
+        if not isinstance(other, Objective):
+            msg = (
+                f"Cannot add objective function '{self}' with '{other}' of type "
+                f"'{type(other).__name__}'."
+            )
+            raise TypeError(msg)
         return Combo([other, self])
 
     def __mul__(self, value: Real) -> "Scaled":

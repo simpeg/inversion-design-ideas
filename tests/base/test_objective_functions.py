@@ -72,6 +72,27 @@ class TestObjectiveOperations:
         with pytest.raises(ValueError, match=msg):
             1 + phi
 
+    def test_add_invalid_type(self):
+        """
+        Test error when adding an objective function with object of different type.
+        """
+
+        class NonObjective:
+            pass
+
+        phi = Dummy(self.n_params)
+        other = NonObjective()
+        # Test add
+        msg = re.escape(
+            f"Cannot add objective function '{phi}' with '{other}' "
+            "of type 'NonObjective'"
+        )
+        with pytest.raises(TypeError, match=msg):
+            phi + other
+        # Test radd
+        with pytest.raises(TypeError, match=msg):
+            other + phi
+
     def test_add_n(self):
         """
         Test addition of multiple objective functions into nested Combos.
@@ -147,14 +168,37 @@ class TestObjectiveOperations:
         """
         Test the __radd__ method of objective functions.
 
-        We'll need to add an object of some dummy class that raises NotImplemented when
-        calling __add__ to trigger __radd__.
+        We'll need to create another dummy objective function class that returns
+        ``NotImplemented`` on its ``__add__`` method, so we can actually test the
+        ``Objective.__radd__`` method of the ``Dummy`` class.
         """
 
-        class DummyNonObjectiveFunction:
+        class DullObjectiveFunction(Objective):
             n_params = self.n_params
 
-        a = DummyNonObjectiveFunction()
+            def __init__(self):
+                pass
+
+            def __call__(self, model):
+                pass
+
+            def gradient(self, model):
+                pass
+
+            def hessian(self, model):
+                pass
+
+            def __add__(self, other):
+                # Override __add__ so it doesn't implement it, and will trigger the
+                # __radd__ of the other objective function.
+                return NotImplemented
+
+            def __radd__(self, other):
+                # Override __radd__ so it doesn't implement it, and will trigger the
+                # __add__ of the other objective function.
+                return NotImplemented
+
+        a = DullObjectiveFunction()
         b = Dummy(self.n_params)
         combo = a + b
         assert isinstance(combo, Combo)

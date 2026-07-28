@@ -266,7 +266,7 @@ class Inversion:
         return self._log_minimizers and isinstance(self.minimizer, Minimizer)
 
     @property
-    def minimizer_logs(self) -> list[None | MinimizerLog] | None:
+    def minimizer_logs(self) -> list[MinimizerLog | None] | None:
         """
         Logs of minimizers.
         """

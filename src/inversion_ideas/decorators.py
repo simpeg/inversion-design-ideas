@@ -25,7 +25,7 @@ def cache_on_model(func):
         of the decorated method will be cached. If ``cache=False``, no caching will
         be performed.
 
-    See also
+    See Also
     --------
     Use :func:`functools.cache` for caching multiple results.
 
@@ -98,9 +98,18 @@ def cache_on_model(func):
 
     @functools.wraps(func)
     def wrapper(self, model, *args, **kwargs):
-        if hasattr(self, "cache") and not self.cache:
-            # Return result without caching
-            return func(self, model, *args, **kwargs)
+        if hasattr(self, "cache"):
+            if not isinstance(self.cache, bool):
+                msg = (
+                    f"Invalid `cache` attribute of type '{type(self.cache).__name__}' "
+                    f"belonging to '{self}' object. "
+                    "It must be a bool for `cache_on_model` to be able to cache "
+                    f"results of the '{func}' method."
+                )
+                raise TypeError(msg)
+            if not self.cache:
+                # Return result without caching
+                return func(self, model, *args, **kwargs)
 
         model_hash = hashlib.sha256(model)
 

@@ -22,6 +22,14 @@ Methods
 
 .. rubric:: Methods documentation
 
+{% for item in members %}
+{% if item == '__call__' %}
+.. automethod:: {{ objname }}.{{ item }}
+
+----
+{% endif %}
+{% endfor %}
+
 {% for item in methods %}
 {% if item != '__init__' %}
 .. automethod:: {{ objname }}.{{ item }}

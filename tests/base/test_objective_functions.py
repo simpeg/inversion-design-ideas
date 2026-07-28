@@ -311,9 +311,9 @@ class TestObjectiveOperations:
         assert combo != sum(collection).flatten()
 
 
-class TestObjectiveHessian:
+class TestObjectiveHessianDiagonal:
     """
-    Test the default implementation of ``hessian_approx`` and ``hessian_diagonal``.
+    Test the default implementation of ``hessian_diagonal``.
     """
 
     n_params = 5
@@ -323,23 +323,6 @@ class TestObjectiveHessian:
         rng = np.random.default_rng(seed=42)
         model = rng.uniform(size=self.n_params)
         return model
-
-    @pytest.mark.parametrize("hessian_type", ["dense", "sparse"])
-    def test_hessian_approx(self, model, hessian_type):
-        """
-        Test if the default implementation of ``hessian_approx`` returns the Hessian.
-        """
-        phi = Dummy(3, seed=42, hessian_type=hessian_type)
-        assert_equal_linear_operators(phi.hessian(model), phi.hessian_approx(model))
-
-    def test_hessian_approx_linop_error(self, model):
-        """
-        Test error on ``hessian_approx`` if hessian is a LinearOperator.
-        """
-        phi = Dummy(3, seed=42, hessian_type="linop")
-        msg = re.escape("Cannot build a 'hessian_approx' for objective function")
-        with pytest.raises(TypeError, match=msg):
-            phi.hessian_approx(model)
 
     @pytest.mark.parametrize("hessian_type", ["dense", "sparse"])
     def test_hessian_diagonal(self, model, hessian_type):
@@ -568,30 +551,6 @@ class TestComboMethods:
             )
         ],
     )
-    def test_hessian_approx(self, model, hessian_types):
-        """
-        Test the hessian_approx method of Combo objective functions.
-        """
-        type_a, type_b = hessian_types
-        rng = np.random.default_rng(seed=42)
-        phi_a = Dummy(self.n_params, seed=rng, hessian_type=type_a)
-        phi_b = Dummy(self.n_params, seed=rng, hessian_type=type_b)
-        combo = phi_a + phi_b
-        assert_equal_linear_operators(
-            combo.hessian_approx(model),
-            phi_a.hessian_approx(model) + phi_b.hessian_approx(model),
-            to_dense=True,
-        )
-
-    @pytest.mark.parametrize(
-        "hessian_types",
-        [
-            pytest.param((type_a, type_b), id=f"{type_a}-{type_b}")
-            for type_a, type_b in itertools.combinations_with_replacement(
-                ("dense", "sparse"), 2
-            )
-        ],
-    )
     def test_hessian_diagonal(self, model, hessian_types):
         """
         Test the hessian_diagonal method of Combo objective functions.
@@ -629,9 +588,6 @@ class Failed(Objective):
         raise NotImplementedError()
 
     def hessian(self, model):
-        raise NotImplementedError()
-
-    def hessian_approx(self, model):
         raise NotImplementedError()
 
     def hessian_diagonal(self, model):
@@ -682,19 +638,6 @@ class TestScaledMethods:
         )
 
     @pytest.mark.parametrize("hessian_type", ["dense", "sparse"])
-    def test_hessian_approx(self, model, hessian_type):
-        """
-        Test the ``hessian_approx`` method of Scaled objective functions.
-        """
-        phi = Dummy(self.n_params, seed=42, hessian_type=hessian_type)
-        scaled = self.scalar * phi
-        assert_equal_linear_operators(
-            scaled.hessian_approx(model),
-            self.scalar * phi.hessian_approx(model),
-            to_dense=True,
-        )
-
-    @pytest.mark.parametrize("hessian_type", ["dense", "sparse"])
     def test_hessian_diagonal(self, model, hessian_type):
         """
         Test the ``hessian_diagonal`` method of Scaled objective functions.
@@ -738,17 +681,6 @@ class TestScaledMethods:
         hessian = scaled.hessian(model)
         assert hessian.shape == (self.n_params, self.n_params)
         np.testing.assert_equal(hessian.toarray(), 0.0)
-
-    def test_hessian_approx_null(self, model):
-        """Test hessian_approx of Scaled with a zero multiplier."""
-        phi = Failed(self.n_params)
-        with pytest.raises(NotImplementedError):
-            phi.hessian_approx(model)
-
-        scaled = 0.0 * phi
-        hessian_approx = scaled.hessian_approx(model)
-        assert hessian_approx.shape == (self.n_params, self.n_params)
-        np.testing.assert_equal(hessian_approx.toarray(), 0.0)
 
     def test_hessian_diagonal_null(self, model):
         """Test hessian_diagonal of Scaled with a zero multiplier."""

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>inversion_ideas.utils.cache_on_model &#8212; inversion-ideas  documentation</title>
+    <title>inversion_ideas.decorators &#8212; inversion-ideas  documentation</title>
   
   
   
@@ -43,12 +43,12 @@
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/api/inversion_ideas.utils.cache_on_model';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/api/inversion_ideas.decorators';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="inversion_ideas.utils.get_logger" href="inversion_ideas.utils.get_logger.html" />
-    <link rel="prev" title="inversion_ideas.utils" href="inversion_ideas.utils.html" />
+    <link rel="next" title="inversion_ideas.decorators.cache_on_model" href="inversion_ideas.decorators.cache_on_model.html" />
+    <link rel="prev" title="Decorators" href="../decorators.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -382,11 +382,18 @@
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.operators.get_diagonal.html">inversion_ideas.operators.get_diagonal</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../utils.html">Utilities</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../utils.html">Utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.utils.html">inversion_ideas.utils</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">inversion_ideas.utils.cache_on_model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.utils.get_logger.html">inversion_ideas.utils.get_logger</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.utils.get_sensitivity_weights.html">inversion_ideas.utils.get_sensitivity_weights</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inversion_ideas.utils.Counter.html">inversion_ideas.utils.Counter</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../decorators.html">Decorators</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">inversion_ideas.decorators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inversion_ideas.decorators.cache_on_model.html">inversion_ideas.decorators.cache_on_model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inversion_ideas.decorators.debug.html">inversion_ideas.decorators.debug</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inversion_ideas.decorators.CountCalls.html">inversion_ideas.decorators.CountCalls</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../errors.html">Errors and warnings</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -451,9 +458,9 @@
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">API Reference</a></li>
     
     
-    <li class="breadcrumb-item"><a href="../utils.html" class="nav-link">Utilities</a></li>
+    <li class="breadcrumb-item"><a href="../decorators.html" class="nav-link">Decorators</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">inversion_ideas.utils.cache_on_model</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">inversion_ideas.decorators</span></li>
   </ul>
 </nav>
 </div>
@@ -470,49 +477,30 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="inversion-ideas-utils-cache-on-model">
-<h1>inversion_ideas.utils.cache_on_model<a class="headerlink" href="#inversion-ideas-utils-cache-on-model" title="Link to this heading">#</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="inversion_ideas.utils.cache_on_model">
-<span class="sig-prename descclassname"><span class="pre">inversion_ideas.utils.</span></span><span class="sig-name descname"><span class="pre">cache_on_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.utils.cache_on_model" title="Link to this definition">#</a></dt>
-<dd><p>Cache the last result of a method within the instance using the model hash.</p>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
-<p>Use this decorator only for methods that take the <code class="docutils literal notranslate"><span class="pre">model</span></code> as the first
-argument.</p>
+  <section id="module-inversion_ideas.decorators">
+<span id="inversion-ideas-decorators"></span><h1>inversion_ideas.decorators<a class="headerlink" href="#module-inversion_ideas.decorators" title="Link to this heading">#</a></h1>
+<p>Decorators for functions, methods and classes.</p>
+<p class="rubric">Functions</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="inversion_ideas.decorators.cache_on_model.html#inversion_ideas.decorators.cache_on_model" title="inversion_ideas.decorators.cache_on_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cache_on_model</span></code></a>(func)</p></td>
+<td><p>Cache the last result of a method within the instance using the model hash.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="inversion_ideas.decorators.debug.html#inversion_ideas.decorators.debug" title="inversion_ideas.decorators.debug"><code class="xref py py-obj docutils literal notranslate"><span class="pre">debug</span></code></a>(func)</p></td>
+<td><p>Add a debug entry into the logger through a decorator.</p></td>
+</tr>
+</tbody>
+</table>
 </div>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
-<p>The instance needs to have a <code class="docutils literal notranslate"><span class="pre">cache</span></code> bool attribute. If True, the result
-of the decorated method will be cached. If False, no caching will be performed.</p>
+<p class="rubric">Classes</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="inversion_ideas.decorators.CountCalls.html#inversion_ideas.decorators.CountCalls" title="inversion_ideas.decorators.CountCalls"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CountCalls</span></code></a>(func)</p></td>
+<td><p>Class decorator to count function calls.</p></td>
+</tr>
+</tbody>
+</table>
 </div>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@cache_on_model</span>
-<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="nf">squared</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="p">(</span><span class="n">model</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sq</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sq</span><span class="o">.</span><span class="n">squared</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>  <span class="c1"># perform the computation</span>
-<span class="go">14.0</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sq</span><span class="o">.</span><span class="n">squared</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>  <span class="c1"># access the cached result</span>
-<span class="go">14.0</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sq</span><span class="o">.</span><span class="n">squared</span><span class="p">(</span><span class="n">model_new</span><span class="p">))</span>  <span class="c1"># perform a new computation</span>
-<span class="go">77.0</span>
-</pre></div>
-</div>
-</dd></dl>
-
 </section>
 
 
@@ -526,20 +514,20 @@ of the decorated method will be cached. If False, no caching will be performed.<
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="inversion_ideas.utils.html"
+       href="../decorators.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">inversion_ideas.utils</p>
+        <p class="prev-next-title">Decorators</p>
       </div>
     </a>
     <a class="right-next"
-       href="inversion_ideas.utils.get_logger.html"
+       href="inversion_ideas.decorators.cache_on_model.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">inversion_ideas.utils.get_logger</p>
+        <p class="prev-next-title">inversion_ideas.decorators.cache_on_model</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -555,21 +543,9 @@ of the decorated method will be cached. If False, no caching will be performed.<
 
 
   <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.utils.cache_on_model"><code class="docutils literal notranslate"><span class="pre">cache_on_model()</span></code></a></li>
-</ul>
-  </nav></div>
-
-  <div class="sidebar-secondary-item">
 
   <div class="tocsection sourcelink">
-    <a href="../../_sources/reference/api/inversion_ideas.utils.cache_on_model.rst.txt">
+    <a href="../../_sources/reference/api/inversion_ideas.decorators.rst.txt">
       <i class="fa-solid fa-file-lines"></i> Show Source
     </a>
   </div>

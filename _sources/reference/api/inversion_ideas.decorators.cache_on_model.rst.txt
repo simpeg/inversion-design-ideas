@@ -1,0 +1,6 @@
+﻿inversion\_ideas.decorators.cache\_on\_model
+============================================
+
+.. currentmodule:: inversion_ideas.decorators
+
+.. autofunction:: cache_on_model

@@ -8,8 +8,6 @@
 
    .. autosummary::
    
-      cache_on_model
-      debug
       get_logger
       get_sensitivity_weights
    
@@ -17,6 +15,5 @@
 
    .. autosummary::
    
-      CountCalls
       Counter
    

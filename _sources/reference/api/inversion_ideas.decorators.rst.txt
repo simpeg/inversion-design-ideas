@@ -1,0 +1,19 @@
+﻿inversion\_ideas.decorators
+===========================
+
+.. automodule:: inversion_ideas.decorators
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      cache_on_model
+      debug
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      CountCalls
+   

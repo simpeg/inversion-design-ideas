@@ -1,0 +1,6 @@
+﻿inversion\_ideas.decorators.debug
+=================================
+
+.. currentmodule:: inversion_ideas.decorators
+
+.. autofunction:: debug

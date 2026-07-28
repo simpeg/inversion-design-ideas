@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>inversion_ideas.create_tikhonov_regularization &#8212; inversion-ideas  documentation</title>
+    <title>inversion_ideas.utils.Counter &#8212; inversion-ideas  documentation</title>
   
   
   
@@ -43,12 +43,12 @@
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/api/inversion_ideas.create_tikhonov_regularization';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/api/inversion_ideas.utils.Counter';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Custom linear operators" href="../operators.html" />
-    <link rel="prev" title="inversion_ideas.create_sparse_inversion" href="inversion_ideas.create_sparse_inversion.html" />
+    <link rel="next" title="Decorators" href="../decorators.html" />
+    <link rel="prev" title="inversion_ideas.utils.get_sensitivity_weights" href="inversion_ideas.utils.get_sensitivity_weights.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -367,13 +367,13 @@
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.wrap_simulation.html">inversion_ideas.wrap_simulation</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../inversion.html">Inversions and Recipes</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../inversion.html">Inversions and Recipes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.Inversion.html">inversion_ideas.Inversion</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.InversionLog.html">inversion_ideas.InversionLog</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.InversionLogRich.html">inversion_ideas.InversionLogRich</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.create_l2_inversion.html">inversion_ideas.create_l2_inversion</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.create_sparse_inversion.html">inversion_ideas.create_sparse_inversion</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">inversion_ideas.create_tikhonov_regularization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inversion_ideas.create_tikhonov_regularization.html">inversion_ideas.create_tikhonov_regularization</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../operators.html">Custom linear operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -382,11 +382,11 @@
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.operators.get_diagonal.html">inversion_ideas.operators.get_diagonal</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../utils.html">Utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../utils.html">Utilities</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.utils.html">inversion_ideas.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.utils.get_logger.html">inversion_ideas.utils.get_logger</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.utils.get_sensitivity_weights.html">inversion_ideas.utils.get_sensitivity_weights</a></li>
-<li class="toctree-l2"><a class="reference internal" href="inversion_ideas.utils.Counter.html">inversion_ideas.utils.Counter</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">inversion_ideas.utils.Counter</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../decorators.html">Decorators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -458,9 +458,9 @@
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">API Reference</a></li>
     
     
-    <li class="breadcrumb-item"><a href="../inversion.html" class="nav-link">Inversions and Recipes</a></li>
+    <li class="breadcrumb-item"><a href="../utils.html" class="nav-link">Utilities</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">inversion_ideas.create_tikhonov_regularization</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">inversion_ideas.utils.Counter</span></li>
   </ul>
 </nav>
 </div>
@@ -477,46 +477,90 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="inversion-ideas-create-tikhonov-regularization">
-<h1>inversion_ideas.create_tikhonov_regularization<a class="headerlink" href="#inversion-ideas-create-tikhonov-regularization" title="Link to this heading">#</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="inversion_ideas.create_tikhonov_regularization">
-<span class="sig-prename descclassname"><span class="pre">inversion_ideas.</span></span><span class="sig-name descname"><span class="pre">create_tikhonov_regularization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">active_cells</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_z</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_model_in_flatness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.create_tikhonov_regularization" title="Link to this definition">#</a></dt>
-<dd><p>Create a linear combination of Tikhonov (L2) regularization terms.</p>
-<p>Define a <a class="reference internal" href="inversion_ideas.base.Combo.html#inversion_ideas.base.Combo" title="inversion_ideas.base.Combo"><code class="xref py py-class docutils literal notranslate"><span class="pre">inversion_ideas.base.Combo</span></code></a> with L2 smallness and flatness
-regularization terms.</p>
+  <section id="inversion-ideas-utils-counter">
+<h1>inversion_ideas.utils.Counter<a class="headerlink" href="#inversion-ideas-utils-counter" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="inversion_ideas.utils.Counter">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inversion_ideas.utils.</span></span><span class="sig-name descname"><span class="pre">Counter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.utils.Counter" title="Link to this definition">#</a></dt>
+<dd><p>Simple counter callable class.</p>
+<p>Count how many times the object gets called.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>mesh</strong><span class="classifier">discretize.base.BaseMesh</span></dt><dd><p>Mesh to use in the regularization.</p>
-</dd>
-<dt><strong>active_cells</strong><span class="classifier">(n_cells) array or None, optional</span></dt><dd><p>Array full of bools that indicate the active cells in the mesh. It must have the
-same amount of elements as cells in the mesh.</p>
-</dd>
-<dt><strong>cell_weights</strong><span class="classifier">(n_params) array or dict of (n_params) arrays or None, optional</span></dt><dd><p>Array with cell weights.
-For multiple cell weights, pass a dictionary where keys are strings and values
-are the different weights arrays.
-If None, no cell weights are going to be used.</p>
-</dd>
-<dt><strong>reference_model</strong><span class="classifier">(n_params) array or None, optional</span></dt><dd><p>Array with values for the reference model.</p>
-</dd>
-<dt><strong>alpha_s</strong><span class="classifier">float or None, optional</span></dt><dd><p>Multiplier for the smallness term.</p>
-</dd>
-<dt><strong>alpha_x, alpha_y, alpha_z</strong><span class="classifier">float or None, optional</span></dt><dd><p>Multipliers for the flatness terms.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt>inversion_ideas.base.Combo</dt><dd><p>Combo of L2 regularization terms.</p>
+<dt><strong>initial_value</strong><span class="classifier">int, optional</span></dt><dd><p>Initial value used in the counts.</p>
 </dd>
 </dl>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>TODO</p>
+<p class="rubric">Attributes</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.utils.Counter.counts" title="inversion_ideas.utils.Counter.counts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">counts</span></code></a></p></td>
+<td><p>Return current amount of counts.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.utils.Counter.initial_value" title="inversion_ideas.utils.Counter.initial_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initial_value</span></code></a></p></td>
+<td><p>Initial value for the counter.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Methods</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.utils.Counter.__call__" title="inversion_ideas.utils.Counter.__call__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Increase <code class="docutils literal notranslate"><span class="pre">counts</span></code> by one.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.utils.Counter.reset" title="inversion_ideas.utils.Counter.reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code></a>()</p></td>
+<td><p>Reset counter to the initial value.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </dd></dl>
 
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading">#</a></h2>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="inversion_ideas.utils.Counter.counts">
+<span class="sig-prename descclassname"><span class="pre">Counter.</span></span><span class="sig-name descname"><span class="pre">counts</span></span><a class="headerlink" href="#inversion_ideas.utils.Counter.counts" title="Link to this definition">#</a></dt>
+<dd><p>Return current amount of counts.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="inversion_ideas.utils.Counter.initial_value">
+<span class="sig-prename descclassname"><span class="pre">Counter.</span></span><span class="sig-name descname"><span class="pre">initial_value</span></span><a class="headerlink" href="#inversion_ideas.utils.Counter.initial_value" title="Link to this definition">#</a></dt>
+<dd><p>Initial value for the counter.</p>
+</dd></dl>
+
+</section>
+<section id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Link to this heading">#</a></h2>
+<p class="rubric">Methods documentation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.utils.Counter.__call__">
+<span class="sig-prename descclassname"><span class="pre">Counter.</span></span><span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.utils.Counter.__call__" title="Link to this definition">#</a></dt>
+<dd><p>Increase <code class="docutils literal notranslate"><span class="pre">counts</span></code> by one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>*args</strong></dt><dd><p>Position-based arguments that will be ignored.</p>
+</dd>
+<dt><strong>**kwargs</strong></dt><dd><p>Keyword arguments that will be ignored.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.utils.Counter.reset">
+<span class="sig-prename descclassname"><span class="pre">Counter.</span></span><span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.utils.Counter.reset" title="Link to this definition">#</a></dt>
+<dd><p>Reset counter to the initial value.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<div style='clear:both'></div></section>
 </section>
 
 
@@ -530,20 +574,20 @@ If None, no cell weights are going to be used.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="inversion_ideas.create_sparse_inversion.html"
+       href="inversion_ideas.utils.get_sensitivity_weights.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">inversion_ideas.create_sparse_inversion</p>
+        <p class="prev-next-title">inversion_ideas.utils.get_sensitivity_weights</p>
       </div>
     </a>
     <a class="right-next"
-       href="../operators.html"
+       href="../decorators.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Custom linear operators</p>
+        <p class="prev-next-title">Decorators</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -566,14 +610,24 @@ If None, no cell weights are going to be used.</p>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.create_tikhonov_regularization"><code class="docutils literal notranslate"><span class="pre">create_tikhonov_regularization()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.utils.Counter"><code class="docutils literal notranslate"><span class="pre">Counter</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#attributes">Attributes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.utils.Counter.counts"><code class="docutils literal notranslate"><span class="pre">Counter.counts</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.utils.Counter.initial_value"><code class="docutils literal notranslate"><span class="pre">Counter.initial_value</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#methods">Methods</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.utils.Counter.__call__"><code class="docutils literal notranslate"><span class="pre">Counter.__call__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.utils.Counter.reset"><code class="docutils literal notranslate"><span class="pre">Counter.reset()</span></code></a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
   <div class="sidebar-secondary-item">
 
   <div class="tocsection sourcelink">
-    <a href="../../_sources/reference/api/inversion_ideas.create_tikhonov_regularization.rst.txt">
+    <a href="../../_sources/reference/api/inversion_ideas.utils.Counter.rst.txt">
       <i class="fa-solid fa-file-lines"></i> Show Source
     </a>
   </div>

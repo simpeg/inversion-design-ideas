@@ -83,14 +83,18 @@ def cache_on_model(func):
     >>> sq_cache = MyClass(cache=True)
     >>> model = np.array([1.0, 2.0, 3.0])
     >>> sq_cache.squared(model)  # perform the computation
+    np.float64(14.0)
     >>> sq_cache.squared(model)  # returns cached object
+    np.float64(14.0)
 
     This one does not:
 
     >>> sq_no_cache = MyClass(cache=False)
     >>> model = np.array([1.0, 2.0, 3.0])
     >>> sq_no_cache.squared(model)  # perform the computation
+    np.float64(14.0)
     >>> sq_no_cache.squared(model)  # perform the computation
+    np.float64(14.0)
 
     """
     # Define attribute name for the cached result using the hash of the function

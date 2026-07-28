@@ -508,6 +508,9 @@ function.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.GaussNewtonConjugateGradient.__call__" title="inversion_ideas.GaussNewtonConjugateGradient.__call__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code></a>(objective, initial_model, *[, ...])</p></td>
 <td><p>Create iterator over Gauss-Newton minimization.</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.GaussNewtonConjugateGradient.run" title="inversion_ideas.GaussNewtonConjugateGradient.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>(objective, initial_model, *args, **kwargs)</p></td>
+<td><p>Run all iterations of the minimizer at once.</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -533,6 +536,33 @@ If the preconditioner implements an <code class="docutils literal notranslate"><
 will be updated <strong>before</strong> every conjugate gradient minimization.</p>
 </dd>
 <dt><strong>callback</strong><span class="classifier">callable, optional</span></dt><dd><p>Callable that gets called after each iteration.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="py method">
+<dt class="sig sig-object py" id="inversion_ideas.GaussNewtonConjugateGradient.run">
+<span class="sig-prename descclassname"><span class="pre">GaussNewtonConjugateGradient.</span></span><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objective</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_model</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.GaussNewtonConjugateGradient.run" title="Link to this definition">#</a></dt>
+<dd><p>Run all iterations of the minimizer at once.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>objective</strong><span class="classifier">Objective</span></dt><dd><p>Objective function to be minimized.</p>
+</dd>
+<dt><strong>initial_model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Initial model used to start the minimization.</p>
+</dd>
+<dt><strong>*args</strong></dt><dd><p>Any extra positional argument will be passed to the <code class="docutils literal notranslate"><span class="pre">__call__</span></code> method.</p>
+</dd>
+<dt><strong>*kwargs</strong></dt><dd><p>Any extra keyword argument will be passed to the <code class="docutils literal notranslate"><span class="pre">__call__</span></code> method.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>inverted_model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Final inverted model.</p>
 </dd>
 </dl>
 </dd>
@@ -593,6 +623,7 @@ will be updated <strong>before</strong> every conjugate gradient minimization.</
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.GaussNewtonConjugateGradient"><code class="docutils literal notranslate"><span class="pre">GaussNewtonConjugateGradient</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#methods">Methods</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.GaussNewtonConjugateGradient.__call__"><code class="docutils literal notranslate"><span class="pre">GaussNewtonConjugateGradient.__call__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.GaussNewtonConjugateGradient.run"><code class="docutils literal notranslate"><span class="pre">GaussNewtonConjugateGradient.run()</span></code></a></li>
 </ul>
 </li>
 </ul>

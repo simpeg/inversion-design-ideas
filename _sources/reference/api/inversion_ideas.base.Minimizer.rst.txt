@@ -90,6 +90,15 @@ Methods
 
 
 
+
+
+.. automethod:: Minimizer.run
+
+----
+
+
+
+
 .. raw:: html
 
      <div style='clear:both'></div>

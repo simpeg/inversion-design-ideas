@@ -90,6 +90,15 @@ Methods
 
 
 
+
+
+.. automethod:: GaussNewtonConjugateGradient.run
+
+----
+
+
+
+
 .. raw:: html
 
      <div style='clear:both'></div>

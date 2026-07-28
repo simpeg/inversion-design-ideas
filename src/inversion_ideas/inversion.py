@@ -199,9 +199,7 @@ class Inversion:
                 minimizer_log = MinimizerLog()
                 self.minimizer_logs.append(minimizer_log)
                 minimizer_kwargs["callback"] = minimizer_log.update
-
-            # Unpack the generator and keep only the last model
-            *_, model = self.minimizer(
+            model = self.minimizer.run(
                 self.objective_function, self.model, **minimizer_kwargs
             )
         else:

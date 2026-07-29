@@ -27,10 +27,6 @@ class Objective(ABC):
     _base_str = "φ"
     _base_latex = r"\phi"
 
-    @abstractmethod
-    def __init__(self):
-        pass  # pragma: no cover
-
     @property
     @abstractmethod
     def n_params(self) -> int:
@@ -81,29 +77,6 @@ class Objective(ABC):
             )
             raise TypeError(msg)
         return hessian.diagonal()
-
-    def hessian_approx(self, model: Model) -> npt.NDArray[np.float64] | SparseArray:
-        """
-        Approximated version of the Hessian.
-
-        Parameters
-        ----------
-        model : (n_params) array
-            Array with model values.
-
-        Returns
-        -------
-        (n_params, n_params) array or sparse array
-            2D array that approximates the Hessian of the objective function.
-        """
-        hessian = self.hessian(model)
-        if isinstance(hessian, LinearOperator):
-            msg = (
-                f"Cannot build a 'hessian_approx' for objective function '{self}', "
-                "since its Hessian is a LinearOperator."
-            )
-            raise TypeError(msg)
-        return hessian
 
     @property
     def name(self) -> str | None:
@@ -168,6 +141,12 @@ class Objective(ABC):
                 )
                 raise ValueError(msg)
             return self
+        if not isinstance(other, Objective):
+            msg = (
+                f"Cannot add objective function '{self}' with '{other}' of type "
+                f"'{type(other).__name__}'."
+            )
+            raise TypeError(msg)
         return Combo([self, other])
 
     def __radd__(self, other) -> "Combo | Self":
@@ -181,6 +160,12 @@ class Objective(ABC):
                 )
                 raise ValueError(msg)
             return self
+        if not isinstance(other, Objective):
+            msg = (
+                f"Cannot add objective function '{self}' with '{other}' of type "
+                f"'{type(other).__name__}'."
+            )
+            raise TypeError(msg)
         return Combo([other, self])
 
     def __mul__(self, value: Real) -> "Scaled":
@@ -252,12 +237,6 @@ class Scaled(Objective):
             shape = (self.n_params, self.n_params)
             return csr_array(shape, dtype=np.float64)
         return self.multiplier * self.function.hessian(model)
-
-    def hessian_approx(self, model: Model) -> npt.NDArray[np.float64] | SparseArray:
-        if self.multiplier == 0.0:
-            shape = (self.n_params, self.n_params)
-            return csr_array(shape, dtype=np.float64)
-        return self.multiplier * self.function.hessian_approx(model)
 
     def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
         if self.multiplier == 0.0:
@@ -387,9 +366,6 @@ class Combo(Objective):
         Evaluate the hessian of the objective function for a given model.
         """
         return _sum_operators(f.hessian(model) for f in self.functions)
-
-    def hessian_approx(self, model: Model) -> npt.NDArray[np.float64] | SparseArray:
-        return _sum_operators(f.hessian_approx(model) for f in self.functions)
 
     def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
         return sum(

@@ -2,7 +2,7 @@
 Ideas for inversion framework.
 """
 
-from . import base, conditions, directives, errors, operators, typing, utils
+from . import base, conditions, decorators, directives, errors, operators, typing, utils
 from ._version import __version__
 from .data_misfit import DataMisfit
 from .inversion import Inversion
@@ -39,6 +39,7 @@ __all__ = [
     "create_l2_inversion",
     "create_sparse_inversion",
     "create_tikhonov_regularization",
+    "decorators",
     "directives",
     "errors",
     "get_jacobi_preconditioner",

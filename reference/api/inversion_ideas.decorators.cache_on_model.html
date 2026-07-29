@@ -479,47 +479,6 @@
                   
   <section id="inversion-ideas-decorators-cache-on-model">
 <h1>inversion_ideas.decorators.cache_on_model<a class="headerlink" href="#inversion-ideas-decorators-cache-on-model" title="Link to this heading">#</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="inversion_ideas.decorators.cache_on_model">
-<span class="sig-prename descclassname"><span class="pre">inversion_ideas.decorators.</span></span><span class="sig-name descname"><span class="pre">cache_on_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.decorators.cache_on_model" title="Link to this definition">#</a></dt>
-<dd><p>Cache the last result of a method within the instance using the model hash.</p>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
-<p>Use this decorator only for methods that take the <code class="docutils literal notranslate"><span class="pre">model</span></code> as the first
-argument.</p>
-</div>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
-<p>The instance needs to have a <code class="docutils literal notranslate"><span class="pre">cache</span></code> bool attribute. If True, the result
-of the decorated method will be cached. If False, no caching will be performed.</p>
-</div>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@cache_on_model</span>
-<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="nf">squared</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="p">(</span><span class="n">model</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sq</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sq</span><span class="o">.</span><span class="n">squared</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>  <span class="c1"># perform the computation</span>
-<span class="go">14.0</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sq</span><span class="o">.</span><span class="n">squared</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>  <span class="c1"># access the cached result</span>
-<span class="go">14.0</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sq</span><span class="o">.</span><span class="n">squared</span><span class="p">(</span><span class="n">model_new</span><span class="p">))</span>  <span class="c1"># perform a new computation</span>
-<span class="go">77.0</span>
-</pre></div>
-</div>
-</dd></dl>
-
 </section>
 
 
@@ -560,18 +519,6 @@ of the decorated method will be cached. If False, no caching will be performed.<
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.decorators.cache_on_model"><code class="docutils literal notranslate"><span class="pre">cache_on_model()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 

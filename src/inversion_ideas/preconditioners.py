@@ -198,10 +198,11 @@ class BFGSPreconditioner(LinearOperator):
         Ditch the current preconditioner matrix estimation and start over with the
         initial matrix. Resets the ``index`` to None.
         """
-        self._index = None
-        del self._matrix
-        del self._model_k
-        del self._gradient_k
+        if self._index is not None:
+            self._index = None
+            del self._matrix
+            del self._model_k
+            del self._gradient_k
 
     def update(self, model: Model):
         """

@@ -18,84 +18,139 @@ def cache_on_model(func):
         Use this decorator only for methods that take the ``model`` as the first
         argument.
 
-    .. important::
+    .. hint::
 
-        The instance needs to have a ``cache`` bool attribute. If True, the result
-        of the decorated method will be cached. If False, no caching will be performed.
+        If the instance has a ``cache`` bool attribute, useres can enable or disable
+        caching within the decorated method. If ``cache=True``, the result
+        of the decorated method will be cached. If ``cache=False``, no caching will
+        be performed.
+
+    See Also
+    --------
+    Use :func:`functools.cache` for caching multiple results.
 
     Examples
     --------
+    Let's decorate a method that will return the cached result when called again with
+    the same ``model`` argument:
+
     >>> import numpy as np
     >>>
     >>> class MyClass:
-    ...
-    ...     def __init__(self):
-    ...         self.cache = True
     ...
     ...     @cache_on_model
     ...     def squared(self, model) -> float:
     ...         return (model ** 2).sum()
     >>>
     >>> sq = MyClass()
+
+    When calling the method with a given model we'll perform the computation:
+
     >>> model = np.array([1.0, 2.0, 3.0])
     >>> print(sq.squared(model))  # perform the computation
     14.0
+
+    Next time we call it with the same model, it'll return the cached value:
+
     >>> print(sq.squared(model))  # access the cached result
     14.0
+
+    When calling the method with a different model, we'll trigger a new computation. And
+    the new result will be cached:
 
     >>> model_new = np.array([4.0, 5.0, 6.0])
     >>> print(sq.squared(model_new))  # perform a new computation
     77.0
+
+    .. important::
+
+        Only the last value gets cached to be cautious about memory usage.
+
+    Users could control wether to cache or not through the ``cache`` attribute:
+
+    >>> class MyClass:
+    ...
+    ...     def __init__(self, cache):
+    ...         self.cache = cache
+    ...
+    ...     @cache_on_model
+    ...     def squared(self, model) -> float:
+    ...         return (model ** 2).sum()
+
+
+    The following instance caches the result:
+
+    >>> sq_cache = MyClass(cache=True)
+    >>> model = np.array([1.0, 2.0, 3.0])
+    >>> sq_cache.squared(model)  # perform the computation
+    np.float64(14.0)
+    >>> sq_cache.squared(model)  # returns cached object
+    np.float64(14.0)
+
+    This one does not:
+
+    >>> sq_no_cache = MyClass(cache=False)
+    >>> model = np.array([1.0, 2.0, 3.0])
+    >>> sq_no_cache.squared(model)  # perform the computation
+    np.float64(14.0)
+    >>> sq_no_cache.squared(model)  # perform the computation
+    np.float64(14.0)
+
     """
     # Define attribute name for the cached result using the hash of the function
     cache_attr = f"_cache_{hash(func)}"
 
     @functools.wraps(func)
     def wrapper(self, model, *args, **kwargs):
-        if not hasattr(self, "cache"):
-            msg = f"Missing 'cache' attribute in {self}"
-            raise AttributeError(msg)
+        if hasattr(self, "cache"):
+            if not isinstance(self.cache, bool):
+                msg = (
+                    f"Invalid `cache` attribute of type '{type(self.cache).__name__}' "
+                    f"belonging to '{self}' object. "
+                    "It must be a bool for `cache_on_model` to be able to cache "
+                    f"results of the '{func}' method."
+                )
+                raise TypeError(msg)
+            if not self.cache:
+                # Return result without caching
+                return func(self, model, *args, **kwargs)
 
-        if self.cache:
-            model_hash = hashlib.sha256(model)
+        model_hash = hashlib.sha256(model)
 
-            # Return cached object if the model hash matches with the cached one
-            if hasattr(self, cache_attr):
-                model_hash_cached, cached_result = getattr(self, cache_attr)
-                if model_hash_cached.digest() == model_hash.digest():
-                    # -- Debug log --
-                    msg = (
-                        f"Returning cached object '{array_to_str(cached_result)}' "
-                        f"after calling '{func}' with model with hash "
-                        f"'{model_hash_cached.hexdigest()}'."
-                    )
-                    if args:
-                        msg += f" With args: '{args}'."
-                    if kwargs:
-                        msg += f" With kwargs: '{kwargs}'."
-                    get_logger().debug(msg)
-                    # ---
-                    return cached_result
+        # Return cached object if the model hash matches with the cached one
+        if hasattr(self, cache_attr):
+            model_hash_cached, cached_result = getattr(self, cache_attr)
+            if model_hash_cached.digest() == model_hash.digest():
+                # -- Debug log --
+                msg = (
+                    f"Returning cached object '{array_to_str(cached_result)}' "
+                    f"after calling '{func}' with model with hash "
+                    f"'{model_hash_cached.hexdigest()}'."
+                )
+                if args:
+                    msg += f" With args: '{args}'."
+                if kwargs:
+                    msg += f" With kwargs: '{kwargs}'."
+                get_logger().debug(msg)
+                # ---
+                return cached_result
 
-            # Compute new result and cache it
-            result = func(self, model, *args, **kwargs)
-            setattr(self, cache_attr, (model_hash, result))
-            # -- Debug log --
-            msg = (
-                f"Computed new result '{array_to_str(result)}' after "
-                f"calling '{func}' with model with hash '{model_hash.hexdigest()}'. "
-                "Cached the result into the object."
-            )
-            if args:
-                msg += f" With args: '{args}'."
-            if kwargs:
-                msg += f" With kwargs: '{kwargs}'."
-            get_logger().debug(msg)
-            # ---
-            return result
-
-        # Return result without caching
-        return func(self, model, *args, **kwargs)
+        # Compute new result and cache it
+        result = func(self, model, *args, **kwargs)
+        setattr(self, cache_attr, (model_hash, result))
+        # -- Debug log --
+        msg = (
+            f"Computed new result '{array_to_str(result)}' after "
+            f"calling '{func}' with model with hash '{model_hash.hexdigest()}'. "
+            "Cached the result into the object."
+        )
+        if args:
+            msg += f" With args: '{args}'."
+        if kwargs:
+            msg += f" With kwargs: '{kwargs}'."
+        get_logger().debug(msg)
+        # ---
+        return result
 
     return wrapper
 

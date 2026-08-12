@@ -82,7 +82,7 @@ class Objective(ABC):
         -------
         (n_params, n_params) array or :class:`~scipy.sparse.linalg.LinearOperator`
             2D array or :class:`~scipy.sparse.linalg.LinearOperator` that represents
-            the Hessian matrix of the objective funciton, or an approximate version
+            the Hessian matrix of the objective funciton, or an approximated version
             of it.
         """
 

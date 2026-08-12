@@ -27,20 +27,22 @@ class DataMisfit(Objective):
     simulation : Simulation
         Instance of Simulation.
     build_hessian : bool, optional
-        If True, the ``hessian`` method will build the Hessian matrix and allocate it in
-        memory. If False, the ``hessian`` method will return a linear operator that
-        represents the Hessian matrix. Default to False.
+        If True, the :meth:`~inversion_ideas.DataMisfit.hessian` method will build the
+        Hessian matrix and allocate it in memory.
+        If False, the :meth:`~inversion_ideas.DataMisfit.hessian` method will return a
+        linear operator that represents the Hessian matrix. Default to False.
 
-        .. important::
+        .. warning::
 
             Hessian matrices are usually very large. Use ``build_hessian=True`` only if
             you need to build it.
 
     estimate_hessian_diagonal : bool, optional
-        If True, the ``hessian_diagonal`` method will estimate the
-        diagonal of the Hessian, even if the Jacobian of the ``simulation`` is a
-        :class:`~scipy.sparse.linalg.LinearOperator`.
-        If False, an error will be raised when calling the ``hessian_diagonal`` method
+        If True, the :meth:`~inversion_ideas.DataMisfit.hessian_diagonal` method will
+        estimate the diagonal of the Hessian, even if the Jacobian of the
+        ``simulation`` is a :class:`~scipy.sparse.linalg.LinearOperator`.
+        If False, an error will be raised when calling the
+        :meth:`~inversion_ideas.DataMisfit.hessian_diagonal` method
         in case the Jacobian of the ``simulation`` is a
         :class:`~scipy.sparse.linalg.LinearOperator`.
 
@@ -85,12 +87,41 @@ class DataMisfit(Objective):
 
         \phi_d(\mathbf{m}) =
         \left\lVert
-        \mathbf{W} \left[ f(\mathbf{m}) - \mathbf{d}^\text{obs} \right]
+        \mathbf{W} \left[ \mathbf{f}(\mathbf{m}) - \mathbf{d}^\text{obs} \right]
         \right\rVert^2
 
-    where :math:`\mathbf{W}` is a diagonal matrix with the square root of the weights,
-    :math:`\mathbf{d}^\text{obs}` is the vector of observed data, and
-    :math:`f(\mathbf{m})` is the forward modelling vector.
+    where :math:`\mathbf{W}` is a diagonal matrix with the square root of the weights
+
+    .. math::
+
+        \mathbf{W} =
+        \begin{bmatrix}
+            \sqrt{w_1} & & 0 \\
+            & \ddots &  \\
+            0 & & \sqrt{w_N} \\
+        \end{bmatrix},
+
+    :math:`\mathbf{d}^\text{obs}` is the vector of observed data
+
+    .. math::
+
+        \mathbf{d}^\text{obs} =
+        \begin{bmatrix}
+        d_1^\text{obs} \\
+        \vdots \\
+        d_N^\text{obs} \\
+        \end{bmatrix},
+
+    and :math:`\mathbf{f}(\mathbf{m})` is the forward modelling vector
+
+    .. math::
+
+        \mathbf{f}(\mathbf{m}) =
+        \begin{bmatrix}
+            f_1(\mathbf{m}) \\
+            \vdots \\
+            f_N(\mathbf{m}) \\
+        \end{bmatrix}.
 
     """
 
@@ -113,13 +144,74 @@ class DataMisfit(Objective):
         self.set_name("d")
 
     def __call__(self, model: Model) -> float:
+        r"""
+        Evaluate the data misfit function.
+
+        Parameters
+        ----------
+        model : (n_params) array
+            Array with model values.
+
+        Returns
+        -------
+        float
+            Value of the data misfit for the given model.
+
+        Notes
+        -----
+        Evaluates the data misfit objective function defined as:
+
+        .. math::
+
+            \phi_d(\mathbf{m}) =
+            \sum\limits_{i=1}^N
+            \frac{
+                \left\lvert f_i(\mathbf{m}) - d_i^\text{obs} \right\rvert^2
+            }{
+                \epsilon_i^2
+            }
+
+        where :math:`\mathbf{m}` is the model vector, :math:`d_i^\text{obs}` is the
+        :math:`i`-th observed datum, :math:`f_i(\mathbf{m})` is the forward modelling
+        function for the :math:`i`-th datum, and :math:`\epsilon_i` is the uncertainty of
+        the :math:`i`-th datum.
+        """
         residual = self.residual(model)
         weights_matrix = self.weights_matrix
         return residual.T @ weights_matrix.T @ weights_matrix @ residual
 
     def gradient(self, model: Model) -> npt.NDArray[np.float64]:
-        """
-        Gradient vector.
+        r"""
+        Gradient vector of the data misfit function.
+
+        Parameters
+        ----------
+        model : (n_params) array
+            Array with model values.
+
+        Returns
+        -------
+        (n_params,) array
+            Gradient vector of the data misfit for the given model.
+
+        Notes
+        -----
+        Computes the gradient of the data misfit as:
+
+        .. math::
+
+            \nabla\phi_d(\mathbf{m}) =
+            2
+            \mathbf{J}^\text{T}
+            \mathbf{W}^\text{T}
+            \mathbf{W}
+            \mathbf{J}
+            \left[ \mathbf{f}(\mathbf{m}) - \mathbf{d}^\text{obs} \right],
+
+        where :math:`\mathbf{J}` is the Jacobian matrix of the ``simulation`` (the forward model),
+        :math:`\mathbf{W}` is a diagonal matrix with the square root of the weights,
+        :math:`\mathbf{d}^\text{obs}` is the vector of observed data, and
+        :math:`\mathbf{f}(\mathbf{m})` is the forward modelling vector.
         """
         jac = self.simulation.jacobian(model)
         weights_matrix = self.weights_matrix
@@ -128,8 +220,42 @@ class DataMisfit(Objective):
     def hessian(
         self, model: Model
     ) -> npt.NDArray[np.float64] | SparseArray | LinearOperator:
-        """
-        Hessian matrix.
+        r"""
+        Evaluate the hessian of the data misfit function for a given model.
+
+        .. important::
+
+            If ``build_hessian`` is set to True, this method will attempt to return a 2D dense or sparse array. If it's False, it'll return a
+            :class:`~scipy.sparse.linalg.LinearOperator`.
+
+        .. warning::
+
+            Hessian matrices are usually very large. Use ``build_hessian=True`` only if
+            you need to build it.
+
+        Parameters
+        ----------
+        model : (n_params) array
+            Array with model values.
+
+        Returns
+        -------
+        (n_params, n_params) array or :class:`~scipy.sparse.linalg.LinearOperator`
+            2D array or :class:`~scipy.sparse.linalg.LinearOperator` that represents
+            the Hessian matrix of the objective funciton, or an approximate version
+            of it.
+
+        Notes
+        -----
+        Computes the Hessian matrix of the data misfit as:
+
+        .. math::
+
+            \bar{\bar{\nabla}} \phi_d(\mathbf{m}) =
+            2 \mathbf{J}^\text{T} \mathbf{W}^\text{T} \mathbf{W} \mathbf{J},
+
+        where :math:`\mathbf{J}` is the Jacobian matrix of the ``simulation`` (the forward model), and
+        :math:`\mathbf{W}` is a diagonal matrix with the square root of the weights.
         """
         jac = self.simulation.jacobian(model)
 
@@ -238,9 +364,9 @@ class DataMisfit(Objective):
 
         .. math::
 
-            \mathbf{r} = \mathcal{F}(\mathbf{m}) - \mathbf{d}
+            \mathbf{r} = \mathbf{f}(\mathbf{m}) - \mathbf{d}
 
-        where :math:`\mathbf{d}` is the vector with observed data, :math:`\mathcal{F}`
+        where :math:`\mathbf{d}` is the vector with observed data, :math:`\mathbf{f}`
         is the forward model, and :math:`\mathbf{m}` is the model vector.
         """
         return self.simulation(model) - self.data

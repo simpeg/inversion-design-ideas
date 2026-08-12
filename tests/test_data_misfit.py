@@ -196,3 +196,28 @@ class TestSanityChecks:
         msg = re.escape(f"Invalid `{offending}` array with NaN values.")
         with pytest.raises(ValueError, match=msg):
             DataMisfit(data, uncertainty, simulation)
+
+    def test_invalid_simulation(self):
+        class NonSimulation:
+            """
+            Dummy class that doesn't implement the full interface of a Simulation.
+            """
+
+            @property
+            def n_params(self):
+                return 30
+
+            @property
+            def n_data(self):
+                return 25
+
+            def __call__(self, model):
+                pass
+
+        data = self.rng.uniform(size=self.n_data)
+        uncertainty = self.rng.uniform(size=self.n_data)
+        simulation = NonSimulation()
+
+        msg = re.escape("Invalid `simulation` argument of type 'NonSimulation'.")
+        with pytest.raises(TypeError, match=msg):
+            DataMisfit(data, uncertainty, simulation)

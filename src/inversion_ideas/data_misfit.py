@@ -11,7 +11,7 @@ from inversion_ideas.utils import get_logger
 
 from .base import Objective, Simulation
 from .operators import get_diagonal
-from .typing import Model, SparseArray
+from .typing import Model, SimulationProtocol, SparseArray
 
 
 class DataMisfit(Objective):
@@ -148,6 +148,14 @@ class DataMisfit(Objective):
                 "It must be a 1D array."
             )
             raise ValueError(msg)
+        if not isinstance(simulation, SimulationProtocol):
+            msg = (
+                "Invalid `simulation` argument of type "
+                f"'{type(simulation).__name__}'. "
+                "It must be a child of `inversion_ideas.base.Simulation` or "
+                "a custom object that implements its interface."
+            )
+            raise TypeError(msg)
         if not (simulation.n_data == data.size == uncertainty.size):
             msg = (
                 f"Invalid `data` and `uncertainty` arguments with {data.size} and "

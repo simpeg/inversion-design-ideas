@@ -8,6 +8,8 @@ import hashlib
 from ._utils import array_to_str
 from .utils import get_logger
 
+__all__ = ["CountCalls", "cache_on_model", "debug"]
+
 
 def cache_on_model(func):
     """
@@ -27,7 +29,8 @@ def cache_on_model(func):
 
     See Also
     --------
-    Use :func:`functools.cache` for caching multiple results.
+    :func:`functools.cache`
+        Use this other decorator for caching multiple results.
 
     Examples
     --------

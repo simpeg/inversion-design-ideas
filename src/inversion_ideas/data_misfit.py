@@ -30,7 +30,8 @@ class DataMisfit(Objective):
         If True, the :meth:`~inversion_ideas.DataMisfit.hessian` method will build the
         Hessian matrix and allocate it in memory.
         If False, the :meth:`~inversion_ideas.DataMisfit.hessian` method will return a
-        linear operator that represents the Hessian matrix. Default to False.
+        :class:`~scipy.sparse.linalg.LinearOperator` that represents the Hessian matrix.
+        Default to False.
 
         .. warning::
 

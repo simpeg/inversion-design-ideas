@@ -260,17 +260,39 @@ class DataMisfit(Objective):
         return diags_array(1 / self.uncertainty)
 
     def chi_factor(self, model: Model):
-        """
-        Compute chi factor.
+        r"""
+        Compute the chi factor for the given model.
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
             Array with model values.
 
         Return
         ------
         float
             Chi factor for the given model.
+
+        Notes
+        -----
+        The chi factor of a data misfit term :math:`\phi_d(\mathbf{m})` is defined as a
+        function of the model vector :math:`\mathbf{m}` as follows:
+
+        .. math::
+
+            \chi(\mathbf{m})
+            = \frac{\phi_d(\mathbf{m})}{N}
+            = \frac{1}{N}
+              \sum\limits_{i=1}^N
+              \frac{
+                  \left\lvert f_i(\mathbf{m}) - d_i^\text{obs} \right\rvert^2
+              }{
+                  \epsilon_i^2
+              }
+
+        References
+        ----------
+        - https://www.eoas.ubc.ca/courses/eosc350/content/tutorials/glossary.htm
+        - https://giftoolscookbook.readthedocs.io/en/latest/content/fundamentals/Beta.html#chi-factor
         """
         return self(model) / self.n_data

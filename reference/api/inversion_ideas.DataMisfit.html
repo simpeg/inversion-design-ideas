@@ -493,19 +493,22 @@
 </dd>
 <dt><strong>simulation</strong><span class="classifier">Simulation</span></dt><dd><p>Instance of Simulation.</p>
 </dd>
-<dt><strong>build_hessian</strong><span class="classifier">bool, optional</span></dt><dd><p>If True, the <code class="docutils literal notranslate"><span class="pre">hessian</span></code> method will build the Hessian matrix and allocate it in
-memory. If False, the <code class="docutils literal notranslate"><span class="pre">hessian</span></code> method will return a linear operator that
-represents the Hessian matrix. Default to False.</p>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
+<dt><strong>build_hessian</strong><span class="classifier">bool, optional</span></dt><dd><p>If True, the <a class="reference internal" href="#inversion_ideas.DataMisfit.hessian" title="inversion_ideas.DataMisfit.hessian"><code class="xref py py-meth docutils literal notranslate"><span class="pre">hessian()</span></code></a> method will build the
+Hessian matrix and allocate it in memory.
+If False, the <a class="reference internal" href="#inversion_ideas.DataMisfit.hessian" title="inversion_ideas.DataMisfit.hessian"><code class="xref py py-meth docutils literal notranslate"><span class="pre">hessian()</span></code></a> method will return a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code> that represents the Hessian matrix.
+Default to False.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
 <p>Hessian matrices are usually very large. Use <code class="docutils literal notranslate"><span class="pre">build_hessian=True</span></code> only if
 you need to build it.</p>
 </div>
 </dd>
-<dt><strong>estimate_hessian_diagonal</strong><span class="classifier">bool, optional</span></dt><dd><p>If True, the <code class="docutils literal notranslate"><span class="pre">hessian_diagonal</span></code> method will estimate the
-diagonal of the Hessian, even if the Jacobian of the <code class="docutils literal notranslate"><span class="pre">simulation</span></code> is a
-<code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code>.
-If False, an error will be raised when calling the <code class="docutils literal notranslate"><span class="pre">hessian_diagonal</span></code> method
+<dt><strong>estimate_hessian_diagonal</strong><span class="classifier">bool, optional</span></dt><dd><p>If True, the <a class="reference internal" href="#inversion_ideas.DataMisfit.hessian_diagonal" title="inversion_ideas.DataMisfit.hessian_diagonal"><code class="xref py py-meth docutils literal notranslate"><span class="pre">hessian_diagonal()</span></code></a> method will
+estimate the diagonal of the Hessian, even if the Jacobian of the
+<code class="docutils literal notranslate"><span class="pre">simulation</span></code> is a <code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code>.
+If False, an error will be raised when calling the
+<a class="reference internal" href="#inversion_ideas.DataMisfit.hessian_diagonal" title="inversion_ideas.DataMisfit.hessian_diagonal"><code class="xref py py-meth docutils literal notranslate"><span class="pre">hessian_diagonal()</span></code></a> method
 in case the Jacobian of the <code class="docutils literal notranslate"><span class="pre">simulation</span></code> is a
 <code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code>.</p>
 <div class="admonition important">
@@ -544,16 +547,16 @@ vectors. This might lead to very expensive computations. Enable
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.DataMisfit.__call__" title="inversion_ideas.DataMisfit.__call__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code></a>(model)</p></td>
-<td><p>Evaluate the objective function for a given model.</p></td>
+<td><p>Evaluate the data misfit function.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.DataMisfit.chi_factor" title="inversion_ideas.DataMisfit.chi_factor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">chi_factor</span></code></a>(model)</p></td>
 <td><p>Compute the chi factor for the given model.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.DataMisfit.gradient" title="inversion_ideas.DataMisfit.gradient"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gradient</span></code></a>(model)</p></td>
-<td><p>Gradient vector.</p></td>
+<td><p>Gradient vector of the data misfit function.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.DataMisfit.hessian" title="inversion_ideas.DataMisfit.hessian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hessian</span></code></a>(model)</p></td>
-<td><p>Hessian matrix.</p></td>
+<td><p>Evaluate the hessian of the data misfit function for a given model.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.DataMisfit.hessian_diagonal" title="inversion_ideas.DataMisfit.hessian_diagonal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hessian_diagonal</span></code></a>(model)</p></td>
 <td><p>Get the main diagonal of the Hessian.</p></td>
@@ -594,11 +597,32 @@ w_i \left\lvert f_i(\mathbf{m}) - d_i^\text{obs} \right\rvert^2\]</div>
 <div class="math notranslate nohighlight">
 \[\phi_d(\mathbf{m}) =
 \left\lVert
-\mathbf{W} \left[ f(\mathbf{m}) - \mathbf{d}^\text{obs} \right]
+\mathbf{W} \left[ \mathbf{f}(\mathbf{m}) - \mathbf{d}^\text{obs} \right]
 \right\rVert^2\]</div>
-<p>where <span class="math notranslate nohighlight">\(\mathbf{W}\)</span> is a diagonal matrix with the square root of the weights,
-<span class="math notranslate nohighlight">\(\mathbf{d}^\text{obs}\)</span> is the vector of observed data, and
-<span class="math notranslate nohighlight">\(f(\mathbf{m})\)</span> is the forward modelling vector.</p>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{W}\)</span> is a diagonal matrix with the square root of the weights</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbf{W} =
+\begin{bmatrix}
+    \sqrt{w_1} &amp; &amp; 0 \\
+    &amp; \ddots &amp;  \\
+    0 &amp; &amp; \sqrt{w_N} \\
+\end{bmatrix},\end{split}\]</div>
+<p><span class="math notranslate nohighlight">\(\mathbf{d}^\text{obs}\)</span> is the vector of observed data</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbf{d}^\text{obs} =
+\begin{bmatrix}
+d_1^\text{obs} \\
+\vdots \\
+d_N^\text{obs} \\
+\end{bmatrix},\end{split}\]</div>
+<p>and <span class="math notranslate nohighlight">\(\mathbf{f}(\mathbf{m})\)</span> is the forward modelling vector</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbf{f}(\mathbf{m}) =
+\begin{bmatrix}
+    f_1(\mathbf{m}) \\
+    \vdots \\
+    f_N(\mathbf{m}) \\
+\end{bmatrix}.\end{split}\]</div>
 </dd></dl>
 
 <section id="attributes">
@@ -640,7 +664,35 @@ w_i \left\lvert f_i(\mathbf{m}) - d_i^\text{obs} \right\rvert^2\]</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.DataMisfit.__call__">
 <span class="sig-prename descclassname"><span class="pre">DataMisfit.</span></span><span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.DataMisfit.__call__" title="Link to this definition">#</a></dt>
-<dd><p>Evaluate the objective function for a given model.</p>
+<dd><p>Evaluate the data misfit function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Array with model values.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>float</dt><dd><p>Value of the data misfit for the given model.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Evaluates the data misfit objective function defined as:</p>
+<div class="math notranslate nohighlight">
+\[\phi_d(\mathbf{m}) =
+\sum\limits_{i=1}^N
+\frac{
+    \left\lvert f_i(\mathbf{m}) - d_i^\text{obs} \right\rvert^2
+}{
+    \epsilon_i^2
+}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{m}\)</span> is the model vector, <span class="math notranslate nohighlight">\(d_i^\text{obs}\)</span> is the
+<span class="math notranslate nohighlight">\(i\)</span>-th observed datum, <span class="math notranslate nohighlight">\(f_i(\mathbf{m})\)</span> is the forward modelling
+function for the <span class="math notranslate nohighlight">\(i\)</span>-th datum, and <span class="math notranslate nohighlight">\(\epsilon_i\)</span> is the uncertainty of
+the <span class="math notranslate nohighlight">\(i\)</span>-th datum.</p>
 </dd></dl>
 
 <hr class="docutils" />
@@ -680,14 +732,75 @@ function of the model vector <span class="math notranslate nohighlight">\(\mathb
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.DataMisfit.gradient">
 <span class="sig-prename descclassname"><span class="pre">DataMisfit.</span></span><span class="sig-name descname"><span class="pre">gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.DataMisfit.gradient" title="Link to this definition">#</a></dt>
-<dd><p>Gradient vector.</p>
+<dd><p>Gradient vector of the data misfit function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Array with model values.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>(n_params,) array</dt><dd><p>Gradient vector of the data misfit for the given model.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Computes the gradient of the data misfit as:</p>
+<div class="math notranslate nohighlight">
+\[\nabla\phi_d(\mathbf{m}) =
+2
+\mathbf{J}^\text{T}
+\mathbf{W}^\text{T}
+\mathbf{W}
+\mathbf{J}
+\left[ \mathbf{f}(\mathbf{m}) - \mathbf{d}^\text{obs} \right],\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{J}\)</span> is the Jacobian matrix of the <code class="docutils literal notranslate"><span class="pre">simulation</span></code> (the forward model),
+<span class="math notranslate nohighlight">\(\mathbf{W}\)</span> is a diagonal matrix with the square root of the weights,
+<span class="math notranslate nohighlight">\(\mathbf{d}^\text{obs}\)</span> is the vector of observed data, and
+<span class="math notranslate nohighlight">\(\mathbf{f}(\mathbf{m})\)</span> is the forward modelling vector.</p>
 </dd></dl>
 
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.DataMisfit.hessian">
 <span class="sig-prename descclassname"><span class="pre">DataMisfit.</span></span><span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.DataMisfit.hessian" title="Link to this definition">#</a></dt>
-<dd><p>Hessian matrix.</p>
+<dd><p>Evaluate the hessian of the data misfit function for a given model.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">build_hessian</span></code> is set to True, this method will attempt to return a 2D dense or sparse array. If it’s False, it’ll return a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code>.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Hessian matrices are usually very large. Use <code class="docutils literal notranslate"><span class="pre">build_hessian=True</span></code> only if
+you need to build it.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Array with model values.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>(n_params, n_params) array or <code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code></dt><dd><p>2D array or <code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code> that represents
+the Hessian matrix of the objective funciton, or an approximate version
+of it.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Computes the Hessian matrix of the data misfit as:</p>
+<div class="math notranslate nohighlight">
+\[\bar{\bar{\nabla}} \phi_d(\mathbf{m}) =
+2 \mathbf{J}^\text{T} \mathbf{W}^\text{T} \mathbf{W} \mathbf{J},\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{J}\)</span> is the Jacobian matrix of the <code class="docutils literal notranslate"><span class="pre">simulation</span></code> (the forward model), and
+<span class="math notranslate nohighlight">\(\mathbf{W}\)</span> is a diagonal matrix with the square root of the weights.</p>
 </dd></dl>
 
 <hr class="docutils" />
@@ -748,8 +861,8 @@ problems. Make sure you to enable diagonal estimations only if you need it.</p>
 <p class="rubric">Notes</p>
 <p>Residual vector defined as:</p>
 <div class="math notranslate nohighlight">
-\[\mathbf{r} = \mathcal{F}(\mathbf{m}) - \mathbf{d}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\mathbf{d}\)</span> is the vector with observed data, <span class="math notranslate nohighlight">\(\mathcal{F}\)</span>
+\[\mathbf{r} = \mathbf{f}(\mathbf{m}) - \mathbf{d}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{d}\)</span> is the vector with observed data, <span class="math notranslate nohighlight">\(\mathbf{f}\)</span>
 is the forward model, and <span class="math notranslate nohighlight">\(\mathbf{m}\)</span> is the model vector.</p>
 </dd></dl>
 

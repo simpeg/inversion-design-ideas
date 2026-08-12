@@ -543,6 +543,20 @@
 <dt class="sig sig-object py" id="inversion_ideas.base.Objective.__call__">
 <span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">Objective.</span></span><span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.base.Objective.__call__" title="Link to this definition">#</a></dt>
 <dd><p>Evaluate the objective function for a given model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Array with model values.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>float</dt><dd><p>Value of the objective function for the given model.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <hr class="docutils" />
@@ -550,6 +564,20 @@
 <dt class="sig sig-object py" id="inversion_ideas.base.Objective.gradient">
 <span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">Objective.</span></span><span class="sig-name descname"><span class="pre">gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.base.Objective.gradient" title="Link to this definition">#</a></dt>
 <dd><p>Evaluate the gradient of the objective function for a given model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Array with model values.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>(n_params,) array</dt><dd><p>Gradient vector for the given model.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <hr class="docutils" />
@@ -557,6 +585,22 @@
 <dt class="sig sig-object py" id="inversion_ideas.base.Objective.hessian">
 <span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">Objective.</span></span><span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.base.Objective.hessian" title="Link to this definition">#</a></dt>
 <dd><p>Evaluate the hessian of the objective function for a given model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Array with model values.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>(n_params, n_params) array or <code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code></dt><dd><p>2D array or <code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code> that represents
+the Hessian matrix of the objective funciton, or an approximated version
+of it.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <hr class="docutils" />

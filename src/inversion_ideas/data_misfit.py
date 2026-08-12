@@ -395,8 +395,8 @@ class DataMisfit(Objective):
         model : (n_params,) array
             Array with model values.
 
-        Return
-        ------
+        Returns
+        -------
         float
             Chi factor for the given model.
 

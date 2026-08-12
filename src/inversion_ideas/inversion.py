@@ -41,7 +41,7 @@ class Inversion:
         function during the inversion. It must take the objective function and a model
         as arguments.
     directives : list of Directive
-        List of ``Directive``s used to modify the objective function after each
+        List of ``Directive`` used to modify the objective function after each
         iteration.
     stopping_criterion : Condition or callable
         Boolean function that takes the model as argument. If this function returns

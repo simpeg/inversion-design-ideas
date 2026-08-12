@@ -377,7 +377,8 @@ class Combo(Objective):
         """
         Create a new flattened combo.
 
-        Create a new ``Combo`` object by unpacking nested ``Combo``s in the current one.
+        Create a new ``Combo`` object by unpacking nested ``Combo`` in the
+        current one.
         """
         return Combo(_unpack_combo(self.functions))
 

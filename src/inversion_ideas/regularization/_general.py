@@ -64,40 +64,16 @@ class TikhonovZero(Objective):
         self.set_name("0")
 
     def __call__(self, model: Model) -> float:
-        """
-        Evaluate the regularization on a given model.
-
-        Parameters
-        ----------
-        model : (n_params) array
-            Array with model values.
-        """
         model_diff = model - self.reference_model
         weights_matrix = self.weights_matrix
         return model_diff.T @ weights_matrix.T @ weights_matrix @ model_diff
 
     def gradient(self, model: Model):
-        """
-        Gradient vector.
-
-        Parameters
-        ----------
-        model : (n_params) array
-            Array with model values.
-        """
         model_diff = model - self.reference_model
         weights_matrix = self.weights_matrix
         return 2 * weights_matrix.T @ weights_matrix @ model_diff
 
     def hessian(self, model: Model):  # noqa: ARG002
-        """
-        Hessian matrix.
-
-        Parameters
-        ----------
-        model : (n_params) array
-            Array with model values.
-        """
         weights_matrix = self.weights_matrix
         return 2 * weights_matrix.T @ weights_matrix
 

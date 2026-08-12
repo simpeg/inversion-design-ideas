@@ -27,7 +27,7 @@ Alternatively, we could clone the repository and install the package from source
 
    .. code:: bash
 
-      cd inversin-design-ideas
+      cd inversion-design-ideas
 
 3. Use ``pip`` to install it:
 

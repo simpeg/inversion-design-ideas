@@ -479,6 +479,96 @@
                   
   <section id="inversion-ideas-decorators-cache-on-model">
 <h1>inversion_ideas.decorators.cache_on_model<a class="headerlink" href="#inversion-ideas-decorators-cache-on-model" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="inversion_ideas.decorators.cache_on_model">
+<span class="sig-prename descclassname"><span class="pre">inversion_ideas.decorators.</span></span><span class="sig-name descname"><span class="pre">cache_on_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.decorators.cache_on_model" title="Link to this definition">#</a></dt>
+<dd><p>Cache the last result of a method within the instance using the model hash.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Use this decorator only for methods that take the <code class="docutils literal notranslate"><span class="pre">model</span></code> as the first
+argument.</p>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>If the instance has a <code class="docutils literal notranslate"><span class="pre">cache</span></code> bool attribute, useres can enable or disable
+caching within the decorated method. If <code class="docutils literal notranslate"><span class="pre">cache=True</span></code>, the result
+of the decorated method will be cached. If <code class="docutils literal notranslate"><span class="pre">cache=False</span></code>, no caching will
+be performed.</p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/functools.html#functools.cache" title="(in Python v3.14)"><code class="xref py py-func docutils literal notranslate"><span class="pre">functools.cache()</span></code></a></dt><dd><p>Use this other decorator for caching multiple results.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Examples</p>
+<p>Let’s decorate a method that will return the cached result when called again with
+the same <code class="docutils literal notranslate"><span class="pre">model</span></code> argument:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="nd">@cache_on_model</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="nf">squared</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="p">(</span><span class="n">model</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sq</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>When calling the method with a given model we’ll perform the computation:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sq</span><span class="o">.</span><span class="n">squared</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>  <span class="c1"># perform the computation</span>
+<span class="go">14.0</span>
+</pre></div>
+</div>
+<p>Next time we call it with the same model, it’ll return the cached value:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sq</span><span class="o">.</span><span class="n">squared</span><span class="p">(</span><span class="n">model</span><span class="p">))</span>  <span class="c1"># access the cached result</span>
+<span class="go">14.0</span>
+</pre></div>
+</div>
+<p>When calling the method with a different model, we’ll trigger a new computation. And
+the new result will be cached:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sq</span><span class="o">.</span><span class="n">squared</span><span class="p">(</span><span class="n">model_new</span><span class="p">))</span>  <span class="c1"># perform a new computation</span>
+<span class="go">77.0</span>
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Only the last value gets cached to be cautious about memory usage.</p>
+</div>
+<p>Users could control wether to cache or not through the <code class="docutils literal notranslate"><span class="pre">cache</span></code> attribute:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cache</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="o">=</span> <span class="n">cache</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="nd">@cache_on_model</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="nf">squared</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="p">(</span><span class="n">model</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The following instance caches the result:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sq_cache</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">(</span><span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sq_cache</span><span class="o">.</span><span class="n">squared</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>  <span class="c1"># perform the computation</span>
+<span class="go">np.float64(14.0)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sq_cache</span><span class="o">.</span><span class="n">squared</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>  <span class="c1"># returns cached object</span>
+<span class="go">np.float64(14.0)</span>
+</pre></div>
+</div>
+<p>This one does not:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sq_no_cache</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">(</span><span class="n">cache</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sq_no_cache</span><span class="o">.</span><span class="n">squared</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>  <span class="c1"># perform the computation</span>
+<span class="go">np.float64(14.0)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sq_no_cache</span><span class="o">.</span><span class="n">squared</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>  <span class="c1"># perform the computation</span>
+<span class="go">np.float64(14.0)</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </section>
 
 
@@ -519,6 +609,18 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.decorators.cache_on_model"><code class="docutils literal notranslate"><span class="pre">cache_on_model()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

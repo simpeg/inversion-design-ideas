@@ -175,6 +175,15 @@ class DataMisfit(Objective):
         self.estimate_hessian_diagonal = estimate_hessian_diagonal
         self.set_name("d")
 
+    @property
+    def math(self) -> str:
+        math = (
+            r"\left\lVert"
+            r"\mathbf{W} \left[ \mathbf{f}(\mathbf{m}) - \mathbf{d}^\text{obs} \right]"
+            r"\right\rVert^2"
+        )
+        return f"${math}$"
+
     def __call__(self, model: Model) -> float:
         r"""
         Evaluate the data misfit function.

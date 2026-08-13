@@ -149,6 +149,14 @@ class Objective(ABC):
             repr_ += rf"_{{{self.name}}}"
         return f"${repr_} (m)$"
 
+    @property
+    def math(self) -> str:
+        """Mathematical representation of the objective function."""
+        # By default, the Objective will just return the default LaTeX representation.
+        # Child classes are encouraged to overwrite this property to represent the
+        # objective function in detail.
+        return self._repr_latex_()
+
     def info(self):
         """Get information about the objective function."""
         type_ = type(self)
@@ -288,17 +296,28 @@ class Scaled(Objective):
         return f"{multiplier:} {phi_repr}"
 
     def _repr_latex_(self):
+        return self._surround_latex(self.function._repr_latex_())
+
+    @property
+    def math(self) -> str:
+        """Mathematical representation of the objective function."""
+        return self._surround_latex(self.function.math)
+
+    def _surround_latex(self, latex_str: str) -> str:
+        """Surround a LaTeX string with the multiplier and brackets if needed."""
+        # Strip the math mode symbols
+        latex_str = latex_str.strip("$")
+        # Express multiplier in scientific notation
         multiplier = _float_to_str(self.multiplier)
         if "e" in multiplier:
             base, exp = multiplier.split("e")
             exp = exp.replace("+", "")
             exp = str(int(exp))
             multiplier = rf"{base} \cdot 10^{{{exp}}}"
-        phi_str = self.function._repr_latex_().strip("$")
         # Add brackets in case that the function has a multiplier or is a Combo
         if isinstance(self.function, Iterable) or hasattr(self.function, "multiplier"):
-            phi_str = f"[{phi_str}]"
-        return rf"${multiplier} \, {phi_str}$"
+            latex_str = rf"\left[{latex_str}right]"
+        return rf"${multiplier} \, {latex_str}$"
 
     def __eq__(self, other) -> bool:
         if not isinstance(other, Scaled):
@@ -435,7 +454,19 @@ class Combo(Objective):
         for function in self.functions:
             function_str = function._repr_latex_().strip("$")
             if isinstance(function, Iterable):
-                function_str = f"[{function_str}]"
+                function_str = rf"\left[{function_str}\right]"
+            functions.append(function_str)
+        phi_str = " + ".join(functions)
+        return f"${phi_str}$"
+
+    @property
+    def math(self) -> str:
+        """Mathematical representation of the objective function."""
+        functions = []
+        for function in self.functions:
+            function_str = function.math.strip("$")
+            if isinstance(function, Iterable):
+                function_str = rf"\left[{function_str}\right]"
             functions.append(function_str)
         phi_str = " + ".join(functions)
         return f"${phi_str}$"

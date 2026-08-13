@@ -157,18 +157,18 @@ class TestSanityChecks:
         with pytest.raises(ValueError, match=msg):
             DataMisfit(data, uncertainty_2d, simulation)
 
-    @pytest.mark.parametrize("offending", ["data", "uncertainty", "simulation"])
-    def test_wrong_size(self, offending, regressor_matrix):
-        if offending == "simulation":
+    @pytest.mark.parametrize("offending_arg", ["data", "uncertainty", "simulation"])
+    def test_wrong_size(self, offending_arg, regressor_matrix):
+        if offending_arg == "simulation":
             x = self.rng.uniform(size=(self.n_data + 1, self.n_params))
             simulation = LinearRegressor(x)
             data = self.rng.uniform(size=self.n_data)
             uncertainty = self.rng.uniform(size=self.n_data)
-        elif offending == "data":
+        elif offending_arg == "data":
             data = self.rng.uniform(size=self.n_data + 1)
             uncertainty = self.rng.uniform(size=self.n_data)
             simulation = LinearRegressor(regressor_matrix)
-        elif offending == "uncertainty":
+        elif offending_arg == "uncertainty":
             data = self.rng.uniform(size=self.n_data)
             uncertainty = self.rng.uniform(size=self.n_data + 1)
             simulation = LinearRegressor(regressor_matrix)
@@ -182,18 +182,21 @@ class TestSanityChecks:
         with pytest.raises(ValueError, match=msg):
             DataMisfit(data, uncertainty, simulation)
 
-    @pytest.mark.parametrize("offending", ["data", "uncertainty"])
-    def test_nans(self, offending, regressor_matrix):
+    @pytest.mark.parametrize("invalid_value", [np.nan, np.inf, "both"])
+    @pytest.mark.parametrize("offending_arg", ["data", "uncertainty"])
+    def test_nans_or_infs(self, invalid_value, offending_arg, regressor_matrix):
         data = self.rng.uniform(size=self.n_data)
         uncertainty = self.rng.uniform(size=self.n_data)
         simulation = LinearRegressor(regressor_matrix)
-        if offending == "data":
-            data[5] = np.nan
-        elif offending == "uncertainty":
-            uncertainty[5] = np.nan
+
+        # Contaminate offending argument with nan, inf, or both
+        array = data if offending_arg == "data" else uncertainty
+        if invalid_value == "both":
+            array[4], array[5] = np.nan, np.inf
         else:
-            raise ValueError()
-        msg = re.escape(f"Invalid `{offending}` array with NaN values.")
+            array[5] = invalid_value
+
+        msg = re.escape(f"Invalid `{offending_arg}` array with NaN values.")
         with pytest.raises(ValueError, match=msg):
             DataMisfit(data, uncertainty, simulation)
 

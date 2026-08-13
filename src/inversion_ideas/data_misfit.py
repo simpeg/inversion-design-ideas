@@ -9,9 +9,9 @@ from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from inversion_ideas.utils import get_logger
 
-from .base import Objective
+from .base import Objective, Simulation
 from .operators import get_diagonal
-from .typing import Model, SparseArray
+from .typing import Model, SimulationProtocol, SparseArray
 
 
 class DataMisfit(Objective):
@@ -130,13 +130,44 @@ class DataMisfit(Objective):
         self,
         data: npt.NDArray[np.float64],
         uncertainty: npt.NDArray[np.float64],
-        simulation,
+        simulation: Simulation,
         *,
         build_hessian=False,
         estimate_hessian_diagonal=False,
     ):
-        # TODO: Check that the data and uncertainties have the size as ndata in the
-        #       simulation.
+        # Validate inputs
+        if data.ndim != 1:
+            msg = (
+                f"Invalid `data` array with {data.ndim} dimensions. "
+                "It must be a 1D array."
+            )
+            raise ValueError(msg)
+        if uncertainty.ndim != 1:
+            msg = (
+                f"Invalid `uncertainty` array with {uncertainty.ndim} dimensions. "
+                "It must be a 1D array."
+            )
+            raise ValueError(msg)
+        if not isinstance(simulation, SimulationProtocol):
+            msg = (
+                "Invalid `simulation` argument of type "
+                f"'{type(simulation).__name__}'. "
+                "It must be a child of `inversion_ideas.base.Simulation` or "
+                "a custom object that implements its interface."
+            )
+            raise TypeError(msg)
+        if not (simulation.n_data == data.size == uncertainty.size):
+            msg = (
+                f"Invalid `data` and `uncertainty` arguments with {data.size} and "
+                f"{uncertainty.size} elements, respectively, and `simulation` "
+                f"argument with {simulation.n_data} 'n_params'. "
+            )
+            raise ValueError(msg)
+        for name, array in {"data": data, "uncertainty": uncertainty}.items():
+            if np.any(np.isnan(array) | np.isinf(array)):
+                msg = f"Invalid `{name}` array with NaN values."
+                raise ValueError(msg)
+
         self.data = data
         self.uncertainty = uncertainty
         self.simulation = simulation

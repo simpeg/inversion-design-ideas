@@ -14,3 +14,4 @@ sphinx
 numpydoc
 pydata-sphinx-theme
 sphinx_design
+choclo

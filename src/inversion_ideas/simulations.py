@@ -49,8 +49,8 @@ class WrappedSimulation(Simulation):
 
         This class is meant to be a glue between current SimPEG simulations and the
         new framework. The ultimate goal is to make SimPEG simulations compatible with
-        this framework. After that, this class will become obsolete and we'll be able to
-        remove it.
+        this framework. After that, this class will become obsolete and we'll be able
+        to remove it.
 
     Parameters
     ----------
@@ -117,18 +117,15 @@ class WrappedSimulation(Simulation):
         """
         Jacobian matrix for a given model.
         """
+        fields = self._get_fields(model)
         if self.store_jacobian:
-            jac = self.simulation.getJ(model, f=self._get_fields(model))
+            jac = self.simulation.getJ(model, f=fields)
         else:
             jac = LinearOperator(
                 shape=(self.n_data, self.n_params),
                 dtype=np.float64,
-                matvec=lambda v: self.simulation.Jvec(
-                    model, v, f=self._get_fields(model)
-                ),
-                rmatvec=lambda v: self.simulation.Jtvec(
-                    model, v, f=self._get_fields(model)
-                ),
+                matvec=lambda v: self.simulation.Jvec(model, v, f=fields),
+                rmatvec=lambda v: self.simulation.Jtvec(model, v, f=fields),
             )
         return jac
 
@@ -144,8 +141,18 @@ class WrappedSimulation(Simulation):
         This method will cache the fields based on the model hash. By using this
         method we can avoid recomputing the fields for the same model whenever we are
         calling ``dpred``, ``Jvec``, or ``Jtvec``.
+
+        Parameters
+        ----------
+        model : (n_params) array
+
+        Returns
+        -------
+        fields : simpeg.fields.Fields or None
+            Computed fields objects. Return None if the ``simulation`` is not a PDE
+            simulation (like integral gravity and magnetic simulations).
         """
-        # Return None for non PDE simulations (like grav and mag)
+        # Return None for non PDE simulations
         if not self._is_pde_simulation:
             return None
 
@@ -155,8 +162,9 @@ class WrappedSimulation(Simulation):
             if cached_hash.digest() == model_hash.digest():
                 # -- Debug log --
                 msg = (
-                    f"Reusing cached fields in '{self}' for model "
-                    f"{array_to_str(model)} with hash '{model_hash.hexdigest()}'."
+                    f"{type(self).__name__}: reusing cached fields in '{self}' for "
+                    f" model {array_to_str(model)} with hash "
+                    f"'{model_hash.hexdigest()}'."
                 )
                 get_logger().debug(msg)
                 # ---

@@ -2,13 +2,18 @@
 Wrap SimPEG simulations to work with this new inversion framework.
 """
 
+import hashlib
+
 import numpy as np
 import numpy.typing as npt
 from scipy.sparse.linalg import LinearOperator
+from simpeg.base.pde_simulation import BasePDESimulation
 
+from ._utils import array_to_str
 from .base import Simulation
 from .decorators import cache_on_model
 from .typing import Model
+from .utils import get_logger
 
 
 def wrap_simulation(simulation, *, store_jacobian=False):
@@ -37,7 +42,15 @@ class WrappedSimulation(Simulation):
     """
     Wrapper of SimPEG's simulations.
 
-    This class is meant to be used within the new framework.
+    Allows to use SimPEG simulations in the new framework, extending them to be
+    compatible with the :class:`inversion_ideas.base.Simulation` interface.
+
+    .. important::
+
+        This class is meant to be a glue between current SimPEG simulations and the
+        new framework. The ultimate goal is to make SimPEG simulations compatible with
+        this framework. After that, this class will become obsolete and we'll be able to
+        remove it.
 
     Parameters
     ----------
@@ -96,19 +109,67 @@ class WrappedSimulation(Simulation):
         """
         Evaluate simulation for a given model.
         """
-        return self.simulation.dpred(model)
+        fields = self._get_fields(model)
+        return self.simulation.dpred(model, f=fields)
 
+    @cache_on_model
     def jacobian(self, model: Model) -> npt.NDArray[np.float64] | LinearOperator:
         """
         Jacobian matrix for a given model.
         """
         if self.store_jacobian:
-            jac = self.simulation.getJ(model)
+            jac = self.simulation.getJ(model, f=self._get_fields(model))
         else:
             jac = LinearOperator(
                 shape=(self.n_data, self.n_params),
                 dtype=np.float64,
-                matvec=lambda v: self.simulation.Jvec(model, v),
-                rmatvec=lambda v: self.simulation.Jtvec(model, v),
+                matvec=lambda v: self.simulation.Jvec(
+                    model, v, f=self._get_fields(model)
+                ),
+                rmatvec=lambda v: self.simulation.Jtvec(
+                    model, v, f=self._get_fields(model)
+                ),
             )
         return jac
+
+    @property
+    def _is_pde_simulation(self):
+        """Whether the SimPEG simulation is a PDE simulation or not."""
+        return isinstance(self.simulation, BasePDESimulation)
+
+    def _get_fields(self, model):
+        """
+        Return fields computed for a given model.
+
+        This method will cache the fields based on the model hash. By using this
+        method we can avoid recomputing the fields for the same model whenever we are
+        calling ``dpred``, ``Jvec``, or ``Jtvec``.
+        """
+        # Return None for non PDE simulations (like grav and mag)
+        if not self._is_pde_simulation:
+            return None
+
+        model_hash = hashlib.sha256(model)
+        if hasattr(self, cache_attr := "_cached_field"):
+            cached_hash, cached_fields = getattr(self, cache_attr)
+            if cached_hash.digest() == model_hash.digest():
+                # -- Debug log --
+                msg = (
+                    f"Reusing cached fields in '{self}' for model "
+                    f"{array_to_str(model)} with hash '{model_hash.hexdigest()}'."
+                )
+                get_logger().debug(msg)
+                # ---
+                return cached_fields
+
+        # Compute new fields and cache them
+        fields = self.simulation.fields(model)
+        setattr(self, cache_attr, (model_hash, fields))
+        # -- Debug log --
+        msg = (
+            f"{type(self).__name__}: computed and cached fields in '{self}' "
+            f"for model {array_to_str(model)} with hash '{model_hash.hexdigest()}'."
+        )
+        get_logger().debug(msg)
+        # ---
+        return fields

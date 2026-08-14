@@ -157,7 +157,7 @@ class WrappedSimulation(Simulation):
             return None
 
         model_hash = hashlib.sha256(model)
-        if hasattr(self, cache_attr := "_cached_field"):
+        if hasattr(self, cache_attr := "_cached_fields"):
             cached_hash, cached_fields = getattr(self, cache_attr)
             if cached_hash.digest() == model_hash.digest():
                 # -- Debug log --

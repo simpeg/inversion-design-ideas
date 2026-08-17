@@ -3,9 +3,8 @@ Decorators for functions, methods and classes.
 """
 
 import functools
-import hashlib
 
-from ._utils import array_to_str
+from ._utils import array_to_str, compute_hash, hash_to_str
 from .utils import get_logger
 
 __all__ = ["CountCalls", "cache_on_model", "debug"]
@@ -118,7 +117,7 @@ def cache_on_model(func):
                 # Return result without caching
                 return func(self, model, *args, **kwargs)
 
-        model_hash = hashlib.sha256(model)
+        model_hash = compute_hash(model)
 
         # Return cached object if the model hash matches with the cached one
         if hasattr(self, cache_attr):
@@ -128,7 +127,7 @@ def cache_on_model(func):
                 msg = (
                     f"Returning cached object '{array_to_str(cached_result)}' "
                     f"after calling '{func}' with model with hash "
-                    f"'{model_hash_cached.hexdigest()}'."
+                    f"'{hash_to_str(model_hash)}'. "
                 )
                 if args:
                     msg += f" With args: '{args}'."
@@ -144,7 +143,8 @@ def cache_on_model(func):
         # -- Debug log --
         msg = (
             f"Computed new result '{array_to_str(result)}' after "
-            f"calling '{func}' with model with hash '{model_hash.hexdigest()}'. "
+            f"calling '{func}' with model with hash "
+            f"'{hash_to_str(model_hash)}'. "
             "Cached the result into the object."
         )
         if args:

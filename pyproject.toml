@@ -14,6 +14,9 @@ dependencies = [
     "discretize==0.12.0",
 ]
 
+[project.optional-dependencies]
+xxhash = ["xxhash"]
+
 [build-system]
 requires = ["setuptools>=61", "wheel", "setuptools_scm[toml]>=6.2"]
 build-backend = "setuptools.build_meta"

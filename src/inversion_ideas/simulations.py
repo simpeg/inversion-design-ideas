@@ -2,14 +2,12 @@
 Wrap SimPEG simulations to work with this new inversion framework.
 """
 
-import hashlib
-
 import numpy as np
 import numpy.typing as npt
 from scipy.sparse.linalg import LinearOperator
 from simpeg.base.pde_simulation import BasePDESimulation
 
-from ._utils import array_to_str
+from ._utils import array_to_str, compute_hash, hash_to_str
 from .base import Simulation
 from .decorators import cache_on_model
 from .typing import Model
@@ -165,7 +163,7 @@ class WrappedSimulation(Simulation):
         if not self.cache_fields:
             return self.simulation.fields(model)
 
-        model_hash = hashlib.sha256(model)
+        model_hash = compute_hash(model)
         if hasattr(self, cache_attr := "_cached_fields"):
             cached_hash, cached_fields = getattr(self, cache_attr)
             if cached_hash.digest() == model_hash.digest():
@@ -173,7 +171,7 @@ class WrappedSimulation(Simulation):
                 msg = (
                     f"{type(self).__name__}: reusing cached fields in '{self}' for "
                     f" model {array_to_str(model)} with hash "
-                    f"'{model_hash.hexdigest()}'."
+                    f"'{hash_to_str(model_hash)}'."
                 )
                 get_logger().debug(msg)
                 # ---
@@ -185,7 +183,8 @@ class WrappedSimulation(Simulation):
         # -- Debug log --
         msg = (
             f"{type(self).__name__}: computed and cached fields in '{self}' "
-            f"for model {array_to_str(model)} with hash '{model_hash.hexdigest()}'."
+            f"for model {array_to_str(model)} with hash "
+            f"'{hash_to_str(model_hash)}'."
         )
         get_logger().debug(msg)
         # ---

@@ -3,20 +3,9 @@ Decorators for functions, methods and classes.
 """
 
 import functools
-import hashlib
 
-from ._utils import array_to_str
+from ._utils import array_to_str, compute_hash, hash_to_str
 from .utils import get_logger
-
-try:
-    import xxhash
-except ImportError:
-    import hashlib
-
-    HASHING_FUNCTION = hashlib.sha256
-else:
-    HASHING_FUNCTION = xxhash.xxh32
-
 
 __all__ = ["CountCalls", "cache_on_model", "debug"]
 
@@ -128,7 +117,7 @@ def cache_on_model(func):
                 # Return result without caching
                 return func(self, model, *args, **kwargs)
 
-        model_hash = HASHING_FUNCTION(model)
+        model_hash = compute_hash(model)
 
         # Return cached object if the model hash matches with the cached one
         if hasattr(self, cache_attr):
@@ -138,7 +127,7 @@ def cache_on_model(func):
                 msg = (
                     f"Returning cached object '{array_to_str(cached_result)}' "
                     f"after calling '{func}' with model with hash "
-                    f"'{model_hash.name}:{model_hash.hexdigest()}'. "
+                    f"'{hash_to_str(model_hash)}'. "
                 )
                 if args:
                     msg += f" With args: '{args}'."
@@ -155,7 +144,7 @@ def cache_on_model(func):
         msg = (
             f"Computed new result '{array_to_str(result)}' after "
             f"calling '{func}' with model with hash "
-            f"'{model_hash.name}:{model_hash.hexdigest()}'. "
+            f"'{hash_to_str(model_hash)}'. "
             "Cached the result into the object."
         )
         if args:

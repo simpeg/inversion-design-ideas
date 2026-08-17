@@ -69,7 +69,9 @@ class WrappedSimulation(Simulation):
         Default to True.
     """
 
-    def __init__(self, simulation, *, store_jacobian=False, cache_fields=True, cache=True):
+    def __init__(
+        self, simulation, *, store_jacobian=False, cache_fields=True, cache=True
+    ):
         has_getJ = hasattr(simulation, "getJ") and callable(simulation.getJ)
         if store_jacobian and not has_getJ:
             msg = (

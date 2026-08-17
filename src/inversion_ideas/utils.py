@@ -10,16 +10,6 @@ from scipy.sparse.linalg import LinearOperator
 
 from .typing import SparseArray
 
-try:
-    import xxhash
-except ImportError:
-    import hashlib
-
-    HASHING_FUNCTION = hashlib.sha256
-else:
-    HASHING_FUNCTION = xxhash.xxh32
-
-
 __all__ = [
     "Counter",
     "get_logger",

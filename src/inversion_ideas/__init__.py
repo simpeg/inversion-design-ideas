@@ -19,7 +19,7 @@ from .recipes import (
     create_tikhonov_regularization,
 )
 from .regularization import Flatness, Smallness, SparseSmallness, TikhonovZero
-from .simulations import wrap_simulation
+from .simulations import WrappedSimulation, wrap_simulation
 
 __all__ = [
     "BFGSPreconditioner",

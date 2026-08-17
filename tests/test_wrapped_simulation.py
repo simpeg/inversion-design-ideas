@@ -113,6 +113,19 @@ class TestWrappedPDESimulation:
         _, cached_fields = simulation._cached_fields
         assert cached_fields is fields_1
 
+    def test_cached_fields_disabled(self):
+        """Test fields are not cached if ``cache_fields`` is False."""
+        simulation_simpeg = get_dc_simulation()
+        n_params = simulation_simpeg.sigmaMap.nP
+        simulation = WrappedSimulation(simulation_simpeg, cache_fields=False)
+        model = np.random.default_rng(seed=41).uniform(size=n_params)
+        fields_1 = simulation._get_fields(model)
+        fields_2 = simulation._get_fields(model)
+        # Check that the two fields returned are not the same
+        assert not (fields_1 is fields_2)
+        # Check that no cached fields live in the object
+        assert not hasattr(simulation, "_cached_fields")
+
     def test_cache_new_fields(self):
         """Test if new fields are computed and cached upon different model."""
         simulation_simpeg = get_dc_simulation()

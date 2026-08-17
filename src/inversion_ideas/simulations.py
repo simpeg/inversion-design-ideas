@@ -62,12 +62,14 @@ class WrappedSimulation(Simulation):
         a :class:`~scipy.sparse.linalg.LinearOperator` that calls the ``Jvec`` and
         ``Jtvec`` methods of the SimPEG simulation.
         Default to False.
+    cache_fields : bool, optional
+        Whether to cache fields within the simulation or not.
     cache : bool, optional
         Whether to cache the last result of the ``__call__`` and ``jacobian`` methods.
         Default to True.
     """
 
-    def __init__(self, simulation, *, store_jacobian=False, cache=True):
+    def __init__(self, simulation, *, store_jacobian=False, cache_fields=True, cache=True):
         has_getJ = hasattr(simulation, "getJ") and callable(simulation.getJ)
         if store_jacobian and not has_getJ:
             msg = (
@@ -79,6 +81,7 @@ class WrappedSimulation(Simulation):
 
         self.simulation = simulation
         self.store_jacobian = store_jacobian
+        self.cache_fields = cache_fields
         self.cache = cache
 
     @property
@@ -138,9 +141,9 @@ class WrappedSimulation(Simulation):
         """
         Return fields computed for a given model.
 
-        This method will cache the fields based on the model hash. By using this
-        method we can avoid recomputing the fields for the same model whenever we are
-        calling ``dpred``, ``Jvec``, or ``Jtvec``.
+        If ``cache_fields`` is True, this method will cache the fields based on the
+        model hash. By using it we can avoid recomputing the fields for the
+        same model whenever we are calling ``dpred``, ``Jvec``, or ``Jtvec``.
 
         Parameters
         ----------
@@ -155,6 +158,10 @@ class WrappedSimulation(Simulation):
         # Return None for non PDE simulations
         if not self._is_pde_simulation:
             return None
+
+        # Do not cache fields if cache_fields is False
+        if not self.cache_fields:
+            return self.simulation.fields(model)
 
         model_hash = hashlib.sha256(model)
         if hasattr(self, cache_attr := "_cached_fields"):

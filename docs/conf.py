@@ -40,6 +40,11 @@ numpydoc_class_members_toctree = False  # Avoid cluttering TOC with inherited me
 numpydoc_attributes_as_param_list = False
 numpydoc_show_inherited_class_members = True  # Show inherited methods in docs
 
+# Configure numpydoc xref
+numpydoc_xref_param_type = True
+numpydoc_xref_aliases = { "LinearOperator": "scipy.sparse.linalg.LinearOperator" }
+numpydoc_xref_ignore = {"type", "optional", "default"}
+
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 

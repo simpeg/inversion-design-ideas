@@ -40,12 +40,12 @@ def compute_hash(*args, **kwargs):
 
 def hash_to_str(hash):
     """
-    Convert hash to string in the form of ``"{algorithm}:{hex_hash}"``.
+    Convert hash to string in the form of ``f"{hash.name}:{hash.hexdigest()}"``.
 
     Parameters
     ----------
     hash : hash-like object
-        Hash-like object with ``name`` property and ``hexdump`` method.
+        Hash-like object with ``name`` property and ``hexdigest`` method.
 
     Returns
     -------

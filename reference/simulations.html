@@ -365,6 +365,7 @@
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Simulations</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.wrap_simulation.html">inversion_ideas.wrap_simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.WrappedSimulation.html">inversion_ideas.WrappedSimulation</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="inversion.html">Inversions and Recipes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -476,10 +477,27 @@
                   
   <section id="simulations">
 <span id="api-simulations"></span><h1>Simulations<a class="headerlink" href="#simulations" title="Link to this heading">#</a></h1>
+<p>The prototype for the new inversion framework does not implement any simulation
+class that models a geophysical problem. It relies on SimPEG simulation classes instead.
+But since the simulation classes in SimPEG are not yet compatible with the new
+framework, we offer a <em>wrapper class</em> that allow us to extend them through a
+<a class="reference internal" href="api/inversion_ideas.base.Simulation.html#inversion_ideas.base.Simulation" title="inversion_ideas.base.Simulation"><code class="xref py py-class docutils literal notranslate"><span class="pre">inversion_ideas.base.Simulation</span></code></a> object so they become compatible with the framework.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The ultimate goal is to make SimPEG simulations compatible with the new
+framework.
+The <a class="reference internal" href="api/inversion_ideas.wrap_simulation.html#inversion_ideas.wrap_simulation" title="inversion_ideas.wrap_simulation"><code class="xref py py-func docutils literal notranslate"><span class="pre">inversion_ideas.wrap_simulation()</span></code></a> function and the
+<a class="reference internal" href="api/inversion_ideas.WrappedSimulation.html#inversion_ideas.WrappedSimulation" title="inversion_ideas.WrappedSimulation"><code class="xref py py-func docutils literal notranslate"><span class="pre">inversion_ideas.WrappedSimulation()</span></code></a> class listed here are only temporary
+solutions to extend SimPEG simulations in a way that become compatible with
+the new framework.</p>
+</div>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="api/inversion_ideas.wrap_simulation.html#inversion_ideas.wrap_simulation" title="inversion_ideas.wrap_simulation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wrap_simulation</span></code></a>(simulation, *[, store_jacobian])</p></td>
 <td><p>Wrap a SimPEG's simulation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/inversion_ideas.WrappedSimulation.html#inversion_ideas.WrappedSimulation" title="inversion_ideas.WrappedSimulation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WrappedSimulation</span></code></a>(simulation, *[, ...])</p></td>
+<td><p>Wrapper of SimPEG's simulations.</p></td>
 </tr>
 </tbody>
 </table>

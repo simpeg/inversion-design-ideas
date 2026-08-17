@@ -9,7 +9,7 @@ from numpy.typing import NDArray
 from scipy.sparse.linalg import LinearOperator
 
 from inversion_ideas.base import Simulation
-from inversion_ideas.utils import cache_on_model
+from inversion_ideas.decorators import cache_on_model
 
 
 class LinearRegressor(Simulation):

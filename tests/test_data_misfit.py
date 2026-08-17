@@ -6,7 +6,6 @@ import re
 
 import numpy as np
 import pytest
-import scipy.sparse as sp
 
 from inversion_ideas import DataMisfit
 
@@ -41,59 +40,7 @@ class TestDataMisfit:
     @pytest.fixture
     def regressor_matrix(self):
         shape = (self.n_data, self.n_params)
-        return self.rng.uniform(size=self.n_data * self.n_params).reshape(shape)
-
-    @pytest.mark.parametrize(
-        "jacobian_as_linop", [False, True], ids=["dense-jac", "linop-jac"]
-    )
-    def test_hessian_approx(
-        self, data_and_uncertainties, regressor_matrix, jacobian_as_linop
-    ):
-        """
-        Test the ``hessian_approx`` method.
-        """
-        data, uncertainties = data_and_uncertainties
-
-        # Define data misfit
-        simulation = LinearRegressor(regressor_matrix, linop=jacobian_as_linop)
-        data_misfit = DataMisfit(
-            data,
-            uncertainties,
-            simulation,
-            # Enable estimation of hessian diagonal if jacobian is a linop
-            estimate_hessian_diagonal=jacobian_as_linop,
-        )
-        # Get approximated hessian
-        model = self.rng.uniform(size=self.n_params)
-        hessian_approx = data_misfit.hessian_approx(model)
-
-        # Compare with expected one
-        full_hessian = DataMisfit(
-            data,
-            uncertainties,
-            simulation=LinearRegressor(regressor_matrix),
-            build_hessian=True,
-        ).hessian(model)
-        expected = sp.diags_array(full_hessian.diagonal())
-        assert_allclose_linear_operators(hessian_approx, expected, to_dense=True)
-
-    def test_hessian_approx_with_dense_hessian(
-        self, data_and_uncertainties, regressor_matrix
-    ):
-        """
-        Test that ``hessian_approx`` returns the Hessian if ``build_hessian``.
-        """
-        data, uncertainties = data_and_uncertainties
-
-        # Define data misfit
-        simulation = LinearRegressor(regressor_matrix)
-        data_misfit = DataMisfit(data, uncertainties, simulation, build_hessian=True)
-
-        # Test if hessian and hessian_approx are the same
-        model = self.rng.uniform(size=self.n_params)
-        np.testing.assert_equal(
-            data_misfit.hessian(model), data_misfit.hessian_approx(model)
-        )
+        return self.rng.uniform(size=shape)
 
     @pytest.mark.parametrize(
         "jacobian_as_linop", [False, True], ids=["dense-jac", "linop-jac"]
@@ -176,3 +123,104 @@ class TestDataMisfit:
         assert_allclose_linear_operators(
             data_misfit.hessian(model), data_misfit_test.hessian(model)
         )
+
+
+class TestSanityChecks:
+    """Test sanity checks for arguments of ``DataMisfit``."""
+
+    rng = np.random.default_rng(seed=42)
+    n_data = 25
+    n_params = 30
+
+    @pytest.fixture
+    def regressor_matrix(self):
+        shape = (self.n_data, self.n_params)
+        return self.rng.uniform(size=shape)
+
+    def test_data_not_1d_array(self, regressor_matrix):
+        data_2d = self.rng.uniform(size=self.n_data).reshape((5, 5))
+        uncertainty = self.rng.uniform(size=self.n_data)
+        simulation = LinearRegressor(regressor_matrix)
+        msg = re.escape(
+            "Invalid `data` array with 2 dimensions. It must be a 1D array."
+        )
+        with pytest.raises(ValueError, match=msg):
+            DataMisfit(data_2d, uncertainty, simulation)
+
+    def test_uncertainty_not_1d_array(self, regressor_matrix):
+        data = self.rng.uniform(size=self.n_data)
+        uncertainty_2d = self.rng.uniform(size=self.n_data).reshape((5, 5))
+        simulation = LinearRegressor(regressor_matrix)
+        msg = re.escape(
+            "Invalid `uncertainty` array with 2 dimensions. It must be a 1D array."
+        )
+        with pytest.raises(ValueError, match=msg):
+            DataMisfit(data, uncertainty_2d, simulation)
+
+    @pytest.mark.parametrize("offending_arg", ["data", "uncertainty", "simulation"])
+    def test_wrong_size(self, offending_arg, regressor_matrix):
+        if offending_arg == "simulation":
+            x = self.rng.uniform(size=(self.n_data + 1, self.n_params))
+            simulation = LinearRegressor(x)
+            data = self.rng.uniform(size=self.n_data)
+            uncertainty = self.rng.uniform(size=self.n_data)
+        elif offending_arg == "data":
+            data = self.rng.uniform(size=self.n_data + 1)
+            uncertainty = self.rng.uniform(size=self.n_data)
+            simulation = LinearRegressor(regressor_matrix)
+        elif offending_arg == "uncertainty":
+            data = self.rng.uniform(size=self.n_data)
+            uncertainty = self.rng.uniform(size=self.n_data + 1)
+            simulation = LinearRegressor(regressor_matrix)
+        else:
+            raise ValueError()
+        msg = re.escape(
+            f"Invalid `data` and `uncertainty` arguments with {data.size} and "
+            f"{uncertainty.size} elements, respectively, and `simulation` "
+            f"argument with {simulation.n_data} 'n_params'. "
+        )
+        with pytest.raises(ValueError, match=msg):
+            DataMisfit(data, uncertainty, simulation)
+
+    @pytest.mark.parametrize("invalid_value", [np.nan, np.inf, "both"])
+    @pytest.mark.parametrize("offending_arg", ["data", "uncertainty"])
+    def test_nans_or_infs(self, invalid_value, offending_arg, regressor_matrix):
+        data = self.rng.uniform(size=self.n_data)
+        uncertainty = self.rng.uniform(size=self.n_data)
+        simulation = LinearRegressor(regressor_matrix)
+
+        # Contaminate offending argument with nan, inf, or both
+        array = data if offending_arg == "data" else uncertainty
+        if invalid_value == "both":
+            array[4], array[5] = np.nan, np.inf
+        else:
+            array[5] = invalid_value
+
+        msg = re.escape(f"Invalid `{offending_arg}` array with NaN values.")
+        with pytest.raises(ValueError, match=msg):
+            DataMisfit(data, uncertainty, simulation)
+
+    def test_invalid_simulation(self):
+        class NonSimulation:
+            """
+            Dummy class that doesn't implement the full interface of a Simulation.
+            """
+
+            @property
+            def n_params(self):
+                return 30
+
+            @property
+            def n_data(self):
+                return 25
+
+            def __call__(self, model):
+                pass
+
+        data = self.rng.uniform(size=self.n_data)
+        uncertainty = self.rng.uniform(size=self.n_data)
+        simulation = NonSimulation()
+
+        msg = re.escape("Invalid `simulation` argument of type 'NonSimulation'.")
+        with pytest.raises(TypeError, match=msg):
+            DataMisfit(data, uncertainty, simulation)

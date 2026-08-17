@@ -26,11 +26,39 @@ Type alias to represent models in the inversion framework as 1D arrays.
 
 Preconditioner: TypeAlias = npt.NDArray[np.float64] | SparseArray | LinearOperator
 """
-Type for static preconditioners.
+Type for preconditioners.
 
-Static preconditioners can either be a dense matrix, a sparse matrix or
-a ``LinearOperator``.
+Preconditioners can either be a dense matrix, a sparse matrix or a ``LinearOperator``.
 """
+
+
+@runtime_checkable
+class CanBeUpdated(Protocol):
+    """
+    Protocol for objects that can be updated.
+    """
+
+    def update(self, model: Model) -> None:
+        raise NotImplementedError
+
+
+@runtime_checkable
+class SimulationProtocol(Protocol):
+    """Protocol for simulation objects."""
+
+    @property
+    def n_data(self) -> int:
+        raise NotImplementedError
+
+    @property
+    def n_params(self) -> int:
+        raise NotImplementedError
+
+    def __call__(self, model) -> npt.NDArray[np.float64]:
+        raise NotImplementedError
+
+    def jacobian(self, model) -> npt.NDArray[np.float64] | LinearOperator:
+        raise NotImplementedError
 
 
 class SparseRegularization(Protocol):

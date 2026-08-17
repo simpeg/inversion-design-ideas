@@ -11,6 +11,12 @@ from .data_misfit import DataMisfit
 from .typing import Model, SparseRegularization
 from .utils import get_logger, get_sensitivity_weights
 
+__all__ = [
+    "Irls",
+    "MultiplierCooler",
+    "UpdateSensitivityWeights",
+]
+
 
 class MultiplierCooler(Directive):
     r"""
@@ -287,8 +293,9 @@ class UpdateSensitivityWeights(Directive):
     .. note::
 
         This directive can only be applied to regularizations that:
+
         1. have a ``cell_weights`` attribute,
-        2. the ``cell_weights`` attribute is a dictionary,
+        2. the ``cell_weights`` attribute is a dictionary, and
         3. the ``cell_weights`` attribute contains weights under the key specified
            through the ``weights_key`` argument ("sensitivity" by default).
 
@@ -358,7 +365,7 @@ class UpdateSensitivityWeights(Directive):
         Select regularizations to update their sensitivity weights.
 
         Extract a selection of the regularizations passed as arguments to build the
-        ``self.regularizations`` attribute. Follow this criteria:
+        ``self.regularizations`` attribute. Follow this criterion:
 
         - Any objective function that is not a ``Combo`` or a ``Scaled`` will be added
           as is. We'll check if the regularization has sensitivity weights (see below).

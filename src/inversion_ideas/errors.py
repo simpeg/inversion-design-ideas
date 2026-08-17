@@ -2,6 +2,11 @@
 Custom errors and warnings.
 """
 
+__all__ = [
+    "ConvergenceWarning",
+    "NotInitializedError",
+]
+
 
 class ConvergenceWarning(Warning):
     """

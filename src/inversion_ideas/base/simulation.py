@@ -16,10 +16,6 @@ class Simulation(ABC):
     Abstract representation of a simulation.
     """
 
-    @abstractmethod
-    def __init__(self):
-        pass
-
     @property
     @abstractmethod
     def n_params(self) -> int:

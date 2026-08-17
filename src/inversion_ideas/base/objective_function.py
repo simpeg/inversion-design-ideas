@@ -27,10 +27,6 @@ class Objective(ABC):
     _base_str = "φ"
     _base_latex = r"\phi"
 
-    @abstractmethod
-    def __init__(self):
-        pass  # pragma: no cover
-
     @property
     @abstractmethod
     def n_params(self) -> int:
@@ -42,12 +38,32 @@ class Objective(ABC):
     def __call__(self, model: Model) -> float:
         """
         Evaluate the objective function for a given model.
+
+        Parameters
+        ----------
+        model : (n_params) array
+            Array with model values.
+
+        Returns
+        -------
+        float
+            Value of the objective function for the given model.
         """
 
     @abstractmethod
     def gradient(self, model: Model) -> npt.NDArray[np.float64]:
         """
         Evaluate the gradient of the objective function for a given model.
+
+        Parameters
+        ----------
+        model : (n_params) array
+            Array with model values.
+
+        Returns
+        -------
+        (n_params,) array
+            Gradient vector for the given model.
         """
 
     @abstractmethod
@@ -56,6 +72,18 @@ class Objective(ABC):
     ) -> npt.NDArray[np.float64] | SparseArray | LinearOperator:
         """
         Evaluate the hessian of the objective function for a given model.
+
+        Parameters
+        ----------
+        model : (n_params) array
+            Array with model values.
+
+        Returns
+        -------
+        (n_params, n_params) array or :class:`~scipy.sparse.linalg.LinearOperator`
+            2D array or :class:`~scipy.sparse.linalg.LinearOperator` that represents
+            the Hessian matrix of the objective funciton, or an approximated version
+            of it.
         """
 
     def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
@@ -81,29 +109,6 @@ class Objective(ABC):
             )
             raise TypeError(msg)
         return hessian.diagonal()
-
-    def hessian_approx(self, model: Model) -> npt.NDArray[np.float64] | SparseArray:
-        """
-        Approximated version of the Hessian.
-
-        Parameters
-        ----------
-        model : (n_params) array
-            Array with model values.
-
-        Returns
-        -------
-        (n_params, n_params) array or sparse array
-            2D array that approximates the Hessian of the objective function.
-        """
-        hessian = self.hessian(model)
-        if isinstance(hessian, LinearOperator):
-            msg = (
-                f"Cannot build a 'hessian_approx' for objective function '{self}', "
-                "since its Hessian is a LinearOperator."
-            )
-            raise TypeError(msg)
-        return hessian
 
     @property
     def name(self) -> str | None:
@@ -168,6 +173,12 @@ class Objective(ABC):
                 )
                 raise ValueError(msg)
             return self
+        if not isinstance(other, Objective):
+            msg = (
+                f"Cannot add objective function '{self}' with '{other}' of type "
+                f"'{type(other).__name__}'."
+            )
+            raise TypeError(msg)
         return Combo([self, other])
 
     def __radd__(self, other) -> "Combo | Self":
@@ -181,6 +192,12 @@ class Objective(ABC):
                 )
                 raise ValueError(msg)
             return self
+        if not isinstance(other, Objective):
+            msg = (
+                f"Cannot add objective function '{self}' with '{other}' of type "
+                f"'{type(other).__name__}'."
+            )
+            raise TypeError(msg)
         return Combo([other, self])
 
     def __mul__(self, value: Real) -> "Scaled":
@@ -226,17 +243,11 @@ class Scaled(Objective):
         return self.function.n_params
 
     def __call__(self, model: Model):
-        """
-        Evaluate the objective function.
-        """
         if self.multiplier == 0.0:
             return self.multiplier
         return self.multiplier * self.function(model)
 
     def gradient(self, model: Model) -> npt.NDArray[np.float64]:
-        """
-        Evaluate the gradient of the objective function for a given model.
-        """
         if self.multiplier == 0.0:
             return np.zeros(self.n_params, dtype=np.float64)
         return self.multiplier * self.function.gradient(model)
@@ -244,20 +255,11 @@ class Scaled(Objective):
     def hessian(
         self, model: Model
     ) -> npt.NDArray[np.float64] | SparseArray | LinearOperator:
-        """
-        Evaluate the hessian of the objective function for a given model.
-        """
         if self.multiplier == 0.0:
             # TODO: replace this with a Zero operator?
             shape = (self.n_params, self.n_params)
             return csr_array(shape, dtype=np.float64)
         return self.multiplier * self.function.hessian(model)
-
-    def hessian_approx(self, model: Model) -> npt.NDArray[np.float64] | SparseArray:
-        if self.multiplier == 0.0:
-            shape = (self.n_params, self.n_params)
-            return csr_array(shape, dtype=np.float64)
-        return self.multiplier * self.function.hessian_approx(model)
 
     def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
         if self.multiplier == 0.0:
@@ -369,27 +371,15 @@ class Combo(Objective):
         return _get_n_params(self.functions)
 
     def __call__(self, model: Model):
-        """
-        Evaluate the objective function.
-        """
         return sum(f(model) for f in self.functions)
 
     def gradient(self, model: Model) -> npt.NDArray[np.float64]:
-        """
-        Evaluate the gradient of the objective function for a given model.
-        """
         return sum(f.gradient(model) for f in self.functions)  # type: ignore[return-value]
 
     def hessian(
         self, model: Model
     ) -> npt.NDArray[np.float64] | SparseArray | LinearOperator:
-        """
-        Evaluate the hessian of the objective function for a given model.
-        """
         return _sum_operators(f.hessian(model) for f in self.functions)
-
-    def hessian_approx(self, model: Model) -> npt.NDArray[np.float64] | SparseArray:
-        return _sum_operators(f.hessian_approx(model) for f in self.functions)
 
     def hessian_diagonal(self, model: Model) -> npt.NDArray[np.float64]:
         return sum(
@@ -401,7 +391,8 @@ class Combo(Objective):
         """
         Create a new flattened combo.
 
-        Create a new ``Combo`` object by unpacking nested ``Combo``s in the current one.
+        Create a new ``Combo`` object by unpacking nested ``Combo`` in the
+        current one.
         """
         return Combo(_unpack_combo(self.functions))
 

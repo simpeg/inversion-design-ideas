@@ -194,14 +194,6 @@ class Smallness(_MeshBasedRegularization):
         )
 
     def gradient(self, model: Model):
-        """
-        Gradient vector.
-
-        Parameters
-        ----------
-        model : (n_params) array
-            Array with model values.
-        """
         model_diff = model - self.reference_model
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
@@ -215,14 +207,6 @@ class Smallness(_MeshBasedRegularization):
         )
 
     def hessian(self, model: Model):  # noqa: ARG002
-        """
-        Hessian matrix.
-
-        Parameters
-        ----------
-        model : (n_params) array
-            Array with model values.
-        """
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
         return (
@@ -386,14 +370,6 @@ class Flatness(_MeshBasedRegularization):
         )
 
     def gradient(self, model: Model):
-        """
-        Gradient vector.
-
-        Parameters
-        ----------
-        model : (n_params) array
-            Array with model values.
-        """
         model_diff = model - self.reference_model
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
@@ -410,14 +386,6 @@ class Flatness(_MeshBasedRegularization):
         )
 
     def hessian(self, model: Model):  # noqa: ARG002
-        """
-        Hessian matrix.
-
-        Parameters
-        ----------
-        model : (n_params) array
-            Array with model values.
-        """
         weights_matrix = self.weights_matrix
         cell_gradient = self._cell_gradient
         cell_volumes_sqrt = self._volumes_sqrt_matrix
@@ -630,9 +598,6 @@ class SparseSmallness(_MeshBasedRegularization):
         )
 
     def gradient(self, model: Model):
-        """
-        Gradient vector.
-        """
         model_diff = model - self.reference_model
         weights_matrix = self.weights_matrix
         cell_volumes_sqrt = self._volumes_sqrt_matrix
@@ -649,9 +614,6 @@ class SparseSmallness(_MeshBasedRegularization):
         )
 
     def hessian(self, model: Model):  # noqa: ARG002
-        """
-        Hessian matrix.
-        """
         weights_matrix = self.weights_matrix
         r_matrix = self.R
         cell_volumes_sqrt = self._volumes_sqrt_matrix

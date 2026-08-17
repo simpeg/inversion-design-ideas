@@ -485,10 +485,10 @@
 <dt class="sig sig-object py" id="inversion_ideas.InversionLogRich">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inversion_ideas.</span></span><span class="sig-name descname"><span class="pre">InversionLogRich</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">columns</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.InversionLogRich" title="Link to this definition">#</a></dt>
 <dd><p>Log the outputs of an inversion.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>columns</strong><span class="classifier">dict</span></dt><dd><p>Dictionary with specification for the columns of the log table.
+<dd class="field-odd"><dl>
+<dt><strong>columns</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>Dictionary with specification for the columns of the log table.
 The keys are the column titles as strings. The values are callables that will be
 used to generate the value for each row and column. Each callable should take
 two arguments: <code class="docutils literal notranslate"><span class="pre">iteration</span></code> (an integer with the number of the iteration) and
@@ -580,20 +580,20 @@ two arguments: <code class="docutils literal notranslate"><span class="pre">iter
 <dt class="sig sig-object py" id="inversion_ideas.InversionLogRich.add_column">
 <span class="sig-prename descclassname"><span class="pre">InversionLogRich.</span></span><span class="sig-name descname"><span class="pre">add_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.InversionLogRich.add_column" title="Link to this definition">#</a></dt>
 <dd><p>Add column to the log.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>name</strong><span class="classifier">str</span></dt><dd><p>Name of the column, used in the <a class="reference internal" href="inversion_ideas.InversionLog.html#inversion_ideas.InversionLog.log" title="inversion_ideas.InversionLog.log"><code class="xref py py-attr docutils literal notranslate"><span class="pre">InversionLog.log</span></code></a> dictionary to
+<dd class="field-odd"><dl>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>Name of the column, used in the <a class="reference internal" href="inversion_ideas.InversionLog.html#inversion_ideas.InversionLog.log" title="inversion_ideas.InversionLog.log"><code class="xref py py-attr docutils literal notranslate"><span class="pre">InversionLog.log</span></code></a> dictionary to
 access the recorded values.</p>
 </dd>
-<dt><strong>column</strong><span class="classifier">Callable | Column</span></dt><dd><p>A callable that takes the <code class="docutils literal notranslate"><span class="pre">iteration</span></code> and the <code class="docutils literal notranslate"><span class="pre">model</span></code> as arguments, or
+<dt><strong>column</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Callable</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">Column</span></code></span></dt><dd><p>A callable that takes the <code class="docutils literal notranslate"><span class="pre">iteration</span></code> and the <code class="docutils literal notranslate"><span class="pre">model</span></code> as arguments, or
 a <code class="docutils literal notranslate"><span class="pre">Column</span></code>.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>self</dt><dd></dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">self</span></code></dt><dd></dd>
 </dl>
 </dd>
 </dl>
@@ -604,19 +604,19 @@ a <code class="docutils literal notranslate"><span class="pre">Column</span></co
 <dt class="sig sig-object py" id="inversion_ideas.InversionLogRich.create_from">
 <span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">InversionLogRich.</span></span><span class="sig-name descname"><span class="pre">create_from</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objective_function</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.InversionLogRich.create_from" title="Link to this definition">#</a></dt>
 <dd><p>Create the standard log for a classic inversion.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>objective_function</strong><span class="classifier">Combo</span></dt><dd><p>Combo objective function with two elements: the data misfit and the
+<dd class="field-odd"><dl>
+<dt><strong>objective_function</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Combo</span></code></span></dt><dd><p>Combo objective function with two elements: the data misfit and the
 regularization (including a trade-off parameter).</p>
 </dd>
-<dt><strong>kwargs</strong><span class="classifier">dict</span></dt><dd><p>Keyword arguments passed to the constructor of the class.</p>
+<dt><strong>kwargs</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>Keyword arguments passed to the constructor of the class.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>Self</dt><dd></dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">Self</span></code></dt><dd></dd>
 </dl>
 </dd>
 </dl>
@@ -661,10 +661,10 @@ the model norm, and <span class="math notranslate nohighlight">\(\beta\)</span> 
 <dt class="sig sig-object py" id="inversion_ideas.InversionLogRich.update_table">
 <span class="sig-prename descclassname"><span class="pre">InversionLogRich.</span></span><span class="sig-name descname"><span class="pre">update_table</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.InversionLogRich.update_table" title="Link to this definition">#</a></dt>
 <dd><p>Add row to the table given the latest inverted model.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>model</strong><span class="classifier">(n_params) array</span></dt><dd></dd>
+<dd class="field-odd"><dl>
+<dt><strong>model</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd></dd>
 </dl>
 </dd>
 </dl>

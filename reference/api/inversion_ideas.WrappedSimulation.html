@@ -493,25 +493,25 @@ new framework. The ultimate goal is to make SimPEG simulations compatible with
 this framework. After that, this class will become obsolete and we’ll be able
 to remove it.</p>
 </div>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>simulation</strong><span class="classifier">object</span></dt><dd><p>Instance of a SimPEG simulation.</p>
+<dd class="field-odd"><dl>
+<dt><strong>simulation</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a></span></dt><dd><p>Instance of a SimPEG simulation.</p>
 </dd>
-<dt><strong>store_jacobian</strong><span class="classifier">bool, optional</span></dt><dd><p>Whether to store the jacobian matrix as a dense or sparse matrix.
+<dt><strong>store_jacobian</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.14)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to store the jacobian matrix as a dense or sparse matrix.
 If False, the <a class="reference internal" href="#inversion_ideas.WrappedSimulation.jacobian" title="inversion_ideas.WrappedSimulation.jacobian"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jacobian()</span></code></a> method will
 return a <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code></a> that calls the <code class="docutils literal notranslate"><span class="pre">Jvec</span></code>
 and <code class="docutils literal notranslate"><span class="pre">Jtvec</span></code> methods of the SimPEG simulation.
 Default to False.</p>
 </dd>
-<dt><strong>cache_fields</strong><span class="classifier">bool, optional</span></dt><dd><p>Whether to cache fields within the simulation or not.
+<dt><strong>cache_fields</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.14)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to cache fields within the simulation or not.
 If True, the fields in PDE-based SimPEG simualtions will be cached within the
 <a class="reference internal" href="#inversion_ideas.WrappedSimulation" title="inversion_ideas.WrappedSimulation"><code class="xref py py-class docutils literal notranslate"><span class="pre">WrappedSimulation</span></code></a> object to avoid recomputing them
 when the object gets called, or an operation with the Jacobian matrix is
 performed.
 Default to True.</p>
 </dd>
-<dt><strong>cache</strong><span class="classifier">bool, optional</span></dt><dd><p>Whether to cache the last result of the
+<dt><strong>cache</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.14)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to cache the last result of the
 <a class="reference internal" href="#inversion_ideas.WrappedSimulation.__call__" title="inversion_ideas.WrappedSimulation.__call__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__call__()</span></code></a> and
 <a class="reference internal" href="#inversion_ideas.WrappedSimulation.jacobian" title="inversion_ideas.WrappedSimulation.jacobian"><code class="xref py py-meth docutils literal notranslate"><span class="pre">jacobian()</span></code></a> methods.
 Default to True.</p>
@@ -567,16 +567,16 @@ Default to True.</p>
 <dt class="sig sig-object py" id="inversion_ideas.WrappedSimulation.__call__">
 <span class="sig-prename descclassname"><span class="pre">WrappedSimulation.</span></span><span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.WrappedSimulation.__call__" title="Link to this definition">#</a></dt>
 <dd><p>Evaluate simulation for a given model.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Array with model parameters.</p>
+<dd class="field-odd"><dl>
+<dt><strong>model</strong><span class="classifier">(<a class="reference internal" href="#inversion_ideas.WrappedSimulation.n_params" title="inversion_ideas.WrappedSimulation.n_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Array with model parameters.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>(n_data) array</dt><dd><p>Array with predicted data for the given model.</p>
+<dt>(<a class="reference internal" href="#inversion_ideas.WrappedSimulation.n_data" title="inversion_ideas.WrappedSimulation.n_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_data</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></dt><dd><p>Array with predicted data for the given model.</p>
 </dd>
 </dl>
 </dd>
@@ -588,16 +588,16 @@ Default to True.</p>
 <dt class="sig sig-object py" id="inversion_ideas.WrappedSimulation.jacobian">
 <span class="sig-prename descclassname"><span class="pre">WrappedSimulation.</span></span><span class="sig-name descname"><span class="pre">jacobian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.WrappedSimulation.jacobian" title="Link to this definition">#</a></dt>
 <dd><p>Jacobian matrix for a given model.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Array with model parameters.</p>
+<dd class="field-odd"><dl>
+<dt><strong>model</strong><span class="classifier">(<a class="reference internal" href="#inversion_ideas.WrappedSimulation.n_params" title="inversion_ideas.WrappedSimulation.n_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Array with model parameters.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>(n_data, n_params) array or LinearOperator</dt><dd><p>2D dense or sparse array or a <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code></a>
+<dt>(<a class="reference internal" href="#inversion_ideas.WrappedSimulation.n_data" title="inversion_ideas.WrappedSimulation.n_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_data</span></code></a>, <a class="reference internal" href="#inversion_ideas.WrappedSimulation.n_params" title="inversion_ideas.WrappedSimulation.n_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LinearOperator</span></code></a></dt><dd><p>2D dense or sparse array or a <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code></a>
 that represents the Jacobian matrix: the matrix of first derivatives of the
 forward model with respect to each model parameter.
 If <code class="docutils literal notranslate"><span class="pre">store_jacobian</span></code> is True, a dense or sparse array will be returned.

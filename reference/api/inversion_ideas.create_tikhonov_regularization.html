@@ -486,30 +486,30 @@
 <dd><p>Create a linear combination of Tikhonov (L2) regularization terms.</p>
 <p>Define a <a class="reference internal" href="inversion_ideas.base.Combo.html#inversion_ideas.base.Combo" title="inversion_ideas.base.Combo"><code class="xref py py-class docutils literal notranslate"><span class="pre">inversion_ideas.base.Combo</span></code></a> with L2 smallness and flatness
 regularization terms.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>mesh</strong><span class="classifier">discretize.base.BaseMesh</span></dt><dd><p>Mesh to use in the regularization.</p>
+<dd class="field-odd"><dl>
+<dt><strong>mesh</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">discretize.base.BaseMesh</span></code></span></dt><dd><p>Mesh to use in the regularization.</p>
 </dd>
-<dt><strong>active_cells</strong><span class="classifier">(n_cells) array or None, optional</span></dt><dd><p>Array full of bools that indicate the active cells in the mesh. It must have the
+<dt><strong>active_cells</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_cells</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Array full of bools that indicate the active cells in the mesh. It must have the
 same amount of elements as cells in the mesh.</p>
 </dd>
-<dt><strong>cell_weights</strong><span class="classifier">(n_params) array or dict of (n_params) arrays or None, optional</span></dt><dd><p>Array with cell weights.
+<dt><strong>cell_weights</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> <code class="xref py py-obj docutils literal notranslate"><span class="pre">of</span></code> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <code class="xref py py-obj docutils literal notranslate"><span class="pre">arrays</span></code> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Array with cell weights.
 For multiple cell weights, pass a dictionary where keys are strings and values
 are the different weights arrays.
 If None, no cell weights are going to be used.</p>
 </dd>
-<dt><strong>reference_model</strong><span class="classifier">(n_params) array or None, optional</span></dt><dd><p>Array with values for the reference model.</p>
+<dt><strong>reference_model</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Array with values for the reference model.</p>
 </dd>
-<dt><strong>alpha_s</strong><span class="classifier">float or None, optional</span></dt><dd><p>Multiplier for the smallness term.</p>
+<dt><strong>alpha_s</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Multiplier for the smallness term.</p>
 </dd>
-<dt><strong>alpha_x, alpha_y, alpha_z</strong><span class="classifier">float or None, optional</span></dt><dd><p>Multipliers for the flatness terms.</p>
+<dt><strong>alpha_x, alpha_y, alpha_z</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Multipliers for the flatness terms.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>inversion_ideas.base.Combo</dt><dd><p>Combo of L2 regularization terms.</p>
+<dt><a class="reference internal" href="inversion_ideas.base.Combo.html#inversion_ideas.base.Combo" title="inversion_ideas.base.Combo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inversion_ideas.base.Combo</span></code></a></dt><dd><p>Combo of L2 regularization terms.</p>
 </dd>
 </dl>
 </dd>

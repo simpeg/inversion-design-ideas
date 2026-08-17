@@ -484,38 +484,38 @@
 <dt class="sig sig-object py" id="inversion_ideas.Inversion">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inversion_ideas.</span></span><span class="sig-name descname"><span class="pre">Inversion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objective_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimizer</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">directives</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopping_criterion</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_models</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_minimizers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimizer_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.Inversion" title="Link to this definition">#</a></dt>
 <dd><p>Inversion runner.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>objective_function</strong><span class="classifier">Objective</span></dt><dd><p>Objective function to minimize.</p>
+<dd class="field-odd"><dl>
+<dt><strong>objective_function</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Objective</span></code></span></dt><dd><p>Objective function to minimize.</p>
 </dd>
-<dt><strong>initial_model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Starting model for the inversion.</p>
+<dt><strong>initial_model</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Starting model for the inversion.</p>
 </dd>
-<dt><strong>minimizer</strong><span class="classifier">Minimizer or callable</span></dt><dd><p>Instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">Minimizer</span></code> or callable used to minimize the objective
+<dt><strong>minimizer</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Minimizer</span></code> or <a class="reference external" href="https://docs.python.org/3/library/functions.html#callable" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">callable()</span></code></a></span></dt><dd><p>Instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">Minimizer</span></code> or callable used to minimize the objective
 function during the inversion. It must take the objective function and a model
 as arguments.</p>
 </dd>
-<dt><strong>directives</strong><span class="classifier">list of Directive</span></dt><dd><p>List of <code class="docutils literal notranslate"><span class="pre">Directive</span></code> used to modify the objective function after each
+<dt><strong>directives</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> <code class="xref py py-obj docutils literal notranslate"><span class="pre">of</span></code> <code class="xref py py-obj docutils literal notranslate"><span class="pre">Directive</span></code></span></dt><dd><p>List of <code class="docutils literal notranslate"><span class="pre">Directive</span></code> used to modify the objective function after each
 iteration.</p>
 </dd>
-<dt><strong>stopping_criterion</strong><span class="classifier">Condition or callable</span></dt><dd><p>Boolean function that takes the model as argument. If this function returns
+<dt><strong>stopping_criterion</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Condition</span></code> or <a class="reference external" href="https://docs.python.org/3/library/functions.html#callable" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">callable()</span></code></a></span></dt><dd><p>Boolean function that takes the model as argument. If this function returns
 <code class="docutils literal notranslate"><span class="pre">True</span></code>, then the inversion will stop.</p>
 </dd>
-<dt><strong>max_iterations</strong><span class="classifier">int, optional</span></dt><dd><p>Max amount of iterations that will be performed. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, then there will be
+<dt><strong>max_iterations</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Max amount of iterations that will be performed. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, then there will be
 no limit on the total amount of iterations.</p>
 </dd>
-<dt><strong>cache_models</strong><span class="classifier">bool, optional</span></dt><dd><p>Whether to cache each model after each iteration.</p>
+<dt><strong>cache_models</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.14)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to cache each model after each iteration.</p>
 </dd>
-<dt><strong>log</strong><span class="classifier">Log or bool, optional</span></dt><dd><p>Instance of <a class="reference internal" href="inversion_ideas.InversionLog.html#inversion_ideas.InversionLog" title="inversion_ideas.InversionLog"><code class="xref py py-class docutils literal notranslate"><span class="pre">InversionLog</span></code></a> to store information about the inversion,
+<dt><strong>log</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Log</span></code> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.14)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Instance of <a class="reference internal" href="inversion_ideas.InversionLog.html#inversion_ideas.InversionLog" title="inversion_ideas.InversionLog"><code class="xref py py-class docutils literal notranslate"><span class="pre">InversionLog</span></code></a> to store information about the inversion,
 or any object that follows the <code class="xref py py-class docutils literal notranslate"><span class="pre">inversion_ideas.typing.Log</span></code> protocol.
 If <code class="docutils literal notranslate"><span class="pre">True</span></code>, a default <a class="reference internal" href="inversion_ideas.InversionLog.html#inversion_ideas.InversionLog" title="inversion_ideas.InversionLog"><code class="xref py py-class docutils literal notranslate"><span class="pre">InversionLog</span></code></a> is going to be used.
 If <code class="docutils literal notranslate"><span class="pre">False</span></code>, no log will be assigned to the inversion, and
 <code class="xref py py-attr docutils literal notranslate"><span class="pre">Inversion.log</span></code> will be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 </dd>
-<dt><strong>log_minimizers</strong><span class="classifier">bool, optional</span></dt><dd><p>Whether to log the minimizers or not. Logging minimizers is only possible when
+<dt><strong>log_minimizers</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.14)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to log the minimizers or not. Logging minimizers is only possible when
 the <code class="docutils literal notranslate"><span class="pre">minimizer</span></code> is an instance of <a class="reference internal" href="inversion_ideas.base.Minimizer.html#inversion_ideas.base.Minimizer" title="inversion_ideas.base.Minimizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">inversion_ideas.base.Minimizer</span></code></a>.</p>
 </dd>
-<dt><strong>minimizer_kwargs</strong><span class="classifier">dict, optional</span></dt><dd><p>Extra arguments that will be passed to the <code class="docutils literal notranslate"><span class="pre">minimizer</span></code> when called.</p>
+<dt><strong>minimizer_kwargs</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Extra arguments that will be passed to the <code class="docutils literal notranslate"><span class="pre">minimizer</span></code> when called.</p>
 </dd>
 </dl>
 </dd>
@@ -598,10 +598,10 @@ Code <code class="docutils literal notranslate"><span class="pre">None</span></c
 <dt class="sig sig-object py" id="inversion_ideas.Inversion.run">
 <span class="sig-prename descclassname"><span class="pre">Inversion.</span></span><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">show_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.Inversion.run" title="Link to this definition">#</a></dt>
 <dd><p>Run the inversion.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>show_log</strong><span class="classifier">bool, optional</span></dt><dd><p>Whether to show the <code class="docutils literal notranslate"><span class="pre">log</span></code> (if it’s defined) during the inversion.</p>
+<dd class="field-odd"><dl>
+<dt><strong>show_log</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.14)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to show the <code class="docutils literal notranslate"><span class="pre">log</span></code> (if it’s defined) during the inversion.</p>
 </dd>
 </dl>
 </dd>

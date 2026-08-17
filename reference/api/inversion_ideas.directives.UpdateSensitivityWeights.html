@@ -494,19 +494,19 @@
 through the <code class="docutils literal notranslate"><span class="pre">weights_key</span></code> argument (“sensitivity” by default).</p></li>
 </ol>
 </div>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>*args</strong><span class="classifier">Objective</span></dt><dd><p>Regularizations to which the sensitivity weights will be updated.
+<dd class="field-odd"><dl>
+<dt><strong>*args</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Objective</span></code></span></dt><dd><p>Regularizations to which the sensitivity weights will be updated.
 If a <a class="reference internal" href="inversion_ideas.base.Combo.html#inversion_ideas.base.Combo" title="inversion_ideas.base.Combo"><code class="xref py py-class docutils literal notranslate"><span class="pre">inversion_ideas.base.Combo</span></code></a> or
 a <a class="reference internal" href="inversion_ideas.base.Scaled.html#inversion_ideas.base.Scaled" title="inversion_ideas.base.Scaled"><code class="xref py py-class docutils literal notranslate"><span class="pre">inversion_ideas.base.Scaled</span></code></a> are passed, they will be explored
 recursively to use regularizations that have sensitivity weights that can be
 updated.</p>
 </dd>
-<dt><strong>simulation</strong><span class="classifier">Simulation</span></dt><dd><p>Simulation used to get the jacobian matrix that will be used while updating the
+<dt><strong>simulation</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Simulation</span></code></span></dt><dd><p>Simulation used to get the jacobian matrix that will be used while updating the
 sensitivity weights.</p>
 </dd>
-<dt><strong>weights_key</strong><span class="classifier">str, optional</span></dt><dd><p>Key used to store the sensitivity weights on the regularization’s
+<dt><strong>weights_key</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>Key used to store the sensitivity weights on the regularization’s
 <code class="docutils literal notranslate"><span class="pre">cell_weights</span></code> dictionary. Only the weights under this key will be updated.</p>
 </dd>
 <dt><strong>**kwargs</strong></dt><dd><p>Extra arguments passed to the

@@ -487,36 +487,36 @@
 <dd><p>Create inversion of the form <span class="math notranslate nohighlight">\(\phi_d + \beta \phi_m\)</span>.</p>
 <p>Build an inversion with a beta cooling schedule and a stopping criterion for a chi
 factor target.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>data_misfit</strong><span class="classifier">Objective</span></dt><dd><p>Data misfit term <span class="math notranslate nohighlight">\(\phi_d\)</span>.</p>
+<dd class="field-odd"><dl>
+<dt><strong>data_misfit</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Objective</span></code></span></dt><dd><p>Data misfit term <span class="math notranslate nohighlight">\(\phi_d\)</span>.</p>
 </dd>
-<dt><strong>model_norm</strong><span class="classifier">Objective</span></dt><dd><p>Model norm <span class="math notranslate nohighlight">\(\phi_m\)</span>.</p>
+<dt><strong>model_norm</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Objective</span></code></span></dt><dd><p>Model norm <span class="math notranslate nohighlight">\(\phi_m\)</span>.</p>
 </dd>
-<dt><strong>starting_beta</strong><span class="classifier">float</span></dt><dd><p>Starting value for the trade-off parameter <span class="math notranslate nohighlight">\(\beta\)</span>.</p>
+<dt><strong>starting_beta</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a></span></dt><dd><p>Starting value for the trade-off parameter <span class="math notranslate nohighlight">\(\beta\)</span>.</p>
 </dd>
-<dt><strong>initial_model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Initial model to use in the inversion.</p>
+<dt><strong>initial_model</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Initial model to use in the inversion.</p>
 </dd>
-<dt><strong>minimizer</strong><span class="classifier">Minimizer</span></dt><dd><p>Instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">Minimizer</span></code> used to minimize the objective function during
+<dt><strong>minimizer</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Minimizer</span></code></span></dt><dd><p>Instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">Minimizer</span></code> used to minimize the objective function during
 the inversion.</p>
 </dd>
-<dt><strong>beta_cooling_factor</strong><span class="classifier">float, optional</span></dt><dd><p>Cooling factor for the trade-off parameter <span class="math notranslate nohighlight">\(\beta\)</span>. Every
+<dt><strong>beta_cooling_factor</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>Cooling factor for the trade-off parameter <span class="math notranslate nohighlight">\(\beta\)</span>. Every
 <code class="docutils literal notranslate"><span class="pre">beta_cooling_rate</span></code> iterations, the <span class="math notranslate nohighlight">\(\beta\)</span> will be <em>cooled down</em> by
 dividing it by the <code class="docutils literal notranslate"><span class="pre">beta_cooling_factor</span></code>.</p>
 </dd>
-<dt><strong>beta_cooling_rate</strong><span class="classifier">int, optional</span></dt><dd><p>Cooling rate for the trade-off parameter <span class="math notranslate nohighlight">\(\beta\)</span>. The trade-off parameter
+<dt><strong>beta_cooling_rate</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Cooling rate for the trade-off parameter <span class="math notranslate nohighlight">\(\beta\)</span>. The trade-off parameter
 will be cooled down every <code class="docutils literal notranslate"><span class="pre">beta_cooling_rate</span></code> iterations.</p>
 </dd>
-<dt><strong>chi_target</strong><span class="classifier">float, optional</span></dt><dd><p>Target for the chi factor. The inversion will finish after the data misfit
+<dt><strong>chi_target</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>Target for the chi factor. The inversion will finish after the data misfit
 reaches a <span class="math notranslate nohighlight">\(\chi\)</span> factor lower or equal to <code class="docutils literal notranslate"><span class="pre">chi_target</span></code>.</p>
 </dd>
-<dt><strong>max_iterations</strong><span class="classifier">int, optional</span></dt><dd><p>Max amount of iterations that will be performed. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, then there will be
+<dt><strong>max_iterations</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Max amount of iterations that will be performed. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, then there will be
 no limit on the total amount of iterations.</p>
 </dd>
-<dt><strong>cache_models</strong><span class="classifier">bool, optional</span></dt><dd><p>Whether to cache models after each iteration in the inversion.</p>
+<dt><strong>cache_models</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.14)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to cache models after each iteration in the inversion.</p>
 </dd>
-<dt><strong>preconditioner</strong><span class="classifier">{“jacobi”} or 2d array or sparse array or LinearOperator or None, optional</span></dt><dd><p>Preconditioner that will be passed to the <code class="docutils literal notranslate"><span class="pre">minimizer</span></code> on every call during the
+<dt><strong>preconditioner</strong><span class="classifier">{“jacobi”} <code class="xref py py-obj docutils literal notranslate"><span class="pre">or</span></code> 2d <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">sparse</span></code> <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LinearOperator</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Preconditioner that will be passed to the <code class="docutils literal notranslate"><span class="pre">minimizer</span></code> on every call during the
 inversion.
 If <code class="docutils literal notranslate"><span class="pre">&quot;bfgs&quot;</span></code>, a default BFGS preconditioner will be used, where the initial
 estimate for it will be set as the Jacobi preconditioner of the <code class="docutils literal notranslate"><span class="pre">model_norm</span></code>
@@ -529,7 +529,7 @@ If None, no preconditioner will be passed.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>Inversion</dt><dd></dd>
+<dt><a class="reference internal" href="inversion_ideas.Inversion.html#inversion_ideas.Inversion" title="inversion_ideas.Inversion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Inversion</span></code></a></dt><dd></dd>
 </dl>
 </dd>
 </dl>

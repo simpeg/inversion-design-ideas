@@ -489,26 +489,26 @@
 <p class="admonition-title">Important</p>
 <p>This minimizer should be used only for linear objective functions.</p>
 </div>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>objective</strong><span class="classifier">Objective</span></dt><dd><p>Objective function to be minimized.</p>
+<dd class="field-odd"><dl>
+<dt><strong>objective</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Objective</span></code></span></dt><dd><p>Objective function to be minimized.</p>
 </dd>
-<dt><strong>initial_model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Initial model used to start the minimization.</p>
+<dt><strong>initial_model</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Initial model used to start the minimization.</p>
 </dd>
-<dt><strong>preconditioner</strong><span class="classifier">(n_params, n_params) array, sparse array or LinearOperator, optional</span></dt><dd><p>Matrix used as preconditioner in the conjugate gradient algorithm.
+<dt><strong>preconditioner</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">sparse</span></code> <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LinearOperator</span></code></a>, optional</span></dt><dd><p>Matrix used as preconditioner in the conjugate gradient algorithm.
 If None, no preconditioner will be used.
 If the preconditioner implements an <code class="docutils literal notranslate"><span class="pre">initialize</span></code> method, the preconditioner
 will be initialized before being used in the conjugate gradient algorithm.</p>
 </dd>
-<dt><strong>kwargs</strong><span class="classifier">dict</span></dt><dd><p>Extra arguments that will be passed to the <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.cg.html#scipy.sparse.linalg.cg" title="(in SciPy v1.18.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.sparse.linalg.cg()</span></code></a>
+<dt><strong>kwargs</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>Extra arguments that will be passed to the <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.cg.html#scipy.sparse.linalg.cg" title="(in SciPy v1.18.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.sparse.linalg.cg()</span></code></a>
 function.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>inverted_model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Inverted model obtained after minimization.</p>
+<dd class="field-even"><dl>
+<dt><strong>inverted_model</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Inverted model obtained after minimization.</p>
 </dd>
 </dl>
 </dd>

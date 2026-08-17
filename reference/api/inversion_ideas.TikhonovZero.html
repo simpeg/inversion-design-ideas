@@ -485,17 +485,17 @@
 <dt class="sig sig-object py" id="inversion_ideas.TikhonovZero">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inversion_ideas.</span></span><span class="sig-name descname"><span class="pre">TikhonovZero</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.TikhonovZero" title="Link to this definition">#</a></dt>
 <dd><p>Tikhonov zero-th order regularization.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>n_params</strong><span class="classifier">int</span></dt><dd><p>Number of elements in the <code class="docutils literal notranslate"><span class="pre">model</span></code> array.</p>
+<dd class="field-odd"><dl>
+<dt><strong>n_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a></span></dt><dd><p>Number of elements in the <code class="docutils literal notranslate"><span class="pre">model</span></code> array.</p>
 </dd>
-<dt><strong>weights</strong><span class="classifier">(n_params) array or dict of (n_params) arrays or None, optional</span></dt><dd><p>Array with regularization weights.
+<dt><strong>weights</strong><span class="classifier">(<a class="reference internal" href="#inversion_ideas.TikhonovZero.n_params" title="inversion_ideas.TikhonovZero.n_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> <code class="xref py py-obj docutils literal notranslate"><span class="pre">of</span></code> (<a class="reference internal" href="#inversion_ideas.TikhonovZero.n_params" title="inversion_ideas.TikhonovZero.n_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code></a>) <code class="xref py py-obj docutils literal notranslate"><span class="pre">arrays</span></code> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Array with regularization weights.
 For multiple weights, pass a dictionary where keys are strings and values are
 the different weights arrays.
 If None, no weights are going to be used.</p>
 </dd>
-<dt><strong>reference_model</strong><span class="classifier">(n_params) array or None, optional</span></dt><dd><p>Array with values for the reference model.</p>
+<dt><strong>reference_model</strong><span class="classifier">(<a class="reference internal" href="#inversion_ideas.TikhonovZero.n_params" title="inversion_ideas.TikhonovZero.n_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Array with values for the reference model.</p>
 </dd>
 </dl>
 </dd>
@@ -589,16 +589,16 @@ vectors, respectively.</p>
 <dt class="sig sig-object py" id="inversion_ideas.TikhonovZero.__call__">
 <span class="sig-prename descclassname"><span class="pre">TikhonovZero.</span></span><span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.TikhonovZero.__call__" title="Link to this definition">#</a></dt>
 <dd><p>Evaluate the objective function for a given model.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Array with model values.</p>
+<dd class="field-odd"><dl>
+<dt><strong>model</strong><span class="classifier">(<a class="reference internal" href="#inversion_ideas.TikhonovZero.n_params" title="inversion_ideas.TikhonovZero.n_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Array with model values.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>float</dt><dd><p>Value of the objective function for the given model.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a></dt><dd><p>Value of the objective function for the given model.</p>
 </dd>
 </dl>
 </dd>
@@ -610,16 +610,16 @@ vectors, respectively.</p>
 <dt class="sig sig-object py" id="inversion_ideas.TikhonovZero.gradient">
 <span class="sig-prename descclassname"><span class="pre">TikhonovZero.</span></span><span class="sig-name descname"><span class="pre">gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.TikhonovZero.gradient" title="Link to this definition">#</a></dt>
 <dd><p>Evaluate the gradient of the objective function for a given model.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Array with model values.</p>
+<dd class="field-odd"><dl>
+<dt><strong>model</strong><span class="classifier">(<a class="reference internal" href="#inversion_ideas.TikhonovZero.n_params" title="inversion_ideas.TikhonovZero.n_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Array with model values.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>(n_params,) array</dt><dd><p>Gradient vector for the given model.</p>
+<dt>(n_params,) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></dt><dd><p>Gradient vector for the given model.</p>
 </dd>
 </dl>
 </dd>
@@ -631,16 +631,16 @@ vectors, respectively.</p>
 <dt class="sig sig-object py" id="inversion_ideas.TikhonovZero.hessian">
 <span class="sig-prename descclassname"><span class="pre">TikhonovZero.</span></span><span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.TikhonovZero.hessian" title="Link to this definition">#</a></dt>
 <dd><p>Evaluate the hessian of the objective function for a given model.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Array with model values.</p>
+<dd class="field-odd"><dl>
+<dt><strong>model</strong><span class="classifier">(<a class="reference internal" href="#inversion_ideas.TikhonovZero.n_params" title="inversion_ideas.TikhonovZero.n_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Array with model values.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>(n_params, n_params) array or <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code></a></dt><dd><p>2D array or <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code></a> that represents
+<dt>(<a class="reference internal" href="#inversion_ideas.TikhonovZero.n_params" title="inversion_ideas.TikhonovZero.n_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code></a>, <a class="reference internal" href="#inversion_ideas.TikhonovZero.n_params" title="inversion_ideas.TikhonovZero.n_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code></a></dt><dd><p>2D array or <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code></a> that represents
 the Hessian matrix of the objective funciton, or an approximated version
 of it.</p>
 </dd>
@@ -654,16 +654,16 @@ of it.</p>
 <dt class="sig sig-object py" id="inversion_ideas.TikhonovZero.hessian_diagonal">
 <span class="sig-prename descclassname"><span class="pre">TikhonovZero.</span></span><span class="sig-name descname"><span class="pre">hessian_diagonal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.TikhonovZero.hessian_diagonal" title="Link to this definition">#</a></dt>
 <dd><p>Get the main diagonal of the Hessian.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Array with model values.</p>
+<dd class="field-odd"><dl>
+<dt><strong>model</strong><span class="classifier">(<a class="reference internal" href="#inversion_ideas.TikhonovZero.n_params" title="inversion_ideas.TikhonovZero.n_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Array with model values.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>(n_params,) array</dt><dd><p>Array containing the diagonal of the Hessian.</p>
+<dt>(n_params,) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></dt><dd><p>Array containing the diagonal of the Hessian.</p>
 </dd>
 </dl>
 </dd>

@@ -485,33 +485,33 @@
 <dt class="sig sig-object py" id="inversion_ideas.SparseSmallness">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inversion_ideas.</span></span><span class="sig-name descname"><span class="pre">SparseSmallness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active_cells</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cooling_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_previous</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">irls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.SparseSmallness" title="Link to this definition">#</a></dt>
 <dd><p>Smallness regularization using lp norm.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>mesh</strong><span class="classifier">discretize.base.BaseMesh</span></dt><dd><p>Mesh to use in the regularization.</p>
+<dd class="field-odd"><dl>
+<dt><strong>mesh</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">discretize.base.BaseMesh</span></code></span></dt><dd><p>Mesh to use in the regularization.</p>
 </dd>
-<dt><strong>norm</strong><span class="classifier">float</span></dt><dd><p>Norm used in the regularization (p).</p>
+<dt><strong>norm</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a></span></dt><dd><p>Norm used in the regularization (p).</p>
 </dd>
-<dt><strong>active_cells</strong><span class="classifier">(n_cells) array or None, optional</span></dt><dd><p>Array full of bools that indicate the active cells in the mesh. It must have the
+<dt><strong>active_cells</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_cells</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Array full of bools that indicate the active cells in the mesh. It must have the
 same amount of elements as cells in the mesh.</p>
 </dd>
-<dt><strong>cell_weights</strong><span class="classifier">(n_active) array or dict of (n_active) arrays or None, optional</span></dt><dd><p>Array with cell weights.
+<dt><strong>cell_weights</strong><span class="classifier">(<a class="reference internal" href="#inversion_ideas.SparseSmallness.n_active" title="inversion_ideas.SparseSmallness.n_active"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_active</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> <code class="xref py py-obj docutils literal notranslate"><span class="pre">of</span></code> (<a class="reference internal" href="#inversion_ideas.SparseSmallness.n_active" title="inversion_ideas.SparseSmallness.n_active"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_active</span></code></a>) <code class="xref py py-obj docutils literal notranslate"><span class="pre">arrays</span></code> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Array with cell weights.
 For multiple cell weights, pass a dictionary where keys are strings and values
 are the different weights arrays.
 If None, no cell weights are going to be used.</p>
 </dd>
-<dt><strong>reference_model</strong><span class="classifier">(n_active) array or None, optional</span></dt><dd><p>Array with values for the reference model. It must have the same number of
+<dt><strong>reference_model</strong><span class="classifier">(<a class="reference internal" href="#inversion_ideas.SparseSmallness.n_active" title="inversion_ideas.SparseSmallness.n_active"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_active</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Array with values for the reference model. It must have the same number of
 elements as active cells in the mesh.</p>
 </dd>
-<dt><strong>threshold</strong><span class="classifier">float, optional</span></dt><dd><p>IRLS threshold. Symbolized with <span class="math notranslate nohighlight">\(\epsilon\)</span> in
+<dt><strong>threshold</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>IRLS threshold. Symbolized with <span class="math notranslate nohighlight">\(\epsilon\)</span> in
 Fournier and Oldenburg (2019).</p>
 </dd>
-<dt><strong>cooling_factor</strong><span class="classifier">float, optional</span></dt><dd><p>Factor used to cool down the <code class="docutils literal notranslate"><span class="pre">threshold</span></code> when updating the IRLS.</p>
+<dt><strong>cooling_factor</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>Factor used to cool down the <code class="docutils literal notranslate"><span class="pre">threshold</span></code> when updating the IRLS.</p>
 </dd>
-<dt><strong>model_previous</strong><span class="classifier">(n_params) array or None, optional</span></dt><dd><p>Array with previous model in the iterations. This model is used to build the
+<dt><strong>model_previous</strong><span class="classifier">(<a class="reference internal" href="#inversion_ideas.SparseSmallness.n_params" title="inversion_ideas.SparseSmallness.n_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Array with previous model in the iterations. This model is used to build the
 <code class="docutils literal notranslate"><span class="pre">R</span></code> matrix. If None, an array full of zeros will be assigned.</p>
 </dd>
-<dt><strong>irls</strong><span class="classifier">bool, optional</span></dt><dd><p>Flag to activate or deactivate IRLS. If False, the class would work as an L2
+<dt><strong>irls</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.14)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Flag to activate or deactivate IRLS. If False, the class would work as an L2
 smallness term. If True, the R matrix will be built using the
 <code class="docutils literal notranslate"><span class="pre">model_previous</span></code>.</p>
 </dd>
@@ -628,16 +628,16 @@ smallness term. If True, the R matrix will be built using the
 <dt class="sig sig-object py" id="inversion_ideas.SparseSmallness.__call__">
 <span class="sig-prename descclassname"><span class="pre">SparseSmallness.</span></span><span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.SparseSmallness.__call__" title="Link to this definition">#</a></dt>
 <dd><p>Evaluate the objective function for a given model.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Array with model values.</p>
+<dd class="field-odd"><dl>
+<dt><strong>model</strong><span class="classifier">(<a class="reference internal" href="#inversion_ideas.SparseSmallness.n_params" title="inversion_ideas.SparseSmallness.n_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Array with model values.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>float</dt><dd><p>Value of the objective function for the given model.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a></dt><dd><p>Value of the objective function for the given model.</p>
 </dd>
 </dl>
 </dd>
@@ -649,10 +649,10 @@ smallness term. If True, the R matrix will be built using the
 <dt class="sig sig-object py" id="inversion_ideas.SparseSmallness.activate_irls">
 <span class="sig-prename descclassname"><span class="pre">SparseSmallness.</span></span><span class="sig-name descname"><span class="pre">activate_irls</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_previous</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.SparseSmallness.activate_irls" title="Link to this definition">#</a></dt>
 <dd><p>Activate IRLS.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>model_previous</strong><span class="classifier">(n_params) array</span></dt><dd><p>Inverted model obtained after the first stage (l2 inversion).</p>
+<dd class="field-odd"><dl>
+<dt><strong>model_previous</strong><span class="classifier">(<a class="reference internal" href="#inversion_ideas.SparseSmallness.n_params" title="inversion_ideas.SparseSmallness.n_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Inverted model obtained after the first stage (l2 inversion).</p>
 </dd>
 </dl>
 </dd>
@@ -672,16 +672,16 @@ before IRLS gets activated), and estimate the initial <code class="docutils lite
 <dt class="sig sig-object py" id="inversion_ideas.SparseSmallness.gradient">
 <span class="sig-prename descclassname"><span class="pre">SparseSmallness.</span></span><span class="sig-name descname"><span class="pre">gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.SparseSmallness.gradient" title="Link to this definition">#</a></dt>
 <dd><p>Evaluate the gradient of the objective function for a given model.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Array with model values.</p>
+<dd class="field-odd"><dl>
+<dt><strong>model</strong><span class="classifier">(<a class="reference internal" href="#inversion_ideas.SparseSmallness.n_params" title="inversion_ideas.SparseSmallness.n_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Array with model values.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>(n_params,) array</dt><dd><p>Gradient vector for the given model.</p>
+<dt>(n_params,) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></dt><dd><p>Gradient vector for the given model.</p>
 </dd>
 </dl>
 </dd>
@@ -693,16 +693,16 @@ before IRLS gets activated), and estimate the initial <code class="docutils lite
 <dt class="sig sig-object py" id="inversion_ideas.SparseSmallness.hessian">
 <span class="sig-prename descclassname"><span class="pre">SparseSmallness.</span></span><span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.SparseSmallness.hessian" title="Link to this definition">#</a></dt>
 <dd><p>Evaluate the hessian of the objective function for a given model.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Array with model values.</p>
+<dd class="field-odd"><dl>
+<dt><strong>model</strong><span class="classifier">(<a class="reference internal" href="#inversion_ideas.SparseSmallness.n_params" title="inversion_ideas.SparseSmallness.n_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Array with model values.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>(n_params, n_params) array or <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code></a></dt><dd><p>2D array or <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code></a> that represents
+<dt>(<a class="reference internal" href="#inversion_ideas.SparseSmallness.n_params" title="inversion_ideas.SparseSmallness.n_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code></a>, <a class="reference internal" href="#inversion_ideas.SparseSmallness.n_params" title="inversion_ideas.SparseSmallness.n_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code></a></dt><dd><p>2D array or <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code></a> that represents
 the Hessian matrix of the objective funciton, or an approximated version
 of it.</p>
 </dd>
@@ -716,16 +716,16 @@ of it.</p>
 <dt class="sig sig-object py" id="inversion_ideas.SparseSmallness.hessian_diagonal">
 <span class="sig-prename descclassname"><span class="pre">SparseSmallness.</span></span><span class="sig-name descname"><span class="pre">hessian_diagonal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.SparseSmallness.hessian_diagonal" title="Link to this definition">#</a></dt>
 <dd><p>Get the main diagonal of the Hessian.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Array with model values.</p>
+<dd class="field-odd"><dl>
+<dt><strong>model</strong><span class="classifier">(<a class="reference internal" href="#inversion_ideas.SparseSmallness.n_params" title="inversion_ideas.SparseSmallness.n_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Array with model values.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>(n_params,) array</dt><dd><p>Array containing the diagonal of the Hessian.</p>
+<dt>(n_params,) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></dt><dd><p>Array containing the diagonal of the Hessian.</p>
 </dd>
 </dl>
 </dd>

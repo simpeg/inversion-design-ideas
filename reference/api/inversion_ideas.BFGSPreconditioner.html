@@ -488,16 +488,16 @@
 <p>Use this class to define a dynamic BFGS preconditioner from an objective function.
 This class implements the <code class="docutils literal notranslate"><span class="pre">update</span></code> method that can be used by minimizers to
 dynamically update the preconditioner.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>objective_function</strong><span class="classifier">Objective</span></dt><dd><p>Objective function for which the Jacobi preconditioner will be built.</p>
+<dd class="field-odd"><dl>
+<dt><strong>objective_function</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Objective</span></code></span></dt><dd><p>Objective function for which the Jacobi preconditioner will be built.</p>
 </dd>
-<dt><strong>initial_matrix</strong><span class="classifier">array or sparray or LinearOperator or None, optional</span></dt><dd><p>Square matrix that will be used as the initial estimate of the inverse of the
+<dt><strong>initial_matrix</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">sparray</span></code> or <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LinearOperator</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Square matrix that will be used as the initial estimate of the inverse of the
 Hessian of the <code class="docutils literal notranslate"><span class="pre">objective_function</span></code>.
 If None, the identity matrix will be used.</p>
 </dd>
-<dt><strong>dtype</strong><span class="classifier">dtype, optional</span></dt><dd><p>Data type of the matrix.</p>
+<dt><strong>dtype</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dtype</span></code>, optional</span></dt><dd><p>Data type of the matrix.</p>
 </dd>
 </dl>
 </dd>
@@ -668,7 +668,7 @@ Hermitian adjoint is equal to the conjugate transpose.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>x</strong><span class="classifier">array_like or <cite>LinearOperator</cite> or scalar</span></dt><dd><p>Array-like input will be interpreted as a 1-D row vector or
+<dt><strong>x</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/glossary.html#term-array_like" title="(in NumPy v2.5)"><span>array_like</span></a> or <cite>LinearOperator</cite> or <a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#arrays-scalars" title="(in NumPy v2.5)"><span class="xref std std-ref">scalar</span></a></span></dt><dd><p>Array-like input will be interpreted as a 1-D row vector or
 2-D matrix (or batch of matrices)
 depending on its shape. See the Returns section for details.</p>
 </dd>
@@ -676,7 +676,7 @@ depending on its shape. See the Returns section for details.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl>
-<dt><strong>Ax</strong><span class="classifier">array or <cite>LinearOperator</cite></span></dt><dd><ul class="simple">
+<dt><strong>Ax</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <cite>LinearOperator</cite></span></dt><dd><ul class="simple">
 <li><p>For <cite>LinearOperator</cite> input, operator composition is performed.</p></li>
 <li><p>For scalar input, a lazily scaled operator is returned.</p></li>
 <li><p>Otherwise, the input is expected to take the form of a dense
@@ -724,17 +724,17 @@ when interacting with dense vectors and matrices.</p>
 linear operator (or batch of linear operators)
 and <cite>X</cite> is a dense <code class="docutils literal notranslate"><span class="pre">N</span></code> x <code class="docutils literal notranslate"><span class="pre">K</span></code> matrix
 (or batch of dense matrices).</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">{matrix, ndarray}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">N,</span> <span class="pre">K)</span></code> representing the dense matrix
+<dd class="field-odd"><dl>
+<dt><strong>X</strong><span class="classifier">{<a class="reference internal" href="#inversion_ideas.BFGSPreconditioner.matrix" title="inversion_ideas.BFGSPreconditioner.matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">matrix</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndarray</span></code></a>}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">N,</span> <span class="pre">K)</span></code> representing the dense matrix
 (or batch of dense matrices).</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>Y</strong><span class="classifier">{matrix, ndarray}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">M,</span> <span class="pre">K)</span></code>.</p>
+<dd class="field-even"><dl>
+<dt><strong>Y</strong><span class="classifier">{<a class="reference internal" href="#inversion_ideas.BFGSPreconditioner.matrix" title="inversion_ideas.BFGSPreconditioner.matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">matrix</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndarray</span></code></a>}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">M,</span> <span class="pre">K)</span></code>.</p>
 </dd>
 </dl>
 </dd>
@@ -755,7 +755,7 @@ and <cite>x</cite> is a row vector (or batch of such vectors).</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>x</strong><span class="classifier">{matrix, ndarray}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">N)</span></code> representing a row vector
+<dt><strong>x</strong><span class="classifier">{<a class="reference internal" href="#inversion_ideas.BFGSPreconditioner.matrix" title="inversion_ideas.BFGSPreconditioner.matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">matrix</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndarray</span></code></a>}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">N)</span></code> representing a row vector
 (or batch of row vectors).</p>
 <div class="versionadded">
 <p><span class="versionmodified added">Added in version 1.18.0: </span>A <code class="docutils literal notranslate"><span class="pre">FutureWarning</span></code> is emitted for column vector input of shape
@@ -766,8 +766,8 @@ and <cite>x</cite> is a row vector (or batch of such vectors).</p>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>y</strong><span class="classifier">{matrix, ndarray}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">M)</span></code>.</p>
+<dd class="field-even"><dl>
+<dt><strong>y</strong><span class="classifier">{<a class="reference internal" href="#inversion_ideas.BFGSPreconditioner.matrix" title="inversion_ideas.BFGSPreconditioner.matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">matrix</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndarray</span></code></a>}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">M)</span></code>.</p>
 </dd>
 </dl>
 </dd>
@@ -792,7 +792,7 @@ like <code class="docutils literal notranslate"><span class="pre">self.H.rdot(x)
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>x</strong><span class="classifier">array_like or <cite>LinearOperator</cite> or scalar</span></dt><dd><p>Array-like input will be interpreted as a 1-D row vector or
+<dt><strong>x</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/glossary.html#term-array_like" title="(in NumPy v2.5)"><span>array_like</span></a> or <cite>LinearOperator</cite> or <a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#arrays-scalars" title="(in NumPy v2.5)"><span class="xref std std-ref">scalar</span></a></span></dt><dd><p>Array-like input will be interpreted as a 1-D row vector or
 2-D matrix (or batch of matrices)
 depending on its shape. See the Returns section for details.</p>
 </dd>
@@ -800,7 +800,7 @@ depending on its shape. See the Returns section for details.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl>
-<dt><strong>xA</strong><span class="classifier">array or <cite>LinearOperator</cite></span></dt><dd><ul class="simple">
+<dt><strong>xA</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <cite>LinearOperator</cite></span></dt><dd><ul class="simple">
 <li><p>For <cite>LinearOperator</cite> input, operator composition is performed.</p></li>
 <li><p>For scalar input, a lazily scaled operator is returned.</p></li>
 <li><p>Otherwise, the input is expected to take the form of a dense
@@ -852,17 +852,17 @@ linear operator (or batch of linear operators)
 and <cite>X</cite> is a dense <code class="docutils literal notranslate"><span class="pre">M</span></code> x <code class="docutils literal notranslate"><span class="pre">K</span></code> matrix
 (or batch of dense matrices).
 The default implementation defers to the adjoint.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">{matrix, ndarray}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">M,</span> <span class="pre">K)</span></code> representing the dense matrix
+<dd class="field-odd"><dl>
+<dt><strong>X</strong><span class="classifier">{<a class="reference internal" href="#inversion_ideas.BFGSPreconditioner.matrix" title="inversion_ideas.BFGSPreconditioner.matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">matrix</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndarray</span></code></a>}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">M,</span> <span class="pre">K)</span></code> representing the dense matrix
 (or batch of dense matrices).</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>Y</strong><span class="classifier">{matrix, ndarray}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">N,</span> <span class="pre">K)</span></code>.</p>
+<dd class="field-even"><dl>
+<dt><strong>Y</strong><span class="classifier">{<a class="reference internal" href="#inversion_ideas.BFGSPreconditioner.matrix" title="inversion_ideas.BFGSPreconditioner.matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">matrix</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndarray</span></code></a>}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">N,</span> <span class="pre">K)</span></code>.</p>
 </dd>
 </dl>
 </dd>
@@ -883,7 +883,7 @@ and <cite>x</cite> is a row vector (or batch of such vectors).</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>x</strong><span class="classifier">{matrix, ndarray}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">M)</span></code> representing a row vector
+<dt><strong>x</strong><span class="classifier">{<a class="reference internal" href="#inversion_ideas.BFGSPreconditioner.matrix" title="inversion_ideas.BFGSPreconditioner.matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">matrix</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndarray</span></code></a>}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">M)</span></code> representing a row vector
 (or batch of row vectors),
 or an array with shape <code class="docutils literal notranslate"><span class="pre">(M,</span> <span class="pre">1)</span></code> representing a column vector.</p>
 <div class="versionadded">
@@ -895,8 +895,8 @@ or an array with shape <code class="docutils literal notranslate"><span class="p
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>y</strong><span class="classifier">{matrix, ndarray}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">N)</span></code>.</p>
+<dd class="field-even"><dl>
+<dt><strong>y</strong><span class="classifier">{<a class="reference internal" href="#inversion_ideas.BFGSPreconditioner.matrix" title="inversion_ideas.BFGSPreconditioner.matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">matrix</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndarray</span></code></a>}</span></dt><dd><p>An array with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">N)</span></code>.</p>
 </dd>
 </dl>
 </dd>
@@ -933,10 +933,10 @@ or an array with shape <code class="docutils literal notranslate"><span class="p
 <dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner.update">
 <span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.update" title="Link to this definition">#</a></dt>
 <dd><p>Update the BFGS preconditioner.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>model</strong><span class="classifier">(n_params,) array</span></dt><dd><p>Model array.</p>
+<dd class="field-odd"><dl>
+<dt><strong>model</strong><span class="classifier">(n_params,) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Model array.</p>
 </dd>
 </dl>
 </dd>

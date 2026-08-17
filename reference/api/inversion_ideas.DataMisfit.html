@@ -488,13 +488,13 @@
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>data</strong><span class="classifier">(n_data) array</span></dt><dd><p>Array with observed data values.</p>
+<dt><strong>data</strong><span class="classifier">(<a class="reference internal" href="#inversion_ideas.DataMisfit.n_data" title="inversion_ideas.DataMisfit.n_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_data</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Array with observed data values.</p>
 </dd>
-<dt><strong>uncertainty</strong><span class="classifier">(n_data) array</span></dt><dd><p>Array with data uncertainty.</p>
+<dt><strong>uncertainty</strong><span class="classifier">(<a class="reference internal" href="#inversion_ideas.DataMisfit.n_data" title="inversion_ideas.DataMisfit.n_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_data</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Array with data uncertainty.</p>
 </dd>
-<dt><strong>simulation</strong><span class="classifier">Simulation</span></dt><dd><p>Instance of Simulation.</p>
+<dt><strong>simulation</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Simulation</span></code></span></dt><dd><p>Instance of Simulation.</p>
 </dd>
-<dt><strong>build_hessian</strong><span class="classifier">bool, optional</span></dt><dd><p>If True, the <a class="reference internal" href="#inversion_ideas.DataMisfit.hessian" title="inversion_ideas.DataMisfit.hessian"><code class="xref py py-meth docutils literal notranslate"><span class="pre">hessian()</span></code></a> method will build the
+<dt><strong>build_hessian</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.14)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>If True, the <a class="reference internal" href="#inversion_ideas.DataMisfit.hessian" title="inversion_ideas.DataMisfit.hessian"><code class="xref py py-meth docutils literal notranslate"><span class="pre">hessian()</span></code></a> method will build the
 Hessian matrix and allocate it in memory.
 If False, the <a class="reference internal" href="#inversion_ideas.DataMisfit.hessian" title="inversion_ideas.DataMisfit.hessian"><code class="xref py py-meth docutils literal notranslate"><span class="pre">hessian()</span></code></a> method will return a
 <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code></a> that represents the Hessian matrix.
@@ -505,7 +505,7 @@ Default to False.</p>
 you need to build it.</p>
 </div>
 </dd>
-<dt><strong>estimate_hessian_diagonal</strong><span class="classifier">bool, optional</span></dt><dd><p>If True, the <a class="reference internal" href="#inversion_ideas.DataMisfit.hessian_diagonal" title="inversion_ideas.DataMisfit.hessian_diagonal"><code class="xref py py-meth docutils literal notranslate"><span class="pre">hessian_diagonal()</span></code></a> method will
+<dt><strong>estimate_hessian_diagonal</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.14)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>If True, the <a class="reference internal" href="#inversion_ideas.DataMisfit.hessian_diagonal" title="inversion_ideas.DataMisfit.hessian_diagonal"><code class="xref py py-meth docutils literal notranslate"><span class="pre">hessian_diagonal()</span></code></a> method will
 estimate the diagonal of the Hessian, even if the Jacobian of the
 <code class="docutils literal notranslate"><span class="pre">simulation</span></code> is a <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code></a>.
 If False, an error will be raised when calling the
@@ -666,16 +666,16 @@ d_N^\text{obs} \\
 <dt class="sig sig-object py" id="inversion_ideas.DataMisfit.__call__">
 <span class="sig-prename descclassname"><span class="pre">DataMisfit.</span></span><span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.DataMisfit.__call__" title="Link to this definition">#</a></dt>
 <dd><p>Evaluate the data misfit function.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Array with model values.</p>
+<dd class="field-odd"><dl>
+<dt><strong>model</strong><span class="classifier">(<a class="reference internal" href="#inversion_ideas.DataMisfit.n_params" title="inversion_ideas.DataMisfit.n_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Array with model values.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>float</dt><dd><p>Value of the data misfit for the given model.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a></dt><dd><p>Value of the data misfit for the given model.</p>
 </dd>
 </dl>
 </dd>
@@ -701,16 +701,16 @@ the <span class="math notranslate nohighlight">\(i\)</span>-th datum.</p>
 <dt class="sig sig-object py" id="inversion_ideas.DataMisfit.chi_factor">
 <span class="sig-prename descclassname"><span class="pre">DataMisfit.</span></span><span class="sig-name descname"><span class="pre">chi_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.DataMisfit.chi_factor" title="Link to this definition">#</a></dt>
 <dd><p>Compute the chi factor for the given model.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>model</strong><span class="classifier">(n_params,) array</span></dt><dd><p>Array with model values.</p>
+<dd class="field-odd"><dl>
+<dt><strong>model</strong><span class="classifier">(n_params,) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Array with model values.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>float</dt><dd><p>Chi factor for the given model.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a></dt><dd><p>Chi factor for the given model.</p>
 </dd>
 </dl>
 </dd>
@@ -740,16 +740,16 @@ function of the model vector <span class="math notranslate nohighlight">\(\mathb
 <dt class="sig sig-object py" id="inversion_ideas.DataMisfit.gradient">
 <span class="sig-prename descclassname"><span class="pre">DataMisfit.</span></span><span class="sig-name descname"><span class="pre">gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.DataMisfit.gradient" title="Link to this definition">#</a></dt>
 <dd><p>Gradient vector of the data misfit function.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Array with model values.</p>
+<dd class="field-odd"><dl>
+<dt><strong>model</strong><span class="classifier">(<a class="reference internal" href="#inversion_ideas.DataMisfit.n_params" title="inversion_ideas.DataMisfit.n_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Array with model values.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>(n_params,) array</dt><dd><p>Gradient vector of the data misfit for the given model.</p>
+<dt>(n_params,) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></dt><dd><p>Gradient vector of the data misfit for the given model.</p>
 </dd>
 </dl>
 </dd>
@@ -785,16 +785,16 @@ function of the model vector <span class="math notranslate nohighlight">\(\mathb
 <p>Hessian matrices are usually very large. Use <code class="docutils literal notranslate"><span class="pre">build_hessian=True</span></code> only if
 you need to build it.</p>
 </div>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Array with model values.</p>
+<dd class="field-odd"><dl>
+<dt><strong>model</strong><span class="classifier">(<a class="reference internal" href="#inversion_ideas.DataMisfit.n_params" title="inversion_ideas.DataMisfit.n_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Array with model values.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>(n_params, n_params) array or <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code></a></dt><dd><p>2D array or <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code></a> that represents
+<dt>(<a class="reference internal" href="#inversion_ideas.DataMisfit.n_params" title="inversion_ideas.DataMisfit.n_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code></a>, <a class="reference internal" href="#inversion_ideas.DataMisfit.n_params" title="inversion_ideas.DataMisfit.n_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code></a></dt><dd><p>2D array or <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code></a> that represents
 the Hessian matrix of the objective funciton, or an approximate version
 of it.</p>
 </dd>
@@ -823,16 +823,16 @@ will be estimated only if <code class="docutils literal notranslate"><span class
 Diagonal estimations can be expensive computational tasks for large
 problems. Make sure you to enable diagonal estimations only if you need it.</p>
 </div>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Array with model values.</p>
+<dd class="field-odd"><dl>
+<dt><strong>model</strong><span class="classifier">(<a class="reference internal" href="#inversion_ideas.DataMisfit.n_params" title="inversion_ideas.DataMisfit.n_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Array with model values.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>(n_params,) array</dt><dd><p>Array containing the diagonal of the Hessian.</p>
+<dt>(n_params,) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></dt><dd><p>Array containing the diagonal of the Hessian.</p>
 </dd>
 </dl>
 </dd>
@@ -851,16 +851,16 @@ problems. Make sure you to enable diagonal estimations only if you need it.</p>
 <dt class="sig sig-object py" id="inversion_ideas.DataMisfit.residual">
 <span class="sig-prename descclassname"><span class="pre">DataMisfit.</span></span><span class="sig-name descname"><span class="pre">residual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.DataMisfit.residual" title="Link to this definition">#</a></dt>
 <dd><p>Residual vector.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>model</strong><span class="classifier">(n_params) array</span></dt><dd><p>Array with model values.</p>
+<dd class="field-odd"><dl>
+<dt><strong>model</strong><span class="classifier">(<a class="reference internal" href="#inversion_ideas.DataMisfit.n_params" title="inversion_ideas.DataMisfit.n_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Array with model values.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>(n_data) array</dt><dd><p>Array with residual vector.</p>
+<dt>(<a class="reference internal" href="#inversion_ideas.DataMisfit.n_data" title="inversion_ideas.DataMisfit.n_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_data</span></code></a>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></dt><dd><p>Array with residual vector.</p>
 </dd>
 </dl>
 </dd>

@@ -31,3 +31,4 @@ Mesh-based:
     Smallness
     Flatness
     SparseSmallness
+    SparseFlatness

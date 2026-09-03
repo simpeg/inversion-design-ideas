@@ -1,6 +1,7 @@
 """
 Regularization classes for mesh-based inversion problems.
 """
+from abc import ABC, abstractmethod
 
 import discretize
 import numpy as np
@@ -35,6 +36,7 @@ class _MeshBasedRegularization(Objective):
 
     @property
     def n_active(self) -> int:
+        """Number of active cells in the mesh."""
         return int(np.sum(self.active_cells))
 
     @property
@@ -92,7 +94,7 @@ class Smallness(_MeshBasedRegularization):
     active_cells : (n_cells) array or None, optional
         Array full of bools that indicate the active cells in the mesh. It must have the
         same amount of elements as cells in the mesh.
-    cell_weights : (n_active) array or dict of (n_active) arrays or None, optional
+    cell_weights : (n_active) array or dict of (n_active) array or None, optional
         Array with cell weights.
         For multiple cell weights, pass a dictionary where keys are strings and values
         are the different weights arrays.
@@ -107,7 +109,7 @@ class Smallness(_MeshBasedRegularization):
 
     .. math::
 
-        \phi_s(\mathbf{m}) =
+        \phi_s(m) =
         \int_\Omega
         w(\mathbf{r})
         |m(\mathbf{r}) - m^\text{ref}(\mathbf{r})|^2
@@ -255,7 +257,7 @@ class Flatness(_MeshBasedRegularization):
     active_cells : (n_cells) array or None, optional
         Array full of bools that indicate the active cells in the mesh. It must have the
         same amount of elements as cells in the mesh.
-    cell_weights : (n_active) array or dict of (n_active) arrays or None, optional
+    cell_weights : (n_active) array or dict of (n_active) array or None, optional
         Array with cell weights.
         For multiple cell weights, pass a dictionary where keys are strings and values
         are the different weights arrays.
@@ -265,19 +267,19 @@ class Flatness(_MeshBasedRegularization):
 
     Notes
     -----
-    Implement a discretized version of the smoothness regularization defined as follows,
-    assuming that the ``direction`` of the derivative is along :math:`x`:
+    Implement a discretized version of the smoothness regularization in the :math:`j`
+    direction (:math:`j \in \{x, y, z\}`) defined as follows:
 
     .. math::
 
-        \phi_x(\mathbf{m}) =
+        \phi_j(\mathbf{m}) =
         \int_\Omega
         w(\mathbf{r})
-        \lvert
-        \frac{\partial m}{\partial x}
+        \left\lvert
+        \frac{\partial m}{\partial j}
         -
-        \frac{\partial m^\text{ref}}{\partial x}
-        \rvert^2
+        \frac{\partial m^\text{ref}}{\partial j}
+        \right\rvert^2
         \text{d}\mathbf{r},
 
     where :math:`w(\mathbf{r})` is the value of weights on the point :math:`\mathbf{r}`,
@@ -288,19 +290,19 @@ class Flatness(_MeshBasedRegularization):
 
     .. math::
 
-        \phi_s(\mathbf{m})
+        \phi_j(\mathbf{m})
         =
         \lVert
         \mathbf{W}^f
         \mathbf{V}^f
-        \mathbf{G}_x
+        \mathbf{G}_j
         (\mathbf{m} - \mathbf{m}^\text{ref})
         \rVert^2,
 
-    where :math:`\mathbf{W}^f` are the square root of cell weights averaged on faces,
-    :math:`\mathbf{V}^f`
-    are the square root of cell volumes averaged on faces,
-    :math:`\mathbf{G}_x` is the partial cell gradient operator along the :math:`x`
+    where
+    :math:`\mathbf{W}^f` are the square root of cell weights averaged on faces,
+    :math:`\mathbf{V}^f` are the square root of cell volumes averaged on faces,
+    :math:`\mathbf{G}_j` is the partial cell gradient operator along the :math:`j`
     direction,
     :math:`\mathbf{m} = [m_1, \dots, m_M]` and
     :math:`\mathbf{m}^\text{ref} = [m_1^\text{ref}, \dots, m_M^\text{ref}]`
@@ -308,7 +310,7 @@ class Flatness(_MeshBasedRegularization):
 
     .. important::
 
-        After applying the :math:`\mathbf{G}_x` to the model, the partial derivatives
+        After applying the :math:`\mathbf{G}_j` to the model, the partial derivatives
         are located on the center of the faces. For this reason we need to average the
         cell volumes and the cell weights to faces before using them in the
         regularization.
@@ -435,7 +437,8 @@ class Flatness(_MeshBasedRegularization):
             )
             # ---
             # Ensure that we are returning a sparse array and not a sparse matrix.
-            # This is a patch. We should fix this upstream.
+            # This is a patch.
+            # TODO: We should fix this upstream.
             if isspmatrix(cell_gradient):
                 if isinstance(cell_gradient, csc_matrix):
                     cell_gradient = csc_array(cell_gradient)
@@ -456,7 +459,6 @@ class Flatness(_MeshBasedRegularization):
             )
         return self._regmesh
 
-
 class SparseSmallness(_MeshBasedRegularization):
     r"""
     Smallness regularization using lp norm.
@@ -470,7 +472,7 @@ class SparseSmallness(_MeshBasedRegularization):
     active_cells : (n_cells) array or None, optional
         Array full of bools that indicate the active cells in the mesh. It must have the
         same amount of elements as cells in the mesh.
-    cell_weights : (n_active) array or dict of (n_active) arrays or None, optional
+    cell_weights : (n_active) array or dict of (n_active) array or None, optional
         Array with cell weights.
         For multiple cell weights, pass a dictionary where keys are strings and values
         are the different weights arrays.
@@ -501,9 +503,9 @@ class SparseSmallness(_MeshBasedRegularization):
         cell_weights: npt.NDArray | dict[str, npt.NDArray] | None = None,
         reference_model: Model | None = None,
         threshold: float = 1e-8,
-        cooling_factor=1.25,
+        cooling_factor: float=1.25,
         model_previous: Model | None = None,
-        irls=False,
+        irls: bool=False,
     ):
         self.mesh = mesh
         self.active_cells = (
@@ -648,3 +650,253 @@ class SparseSmallness(_MeshBasedRegularization):
         """
         cell_volumes = self.mesh.cell_volumes[self.active_cells]
         return diags_array(np.sqrt(cell_volumes))
+
+
+class SparseFlatness(Flatness):
+    r"""
+    Flatness regularization using lp norm.
+
+    Parameters
+    ----------
+    mesh : discretize.base.BaseMesh
+        Mesh to use in the regularization.
+    direction : {"x", "y", "z"}
+        Direction of the spatial derivative.
+    norm : float
+        Norm used in the regularization (p).
+    active_cells : (n_cells) array or None, optional
+        Array full of bools that indicate the active cells in the mesh. It must have the
+        same amount of elements as cells in the mesh.
+    cell_weights : (n_active) array or dict of (n_active) array or None, optional
+        Array with cell weights.
+        For multiple cell weights, pass a dictionary where keys are strings and values
+        are the different weights arrays.
+        If None, no cell weights are going to be used.
+    reference_model : (n_active) array or None, optional
+        Array with values for the reference model. It must have the same number of
+        elements as active cells in the mesh.
+    threshold : float, optional
+        IRLS threshold. Symbolized with :math:`\epsilon` in
+        Fournier and Oldenburg (2019).
+    cooling_factor : float, optional
+        Factor used to cool down the ``threshold`` when updating the IRLS.
+    model_previous : (n_params) array or None, optional
+        Array with previous model in the iterations. This model is used to build the
+        ``R`` matrix. If None, an array full of zeros will be assigned.
+    irls : bool, optional
+        Flag to activate or deactivate IRLS. If False, the class would work as an L2
+        smallness term. If True, the R matrix will be built using the
+        ``model_previous``.
+
+
+    Notes
+    -----
+    This objective function defines a flatness regularization using an :math:`l_p`
+    norm. It's based on the Iterative-Reweighted Least Squares (IRLS) algorithm, and
+    the Lawson's algorithm to iteratively approximate the :math:`l_p` norm through an
+    :math:`l_2` norm.
+
+    The sparse flatness regularization whith norm :math:`p` in the :math:`j` direction
+    (:math:`j \in \{ x, y, z\}`) is defined in its continuous form as follows:
+
+    .. math::
+
+        \phi_j(m) =
+        \int_\Omega
+        w(\mathbf{r})
+        \left\lvert
+            \frac{\partial m}{\partial j} - \frac{\partial m_\text{ref}}{\partial j}
+        \right\rvert^p
+        \text{d}\mathbf{r},
+
+    where :math:`w(\mathbf{r})` is the value of weights on the point :math:`\mathbf{r}`,
+    and :math:`m` and :math:`m_\text{ref}` are the model and the reference model,
+    respectively.
+
+    To use this type of regularization in a stable way during an optimizaiton problem,
+    we discretize it by applying Lawson's algorithm to approximate the :math:`l_p` norm by
+    an :math:`l_2` norm with some parameters that will get iteratively updated throughout
+    an inversion (see Fournier & Oldenburg, 2019).
+    Lawson's algorithm consists in approximating the :math:`l_p` norm of a quantity
+    :math:`f` as:
+
+    .. math::
+
+        \lvert f \rvert^p \approx \frac{f^2}{(f^2 + \epsilon^2)^{1 - p/2}},
+
+    where :math:`\epsilon` is defined as a *threshold*.
+
+    If we approximate the quantity :math:`f` that appears in the denominator by a
+    previous value of it, then the :math:`l_p` norm of :math:`f` can be approximated as a
+    quantity proportional to its :math:`l_2` norm.
+
+    The sparse flatness regularization can therefore be expressed in its discretized
+    form as follows:
+
+    .. math::
+
+        \phi_j(\mathbf{m}) =
+        \lVert
+            \mathbf{W}^f
+            \mathbf{V}^f
+            \mathbf{R}
+            \mathbf{G}_j
+            (\mathbf{m} - \mathbf{m}^\text{ref})
+        \rVert^2
+
+    where
+    :math:`\mathbf{W}^f` are the square root of cell weights averaged on faces,
+    :math:`\mathbf{V}^f` are the square root of cell volumes averaged on faces,
+    :math:`\mathbf{G}_j` is the discrete gradient operator in the :math:`j`
+    direction (:math:`j \in \{ x, y, z\}`),
+    :math:`\mathbf{m} = [m_1, \dots, m_M]` and
+    :math:`\mathbf{m}^\text{ref} = [m_1^\text{ref}, \dots, m_M^\text{ref}]`
+    are the model and reference model vectors, respectively,
+    and :math:`\mathbf{R}` matrix is a diagonal matrix that contains the factors from
+    Lawson's algorithm:
+
+    .. math::
+
+        \mathbf{R} =
+        \text{diag}\left(
+            \left[
+                \left( \mathbf{G}_j \mathbf{m}_\text{prev} \right)^2
+                 + \epsilon^2
+            \right]^{\frac{p}{4} - \frac{1}{2}}
+        \right).
+
+    .. important::
+
+        After applying the :math:`\mathbf{G}_j` to the model, the partial derivatives
+        are located on the center of the faces. For this reason we need to average the
+        cell volumes and the cell weights to faces before using them in the
+        regularization.
+
+
+    References
+    ----------
+    Fournier, D., & Oldenburg, D. W. (2019). Inversion using spatially variable mixed
+    :math:`l_p` norms. Geophysical Journal International, 218(1), 268-282.
+    https://doi.org/10.1093/gji/ggz156
+
+
+    """
+
+    def __init__(
+        self,
+        mesh: discretize.base.BaseMesh,
+        direction: str,
+        *,
+        norm: float,
+        active_cells: npt.NDArray | None = None,
+        cell_weights: npt.NDArray | dict[str, npt.NDArray] | None = None,
+        reference_model: Model | None = None,
+        threshold: float = 1e-8,
+        cooling_factor=1.25,
+        model_previous: Model | None = None,
+        irls=False,
+    ):
+        super().__init__(
+            mesh,
+            direction,
+            active_cells=active_cells,
+            cell_weights=cell_weights,
+            reference_model=reference_model,
+        )
+        self.norm = norm
+        self.irls = irls
+        self.model_previous = (
+            model_previous if model_previous is not None else np.zeros(self.n_params)
+        )
+        self.threshold = threshold
+        self.cooling_factor = cooling_factor
+        self.set_name(f"{self.direction}(p={self.norm})")
+
+    @property
+    def R(self) -> dia_array:
+        r"""
+        R matrix to approximate lp norm using Lawson's algorithm.
+
+        Notes
+        -----
+        The :math:`\mathbf{R}_j` matrix is defined as a diagonal matrix as follows:
+
+        .. math::
+
+            \mathbf{R} =
+            \text{diag}\left(
+                \left[
+                    \left( \mathbf{G}_j \mathbf{m}_\text{prev} \right)^2
+                     + \epsilon^2
+                \right]^{\frac{p}{4} - \frac{1}{2}}
+            \right)
+
+        where :math:`\mathbf{G}_j` is the discrete gradient operator in the :math:`j`
+        direction (x, y, or z), :math:`\mathbf{m}_\text{prev}` is the model from
+        the previous iteration (stored in the ``model_previous`` attribute),
+        :math:`\epsilon` is the IRLS threshold (defined by the ``threshold`` attribute),
+        and :math:`p` is the norm of the regularization (defined through the ``norm``
+        attribute).
+        """
+        if not self.irls:
+            return eye_array(self.n_active)
+        power = self.norm / 4 - 0.5
+        diagonal = (
+            (self._cell_gradient @ self.model_previous) ** 2 + self.threshold**2
+        ) ** power
+        return diags_array(diagonal)
+
+    def __call__(self, model: Model) -> float:
+        model_diff = model - self.reference_model
+        weights_matrix = self.weights_matrix
+        cell_volumes_sqrt = self._volumes_sqrt_matrix
+        cell_gradient = self._cell_gradient
+        r_matrix = self.R
+        return (
+            model_diff.T
+            @ cell_gradient.T
+            @ r_matrix.T
+            @ cell_volumes_sqrt.T
+            @ weights_matrix.T
+            @ weights_matrix
+            @ cell_volumes_sqrt
+            @ r_matrix
+            @ cell_gradient
+            @ model_diff
+        )
+
+    def gradient(self, model: Model):
+        model_diff = model - self.reference_model
+        weights_matrix = self.weights_matrix
+        cell_volumes_sqrt = self._volumes_sqrt_matrix
+        cell_gradient = self._cell_gradient
+        r_matrix = self.R
+        return (
+            2
+            * r_matrix.T
+            @ cell_gradient.T
+            @ cell_volumes_sqrt.T
+            @ weights_matrix.T
+            @ weights_matrix
+            @ cell_volumes_sqrt
+            @ r_matrix
+            @ cell_gradient
+            @ model_diff
+        )
+
+    def hessian(self, model: Model):  # noqa: ARG002
+        weights_matrix = self.weights_matrix
+        cell_gradient = self._cell_gradient
+        r_matrix = self.R
+        cell_volumes_sqrt = self._volumes_sqrt_matrix
+        return (
+            2
+            * r_matrix.T
+            @ cell_gradient.T
+            @ cell_volumes_sqrt.T
+            @ weights_matrix.T
+            @ weights_matrix
+            @ cell_volumes_sqrt
+            @ r_matrix
+            @ cell_gradient
+        )

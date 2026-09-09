@@ -16,3 +16,4 @@ numpydoc
 pydata-sphinx-theme
 sphinx_design
 choclo
+myst-nb

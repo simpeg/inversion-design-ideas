@@ -31,3 +31,4 @@ dependencies:
   - numpydoc
   - pydata-sphinx-theme
   - sphinx-design
+  - myst-nb

@@ -64,9 +64,8 @@ class TikhonovZero(Objective):
         self.set_name("0")
 
     def __call__(self, model: Model) -> float:
-        model_diff = model - self.reference_model
-        weights_matrix = self.weights_matrix
-        return model_diff.T @ weights_matrix.T @ weights_matrix @ model_diff
+        vector = self.weights_matrix @ (model - self.reference_model)
+        return vector.T @ vector
 
     def gradient(self, model: Model):
         model_diff = model - self.reference_model

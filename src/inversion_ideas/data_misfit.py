@@ -208,9 +208,8 @@ class DataMisfit(Objective):
         function for the :math:`i`-th datum, and :math:`\epsilon_i` is the uncertainty of
         the :math:`i`-th datum.
         """
-        residual = self.residual(model)
-        weights_matrix = self.weights_matrix
-        return residual.T @ weights_matrix.T @ weights_matrix @ residual
+        vector = self.weights_matrix @ self.residual(model)
+        return vector.T @ vector
 
     def gradient(self, model: Model) -> npt.NDArray[np.float64]:
         r"""

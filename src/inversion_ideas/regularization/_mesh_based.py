@@ -181,17 +181,12 @@ class Smallness(_MeshBasedRegularization):
         model : (n_params) array
             Array with model values.
         """
-        model_diff = model - self.reference_model
-        weights_matrix = self.weights_matrix
-        cell_volumes_sqrt = self._volumes_sqrt_matrix
-        return (
-            model_diff.T
-            @ cell_volumes_sqrt.T
-            @ weights_matrix.T
-            @ weights_matrix
-            @ cell_volumes_sqrt
-            @ model_diff
+        vector = (
+            self.weights_matrix
+            @ self._volumes_sqrt_matrix
+            @ (model - self.reference_model)
         )
+        return vector.T @ vector
 
     def gradient(self, model: Model):
         model_diff = model - self.reference_model
@@ -354,20 +349,13 @@ class Flatness(_MeshBasedRegularization):
         model : (n_params) array
             Array with model values.
         """
-        model_diff = model - self.reference_model
-        weights_matrix = self.weights_matrix
-        cell_volumes_sqrt = self._volumes_sqrt_matrix
-        cell_gradient = self._cell_gradient
-        return (
-            model_diff.T
-            @ cell_gradient.T
-            @ cell_volumes_sqrt.T
-            @ weights_matrix.T
-            @ weights_matrix
-            @ cell_volumes_sqrt
-            @ cell_gradient
-            @ model_diff
+        vector = (
+            self.weights_matrix
+            @ self._volumes_sqrt_matrix
+            @ self._cell_gradient
+            @ (model - self.reference_model)
         )
+        return vector.T @ vector
 
     def gradient(self, model: Model):
         model_diff = model - self.reference_model
@@ -582,20 +570,13 @@ class SparseSmallness(_MeshBasedRegularization):
         return diags_array(diagonal)
 
     def __call__(self, model: Model) -> float:
-        model_diff = model - self.reference_model
-        weights_matrix = self.weights_matrix
-        cell_volumes_sqrt = self._volumes_sqrt_matrix
-        r_matrix = self.R
-        return (
-            model_diff.T
-            @ r_matrix.T
-            @ cell_volumes_sqrt.T
-            @ weights_matrix.T
-            @ weights_matrix
-            @ cell_volumes_sqrt
-            @ r_matrix
-            @ model_diff
+        vector = (
+            self.weights_matrix
+            @ self._volumes_sqrt_matrix
+            @ self.R
+            @ (model - self.reference_model)
         )
+        return vector.T @ vector
 
     def gradient(self, model: Model):
         model_diff = model - self.reference_model

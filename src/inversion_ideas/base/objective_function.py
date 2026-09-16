@@ -289,12 +289,16 @@ class Scaled(Objective):
         return f"{multiplier:} {phi_repr}"
 
     def _repr_latex_(self):
-        multiplier = _float_to_str(self.multiplier)
-        if "e" in multiplier:
-            base, exp = multiplier.split("e")
-            exp = exp.replace("+", "")
-            exp = str(int(exp))
-            multiplier = rf"{base} \cdot 10^{{{exp}}}"
+        if hasattr(self.multiplier, "_repr_latex_"):
+            multiplier = self.multiplier._repr_latex_().strip("$")
+        else:
+            # TODO: move these bits to utils functions so they can be used by Multiplier._repr_latex
+            multiplier = _float_to_str(self.multiplier)
+            if "e" in multiplier:
+                base, exp = multiplier.split("e")
+                exp = exp.replace("+", "")
+                exp = str(int(exp))
+                multiplier = rf"{base} \cdot 10^{{{exp}}}"
         phi_str = self.function._repr_latex_().strip("$")
         # Add brackets in case that the function has a multiplier or is a Combo
         if isinstance(self.function, Iterable) or hasattr(self.function, "multiplier"):

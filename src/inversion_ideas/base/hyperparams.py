@@ -79,7 +79,10 @@ class Multiplier(Real):  # ruff: ignore[PLW1641] (ignore undefined __hash__ meth
         return f"{type(self).__name__}({self.value})"
 
     def _repr_latex_(self):
-        return str(self.value)
+        return r"$\text{" + f"{type(self).__name__}" + "}" f"({self.value})$"
+
+    def __format__(self, fmt):
+        return format(self.value, fmt)
 
     @property
     def mutable(self):

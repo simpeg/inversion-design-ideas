@@ -3,7 +3,7 @@ Base classes for custom hyperparameter objects.
 """
 
 from math import ceil, floor, trunc
-from numbers import Number, Real
+from numbers import Real
 
 from .objective_function import Objective
 
@@ -116,14 +116,14 @@ class Multiplier(Real):  # ruff: ignore[PLW1641] (ignore undefined __hash__ meth
         # Allow multiplication by objective function.
         # In such cases, make the other object to handle the multiplication.
         if isinstance(other, Objective):
-            return other.__mul__(self)
+            return NotImplemented
         return self.value * other
 
     def __rmul__(self, other):
         # Allow multiplication by objective function.
         # In such cases, make the other object to handle the multiplication.
         if isinstance(other, Objective):
-            return other.__rmul__(self)
+            return NotImplemented
         return other * self.value
 
     def __imul__(self, other):

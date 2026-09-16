@@ -201,6 +201,7 @@ class Objective(ABC):
         return Combo([other, self])
 
     def __mul__(self, value: Real) -> "Scaled":
+        # TODO: add check for Real value
         return Scaled(value, self)
 
     def __rmul__(self, value):

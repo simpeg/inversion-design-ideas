@@ -60,7 +60,7 @@ class Multiplier(Real):  # ruff: ignore[PLW1641] (ignore undefined __hash__ meth
     def __init__(self, value: float, *, mutable=False):
         if not isinstance(value, Real):
             msg = (
-                f"Invalid 'value' of type '{type(value)}'. "
+                f"Invalid 'value' argument of type '{type(value)}'. "
                 "It must be a float or similar."
             )
             raise TypeError(msg)
@@ -145,14 +145,32 @@ class Multiplier(Real):  # ruff: ignore[PLW1641] (ignore undefined __hash__ meth
     def __floordiv__(self, other):
         return self.value // other
 
+    def __rfloordiv__(self, other):
+        return other // self.value
+
+    def __ifloordiv__(self, other):
+        if not self.mutable:
+            raise TypeError(self._mutability_error_msg())
+        self._value //= other
+        return self
+
     def __le__(self, other):
         return self.value <= other
 
     def __lt__(self, other):
         return self.value < other
 
+    def __ge__(self, other):
+        return other <= self.value
+
+    def __gt__(self, other):
+        return other < self.value
+
     def __mod__(self, other):
         return self.value % other
+
+    def __rmod__(self, other):
+        return other % self.value
 
     def __neg__(self):
         return -self.value
@@ -163,23 +181,23 @@ class Multiplier(Real):  # ruff: ignore[PLW1641] (ignore undefined __hash__ meth
     def __pow__(self, exponent):
         return self.value**exponent
 
-    def __rfloordiv__(self, other):
-        return other // self.value
-
-    def __rmod__(self, other):
-        return other % self.value
+    def __rpow__(self, base):
+        return base**self.value
 
     def __round__(self, ndigits=None):
         return round(self.value, ndigits)
 
-    def __rpow__(self, base):
-        return base**self.value
+    def __truediv__(self, other):
+        return self.value / other
 
     def __rtruediv__(self, other):
         return other / self.value
 
-    def __truediv__(self, other):
-        return self.value / other
+    def __itruediv__(self, other):
+        if not self.mutable:
+            raise TypeError(self._mutability_error_msg())
+        self._value /= other
+        return self
 
     def __trunc__(self):
         return trunc(self.value)

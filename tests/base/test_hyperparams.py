@@ -65,12 +65,17 @@ class TestMultiplier:
         assert isinstance(other * multiplier, float)
 
     @pytest.mark.parametrize("rmul", [False, True], ids=["mul", "rmul"])
-    def test_mul_non_number(self, rmul):
+    def test_mul_vs_objective(self, rmul):
         """Test ``__mul__`` and ``__rmul__`` when multiplying by objective function."""
         dummy = Dummy(n_params=3)
         value = 10.0
         multiplier = Multiplier(value)
         scaled = dummy * multiplier if rmul else multiplier * dummy
+
+        # Make sure that the multiplier of the Scaled object is the same Multiplier
+        assert scaled.multiplier is multiplier
+
+        # Test the common methods of the objective function
         model = np.array([1.0, 2.0, 3.0])
         assert value * dummy(model) == scaled(model)
         np.testing.assert_allclose(
@@ -88,26 +93,17 @@ class TestMultiplier:
         assert other / multiplier == other / value
         assert isinstance(other / multiplier, float)
 
-    def test_truediv_non_number(self):
-        """Test ``__truediv__`` when dividing an objective function."""
+    def test_truediv_vs_objective(self):
+        """Test error on ``__truediv__`` and ``__rtruediv__`` when dividing by objective function."""
         value = 10.0
         multiplier = Multiplier(value)
         dummy = Dummy(n_params=3)
-        scaled = dummy / multiplier
-        model = np.array([1.0, 2.0, 3.0])
-        np.testing.assert_allclose(dummy(model) / value, scaled(model))
-        np.testing.assert_allclose(
-            dummy.gradient(model) / value, scaled.gradient(model)
-        )
-        np.testing.assert_allclose(dummy.hessian(model) / value, scaled.hessian(model))
-
-    def test_rtruediv_non_number(self):
-        """Test error on ``__rtruediv__`` when dividing by objective function."""
-        value = 10.0
-        multiplier = Multiplier(value)
-        dummy = Dummy(n_params=3)
-        with pytest.raises(TypeError, match="unsupported operand type"):
+        with pytest.raises(TypeError, match="True division is not supported between"):
             multiplier / dummy
+        with pytest.raises(
+            TypeError, match="True division is not implemented for objective functions"
+        ):
+            dummy / multiplier
 
     def test_floordiv(self):
         """Test the ``__floordiv__`` and ``__rfloordiv__`` methods."""
@@ -119,7 +115,7 @@ class TestMultiplier:
         assert other // multiplier == other // value
         assert isinstance(other // multiplier, float)
 
-    def test_floordiv_non_number(self):
+    def test_floordiv_vs_objective(self):
         """Test error on ``__floordiv__`` when dividing by objective function."""
         value = 10.0
         multiplier = Multiplier(value)

@@ -207,7 +207,8 @@ class Objective(ABC):
         return self.__mul__(value)
 
     def __truediv__(self, denominator: Real):
-        return self * (1.0 / denominator)  # type: ignore[operator]
+        msg = "True division is not implemented for objective functions."
+        raise TypeError(msg)
 
     def __floordiv__(self, denominator):
         msg = "Floor division is not implemented for objective functions."

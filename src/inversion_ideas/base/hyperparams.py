@@ -5,6 +5,8 @@ Base classes for custom hyperparameter objects.
 from math import ceil, floor, trunc
 from numbers import Number, Real
 
+from .objective_function import Objective
+
 
 class Multiplier(Real):  # ruff: ignore[PLW1641] (ignore undefined __hash__ method)
     """
@@ -108,17 +110,17 @@ class Multiplier(Real):  # ruff: ignore[PLW1641] (ignore undefined __hash__ meth
         return self
 
     def __mul__(self, other):
-        # Allow multiplication by objects that are not Number (e.g. objective function)
+        # Allow multiplication by objective function.
         # In such cases, make the other object to handle the multiplication.
-        if not isinstance(other, Number):
-            return other.__mul__(self.value)
+        if isinstance(other, Objective):
+            return other.__mul__(self)
         return self.value * other
 
     def __rmul__(self, other):
-        # Allow multiplication by objects that are not Number (e.g. objective function)
+        # Allow multiplication by objective function.
         # In such cases, make the other object to handle the multiplication.
-        if not isinstance(other, Number):
-            return other.__rmul__(self.value)
+        if isinstance(other, Objective):
+            return other.__rmul__(self)
         return other * self.value
 
     def __imul__(self, other):
@@ -188,9 +190,21 @@ class Multiplier(Real):  # ruff: ignore[PLW1641] (ignore undefined __hash__ meth
         return round(self.value, ndigits)
 
     def __truediv__(self, other):
+        if isinstance(other, Objective):
+            msg = (
+                f"True division is not supported between '{self}' of type "
+                f"'{type(self)}' and {other} of type '{type(other)}'."
+            )
+            raise TypeError(msg)
         return self.value / other
 
     def __rtruediv__(self, other):
+        if isinstance(other, Objective):
+            msg = (
+                f"True division is not supported between '{self}' of type "
+                f"'{type(self)}' and {other} of type '{type(other)}'."
+            )
+            raise TypeError(msg)
         return other / self.value
 
     def __itruediv__(self, other):

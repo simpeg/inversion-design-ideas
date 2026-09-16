@@ -133,12 +133,9 @@ class TestObjectiveOperations:
         assert scaled.multiplier == scalar
 
     def test_truediv(self):
-        a = Dummy(self.n_params)
-        scalar = 3.14
-        scaled = a / scalar
-        assert isinstance(scaled, Scaled)
-        assert scaled.function is a
-        assert scaled.multiplier == 1 / scalar
+        phi = Dummy(self.n_params)
+        with pytest.raises(TypeError, match="True division is not implemented"):
+            phi / 2.71
 
     def test_add_combos(self):
         a, b, c, d = tuple(Dummy(self.n_params) for _ in range(4))

@@ -21,7 +21,8 @@ class CooledMultiplier(Multiplier):
         :meth:`~inversion_ideas.CooledMultiplier.update` method is called.
     mutable : bool, optional
         If False, the wrapped value is immutable, i.e. we cannot change it through
-        public properties and methods.
+        public properties and methods besides the
+        :meth:`~inversion_ideas.CooledMultiplier.update` method.
         If True, the wrapped value is mutable and can be modified.
 
     Examples

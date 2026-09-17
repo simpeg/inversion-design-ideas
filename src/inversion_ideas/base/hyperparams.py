@@ -2,8 +2,13 @@
 Base classes for custom hyperparameter objects.
 """
 
+from copy import deepcopy
 from math import ceil, floor, trunc
 from numbers import Real
+from typing import Self
+
+import numpy as np
+import numpy.typing as npt
 
 from .objective_function import Objective
 
@@ -225,3 +230,156 @@ class Multiplier(Real):  # ruff: ignore[PLW1641] (ignore undefined __hash__ meth
             "because it was defined as immutable."
         )
         return msg
+
+
+class WrappedArray:  # ruff: ignore[PLW1641] (ignore undefined __hash__ method)
+    """
+    Wraps a Numpy array into a class.
+
+    Wraps a single Numpy array into a class to create custom hyperparameter classes.
+
+    .. note:
+
+        Inherit this class to create custom hyperparameters, for example to create
+        regularization weights that have an ``update`` method that can update its values
+        based on a given model.
+
+    Parameters
+    ----------
+    array : array
+        Array to be wrapped.
+
+    Examples
+    --------
+    Wrap an array using this class:
+
+    >>> import numpy as np
+    >>> a = np.array([1., 2., 3., 4., 5.])
+    >>> array_wrapped = WrappedArray(a)
+    >>> array_wrapped
+    WrappedArray([1., 2., 3., 4., 5.])
+
+    We can operate with this ``array_wrapped`` as with any other array:
+    >>> array_wrapped * 2
+    array([ 2.,  4.,  6.,  8., 10.])
+    >>> array_wrapped @ array_wrapped
+    np.float64(55.0)
+
+    We can also pass it to Numpy functions:
+
+    >>> np.mean(array_wrapped)
+    np.float64(3.0)
+    >>> np.abs(array_wrapped)
+    array([1., 2., 3., 4., 5.])
+    """
+
+    def __init__(self, array: npt.NDArray):
+        self.array = array
+
+    def __repr__(self):
+        array_str = repr(self.array).removeprefix("array")
+        return f"{type(self).__name__}{array_str}"
+
+    def __array__(
+        self, dtype: npt.DTypeLike | None = None, copy: bool | None = None
+    ) -> npt.NDArray:
+        return np.asarray(self.array, dtype=dtype, copy=copy)
+
+    def copy(self) -> Self:
+        return deepcopy(self)
+
+    @property
+    def dtype(self) -> npt.DTypeLike:
+        return self.array.dtype
+
+    def __len__(self) -> int:
+        return len(self.array)
+
+    def __add__(self, other):
+        return self.array + other
+
+    def __radd__(self, other):
+        return other + self.array
+
+    def __mul__(self, other):
+        return self.array * other
+
+    def __rmul__(self, other):
+        return other * self.array
+
+    def __truediv__(self, other):
+        return self.array / other
+
+    def __rtruediv__(self, other):
+        return other / self.array
+
+    def __floordiv__(self, other):
+        return self.array // other
+
+    def __rfloordiv__(self, other):
+        return other // self.array
+
+    def __matmul__(self, other):
+        return self.array @ other
+
+    def __rmatmul__(self, other):
+        return other @ self.array
+
+    def __lt__(self, other):
+        return self.array < other
+
+    def __le__(self, other):
+        return self.array <= other
+
+    def __eq__(self, other):
+        return self.array == other
+
+    def __ne__(self, other):
+        return self.array != other
+
+    def __ge__(self, other):
+        return self.array >= other
+
+    def __gt__(self, other):
+        return self.array > other
+
+    def __not__(self):
+        return not self.array
+
+    def __abs__(self):
+        return np.abs(self.array)
+
+    def __neg__(self):
+        return -self.array
+
+    def __and__(self, other):
+        return self.array & other
+
+    def __or__(self, other):
+        return self.array | other
+
+    def __getitem__(self, key):
+        # TODO: make sure this works as expected
+        return self.array[key]
+
+    def T(self) -> npt.NDArray:
+        """Transpose of the array."""
+        return self.array.T
+
+    @property
+    def size(self) -> int:
+        return self.array.size
+
+    @property
+    def shape(self) -> tuple[int, ...]:
+        return self.array.shape
+
+    @property
+    def ndim(self) -> int:
+        return self.array.ndim
+
+    def min(self):
+        return self.array.min()
+
+    def max(self):
+        return self.array.max()

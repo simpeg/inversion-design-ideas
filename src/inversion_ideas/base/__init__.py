@@ -4,7 +4,7 @@ Base classes of the inversion framework.
 
 from .conditions import Condition
 from .directive import Directive
-from .hyperparams import Multiplier
+from .hyperparams import Multiplier, WrappedArray
 from .minimizer import Minimizer, MinimizerResult
 from .objective_function import Combo, Objective, Scaled
 from .simulation import Simulation
@@ -19,4 +19,5 @@ __all__ = [
     "Objective",
     "Scaled",
     "Simulation",
+    "WrappedArray",
 ]

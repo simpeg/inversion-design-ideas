@@ -55,6 +55,12 @@ class CooledMultiplier(Multiplier):
         """
         Cool down the multiplier.
 
+        Parameters
+        ----------
+        *args :
+            Any argument will be ignored. They are kept to guarantee compatibility
+            with the ``update`` method interface.
+
         Notes
         -----
         Cool down the multiplier by dividing it by the cooling factor.

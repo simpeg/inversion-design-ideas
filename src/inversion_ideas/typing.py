@@ -95,3 +95,24 @@ class HasDiagonal(Protocol):
 
     def diagonal(self) -> npt.NDArray[np.float64]:
         raise NotImplementedError
+
+
+@runtime_checkable
+class ArrayLike(Protocol):
+    """
+    Protocol for classes that implement the ``__array__`` method.
+
+    References
+    ----------
+    https://numpy.org/doc/stable/user/basics.interoperability.html
+    """
+
+    def __array__(
+        self, dtype: npt.DTypeLike | None = None, copy: bool | None = None
+    ) -> npt.NDArray:
+        return np.asarray(self.array, dtype=dtype, copy=copy)
+        raise NotImplementedError
+
+    @property
+    def size(self) -> int:
+        raise NotImplementedError

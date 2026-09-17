@@ -47,7 +47,7 @@ class SensitivityWeights(WrappedArray):
         self.data_weights = data_weights
         self.volumes = volumes
         self.vmin = vmin
-        self.array = self._compute_sensitivity_weights(initial_model)
+        super().__init__(self._compute_sensitivity_weights(initial_model))
 
     def update(self, model, *args):  # ruff: ignore[ARG002]
         """

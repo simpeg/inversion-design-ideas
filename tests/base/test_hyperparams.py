@@ -278,3 +278,75 @@ class TestMultiplierMutability:
         else:
             with pytest.raises(TypeError, match="Cannot modify the value of"):
                 multiplier //= other
+
+
+class TestMultiplierVsMultiplier:
+    """
+    Test arithmetic operations between multipliers.
+    """
+
+    a_value = 10.2
+    b_value = -30.8
+
+    @pytest.fixture
+    def a(self):
+        return Multiplier(self.a_value)
+
+    @pytest.fixture
+    def b(self):
+        return Multiplier(self.b_value)
+
+    def test_add(self, a, b):
+        result = a + b
+        assert isinstance(result, float)
+        assert result == self.a_value + self.b_value
+
+    def test_diff(self, a, b):
+        result = a - b
+        assert isinstance(result, float)
+        assert result == self.a_value - self.b_value
+
+    def test_mul(self, a, b):
+        result = a * b
+        assert isinstance(result, float)
+        assert result == self.a_value * self.b_value
+
+    def test_truediv(self, a, b):
+        result = a / b
+        assert isinstance(result, float)
+        assert result == self.a_value / self.b_value
+
+    def test_floordiv(self, a, b):
+        result = a // b
+        assert isinstance(result, float)
+        assert result == self.a_value // self.b_value
+
+    def test_eq(self, a, b):
+        result = a == b
+        assert isinstance(result, bool)
+        assert result is (self.a_value == self.b_value)
+
+    def test_gt(self, a, b):
+        result = a > b
+        assert isinstance(result, bool)
+        assert result is (self.a_value > self.b_value)
+
+    def test_ge(self, a, b):
+        result = a >= b
+        assert isinstance(result, bool)
+        assert result is (self.a_value >= self.b_value)
+
+    def test_lt(self, a, b):
+        result = a < b
+        assert isinstance(result, bool)
+        assert result is (self.a_value < self.b_value)
+
+    def test_le(self, a, b):
+        result = a <= b
+        assert isinstance(result, bool)
+        assert result is (self.a_value <= self.b_value)
+
+    def test_ne(self, a, b):
+        result = a != b
+        assert isinstance(result, bool)
+        assert result is (self.a_value != self.b_value)

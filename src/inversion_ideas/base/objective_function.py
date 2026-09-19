@@ -201,13 +201,15 @@ class Objective(ABC):
         return Combo([other, self])
 
     def __mul__(self, value: Real) -> "Scaled":
+        # TODO: add check for Real value
         return Scaled(value, self)
 
     def __rmul__(self, value):
         return self.__mul__(value)
 
     def __truediv__(self, denominator: Real):
-        return self * (1.0 / denominator)  # type: ignore[operator]
+        msg = "True division is not implemented for objective functions."
+        raise TypeError(msg)
 
     def __floordiv__(self, denominator):
         msg = "Floor division is not implemented for objective functions."
@@ -288,12 +290,16 @@ class Scaled(Objective):
         return f"{multiplier:} {phi_repr}"
 
     def _repr_latex_(self):
-        multiplier = _float_to_str(self.multiplier)
-        if "e" in multiplier:
-            base, exp = multiplier.split("e")
-            exp = exp.replace("+", "")
-            exp = str(int(exp))
-            multiplier = rf"{base} \cdot 10^{{{exp}}}"
+        if hasattr(self.multiplier, "_repr_latex_"):
+            multiplier = self.multiplier._repr_latex_().strip("$")
+        else:
+            # TODO: move these bits to utils functions so they can be used by Multiplier._repr_latex
+            multiplier = _float_to_str(self.multiplier)
+            if "e" in multiplier:
+                base, exp = multiplier.split("e")
+                exp = exp.replace("+", "")
+                exp = str(int(exp))
+                multiplier = rf"{base} \cdot 10^{{{exp}}}"
         phi_str = self.function._repr_latex_().strip("$")
         # Add brackets in case that the function has a multiplier or is a Combo
         if isinstance(self.function, Iterable) or hasattr(self.function, "multiplier"):

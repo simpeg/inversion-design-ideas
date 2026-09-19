@@ -2,7 +2,17 @@
 Ideas for inversion framework.
 """
 
-from . import base, conditions, decorators, directives, errors, operators, typing, utils
+from . import (
+    base,
+    conditions,
+    decorators,
+    directives,
+    errors,
+    hyperparams,
+    operators,
+    typing,
+    utils,
+)
 from ._version import __version__
 from .data_misfit import DataMisfit
 from .inversion import Inversion
@@ -43,6 +53,7 @@ __all__ = [
     "directives",
     "errors",
     "get_jacobi_preconditioner",
+    "hyperparams",
     "operators",
     "typing",
     "utils",

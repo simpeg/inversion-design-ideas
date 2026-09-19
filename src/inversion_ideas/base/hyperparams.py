@@ -290,6 +290,7 @@ class WrappedArray:  # ruff: ignore[PLW1641] (ignore undefined __hash__ method)
 
     @property
     def dtype(self) -> npt.DTypeLike:
+        """The data-type for the wrapped array."""
         return self.array.dtype
 
     def __len__(self) -> int:
@@ -359,27 +360,84 @@ class WrappedArray:  # ruff: ignore[PLW1641] (ignore undefined __hash__ method)
         return self.array | other
 
     def __getitem__(self, key):
-        # TODO: make sure this works as expected
         return self.array[key]
 
-    def T(self) -> npt.NDArray:
-        """Transpose of the array."""
+    def __setitem__(self, key, value):
+        self.array[key] = value
+
+    def __contains__(self, key):
+        return self.array.__contains__(key)
+
+    def transpose(self) -> npt.NDArray:
+        """
+        Transpose.
+
+        Returns
+        -------
+        array
+        """
         return self.array.T
 
     @property
+    def T(self) -> npt.NDArray:
+        """
+        Transpose.
+
+        Returns
+        -------
+        array
+        """
+        return self.transpose()
+
+    @property
     def size(self) -> int:
+        """
+        Total number of elements in the wrapped array.
+
+        Returns
+        -------
+        int
+        """
         return self.array.size
 
     @property
     def shape(self) -> tuple[int, ...]:
+        """
+        Shape of the wrapped array.
+
+        Returns
+        -------
+        tuple of int
+        """
         return self.array.shape
 
     @property
     def ndim(self) -> int:
+        """
+        Number of dimensions in the wrapped array.
+
+        Returns
+        -------
+        int
+        """
         return self.array.ndim
 
-    def min(self):
-        return self.array.min()
+    def min(self, axis=None, out=None, **kwargs):
+        """
+        Minimum value in the wrapped array along a given axis.
 
-    def max(self):
-        return self.array.max()
+        See Also
+        --------
+        numpy.min : upstream function
+        """
+        return self.array.min(axis=axis, out=out, **kwargs)
+
+    def max(self, axis=None, out=None, **kwargs):
+        """
+        Maximum value in the wrapped array along a given axis.
+
+        See Also
+        --------
+        numpy.max : upstream function
+        """
+        return self.array.max(axis=axis, out=out, **kwargs)

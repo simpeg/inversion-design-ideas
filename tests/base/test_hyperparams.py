@@ -2,13 +2,15 @@
 Test the base hyperparameter classes.
 """
 
+from numbers import Real
+
 import re
 from math import ceil, floor, trunc
 
 import numpy as np
 import pytest
 
-from inversion_ideas.base import Multiplier
+from inversion_ideas.base import Multiplier, WrappedArray
 
 from ..utils import Dummy
 
@@ -350,3 +352,201 @@ class TestMultiplierVsMultiplier:
         result = a != b
         assert isinstance(result, bool)
         assert result is (self.a_value != self.b_value)
+
+
+class TestWrappedArray:
+    """Test the :class:`inversion_ideas.base.WrappedArray` class."""
+
+    size = 30
+
+    @pytest.fixture
+    def array(self):
+        rng = np.random.default_rng(seed=4141)
+        return rng.uniform(size=self.size)
+
+    @pytest.fixture
+    def other_array(self):
+        rng = np.random.default_rng(seed=4884)
+        return rng.uniform(size=self.size)
+
+    def test_len(self, array):
+        wrapped_array = WrappedArray(array)
+        assert isinstance(len(wrapped_array), int)
+        assert len(array) == len(wrapped_array)
+
+    def test_size(self, array):
+        wrapped_array = WrappedArray(array)
+        assert isinstance(wrapped_array.size, int)
+        assert array.size == wrapped_array.size
+
+    def test_shape(self, array):
+        wrapped_array = WrappedArray(array)
+        assert isinstance(wrapped_array.shape, tuple)
+        assert array.shape == wrapped_array.shape
+
+    def test_ndim(self, array):
+        wrapped_array = WrappedArray(array)
+        assert isinstance(wrapped_array.ndim, int)
+        assert array.ndim == wrapped_array.ndim
+
+    @pytest.mark.parametrize("right", [False, True], ids=["left", "right"])
+    def test_add(self, array, other_array, right):
+        wrapped_array = WrappedArray(array)
+        expected = array + other_array
+        result = other_array + wrapped_array if right else wrapped_array + other_array
+        assert isinstance(result, np.ndarray)
+        np.testing.assert_allclose(expected, result, strict=True)
+
+    @pytest.mark.parametrize("right", [False, True], ids=["left", "right"])
+    def test_mul(self, array, other_array, right):
+        wrapped_array = WrappedArray(array)
+        expected = array * other_array
+        result = other_array * wrapped_array if right else wrapped_array * other_array
+        assert isinstance(result, np.ndarray)
+        np.testing.assert_allclose(expected, result, strict=True)
+
+    @pytest.mark.parametrize("right", [False, True], ids=["left", "right"])
+    def test_truediv(self, array, other_array, right):
+        wrapped_array = WrappedArray(array)
+        if right:
+            expected = other_array / array
+            result = other_array / wrapped_array
+        else:
+            expected = array / other_array
+            result = wrapped_array / other_array
+        assert isinstance(result, np.ndarray)
+        np.testing.assert_allclose(expected, result, strict=True)
+
+    @pytest.mark.parametrize("right", [False, True], ids=["left", "right"])
+    def test_floordiv(self, array, other_array, right):
+        wrapped_array = WrappedArray(array)
+        if right:
+            expected = other_array // array
+            result = other_array // wrapped_array
+        else:
+            expected = array // other_array
+            result = wrapped_array // other_array
+        assert isinstance(result, np.ndarray)
+        np.testing.assert_allclose(expected, result, strict=True)
+
+    @pytest.mark.parametrize("right", [False, True], ids=["left", "right"])
+    def test_matmul(self, array, other_array, right):
+        wrapped_array = WrappedArray(array)
+        if right:
+            expected = other_array @ array
+            result = other_array @ wrapped_array
+        else:
+            expected = array @ other_array
+            result = wrapped_array @ other_array
+        assert isinstance(result, Real)
+        np.testing.assert_allclose(expected, result, strict=True)
+
+    @pytest.mark.parametrize("right", [False, True], ids=["left", "right"])
+    @pytest.mark.parametrize("operator", ["<", "<=", ">", ">=", "!="])
+    def test_inequalities(self, array, other_array, operator, right):
+        wrapped_array = WrappedArray(array)
+        if operator == "<":
+            expected = array < other_array if not right else other_array < array
+            result = (
+                wrapped_array < other_array
+                if not right
+                else other_array < wrapped_array
+            )
+        elif operator == ">":
+            expected = array > other_array if not right else other_array > array
+            result = (
+                wrapped_array > other_array
+                if not right
+                else other_array > wrapped_array
+            )
+        elif operator == "<=":
+            expected = array <= other_array if not right else other_array <= array
+            result = (
+                wrapped_array <= other_array
+                if not right
+                else other_array <= wrapped_array
+            )
+        elif operator == ">=":
+            expected = array >= other_array if not right else other_array >= array
+            result = (
+                wrapped_array >= other_array
+                if not right
+                else other_array >= wrapped_array
+            )
+        elif operator == "!=":
+            expected = array != other_array if not right else other_array != array
+            result = (
+                wrapped_array != other_array
+                if not right
+                else other_array != wrapped_array
+            )
+        else:
+            raise ValueError()
+        assert isinstance(result, np.ndarray)
+        np.testing.assert_allclose(expected, result, strict=True)
+
+    @pytest.mark.parametrize("right", [False, True], ids=["left", "right"])
+    def test_and(self, right):
+        rng = np.random.default_rng(seed=1212)
+        array = rng.choice([True, False], size=self.size)
+        other_array = rng.choice([True, False], size=self.size)
+        wrapped_array = WrappedArray(array)
+        expected = array & other_array if not right else other_array & array
+        result = (
+            wrapped_array & other_array if not right else other_array & wrapped_array
+        )
+        assert isinstance(result, np.ndarray)
+        np.testing.assert_allclose(expected, result, strict=True)
+
+    @pytest.mark.parametrize("right", [False, True], ids=["left", "right"])
+    def test_or(self, right):
+        rng = np.random.default_rng(seed=1212)
+        array = rng.choice([True, False], size=self.size)
+        other_array = rng.choice([True, False], size=self.size)
+        wrapped_array = WrappedArray(array)
+        expected = array | other_array if not right else other_array | array
+        result = (
+            wrapped_array | other_array if not right else other_array | wrapped_array
+        )
+        assert isinstance(result, np.ndarray)
+        np.testing.assert_allclose(expected, result, strict=True)
+
+    def test_abs(self, array):
+        result = abs(WrappedArray(array))
+        assert isinstance(result, np.ndarray)
+        np.testing.assert_allclose(result, abs(array), strict=True)
+
+    def test_neg(self, array):
+        result = -WrappedArray(array)
+        assert isinstance(result, np.ndarray)
+        np.testing.assert_allclose(result, -array, strict=True)
+
+    def test_bool(self, array):
+        wrapped_array = WrappedArray(array)
+        match = "The truth value of an array with more than one element is ambiguous"
+        with pytest.raises(ValueError, match=match):
+            bool(wrapped_array)
+        with pytest.raises(ValueError, match=match):
+            not wrapped_array
+
+    @pytest.mark.parametrize("index", [0, -1, slice(0, 3), slice(0, 5, 2)])
+    def test_getitem(self, array, index):
+        wrapped_array = WrappedArray(array)
+        np.testing.assert_allclose(wrapped_array[index], array[index], strict=True)
+
+    def test_contains(self, array):
+        wrapped_array = WrappedArray(array)
+        assert array[3] in wrapped_array
+        assert 100.0 not in wrapped_array
+
+    def test_min(self, array):
+        wrapped_array = WrappedArray(array)
+        np.testing.assert_allclose(wrapped_array.min(), array.min(), strict=True)
+
+    def test_max(self, array):
+        wrapped_array = WrappedArray(array)
+        np.testing.assert_allclose(wrapped_array.max(), array.max(), strict=True)
+
+
+class TestWrappedArrayVsWrappedArray:
+    """Test arithmetic operations between two WrappedArrays:class:`inversion_ideas.base.WrappedArray`."""

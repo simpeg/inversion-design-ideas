@@ -2,10 +2,9 @@
 Test the base hyperparameter classes.
 """
 
-from numbers import Real
-
 import re
 from math import ceil, floor, trunc
+from numbers import Real
 
 import numpy as np
 import pytest
@@ -527,7 +526,7 @@ class TestWrappedArray:
         with pytest.raises(ValueError, match=match):
             bool(wrapped_array)
         with pytest.raises(ValueError, match=match):
-            not wrapped_array
+            not wrapped_array  # ruff: ignore[B018]
 
     @pytest.mark.parametrize("index", [0, -1, slice(0, 3), slice(0, 5, 2)])
     def test_getitem(self, array, index):

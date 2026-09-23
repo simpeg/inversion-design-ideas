@@ -436,8 +436,9 @@ class Flatness(_MeshBasedRegularization):
     @property
     def _regularization_mesh(self):
         """Return a :class:`simpeg.RegularizationMesh`."""
-        # TODO: would be nice to simplify this, don't quite like the idea of
-        # regularization meshes. Even if we keep them, I think they should be private.
+        # TODO: # ruff: ignore[FIX002]
+        #   Would be nice to simplify this, don't quite like the idea of
+        #   regularization meshes. Even if we keep them, I think they should be private.
         if not hasattr(self, "_regmesh"):
             self._regmesh = simpeg.regularization.RegularizationMesh(
                 self.mesh, self.active_cells

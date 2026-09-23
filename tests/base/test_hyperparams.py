@@ -46,7 +46,7 @@ class TestMultiplier:
         assert str(multiplier) == "Multiplier(10.0)"
 
     def test_add(self):
-        """Test the ``__add__`` and ``__radd__`` methods."""
+        """Test addition."""
         value = 10.0
         other = 2.5
         multiplier = Multiplier(value)
@@ -56,7 +56,7 @@ class TestMultiplier:
         assert isinstance(other + multiplier, float)
 
     def test_mul(self):
-        """Test the ``__mul__`` and ``__rmul__`` methods."""
+        """Test the multiplication by float."""
         value = 10.0
         other = 2.5
         multiplier = Multiplier(value)
@@ -67,7 +67,7 @@ class TestMultiplier:
 
     @pytest.mark.parametrize("rmul", [False, True], ids=["mul", "rmul"])
     def test_mul_vs_objective(self, rmul):
-        """Test ``__mul__`` and ``__rmul__`` when multiplying by objective function."""
+        """Test multiplication by objective function."""
         dummy = Dummy(n_params=3)
         value = 10.0
         multiplier = Multiplier(value)
@@ -84,8 +84,24 @@ class TestMultiplier:
         )
         np.testing.assert_allclose(value * dummy.hessian(model), scaled.hessian(model))
 
+    @pytest.mark.parametrize("other_type", [float, Dummy])
+    @pytest.mark.parametrize("rmul", [False, True], ids=["mul", "rmul"])
+    def test_mul_dunder(self, other_type, rmul):
+        """Test the ``__mul__`` and ``__rmul__`` methods directly."""
+        value = 10.0
+        multiplier = Multiplier(value)
+        dunder = multiplier.__rmul__ if rmul else multiplier.__mul__
+        if other_type is float:
+            other = -45.0
+            assert dunder(other) == value * other
+        elif other_type is Dummy:
+            phi = Dummy(3)
+            assert dunder(phi) is NotImplemented
+        else:
+            raise TypeError()
+
     def test_truediv(self):
-        """Test the ``__truediv__`` and ``__rtruediv__`` methods."""
+        """Test division by float."""
         value = 10.0
         other = 2.5
         multiplier = Multiplier(value)
@@ -95,7 +111,7 @@ class TestMultiplier:
         assert isinstance(other / multiplier, float)
 
     def test_truediv_vs_objective(self):
-        """Test error on ``__truediv__`` and ``__rtruediv__`` when dividing by objective function."""
+        """Test error on division by objective function."""
         value = 10.0
         multiplier = Multiplier(value)
         dummy = Dummy(n_params=3)
@@ -106,8 +122,28 @@ class TestMultiplier:
         ):
             dummy / multiplier
 
+    @pytest.mark.parametrize("other_type", [float, Dummy])
+    @pytest.mark.parametrize("rtruediv", [False, True], ids=["mul", "rmul"])
+    def test_truediv_dunder(self, other_type, rtruediv):
+        """Test ``__truediv__`` and ``__rtruediv__`` dunder methods."""
+        value = 10.0
+        multiplier = Multiplier(value)
+        if other_type is float:
+            other = -45.0
+            if rtruediv:
+                expected = other / value
+                assert expected == multiplier.__rtruediv__(other)
+            else:
+                expected = value / other
+                assert expected == multiplier.__truediv__(other)
+        elif other_type is Dummy:
+            phi = Dummy(3)
+            dunder = multiplier.__rtruediv__ if rtruediv else multiplier.__truediv__
+            with pytest.raises(TypeError, match="True division is not supported"):
+                dunder(phi)
+
     def test_floordiv(self):
-        """Test the ``__floordiv__`` and ``__rfloordiv__`` methods."""
+        """Test the floor division."""
         value = 10.0
         other = 2.0
         multiplier = Multiplier(value)
@@ -117,7 +153,7 @@ class TestMultiplier:
         assert isinstance(other // multiplier, float)
 
     def test_floordiv_vs_objective(self):
-        """Test error on ``__floordiv__`` when dividing by objective function."""
+        """Test error on floor division when dividing by objective function."""
         value = 10.0
         multiplier = Multiplier(value)
         dummy = Dummy(n_params=3)
@@ -408,10 +444,30 @@ class TestWrappedArray:
         np.testing.assert_allclose(expected, result, strict=True)
 
     @pytest.mark.parametrize("right", [False, True], ids=["left", "right"])
+    def test_add_dunder(self, array, other_array, right):
+        """Test the ``__add__`` and ``__radd__`` methods."""
+        wrapped_array = WrappedArray(array)
+        expected = array + other_array
+        dunder = wrapped_array.__radd__ if right else wrapped_array.__add__
+        result = dunder(other_array)
+        assert isinstance(result, np.ndarray)
+        np.testing.assert_allclose(expected, result, strict=True)
+
+    @pytest.mark.parametrize("right", [False, True], ids=["left", "right"])
     def test_mul(self, array, other_array, right):
         wrapped_array = WrappedArray(array)
         expected = array * other_array
         result = other_array * wrapped_array if right else wrapped_array * other_array
+        assert isinstance(result, np.ndarray)
+        np.testing.assert_allclose(expected, result, strict=True)
+
+    @pytest.mark.parametrize("right", [False, True], ids=["left", "right"])
+    def test_mul_dunder(self, array, other_array, right):
+        """Test the ``__mul__`` and ``__rmul__`` methods."""
+        wrapped_array = WrappedArray(array)
+        expected = array * other_array
+        dunder = wrapped_array.__rmul__ if right else wrapped_array.__mul__
+        result = dunder(other_array)
         assert isinstance(result, np.ndarray)
         np.testing.assert_allclose(expected, result, strict=True)
 
@@ -428,6 +484,16 @@ class TestWrappedArray:
         np.testing.assert_allclose(expected, result, strict=True)
 
     @pytest.mark.parametrize("right", [False, True], ids=["left", "right"])
+    def test_truediv_dunder(self, array, other_array, right):
+        """Test the ``__truediv__`` and ``__rtruediv__`` methods."""
+        wrapped_array = WrappedArray(array)
+        expected = other_array / array if right else array / other_array
+        dunder = wrapped_array.__rtruediv__ if right else wrapped_array.__truediv__
+        result = dunder(other_array)
+        assert isinstance(result, np.ndarray)
+        np.testing.assert_allclose(expected, result, strict=True)
+
+    @pytest.mark.parametrize("right", [False, True], ids=["left", "right"])
     def test_floordiv(self, array, other_array, right):
         wrapped_array = WrappedArray(array)
         if right:
@@ -436,6 +502,16 @@ class TestWrappedArray:
         else:
             expected = array // other_array
             result = wrapped_array // other_array
+        assert isinstance(result, np.ndarray)
+        np.testing.assert_allclose(expected, result, strict=True)
+
+    @pytest.mark.parametrize("right", [False, True], ids=["left", "right"])
+    def test_floordiv_dunder(self, array, other_array, right):
+        """Test the ``__floordiv__`` and ``__rfloordiv__`` methods."""
+        wrapped_array = WrappedArray(array)
+        expected = other_array // array if right else array // other_array
+        dunder = wrapped_array.__rfloordiv__ if right else wrapped_array.__floordiv__
+        result = dunder(other_array)
         assert isinstance(result, np.ndarray)
         np.testing.assert_allclose(expected, result, strict=True)
 
@@ -450,6 +526,27 @@ class TestWrappedArray:
             result = wrapped_array @ other_array
         assert isinstance(result, Real)
         np.testing.assert_allclose(expected, result, strict=True)
+
+    @pytest.mark.parametrize("right", [False, True], ids=["left", "right"])
+    def test_matmul_dunder(self, array, other_array, right):
+        """Test the ``__matmul__`` and ``__rmatmul__`` methods."""
+        wrapped_array = WrappedArray(array)
+        expected = other_array @ array if right else array @ other_array
+        dunder = wrapped_array.__rmatmul__ if right else wrapped_array.__matmul__
+        result = dunder(other_array)
+        assert isinstance(result, Real)
+        np.testing.assert_allclose(expected, result, strict=True)
+
+    def test_equality(self, array, other_array):
+        wrapped_array = WrappedArray(array)
+        assert (wrapped_array == array).all()
+        assert (wrapped_array == wrapped_array.copy()).all()
+        assert (wrapped_array != other_array).all()
+        assert (wrapped_array != WrappedArray(other_array)).all()
+        assert (array == wrapped_array).all()
+        assert (wrapped_array.copy() == wrapped_array).all()
+        assert (other_array != wrapped_array).all()
+        assert (WrappedArray(other_array) != wrapped_array).all()
 
     @pytest.mark.parametrize("right", [False, True], ids=["left", "right"])
     @pytest.mark.parametrize("operator", ["<", "<=", ">", ">=", "!="])
@@ -544,6 +641,20 @@ class TestWrappedArray:
         wrapped_array = WrappedArray(array)
         np.testing.assert_allclose(wrapped_array[index], array[index], strict=True)
 
+    @pytest.mark.parametrize("index", [0, -1, slice(0, 3), slice(0, 5, 2)])
+    def test_setitem(self, array, index):
+        original = array.copy()
+        wrapped = WrappedArray(array)
+        wrapped[index] = 100.0
+        np.testing.assert_allclose(wrapped[index], 100.0)
+        np.testing.assert_allclose(wrapped.array[index], 100.0)
+        # Since we are storing a reference to the array, a modification to it changes
+        # the value of the array itself.
+        np.testing.assert_allclose(array[index], 100.0)
+        # Compare the full array
+        original[index] = 100.0
+        np.testing.assert_allclose(wrapped.array, original, strict=True)
+
     def test_contains(self, array):
         wrapped_array = WrappedArray(array)
         assert array[3] in wrapped_array
@@ -565,6 +676,100 @@ class TestWrappedArray:
         assert array is wrapped_array.array
         assert not (array is copied.array)
 
+    def test_transpose(self, array):
+        wrapped = WrappedArray(array)
+        np.testing.assert_allclose(wrapped.T, array.T, strict=True)
+        np.testing.assert_allclose(wrapped.transpose(), array.transpose(), strict=True)
+
 
 class TestWrappedArrayVsWrappedArray:
-    """Test arithmetic operations between two WrappedArrays:class:`inversion_ideas.base.WrappedArray`."""
+    """Test operations between two :class:`inversion_ideas.base.WrappedArray`."""
+
+    size = 11
+
+    @pytest.fixture
+    def array_a(self):
+        rng = np.random.default_rng(seed=4141)
+        return rng.uniform(size=self.size)
+
+    @pytest.fixture
+    def array_b(self):
+        rng = np.random.default_rng(seed=1512)
+        return rng.uniform(size=self.size)
+
+    def test_add(self, array_a, array_b):
+        wrapped_a, wrapped_b = WrappedArray(array_a), WrappedArray(array_b)
+        assert isinstance(wrapped_a + wrapped_b, np.ndarray)
+        np.testing.assert_allclose(wrapped_a + wrapped_b, array_a + array_b)
+
+    def test_mul(self, array_a, array_b):
+        wrapped_a, wrapped_b = WrappedArray(array_a), WrappedArray(array_b)
+        assert isinstance(wrapped_a * wrapped_b, np.ndarray)
+        np.testing.assert_allclose(wrapped_a * wrapped_b, array_a * array_b)
+
+    def test_matmul(self, array_a, array_b):
+        wrapped_a, wrapped_b = WrappedArray(array_a), WrappedArray(array_b)
+        assert isinstance(wrapped_a @ wrapped_b, Real)
+        np.testing.assert_allclose(wrapped_a @ wrapped_b, array_a @ array_b)
+
+    def test_truediv(self, array_a, array_b):
+        wrapped_a, wrapped_b = WrappedArray(array_a), WrappedArray(array_b)
+        assert isinstance(wrapped_a / wrapped_b, np.ndarray)
+        np.testing.assert_allclose(wrapped_a / wrapped_b, array_a / array_b)
+
+    def test_floordiv(self, array_a, array_b):
+        wrapped_a, wrapped_b = WrappedArray(array_a), WrappedArray(array_b)
+        assert isinstance(wrapped_a // wrapped_b, np.ndarray)
+        np.testing.assert_allclose(wrapped_a // wrapped_b, array_a // array_b)
+
+    def test_eq(self, array_a):
+        wrapped = WrappedArray(array_a)
+        copied = wrapped.copy()
+        assert not (wrapped is copied)
+        assert isinstance(wrapped == copied, np.ndarray)
+        assert (wrapped == copied).all()
+
+    @pytest.mark.parametrize("operator", ["<", "<=", ">", ">=", "!="])
+    def test_inequalities(self, array_a, array_b, operator):
+        wrapped_a, wrapped_b = WrappedArray(array_a), WrappedArray(array_b)
+        if operator == "<":
+            expected = array_a < array_b
+            result = wrapped_a < wrapped_b
+        elif operator == "<=":
+            expected = array_a <= array_b
+            result = wrapped_a <= wrapped_b
+        elif operator == ">":
+            expected = array_a > array_b
+            result = wrapped_a > wrapped_b
+        elif operator == ">=":
+            expected = array_a >= array_b
+            result = wrapped_a >= wrapped_b
+        elif operator == "!=":
+            expected = array_a != array_b
+            result = wrapped_a != wrapped_b
+        else:
+            raise ValueError()
+        np.testing.assert_allclose(expected, result)
+
+
+class TestWrappedArrayNDim:
+    """
+    Test n-dimensional wrapped arrays.
+    """
+
+    shape = (3, 4)
+
+    @pytest.fixture
+    def array(self):
+        rng = np.random.default_rng(seed=4141)
+        return rng.uniform(size=self.shape)
+
+    def test_transpose(self, array):
+        wrapped = WrappedArray(array)
+        np.testing.assert_allclose(wrapped.T, array.T, strict=True)
+        np.testing.assert_allclose(wrapped.transpose(), array.transpose(), strict=True)
+
+    def test_matmul(self, array):
+        wrapped = WrappedArray(array)
+        v = np.arange(self.shape[1], dtype=np.float64)
+        np.testing.assert_allclose(wrapped @ v, array @ v, strict=True)

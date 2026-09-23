@@ -489,22 +489,22 @@ and use a backtracking line search to update the model after each iteration.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>maxiter</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Maximum number of Gauss-Newton iterations.</p>
+<dt><strong>maxiter</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Maximum number of Gauss-Newton iterations.</p>
 </dd>
-<dt><strong>maxiter_line_search</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Maximum number of line search iterations.</p>
+<dt><strong>maxiter_line_search</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Maximum number of line search iterations.</p>
 </dd>
-<dt><strong>rtol</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>Relative tolerance for the objective function. If the relative difference
+<dt><strong>rtol</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>Relative tolerance for the objective function. If the relative difference
 between the current and previous value of the objective function is below
 <code class="docutils literal notranslate"><span class="pre">rtol</span></code>, then the minimization is considered as converged.</p>
 </dd>
-<dt><strong>stopping_criterion</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Condition</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">Callable</span></code> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Additional stopping condition that will make the Gauss-Newton iterations to
+<dt><strong>stopping_criterion</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Condition</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">Callable</span></code> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Additional stopping condition that will make the Gauss-Newton iterations to
 finish. When a condition is passed, the Gauss-Newton iterations will finish if
 the condition is met, the Gauss-Newton converges (relative difference below
 <code class="docutils literal notranslate"><span class="pre">rtol</span></code>), or if maximum number of iterations are reached.
 If None, Gauss-Newton iterations will finish if convergence or maximum number of
 iterations are reached.</p>
 </dd>
-<dt><strong>cg_kwargs</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Dictionary with extra arguments passed to the <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.cg.html#scipy.sparse.linalg.cg" title="(in SciPy v1.18.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.sparse.linalg.cg()</span></code></a>
+<dt><strong>cg_kwargs</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Dictionary with extra arguments passed to the <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.cg.html#scipy.sparse.linalg.cg" title="(in SciPy v1.18.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.sparse.linalg.cg()</span></code></a>
 function.</p>
 </dd>
 </dl>
@@ -543,7 +543,7 @@ If None, no preconditioner will be used.
 If the preconditioner implements an <code class="docutils literal notranslate"><span class="pre">update</span></code> method, the preconditioner
 will be updated <strong>before</strong> every conjugate gradient minimization.</p>
 </dd>
-<dt><strong>callback</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#callable" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">callable()</span></code></a>, optional</span></dt><dd><p>Callable that gets called after each iteration.</p>
+<dt><strong>callback</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#callable" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">callable()</span></code></a>, optional</span></dt><dd><p>Callable that gets called after each iteration.</p>
 </dd>
 </dl>
 </dd>

@@ -494,7 +494,7 @@
 </dd>
 <dt><strong>simulation</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Simulation</span></code></span></dt><dd><p>Instance of Simulation.</p>
 </dd>
-<dt><strong>build_hessian</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.14)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>If True, the <a class="reference internal" href="#inversion_ideas.DataMisfit.hessian" title="inversion_ideas.DataMisfit.hessian"><code class="xref py py-meth docutils literal notranslate"><span class="pre">hessian()</span></code></a> method will build the
+<dt><strong>build_hessian</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bltin-boolean-values" title="(in Python v3.14)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>If True, the <a class="reference internal" href="#inversion_ideas.DataMisfit.hessian" title="inversion_ideas.DataMisfit.hessian"><code class="xref py py-meth docutils literal notranslate"><span class="pre">hessian()</span></code></a> method will build the
 Hessian matrix and allocate it in memory.
 If False, the <a class="reference internal" href="#inversion_ideas.DataMisfit.hessian" title="inversion_ideas.DataMisfit.hessian"><code class="xref py py-meth docutils literal notranslate"><span class="pre">hessian()</span></code></a> method will return a
 <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code></a> that represents the Hessian matrix.
@@ -505,7 +505,7 @@ Default to False.</p>
 you need to build it.</p>
 </div>
 </dd>
-<dt><strong>estimate_hessian_diagonal</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.14)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>If True, the <a class="reference internal" href="#inversion_ideas.DataMisfit.hessian_diagonal" title="inversion_ideas.DataMisfit.hessian_diagonal"><code class="xref py py-meth docutils literal notranslate"><span class="pre">hessian_diagonal()</span></code></a> method will
+<dt><strong>estimate_hessian_diagonal</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bltin-boolean-values" title="(in Python v3.14)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>If True, the <a class="reference internal" href="#inversion_ideas.DataMisfit.hessian_diagonal" title="inversion_ideas.DataMisfit.hessian_diagonal"><code class="xref py py-meth docutils literal notranslate"><span class="pre">hessian_diagonal()</span></code></a> method will
 estimate the diagonal of the Hessian, even if the Jacobian of the
 <code class="docutils literal notranslate"><span class="pre">simulation</span></code> is a <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code></a>.
 If False, an error will be raised when calling the
@@ -675,7 +675,7 @@ d_N^\text{obs} \\
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a></dt><dd><p>Value of the data misfit for the given model.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a></dt><dd><p>Value of the data misfit for the given model.</p>
 </dd>
 </dl>
 </dd>
@@ -710,7 +710,7 @@ the <span class="math notranslate nohighlight">\(i\)</span>-th datum.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a></dt><dd><p>Chi factor for the given model.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a></dt><dd><p>Chi factor for the given model.</p>
 </dd>
 </dl>
 </dd>

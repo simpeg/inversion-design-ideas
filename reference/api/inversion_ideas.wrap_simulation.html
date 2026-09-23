@@ -487,9 +487,9 @@
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>simulation</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a></span></dt><dd><p>Instance of a SimPEG simulation.</p>
+<dt><strong>simulation</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a></span></dt><dd><p>Instance of a SimPEG simulation.</p>
 </dd>
-<dt><strong>store_jacobian</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.14)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to store the jacobian matrix as a dense or sparse matrix.
+<dt><strong>store_jacobian</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bltin-boolean-values" title="(in Python v3.14)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to store the jacobian matrix as a dense or sparse matrix.
 If False, the <code class="docutils literal notranslate"><span class="pre">jacobian</span></code> method will return
 a <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code></a> that calls the <code class="docutils literal notranslate"><span class="pre">Jvec</span></code> and
 <code class="docutils literal notranslate"><span class="pre">Jtvec</span></code> methods of the SimPEG simulation.

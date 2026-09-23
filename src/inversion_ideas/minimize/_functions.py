@@ -67,8 +67,9 @@ def conjugate_gradient(
             preconditioner.update(initial_model)
         kwargs["M"] = preconditioner
 
-    # TODO: maybe it would be nice to add a `is_linear` attribute to the objective
-    # functions for the ones that generate a linear problem.
+    # TODO: # ruff: ignore[FIX002]
+    #   Maybe it would be nice to add a `is_linear` attribute to the objective functions
+    #   for the ones that generate a linear problem.
     gradient = objective.gradient(initial_model)
     hessian = objective.hessian(initial_model)
     model_step, info = cg(hessian, -gradient, **kwargs)

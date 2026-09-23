@@ -258,7 +258,7 @@ def create_sparse_inversion(
 
     # Add extra columns to log
     if inversion.log is not None:
-        # TODO: fix this in case that model norm is a combo
+        # TODO: fix this in case that model norm is a combo # ruff: ignore[FIX002]
         inversion.log.add_column(
             "IRLS", lambda _, __: "active" if model_norm.irls else "inactive"
         )

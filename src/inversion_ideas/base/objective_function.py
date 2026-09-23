@@ -256,7 +256,7 @@ class Scaled(Objective):
         self, model: Model
     ) -> npt.NDArray[np.float64] | SparseArray | LinearOperator:
         if self.multiplier == 0.0:
-            # TODO: replace this with a Zero operator?
+            # TODO: replace this with a Zero operator? # ruff: ignore[FIX002]
             shape = (self.n_params, self.n_params)
             return csr_array(shape, dtype=np.float64)
         return self.multiplier * self.function.hessian(model)

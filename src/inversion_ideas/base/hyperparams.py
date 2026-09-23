@@ -344,9 +344,6 @@ class WrappedArray:  # ruff: ignore[PLW1641] (ignore undefined __hash__ method)
     def __gt__(self, other):
         return self.array > other
 
-    def __not__(self):
-        return not self.array
-
     def __bool__(self):
         return bool(self.array)
 

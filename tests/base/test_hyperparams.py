@@ -198,6 +198,13 @@ class TestMultiplier:
         assert -multiplier == -value
         assert isinstance(-multiplier, float)
 
+    def test_pos(self):
+        """Test the ``__pos__`` method."""
+        value = 10.0
+        multiplier = Multiplier(value)
+        assert multiplier.__pos__() == value.__pos__()
+        assert isinstance(multiplier.__pos__(), float)
+
     def test_round(self):
         """Test the ``__round__`` method."""
         value = 10.5
@@ -388,6 +395,10 @@ class TestWrappedArray:
         assert isinstance(wrapped_array.ndim, int)
         assert array.ndim == wrapped_array.ndim
 
+    def test_dtype(self, array):
+        wrapped_array = WrappedArray(array)
+        assert wrapped_array.dtype is array.dtype
+
     @pytest.mark.parametrize("right", [False, True], ids=["left", "right"])
     def test_add(self, array, other_array, right):
         wrapped_array = WrappedArray(array)
@@ -545,6 +556,14 @@ class TestWrappedArray:
     def test_max(self, array):
         wrapped_array = WrappedArray(array)
         np.testing.assert_allclose(wrapped_array.max(), array.max(), strict=True)
+
+    def test_copy(self, array):
+        wrapped_array = WrappedArray(array)
+        copied = wrapped_array.copy()
+        assert not (wrapped_array is copied)
+        assert not (wrapped_array.array is copied.array)
+        assert array is wrapped_array.array
+        assert not (array is copied.array)
 
 
 class TestWrappedArrayVsWrappedArray:

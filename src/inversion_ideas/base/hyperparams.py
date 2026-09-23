@@ -10,6 +10,7 @@ from typing import Self
 import numpy as np
 import numpy.typing as npt
 
+from ._utils import float_to_latex
 from .objective_function import Objective
 
 
@@ -84,7 +85,8 @@ class Multiplier(Real):  # ruff: ignore[PLW1641] (ignore undefined __hash__ meth
         return f"{type(self).__name__}({self.value})"
 
     def _repr_latex_(self):
-        return r"$\text{" + f"{type(self).__name__}" + f"}}({self.value})$"
+        value = float_to_latex(self.value)
+        return r"$\text{" + f"{type(self).__name__}" + f"}}({value})$"
 
     def __format__(self, fmt):
         return format(self.value, fmt)

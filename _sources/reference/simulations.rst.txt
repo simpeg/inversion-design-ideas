@@ -25,3 +25,4 @@ framework, we offer a *wrapper class* that allow us to extend them through a
 
    wrap_simulation
    WrappedSimulation
+   LinearRegressor

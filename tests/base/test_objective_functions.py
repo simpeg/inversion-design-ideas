@@ -786,7 +786,11 @@ class TestObjectiveFunRepresentations:
         phi = Dummy(3)
         assert phi._repr_latex_() == f"${phi._base_latex} (m)$"
         phi = Dummy(3).set_name("a")
-        assert phi._repr_latex_() == f"${phi._base_latex}_{{a}} (m)$"
+        assert phi._repr_latex_() == rf"${phi._base_latex}_\text{{a}} (m)$"
+
+        # Test when name contains and underscore
+        phi = Dummy(3).set_name("a_b")
+        assert phi._repr_latex_() == rf"${phi._base_latex}_\text{{a-b}} (m)$"
 
 
 class TestScaledRepresentations:

@@ -240,9 +240,10 @@ class LinearRegressor(Simulation):
         Matrix used in the definition of the linear regressor.
     build_jacobian : bool, optional
         Whether the Jacobian matrix will be created as a dense matrix (True) or as a
-        :class:`LinearOperator` (False). Default to True.
+        :class:`~scipy.sparse.linalg.LinearOperator` (False). Default to True.
     cache : bool, optional
-        Whether to cache the results of the ``__call__`` method for the last model
+        Whether to cache the results of the
+        :meth:`~inversion_ideas.LinearRegressor.__call__` method for the last model
         vector or not. Default to True.
 
     Notes
@@ -267,14 +268,15 @@ class LinearRegressor(Simulation):
 
         Parameters
         ----------
-        n_data: int
+        n_data : int
             Number of data values that the simulation will generate.
         n_params : int
             Number of elements in the model vector.
         seed : int or None, optional
             Random seed or random state used to generate the matrix.
         **kwargs
-            Keyword arguents passed to :meth:`~inversion_ideas.simulations.LinearRegressor.__init__`.
+            Keyword arguents passed to
+            the constructor of :class:`~inversion_ideas.LinearRegressor`.
         """
         shape = (n_data, n_params)
         matrix = np.random.default_rng(seed=seed).uniform(size=shape)

@@ -3,6 +3,9 @@
 Objective function
 ==================
 
+Defining objective functions
+----------------------------
+
 Any objective function is defined as a vector function :math:`\phi: \mathbb{R}^M \rightarrow \mathbb{R}`, i.e. it takes a model vector :math:`\mathbf{m}` with :math:`M` elements and returns a single value.
 
 In the new SimPEG's inversion framework, objective functions are represented by a child of the :class:`inversion_ideas.base.Objective`, like the :class:`inversion_ideas.DataMisfit` for example.
@@ -13,12 +16,14 @@ In the new SimPEG's inversion framework, objective functions are represented by 
    import inversion_ideas as ii
 
    # Define a linear regressor as a simulation
-   n_data, n_params = 10, 15
+   n_data, n_params = 3, 5
    simulation = ii.simulations.LinearRegressor.create_random(n_data, n_params, seed=42)
 
-   # Create some random data and uncertainties
-   data = np.random.default_rng(seed=1414).uniform(size=n_data)
-   uncertainties = 1e-3 * np.ones_like(data)
+   # Create some synthetic data and uncertainties
+   true_model = np.array([-5., 2., -3., 4., 1.])
+   std = 1e-2
+   data = simulation(true_model) + np.random.default_rng(seed=42).normal(size=n_data, scale=std)
+   uncertainties = std * np.ones_like(data)
 
    # Define a data misfit function
    data_misfit = ii.DataMisfit(data, uncertainties, simulation)
@@ -35,7 +40,7 @@ Objective functions can be evaluated by calling them:
 .. jupyter-execute::
 
    # Define some model
-   model = np.arange(n_params, dtype=np.float64)
+   model = np.array([-2., -1., 0., 1., 2.])
 
    # Evaluate the data_misfit on that model
    data_misfit(model)
@@ -68,6 +73,13 @@ All objective functions have two methods to compute its derivatives:
    A :class:`~scipy.sparse.linalg.LinearOperator` allows us to operate with such
    matrix as if it were an array, but without storing it entirely in memory.
 
+   For example, we can compute the dot product of the ``hessian`` with the
+   ``model`` vector:
+
+   .. jupyter-execute::
+
+      hessian @ model
+
 
 Renaming a function
 -------------------
@@ -95,12 +107,61 @@ Let's rename it to its previous name:
       data_misfit = ii.DataMisfit(data, uncertainties, simulation).set_name("data_misfit")
 
 
+Scaling a function
+------------------
 
-Combining objective functions
------------------------------
+We can easily multiply an :class:`~inversion_ideas.base.Objective` function by a scalar, obtaining a :class:`inversion_ideas.base.Scaled` object.
+The  :class:`inversion_ideas.base.Scaled` is another type of objective functions that represents an objective function (encapsulated in the :attr:`~inversion_ideas.base.Scaled.function` attribute) multiplied by a scalar (encapsulated in the :attr:`~inversion_ideas.base.Scaled.multiplier` attribute).
 
-Add two objective functions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+For example, we can build a new ``scaled`` function by multiplying the ``data_misfit`` by a ``float``:
+
+.. jupyter-execute::
+
+   scaled = 5.0 * data_misfit
+   scaled
+
+We can still access the underlying objects:
+
+.. jupyter-execute::
+
+   scaled.multiplier
+
+.. jupyter-execute::
+
+   scaled.function
+
+
+.. important::
+
+   The  :attr:`~inversion_ideas.base.Scaled.function` variable stores a reference to the original objective function. The
+   :class:`~inversion_ideas.base.Scaled` doesn't perform any copy of it. Therefore ``scaled.function`` **is** the ``data_misfit`` object:
+
+   .. jupyter-execute::
+
+      scaled.function is data_misfit
+
+
+We can evaluate the ``scaled`` function and get its gradient and Hessian as with any other objective function:
+
+.. jupyter-execute::
+
+   scaled(model)
+
+.. jupyter-execute::
+
+   scaled.gradient(model)
+
+.. jupyter-execute::
+
+   scaled.hessian(model)
+
+
+
+Combining functions
+-------------------
+
+Add two functions
+~~~~~~~~~~~~~~~~~
 
 It's possible to define any linear combination of objective functions.
 
@@ -158,8 +219,8 @@ The :class:`inversion_ideas.base.Combo` works as a collection of objective funct
    print(data_misfit in phi)
    print(zeroth in phi)
 
-Add multiple objective functions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Add multiple functions
+~~~~~~~~~~~~~~~~~~~~~~
 
 We can also add more than two objective functions together. For example, consider that we want to add the ``data_misfit`` and the ``zeroth`` regularization with a :class:`~inversion_ideas.TikhonovFirst` regularization:
 
@@ -222,7 +283,7 @@ If we don't want to have this kind of structure,  we can
    first in flat_phi
 
 Is in or contains?
-~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^
 
 When using the ``in`` statement to check whether an objective function is part of a :class:`~inversion_ideas.base.Combo`, we are only checking if that function is one of its elements, but not a recursive search through its nested :class:`~inversion_ideas.base.Combo`.
 
@@ -269,3 +330,92 @@ Alternatively, we can use the :meth:`~inversion_ideas.base.Combo.contains` metho
 
    phi.contains(first)
 
+
+Linear combination of functions
+-------------------------------
+
+Since it's possible to scale objective functions and also to add them up, we can define any linear combination of objective functions.
+For example, we could build an classic objective function like:
+
+.. math::
+
+   \phi(\mathbf{m}) = \phi_\text{d}(\mathbf{m}) + \beta \left[ \phi_\text{0}(\mathbf{m}) + \alpha \phi_\text{1}(\mathbf{m}) \right]
+
+
+as follows:
+
+.. jupyter-execute::
+
+   beta = 1e2
+   alpha = 3.0
+   phi = data_misfit + beta * (zeroth + alpha * first)
+   phi
+
+We can evaluate the ``phi`` function and get its gradient and Hessian as with any other objective function:
+
+.. jupyter-execute::
+
+   phi(model)
+
+.. jupyter-execute::
+
+   phi.gradient(model)
+
+.. jupyter-execute::
+
+   phi.hessian(model)
+
+
+Internal structure
+~~~~~~~~~~~~~~~~~~
+
+The ``phi`` object is a :class:`~inversion_ideas.base.Combo` with a nested structure. It contains two elements: the ``data_misfit`` and a :class:`~inversion_ideas.base.Scaled` object that represents the :math:`\beta \left[ phi_\text{0}(\mathbf{m}) + \alpha \phi_\text{1}(\mathbf{m}) \right]`:
+
+.. jupyter-execute::
+
+   len(phi)
+
+
+.. jupyter-execute::
+
+   phi[0]
+
+.. jupyter-execute::
+
+   phi[1]
+
+
+Because the ``phi[1]`` is a  :class:`~inversion_ideas.base.Scaled`, it has a ``multiplier`` (the value of :math:`\beta`) and a ``function``:
+
+.. jupyter-execute::
+
+   phi[1].multiplier
+
+.. jupyter-execute::
+
+   phi[1].function
+
+The ``phi[1].function`` is another :class:`~inversion_ideas.base.Combo` that contains the ``zeroth`` and a scaled version of ``first``.
+
+.. jupyter-execute::
+
+   phi[1].function[0]
+
+.. jupyter-execute::
+
+   phi[1].function[1]
+
+We can use the  :meth:`~inversion_ideas.base.Combo.contains` to perform a recursive check for a given objective function within the ``phi`` function. This recursive check also explores
+:class:`~inversion_ideas.base.Scaled` objects:
+
+.. jupyter-execute::
+
+   phi.contains(data_misfit)
+
+.. jupyter-execute::
+
+   phi.contains(zeroth)
+
+.. jupyter-execute::
+
+   phi.contains(first)

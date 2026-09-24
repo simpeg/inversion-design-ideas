@@ -13,7 +13,7 @@ model* or *recovered model*, i.e. the model that minimize that objective functio
 Linear minimizers
 -----------------
 
-If our inversion is linear, we can make use of linear minimizers, like :func:`inversion_ideas.conjugate_gradient` to minimize the objective function.
+If our inversion is linear (e.g. potential field inversions), we can make use of linear minimizers, like :func:`inversion_ideas.conjugate_gradient` to minimize the objective function.
 The :func:`~inversion_ideas.conjugate_gradient` function will ask the objective function and an initial model from which it'll start the conjugate gradient algorithm, and it will return the recovered model after convergence has been achieved.
 
 For example, let's consider the :class:`~inversion_ideas.LinearRegressor` simulation and the ``data_misfit`` object we built when we introduced the :ref:`objective function <objective-function>`:
@@ -78,7 +78,33 @@ We can make use of the :meth:`inversion_ideas.DataMisfit.chi_factor` method to s
 Non-linear minimizers
 ---------------------
 
-> TODO
+If our inversion is non-linear (DC-IP, EM inversions, etc.), we'll need to use a suitable minimizer for non-linear inversion problems, like the Gauss-Newton method.
+
+The :class:`inversion_ideas.GaussNewtonConjugateGradient` object implements a Gauss-Newton algorithm using Conjugate Gradient to find search directions, and performing a backtracking line search.
+
+We can use it to minimize the non-linear objective function through the :meth:`inversion_ideas.GaussNewtonConjugateGradient.run` method:
+
+.. code:: python
+
+   minimizer = GaussNewtonConjugateGradient()
+   inverted_model = minimizer.run(phi, initial_model)
+
+
+Alternatively we can iterate over it after calling the minimizer:
+
+.. code:: python
+
+   minimizer = GaussNewtonConjugateGradient()
+
+   for model in minimizer(phi, initial_model):
+      # The model is the one obtained after each Gauss-Newton iteration
+      ...
+      # We can perform stuff here, like plot the model, print information,
+      # save stuff to disk, etc.
+      ...
+
+   # The inverted model is the last value of the `model` variable
+   inverted_model = model.copy()
 
 
 Third-party minimizers

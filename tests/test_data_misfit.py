@@ -7,9 +7,9 @@ import re
 import numpy as np
 import pytest
 
-from inversion_ideas import DataMisfit
+from inversion_ideas import DataMisfit, LinearRegressor
 
-from .utils import LinearRegressor, assert_allclose_linear_operators
+from .utils import assert_allclose_linear_operators
 
 
 class TestDataMisfit:
@@ -43,10 +43,10 @@ class TestDataMisfit:
         return self.rng.uniform(size=shape)
 
     @pytest.mark.parametrize(
-        "jacobian_as_linop", [False, True], ids=["dense-jac", "linop-jac"]
+        "build_jacobian", [True, False], ids=["dense-jac", "linop-jac"]
     )
     def test_hessian_diagonal(
-        self, data_and_uncertainties, regressor_matrix, jacobian_as_linop
+        self, data_and_uncertainties, regressor_matrix, build_jacobian
     ):
         """
         Test the ``hessian_diagonal`` method.
@@ -54,13 +54,13 @@ class TestDataMisfit:
         data, uncertainties = data_and_uncertainties
 
         # Define data misfit
-        simulation = LinearRegressor(regressor_matrix, linop=jacobian_as_linop)
+        simulation = LinearRegressor(regressor_matrix, build_jacobian=build_jacobian)
         data_misfit = DataMisfit(
             data,
             uncertainties,
             simulation,
             # Enable estimation of hessian diagonal if jacobian is a linop
-            estimate_hessian_diagonal=jacobian_as_linop,
+            estimate_hessian_diagonal=True,
         )
 
         # Get diagonal of the hessian
@@ -86,7 +86,7 @@ class TestDataMisfit:
         Test error if `build_hessian` is True and Jacobian is a linear operator.
         """
         data, uncertainties = data_and_uncertainties
-        simulation = LinearRegressor(regressor_matrix, linop=True)
+        simulation = LinearRegressor(regressor_matrix, build_jacobian=False)
         data_misfit = DataMisfit(data, uncertainties, simulation, build_hessian=True)
 
         model = self.rng.uniform(size=self.n_params)
@@ -95,9 +95,9 @@ class TestDataMisfit:
             data_misfit.hessian(model)
 
     @pytest.mark.parametrize(
-        "jacobian_as_linop", [False, True], ids=["dense-jac", "linop-jac"]
+        "build_jacobian", [True, False], ids=["dense-jac", "linop-jac"]
     )
-    def test_hessian(self, data_and_uncertainties, regressor_matrix, jacobian_as_linop):
+    def test_hessian(self, data_and_uncertainties, regressor_matrix, build_jacobian):
         """
         Compare dense Hessian vs Hessian as LinearOperator.
         """
@@ -115,7 +115,7 @@ class TestDataMisfit:
         data_misfit_test = DataMisfit(
             data,
             uncertainties,
-            simulation=LinearRegressor(regressor_matrix, linop=jacobian_as_linop),
+            simulation=LinearRegressor(regressor_matrix, build_jacobian=build_jacobian),
             build_hessian=False,
         )
 

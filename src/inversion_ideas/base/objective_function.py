@@ -614,8 +614,8 @@ def _float_to_str(number: float, precision: int = FLOAT_TO_STR_PRECISION) -> str
         msg = f"Invalid precision value '{precision}'. It must be a positive integer."
         raise ValueError(msg)
     if number == 0.0:
-        return "0."
+        return "0.0"
     min_bound, max_bound = 10 ** (-precision), 10**precision
     if min_bound <= np.abs(number) <= max_bound:
-        return np.format_float_positional(number, precision=precision)
+        return np.format_float_positional(number, precision=precision, trim="0")
     return np.format_float_scientific(number, precision=precision)

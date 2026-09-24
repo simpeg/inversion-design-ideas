@@ -146,7 +146,8 @@ class Objective(ABC):
     def _repr_latex_(self):
         repr_ = f"{self._base_latex}"
         if self.name is not None:
-            repr_ += rf"_{{{self.name}}}"
+            name = self.name.replace("_", "-")
+            repr_ += r"_\text{" + name + "}"
         return f"${repr_} (m)$"
 
     def info(self):

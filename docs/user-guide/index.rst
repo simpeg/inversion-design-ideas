@@ -20,3 +20,8 @@ User Guide
    objective-function
    minimizer
 
+.. toctree::
+   :maxdepth: 1
+   :caption: How To
+
+   logging

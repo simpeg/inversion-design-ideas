@@ -279,7 +279,7 @@ class LinearRegressor(Simulation):
             the constructor of :class:`~inversion_ideas.LinearRegressor`.
         """
         shape = (n_data, n_params)
-        matrix = np.random.default_rng(seed=seed).uniform(size=shape)
+        matrix = np.random.default_rng(seed=seed).uniform(low=-1, high=1, size=shape)
         return cls(matrix, **kwargs)
 
     @property

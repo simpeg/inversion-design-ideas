@@ -4,9 +4,19 @@ User Guide
 ----------
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Basic concepts
+   :maxdepth: 1
+   :caption: Getting started
+
+   what
+   installing
+   gravity-inversion
+   dc-inversion
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Fundamentals
 
    inversion-concept
    objective-function
    minimizer
+

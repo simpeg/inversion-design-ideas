@@ -4,7 +4,7 @@ Wrap SimPEG simulations to work with this new inversion framework.
 
 import numpy as np
 import numpy.typing as npt
-from scipy.sparse.linalg import LinearOperator
+from scipy.sparse.linalg import LinearOperator, aslinearoperator
 from simpeg.base.pde_simulation import BasePDESimulation
 
 from ._utils import array_to_str, compute_hash, hash_to_str
@@ -220,3 +220,78 @@ class WrappedSimulation(Simulation):
         get_logger().debug(msg)
         # ---
         return fields
+
+
+class LinearRegressor(Simulation):
+    r"""
+    Linear regressor simulation.
+
+    Implements a linear regressor that generates data values as the product between its
+    matrix and a given model vector.
+
+    .. important::
+
+        This class is included mainly as an example of a simple simulation class that
+        could be created and used within the inversion framework.
+
+    Parameters
+    ----------
+    matrix : (n_data, n_params) array
+        Matrix used in the definition of the linear regressor.
+    build_hessian : bool, optional
+        Whether the Hessian matrix will be created as a dense matrix (True) or as a :class:`LinearOperator`. Default to False.
+    cache : bool, optional
+        Whether to cache the results of the ``__call__`` method for the last model
+        vector or not. Default to True.
+
+    Notes
+    -----
+    Given the matrix :math:`\mathbf{X}`, the linear regressor simulation computes the
+    data vector :math:`\mathbf{y}` for a given model vector :math:`\mathbf{m}` as
+    follows:
+
+    .. math::
+
+        \mathbf{y} = \mathbf{X} \cdot \mathbf{m}
+    """
+
+    def __init__(self, matrix, *, build_hessian=False, cache=True):
+        self.matrix = matrix
+        self.build_hessian = build_hessian
+        self.cache = cache
+
+    @classmethod
+    def create_random(cls, n_data: int, n_params: int, *, seed=None, **kwargs):
+        """Create a linear regressor with a random matrix.
+
+        Parameters
+        ----------
+        n_data: int
+            Number of data values that the simulation will generate.
+        n_params : int
+            Number of elements in the model vector.
+        seed : int or None, optional
+            Random seed or random state used to generate the matrix.
+        **kwargs
+            Keyword arguents passed to :meth:`~inversion_ideas.simulations.LinearRegressor.__init__`.
+        """
+        shape = (n_data, n_params)
+        matrix = np.random.default_rng(seed=seed).uniform(size=shape)
+        return cls(matrix, **kwargs)
+
+    @property
+    def n_params(self) -> int:
+        return self.matrix.shape[1]
+
+    @property
+    def n_data(self) -> int:
+        return self.matrix.shape[0]
+
+    @cache_on_model
+    def __call__(self, model) -> npt.NDArray[np.float64]:
+        return self.matrix @ model
+
+    def jacobian(self, model) -> npt.NDArray[np.float64] | LinearOperator:  # noqa: ARG002
+        if not self.build_hessian:
+            return aslinearoperator(self.matrix)
+        return self.matrix

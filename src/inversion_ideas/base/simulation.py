@@ -34,10 +34,31 @@ class Simulation(ABC):
     def __call__(self, model: Model) -> NDArray[np.float64]:
         """
         Evaluate simulation for a given model.
+
+        Parameters
+        ----------
+        model : (n_params) array
+            Array with model values.
+
+        Returns
+        -------
+        (n_data)
+            Array with predicted data values for the given model.
         """
 
     @abstractmethod
     def jacobian(self, model: Model) -> NDArray[np.float64] | LinearOperator:
         """
         Jacobian matrix for a given model.
+
+        Parameters
+        ----------
+        model : (n_params) array
+            Array with model values.
+
+        Returns
+        -------
+        (n_data, n_params) array or LinearOperator
+            Jacobian matrix as a dense or sparse array,
+            or as a :class:`~scipy.sparse.linalg.LinearOperator`.
         """

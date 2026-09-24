@@ -238,8 +238,9 @@ class LinearRegressor(Simulation):
     ----------
     matrix : (n_data, n_params) array
         Matrix used in the definition of the linear regressor.
-    build_hessian : bool, optional
-        Whether the Hessian matrix will be created as a dense matrix (True) or as a :class:`LinearOperator`. Default to False.
+    build_jacobian : bool, optional
+        Whether the Jacobian matrix will be created as a dense matrix (True) or as a
+        :class:`LinearOperator` (False). Default to True.
     cache : bool, optional
         Whether to cache the results of the ``__call__`` method for the last model
         vector or not. Default to True.
@@ -255,9 +256,9 @@ class LinearRegressor(Simulation):
         \mathbf{y} = \mathbf{X} \cdot \mathbf{m}
     """
 
-    def __init__(self, matrix, *, build_hessian=False, cache=True):
+    def __init__(self, matrix, *, build_jacobian=True, cache=True):
         self.matrix = matrix
-        self.build_hessian = build_hessian
+        self.build_jacobian = build_jacobian
         self.cache = cache
 
     @classmethod
@@ -292,6 +293,6 @@ class LinearRegressor(Simulation):
         return self.matrix @ model
 
     def jacobian(self, model) -> npt.NDArray[np.float64] | LinearOperator:  # noqa: ARG002
-        if not self.build_hessian:
+        if not self.build_jacobian:
             return aslinearoperator(self.matrix)
         return self.matrix

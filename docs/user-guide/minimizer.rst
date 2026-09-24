@@ -1,0 +1,4 @@
+.. _minimizer:
+
+Minimizer
+=========

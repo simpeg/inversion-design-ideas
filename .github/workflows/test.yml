@@ -67,7 +67,7 @@ jobs:
   # Only run in a Pull-Request
   diff-cover:
     name: Check coverage of diff
-    if: success() && github.event_name != 'pull_request'
+    if: success() && github.event_name == 'pull_request'
     needs: test
     runs-on: ubuntu-latest
     env:

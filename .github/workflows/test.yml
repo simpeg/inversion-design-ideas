@@ -159,8 +159,8 @@ jobs:
           # specified by path.
           merge-multiple: true
 
-      - name: Install coverage.py
-        run: python -m pip install --upgrade coverage[toml]
+      - name: Install coverage.py and diff-cover
+        run: python -m pip install --upgrade coverage[toml] diff-cover
 
       - name: Check coverage of 100% on diff
         run: make diff-cover

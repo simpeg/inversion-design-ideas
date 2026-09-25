@@ -6,6 +6,7 @@ import numpy as np
 import pytest
 
 from inversion_ideas.base import Condition
+from inversion_ideas.typing import Model
 
 
 class Even(Condition):
@@ -13,7 +14,7 @@ class Even(Condition):
     Simple condition that checks if model is even.
     """
 
-    def __call__(self, model) -> bool:
+    def __call__(self, model: Model) -> bool:
         return bool(np.all((model % 2) == 0))
 
 
@@ -22,7 +23,7 @@ class Positive(Condition):
     Simple condition that checks if model is positive.
     """
 
-    def __call__(self, model) -> bool:
+    def __call__(self, model: Model) -> bool:
         return bool(np.all(model > 0))
 
 
@@ -40,7 +41,7 @@ class TestMixin:
         """
         if request.param == "function":
 
-            def is_even(model) -> bool:
+            def is_even(model: Model) -> bool:
                 return bool(np.all((model % 2) == 0))
 
             return is_even
@@ -48,63 +49,63 @@ class TestMixin:
 
     def test_positive(self):
         is_positive = Positive()
-        assert is_positive(1.0)
-        assert is_positive(10.0)
-        assert not is_positive(0.0)
-        assert not is_positive(-2.0)
+        assert is_positive(np.array([1.0]))
+        assert is_positive(np.array([10.0]))
+        assert not is_positive(np.array([0.0]))
+        assert not is_positive(np.array([-2.0]))
 
     def test_even(self, is_even):
-        assert not is_even(1.0)
-        assert is_even(2.0)
-        assert not is_even(3.0)
-        assert is_even(4.0)
-        assert is_even(0.0)
-        assert not is_even(-1.0)
-        assert is_even(-2.0)
-        assert not is_even(-3.0)
-        assert is_even(-4.0)
+        assert not is_even(np.array([1.0]))
+        assert is_even(np.array([2.0]))
+        assert not is_even(np.array([3.0]))
+        assert is_even(np.array([4.0]))
+        assert is_even(np.array([0.0]))
+        assert not is_even(np.array([-1.0]))
+        assert is_even(np.array([-2.0]))
+        assert not is_even(np.array([-3.0]))
+        assert is_even(np.array([-4.0]))
 
-    def test_and(self, is_even):
+    def test_and(self):
         is_even = Even()
         is_positive = Positive()
         condition = is_even & is_positive
-        assert not condition(1.0)
-        assert condition(2.0)
-        assert not condition(3.0)
-        assert condition(4.0)
-        assert not condition(0.0)
-        assert not condition(-1.0)
-        assert not condition(-2.0)
-        assert not condition(-3.0)
-        assert not condition(-4.0)
+        assert not condition(np.array([1.0]))
+        assert condition(np.array([2.0]))
+        assert not condition(np.array([3.0]))
+        assert condition(np.array([4.0]))
+        assert not condition(np.array([0.0]))
+        assert not condition(np.array([-1.0]))
+        assert not condition(np.array([-2.0]))
+        assert not condition(np.array([-3.0]))
+        assert not condition(np.array([-4.0]))
 
-    def test_or(self, is_even):
+    def test_or(self):
         is_even = Even()
         is_positive = Positive()
         condition = is_even | is_positive
-        assert condition(1.0)
-        assert condition(2.0)
-        assert condition(3.0)
-        assert condition(4.0)
-        assert condition(0.0)
-        assert not condition(-1.0)
-        assert condition(-2.0)
-        assert not condition(-3.0)
-        assert condition(-4.0)
+        assert condition(np.array([1.0]))
+        assert condition(np.array([2.0]))
+        assert condition(np.array([3.0]))
+        assert condition(np.array([4.0]))
+        assert condition(np.array([0.0]))
+        assert not condition(np.array([-1.0]))
+        assert condition(np.array([-2.0]))
+        assert not condition(np.array([-3.0]))
+        assert condition(np.array([-4.0]))
 
-    def test_xor(self, is_even):
+    def test_xor(self):
         is_even = Even()
         is_positive = Positive()
         condition = is_even ^ is_positive
-        assert condition(1.0)
-        assert not condition(2.0)
-        assert condition(3.0)
-        assert not condition(4.0)
-        assert condition(0.0)
-        assert not condition(-1.0)
-        assert condition(-2.0)
-        assert not condition(-3.0)
-        assert condition(-4.0)
+        assert condition(np.array([1.0]))
+        assert not condition(np.array([2.0]))
+        assert condition(np.array([3.0]))
+        assert not condition(np.array([4.0]))
+        assert condition(np.array([0.0]))
+        assert not condition(np.array([-1.0]))
+        assert condition(np.array([-2.0]))
+        assert not condition(np.array([-3.0]))
+        assert condition(np.array([-4.0]))
 
 
 class GreaterThan(Condition):
@@ -112,17 +113,17 @@ class GreaterThan(Condition):
     Check if model is greater than certain value for all elements in the model.
     """
 
-    def __init__(self, value):
+    def __init__(self, value: Model):
         self.value = value
 
-    def __call__(self, model) -> bool:
+    def __call__(self, model: Model) -> bool:
         return bool(np.all(model > self.value))
 
-    def update(self, model):
+    def update(self, model: Model):
         self.value = model
 
     def initialize(self):
-        self.value = None
+        self.value = np.array([0])
 
 
 class TestUpdateMixin:
@@ -131,21 +132,21 @@ class TestUpdateMixin:
     """
 
     def test_greater_than(self):
-        condition = GreaterThan(2)
-        assert condition(3)
-        assert not condition(2)
-        assert not condition(1)
+        condition = GreaterThan(np.array([2]))
+        assert condition(np.array([3]))
+        assert not condition(np.array([2]))
+        assert not condition(np.array([1]))
 
     def test_update(self):
-        condition = GreaterThan(2)
-        new_value = 3
+        condition = GreaterThan(np.array([2]))
+        new_value = np.array([3])
         condition.update(new_value)
         assert condition.value == new_value
 
     @pytest.mark.parametrize("operation", ["and", "or", "xor"])
     def test_update_mixin(self, operation):
-        condition_a = GreaterThan(2)
-        condition_b = GreaterThan(3)
+        condition_a = GreaterThan(np.array([2]))
+        condition_b = GreaterThan(np.array([3]))
         match operation:
             case "and":
                 condition = condition_a & condition_b
@@ -157,9 +158,9 @@ class TestUpdateMixin:
                 msg = f"{operation}"
                 raise ValueError(msg)
         new_value = 4
-        condition.update(new_value)
-        assert condition_a.value == new_value
-        assert condition_b.value == new_value
+        condition.update(np.array([new_value]))
+        assert (condition_a.value == new_value).all()
+        assert (condition_b.value == new_value).all()
 
     @pytest.mark.parametrize("operation", ["and", "or", "xor"])
     def test_update_mixin_with_function(self, operation):
@@ -170,7 +171,7 @@ class TestUpdateMixin:
         def is_even(model) -> bool:
             return bool(np.all((model % 2) == 0))
 
-        condition_a = GreaterThan(2)
+        condition_a = GreaterThan(np.array([2]))
         match operation:
             case "and":
                 condition = condition_a & is_even
@@ -181,7 +182,7 @@ class TestUpdateMixin:
             case _:
                 msg = f"{operation}"
                 raise ValueError(msg)
-        new_value = 4
+        new_value = np.array([4])
         condition.update(new_value)
         assert condition_a.value == new_value
         assert condition.condition_b is is_even
@@ -193,14 +194,14 @@ class TestInitializeMixin:
     """
 
     def test_initialize(self):
-        condition = GreaterThan(2)
+        condition = GreaterThan(np.array([2]))
         condition.initialize()
-        assert condition.value is None
+        assert (condition.value == np.array([0])).all()
 
     @pytest.mark.parametrize("operation", ["and", "or", "xor"])
     def test_initialize_mixin(self, operation):
-        condition_a = GreaterThan(2)
-        condition_b = GreaterThan(3)
+        condition_a = GreaterThan(np.array([2]))
+        condition_b = GreaterThan(np.array([3]))
         match operation:
             case "and":
                 condition = condition_a & condition_b
@@ -212,8 +213,8 @@ class TestInitializeMixin:
                 msg = f"{operation}"
                 raise ValueError(msg)
         condition.initialize()
-        assert condition_a.value is None
-        assert condition_b.value is None
+        assert (condition_a.value == np.array([0])).all()
+        assert (condition_b.value == np.array([0])).all()
 
     @pytest.mark.parametrize("operation", ["and", "or", "xor"])
     def test_initialize_mixin_with_function(self, operation):
@@ -224,7 +225,7 @@ class TestInitializeMixin:
         def is_even(model) -> bool:
             return bool(np.all((model % 2) == 0))
 
-        condition_a = GreaterThan(2)
+        condition_a = GreaterThan(np.array([2]))
         match operation:
             case "and":
                 condition = condition_a & is_even
@@ -236,5 +237,32 @@ class TestInitializeMixin:
                 msg = f"{operation}"
                 raise ValueError(msg)
         condition.initialize()
-        assert condition_a.value is None
+        assert (condition_a.value == np.array([0])).all()
         assert condition.condition_b is is_even
+
+
+class TestInplaceErrors:
+    """
+    Test errors on inplace operators of conditions.
+    """
+
+    def test_iand(self):
+        condition_a, condition_b = Even(), Positive()
+        with pytest.raises(
+            TypeError, match="Inplace AND binary operation is not supported"
+        ):
+            condition_a &= condition_b
+
+    def test_ior(self):
+        condition_a, condition_b = Even(), Positive()
+        with pytest.raises(
+            TypeError, match="Inplace OR binary operation is not supported"
+        ):
+            condition_a |= condition_b
+
+    def test_ixor(self):
+        condition_a, condition_b = Even(), Positive()
+        with pytest.raises(
+            TypeError, match="Inplace XOR binary operation is not supported"
+        ):
+            condition_a ^= condition_b

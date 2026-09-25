@@ -29,14 +29,37 @@ def _get_info_title(condition, model) -> str:
 class Condition(ABC):
     """
     Base abstract class for conditions.
+
+    .. important::
+
+        This class is not meant to be instantiated. Use it to create child classes in
+        order to implement custom condition objects.
     """
 
     @abstractmethod
-    def __call__(self, model: Model) -> bool: ...
+    def __call__(self, model: Model) -> bool:
+        """
+        Evaluate the condition on a given model.
 
-    def update(self, model: Model):  # noqa: B027
+        Parameters
+        ----------
+        model : (n_params) array
+            Array with model values.
+
+        Returns
+        -------
+        bool
+            Whether the condition is True or False.
+        """
+
+    def update(self, model: Model) -> None:  # noqa: B027
         """
         Update the condition.
+
+        Parameters
+        ----------
+        model : (n_params) array
+            Array with model values.
         """
         # This is not an abstract method. Children classes can choose to override it if
         # necessary. The base class implements it to provide a common interface, even
@@ -53,6 +76,16 @@ class Condition(ABC):
     def info(self, model: Model) -> Tree:
         """
         Display information about the condition for a given model.
+
+        Parameters
+        ----------
+        model : (n_params) array
+            Array with model values.
+
+        Returns
+        -------
+        rich.tree.Tree
+            :class:`rick.tree.Tree` object containing information about the condition.
         """
         return Tree(_get_info_title(self, model))
 
@@ -80,7 +113,14 @@ class Condition(ABC):
 
 class _Mixin(ABC):
     """
-    Base class for Mixin classes.
+    Mixin class for combo conditions.
+
+    .. important::
+
+        This class is not meant to be instantiated.
+        This is a mixin class intended to provide implementation of certain methods
+        for the condition classes that group together two other conditions.
+
     """
 
     def __init__(self, condition_a, condition_b):
@@ -91,9 +131,6 @@ class _Mixin(ABC):
     def __call__(self, model: Model) -> bool: ...
 
     def update(self, model: Model):
-        """
-        Update the underlying conditions.
-        """
         for condition in (self.condition_a, self.condition_b):
             if hasattr(condition, "update"):
                 condition.update(model)
@@ -117,9 +154,6 @@ class _Mixin(ABC):
         return tree
 
     def initialize(self):
-        """
-        Initialize the underlying conditions.
-        """
         for condition in (self.condition_a, self.condition_b):
             if hasattr(condition, "initialize"):
                 condition.initialize()
@@ -127,7 +161,13 @@ class _Mixin(ABC):
 
 class LogicalAnd(_Mixin, Condition):
     """
-    Mixin condition for the AND operation between two other conditions.
+    Combo condition for the AND operation between two other conditions.
+
+    .. important::
+
+        This class is not meant to be instantiated. It should only be used when
+        combining two conditions through the ``&`` (AND) operator.
+
     """
 
     def __call__(self, model: Model) -> bool:
@@ -136,7 +176,13 @@ class LogicalAnd(_Mixin, Condition):
 
 class LogicalOr(_Mixin, Condition):
     """
-    Mixin condition for the OR operation between two other conditions.
+    Combo condition for the OR operation between two other conditions.
+
+    .. important::
+
+        This class is not meant to be instantiated. It should only be used when
+        combining two conditions through the ``|`` (OR) operator.
+
     """
 
     def __call__(self, model: Model) -> bool:
@@ -145,7 +191,13 @@ class LogicalOr(_Mixin, Condition):
 
 class LogicalXor(_Mixin, Condition):
     """
-    Mixin condition for the XOR operation between two other conditions.
+    Combo condition for the XOR operation between two other conditions.
+
+    .. important::
+
+        This class is not meant to be instantiated. It should only be used when
+        combining two conditions through the ``^`` (XOR) operator.
+
     """
 
     def __call__(self, model: Model) -> bool:

@@ -35,13 +35,13 @@ def float_to_str(number: float, precision: int = FLOAT_TO_STR_PRECISION) -> str:
     Examples
     --------
     >>> float_to_str(1.0)
-    '1.'
+    '1.0'
 
     >>> float_to_str(-1.0)
-    '-1.'
+    '-1.0'
 
     >>> float_to_str(1e3)
-    '1000.'
+    '1000.0'
 
     >>> float_to_str(2e3)
     '2.e+03'
@@ -56,10 +56,10 @@ def float_to_str(number: float, precision: int = FLOAT_TO_STR_PRECISION) -> str:
         msg = f"Invalid precision value '{precision}'. It must be a positive integer."
         raise ValueError(msg)
     if number == 0.0:
-        return "0."
+        return "0.0"
     min_bound, max_bound = 10 ** (-precision), 10**precision
     if min_bound <= np.abs(number) <= max_bound:
-        return np.format_float_positional(number, precision=precision)
+        return np.format_float_positional(number, precision=precision, trim="0")
     return np.format_float_scientific(number, precision=precision)
 
 
@@ -89,13 +89,13 @@ def float_to_latex(number: float, precision: int = FLOAT_TO_STR_PRECISION) -> st
     Examples
     --------
     >>> float_to_latex(1.0)
-    '1.'
+    '1.0'
 
     >>> float_to_latex(-1.0)
-    '-1.'
+    '-1.0'
 
     >>> float_to_latex(1e3)
-    '1000.'
+    '1000.0'
 
     >>> float_to_latex(2e3)
     '2. \\cdot 10^{3}'

@@ -29,7 +29,7 @@ from .recipes import (
     create_tikhonov_regularization,
 )
 from .regularization import Flatness, Smallness, SparseSmallness, TikhonovZero
-from .simulations import WrappedSimulation, wrap_simulation
+from .simulations import LinearRegressor, WrappedSimulation, wrap_simulation
 
 __all__ = [
     "BFGSPreconditioner",
@@ -40,6 +40,7 @@ __all__ = [
     "InversionLog",
     "InversionLogRich",
     "JacobiPreconditioner",
+    "LinearRegressor",
     "Smallness",
     "SparseSmallness",
     "TikhonovZero",

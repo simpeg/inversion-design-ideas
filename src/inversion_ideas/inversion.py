@@ -94,8 +94,9 @@ class Inversion:
         if log is False:
             self.log = None
         elif log is True:
-            # TODO: this could fail if the objective function is not
-            # phi_d + beta * phi_m. We should try-error here maybe...
+            # TODO: # ruff: ignore[FIX002]
+            #   This could fail if the objective function is not
+            #     phi_d + beta * phi_m. We should try-error here maybe...
             self.log = InversionLogRich.create_from(self.objective_function)
         else:
             self.log = log
@@ -103,7 +104,8 @@ class Inversion:
         # Assign model as a copy of the initial model
         self.model = initial_model.copy()
 
-        # TODO: Support for handling custom callbacks for the minimizer
+        # TODO: # ruff: ignore[FIX002]
+        #   Support for handling custom callbacks for the minimizer.
         if log is not None and "callback" in self.minimizer_kwargs:
             msg = "Passing a custom callback for the minimizer is not yet supported."
             raise NotImplementedError(msg)
@@ -287,7 +289,7 @@ class Inversion:
         """
         if show_log and self.log is not None:
             if not isinstance(self.log, RenderableType):
-                # TODO: Add message
+                # TODO: Add message # ruff: ignore[FIX002]
                 raise NotImplementedError()
 
             spinner = Spinner(

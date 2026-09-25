@@ -22,7 +22,7 @@ class TestFloatToString:
         ("number", "string"),
         [
             # Zero
-            (0, "0."),
+            (0, "0.0"),
             # Positional
             (3.14, "3.14"),
             (3.1416, "3.142"),
@@ -31,8 +31,8 @@ class TestFloatToString:
             (0.001, "0.001"),
             (-0.001, "-0.001"),
             (0.123456, "0.123"),
-            (1000.0, "1000."),
-            (-1000.0, "-1000."),
+            (1000.0, "1000.0"),
+            (-1000.0, "-1000.0"),
             (999.123, "999.123"),
             (999.1235, "999.124"),
             (-999.123, "-999.123"),
@@ -48,5 +48,5 @@ class TestFloatToString:
             (-1000.123, "-1.000e+03"),
         ],
     )
-    def testfloat_to_str(self, number, string):
+    def test_float_to_str(self, number, string):
         assert float_to_str(number) == string

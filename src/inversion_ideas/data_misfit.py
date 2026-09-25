@@ -351,9 +351,10 @@ class DataMisfit(Objective):
             )
             # ---
 
-            # TODO: Extend algorithms for estimating the diagonal. Add keyword arguments
-            #       to the constructor of the DataMisfit to choose method and set
-            #       parameters.
+            # TODO: # ruff: ignore[FIX002]
+            #   Extend algorithms for estimating the diagonal.
+            #   Add keyword arguments to the constructor of the DataMisfit to choose
+            #   method and set parameters.
 
             # Compute the diagonal.
             diagonal = get_diagonal(hessian)

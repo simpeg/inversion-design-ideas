@@ -12,17 +12,39 @@ from abc import ABC, abstractmethod
 from rich.panel import Panel
 from rich.tree import Tree
 
-from ..typing import Model
+from ..typing import CanBeInitialized, CanBeUpdated, ConditionLike, HasInfo, Model
 
 
-def _get_info_title(condition, model) -> str:
+def _get_info_title(condition: ConditionLike, status: bool) -> str:
     """
-    Generate title for condition's information.
+    Generate title for condition's information message.
+
+    Parameters
+    ----------
+    condition : Condition or callable
+        Condition or collable object we want to get a title for.
+    status : bool
+        Status of the condition, whether it's True or False.
+
+    Returns
+    -------
+    str
+        Title for the condition information message.
+
+    Note
+    ----
+    We purposely avoid calling the condition within this function, since it's likely
+    that the status of the condition will be know by the time the function is called.
+    And we want to avoid evaluating the condition again since it could potentially be a
+    costly operation.
     """
-    status = condition(model)
     checkbox = "x" if status else " "
     color = "green" if status else "red"
-    text = rf"[bold {color}]\[{checkbox}] {type(condition).__name__}[/bold {color}]"
+    if hasattr(condition, "__name__"):
+        name = condition.__name__
+    else:
+        name = type(condition).__name__
+    text = rf"[bold {color}]\[{checkbox}] {name}[/bold {color}]"
     return text
 
 
@@ -87,7 +109,8 @@ class Condition(ABC):
         rich.tree.Tree
             :class:`rick.tree.Tree` object containing information about the condition.
         """
-        return Tree(_get_info_title(self, model))
+        status = self(model)
+        return Tree(_get_info_title(self, status))
 
     def __and__(self, other) -> "LogicalAnd":
         return LogicalAnd(self, other)
@@ -132,7 +155,7 @@ class _Mixin(ABC):
 
     """
 
-    def __init__(self, condition_a, condition_b):
+    def __init__(self, condition_a: ConditionLike, condition_b: ConditionLike):
         self.condition_a = condition_a
         self.condition_b = condition_b
 
@@ -141,30 +164,38 @@ class _Mixin(ABC):
 
     def update(self, model: Model):
         for condition in (self.condition_a, self.condition_b):
-            if hasattr(condition, "update"):
+            if isinstance(condition, CanBeUpdated):
                 condition.update(model)
 
     def info(self, model: Model) -> Tree:
+        # Build info for a combo condition.
+        # Generate a tree structure for them, support other Condition objects and
+        # functions.
         status = self(model)
         checkbox = "x" if status else " "
         color = "green" if status else "red"
         text = rf"[bold {color}]\[{checkbox}] {type(self).__name__}[/bold {color}]"
         tree = Tree(text, guide_style=color)
         for condition in (self.condition_a, self.condition_b):
-            if hasattr(condition, "info"):
+            status = condition(model)
+            if isinstance(condition, HasInfo):
+                # Add info for a Condition object
                 subtree = condition.info(model)
                 if isinstance(condition, _Mixin):
                     tree.add(subtree)
                 else:
-                    color = "green" if condition(model) else "red"
+                    color = "green" if status else "red"
                     tree.add(Panel(subtree, border_style=color))
             else:
-                raise NotImplementedError()
+                # Add info for a generic callable
+                subtree = Tree(_get_info_title(condition, status))
+                color = "green" if status else "red"
+                tree.add(Panel(subtree, border_style=color))
         return tree
 
     def initialize(self):
         for condition in (self.condition_a, self.condition_b):
-            if hasattr(condition, "initialize"):
+            if isinstance(condition, CanBeInitialized):
                 condition.initialize()
 
 

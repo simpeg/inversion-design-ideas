@@ -263,3 +263,60 @@ class TestInplaceErrors:
             TypeError, match="Inplace XOR binary operation is not supported"
         ):
             condition_a ^= condition_b
+
+
+class TestInfo:
+    """
+    Simple tests to check if the ``info()`` method works without failing.
+    """
+
+    def test_info_condition(self):
+        """
+        Test ``info()`` method of the ``Condition`` base class.
+        """
+        even = Even()
+        model = np.array([1])
+        even.info(model)
+
+    @pytest.mark.parametrize("operation", ["and", "or", "xor"])
+    def test_info_combo(self, operation):
+        """
+        Test ``info()`` method of the combo condition classes.
+        """
+        condition_a = GreaterThan(np.array([2]))
+        condition_b = Even()
+        match operation:
+            case "and":
+                combo = condition_a & condition_b
+            case "or":
+                combo = condition_a | condition_b
+            case "xor":
+                combo = condition_a ^ condition_b
+            case _:
+                msg = f"{operation}"
+                raise ValueError(msg)
+        model = np.array([1])
+        combo.info(model)
+
+    @pytest.mark.parametrize("operation", ["and", "or", "xor"])
+    def test_info_combo_with_function(self, operation):
+        """
+        Test ``info()`` method of a combo with condition and function.
+        """
+
+        def is_even(model: Model) -> bool:
+            return bool(np.all((model % 2) == 0))
+
+        condition = GreaterThan(np.array([2]))
+        match operation:
+            case "and":
+                combo = condition & is_even
+            case "or":
+                combo = condition | is_even
+            case "xor":
+                combo = condition ^ is_even
+            case _:
+                msg = f"{operation}"
+                raise ValueError(msg)
+        model = np.array([1])
+        combo.info(model)

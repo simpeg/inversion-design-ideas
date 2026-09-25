@@ -71,7 +71,7 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     env:
-      BASE_REF: ${{ github.base_ref || "main" }}
+      BASE_REF: ${{ github.base_ref || 'main' }}
 
     steps:
 

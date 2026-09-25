@@ -15,8 +15,7 @@ from scipy.sparse import csr_array, spmatrix
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from ..typing import HasDiagonal, Model, SparseArray
-
-FLOAT_TO_STR_PRECISION = 3
+from ._utils import float_to_latex, float_to_str
 
 
 class Objective(ABC):
@@ -203,13 +202,15 @@ class Objective(ABC):
         return Combo([other, self])
 
     def __mul__(self, value: Real) -> "Scaled":
+        # TODO: add check for Real value
         return Scaled(value, self)
 
     def __rmul__(self, value):
         return self.__mul__(value)
 
     def __truediv__(self, denominator: Real):
-        return self * (1.0 / denominator)  # type: ignore[operator]
+        msg = "True division is not implemented for objective functions."
+        raise TypeError(msg)
 
     def __floordiv__(self, denominator):
         msg = "Floor division is not implemented for objective functions."
@@ -282,7 +283,7 @@ class Scaled(Objective):
         sys.stdout.write(info + "\n")
 
     def __repr__(self):
-        multiplier = _float_to_str(self.multiplier)
+        multiplier = float_to_str(self.multiplier)
         phi_repr = f"{self.function}"
         # Add brackets in case that the function has a multiplier or is a Combo
         if isinstance(self.function, Iterable) or hasattr(self.function, "multiplier"):
@@ -290,12 +291,10 @@ class Scaled(Objective):
         return f"{multiplier:} {phi_repr}"
 
     def _repr_latex_(self):
-        multiplier = _float_to_str(self.multiplier)
-        if "e" in multiplier:
-            base, exp = multiplier.split("e")
-            exp = exp.replace("+", "")
-            exp = str(int(exp))
-            multiplier = rf"{base} \cdot 10^{{{exp}}}"
+        if hasattr(self.multiplier, "_repr_latex_"):
+            multiplier = self.multiplier._repr_latex_().strip("$")
+        else:
+            multiplier = float_to_latex(self.multiplier)
         phi_str = self.function._repr_latex_().strip("$")
         # Add brackets in case that the function has a multiplier or is a Combo
         if isinstance(self.function, Iterable) or hasattr(self.function, "multiplier"):
@@ -585,37 +584,3 @@ def _raise_if_sparse_matrix(operator):
             "sparse.migration_to_sparray.html)."
         )
         raise TypeError(msg)
-
-
-def _float_to_str(number: float, precision: int = FLOAT_TO_STR_PRECISION) -> str:
-    """
-    Format float to string.
-
-    Formats a floating point number into string.
-
-    Parameters
-    ----------
-    number : float
-        Floating point number to represent as a string.
-    precision : int
-        Decimal point precision for positional and scientific representation. The
-        ``precision`` is used to choose between a positional representation (e.g. 1.013)
-        and a scientific notation. If the absolute value of the number is between
-        ``10**(-precision)`` and ``10**precision``, then the positional representation
-        will be used, otherwise the scientific notation will be chosen.
-        It must be a positive integer.
-
-    Returns
-    -------
-    str
-        String representation of the floating point number.
-    """
-    if precision <= 0:
-        msg = f"Invalid precision value '{precision}'. It must be a positive integer."
-        raise ValueError(msg)
-    if number == 0.0:
-        return "0.0"
-    min_bound, max_bound = 10 ** (-precision), 10**precision
-    if min_bound <= np.abs(number) <= max_bound:
-        return np.format_float_positional(number, precision=precision, trim="0")
-    return np.format_float_scientific(number, precision=precision)

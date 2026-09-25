@@ -118,6 +118,14 @@ jobs:
         run: |
           diff-cover --compare-branch="origin/$BASE_REF" --fail-under=100 coverage.xml
 
+      - name: Report coverage diff if failed
+        if: ${{ failure() }}
+        run: |
+          diff-cover --compare-branch="origin/$BASE_REF" --format markdown:$DIFF_MD_FILE coverage.xml
+          cat $DIFF_MD_FILE >> $GITHUB_STEP_SUMMARY
+        env:
+          DIFF_MD_FILE: diff-cover.md
+
 
   #############################################################################
   # Check coverage and upload a report

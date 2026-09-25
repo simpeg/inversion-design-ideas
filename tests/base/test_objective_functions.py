@@ -9,7 +9,7 @@ import numpy as np
 import pytest
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
-from inversion_ideas.base import Combo, Objective, Scaled
+from inversion_ideas.base import Combo, Multiplier, Objective, Scaled
 
 from ..utils import Dummy, assert_equal_linear_operators
 
@@ -133,12 +133,9 @@ class TestObjectiveOperations:
         assert scaled.multiplier == scalar
 
     def test_truediv(self):
-        a = Dummy(self.n_params)
-        scalar = 3.14
-        scaled = a / scalar
-        assert isinstance(scaled, Scaled)
-        assert scaled.function is a
-        assert scaled.multiplier == 1 / scalar
+        phi = Dummy(self.n_params)
+        with pytest.raises(TypeError, match="True division is not implemented"):
+            phi / 2.71
 
     def test_add_combos(self):
         a, b, c, d = tuple(Dummy(self.n_params) for _ in range(4))
@@ -817,6 +814,13 @@ class TestScaledRepresentations:
         scaled = multiplier * phi
         assert repr(scaled) == f"{multiplier_str} {phi}"
 
+    def test_repr_with_multiplier_object(self):
+        """Test the ``__repr__`` with a ``Multiplier`` object."""
+        multiplier = Multiplier(2e5)
+        phi = Dummy(3)
+        scaled = multiplier * phi
+        assert repr(scaled) == f"2.e+05 {phi!r}"
+
     @pytest.mark.parametrize(
         ("multiplier", "multiplier_str"),
         [
@@ -856,6 +860,16 @@ class TestScaledRepresentations:
         combo_latex = combo._repr_latex_().strip("$")
         scaled = multiplier * combo
         assert scaled._repr_latex_() == f"${multiplier_str} \\, [{combo_latex}]$"
+
+    def test_repr_latex_with_multiplier_object(self):
+        """Test the ``_repr_latex_`` with a ``Multiplier`` object."""
+        multiplier = Multiplier(2e5)
+        phi = Dummy(3)
+        scaled = multiplier * phi
+
+        multiplier_str = r"\text{Multiplier}(2. \cdot 10^{5})"
+        phi_str = phi._repr_latex_().strip("$")
+        assert scaled._repr_latex_() == f"${multiplier_str} \\, {phi_str}$"
 
 
 class TestComboRepresentations:

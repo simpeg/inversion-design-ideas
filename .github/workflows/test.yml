@@ -61,13 +61,70 @@ jobs:
           if-no-files-found: ignore
           include-hidden-files: true
 
+  #############################################################################
+  # Check coverage of diff
+  #
+  # Only run in a Pull-Request
+  diff-cover:
+    name: Check coverage of diff
+    if: github.event_name == 'pull_request'
+    needs: test
+    runs-on: ubuntu-latest
+    env:
+      BASE_REF: ${{ github.base_ref || 'main' }}
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          # The GitHub token is preserved by default but this job doesn't need
+          # to be able to push to GitHub.
+          persist-credentials: false
+          # Fetch all history for all tags and branches
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v6
+        with:
+          # Use latest Python, so it understands all syntax.
+          python-version: "3.14"
+
+      - name: Get the pip cache folder
+        id: pip-cache
+        run: echo "dir=$(pip cache dir)" >> $GITHUB_OUTPUT
+
+      - name: Setup caching for pip packages
+        uses: actions/cache@v5
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: ${{ runner.os }}-pip-coverage
+
+      - name: Download coverage artifacts
+        uses: actions/download-artifact@v8
+        with:
+          pattern: coverage
+          # If true, the downloaded artifacts will be in the same directory
+          # specified by path.
+          merge-multiple: true
+
+      - name: Install coverage.py and diff-cover
+        run: python -m pip install --upgrade coverage[toml] diff-cover
+
+      - name: Make an XML report
+        run: |
+          python -m coverage xml
+
+      - name: Check coverage of 100% on diff
+        run: |
+          diff-cover --compare-branch="origin/$BASE_REF" --fail-under=100 coverage.xml
+
 
   #############################################################################
   # Check coverage and upload a report
   #
   # Inspired by: https://hynek.me/articles/ditch-codecov-python/
   coverage:
-    name: upload coverage report
+    name: Upload coverage report
     if: always()
     needs: test
     runs-on: ubuntu-latest

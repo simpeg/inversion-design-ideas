@@ -162,5 +162,10 @@ jobs:
       - name: Install coverage.py and diff-cover
         run: python -m pip install --upgrade coverage[toml] diff-cover
 
+      - name: Make an XML report
+        run: |
+          python -m coverage xml
+
       - name: Check coverage of 100% on diff
-        run: make diff-cover
+        run: |
+          diff-cover --compare-branch main --fail-under 100 coverage.xml

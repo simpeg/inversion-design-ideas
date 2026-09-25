@@ -91,8 +91,7 @@ class TestMixin:
         assert not condition(np.array([-3.0]))
         assert condition(np.array([-4.0]))
 
-    def test_xor(self):
-        is_even = Even()
+    def test_xor(self, is_even):
         is_positive = Positive()
         condition = is_even ^ is_positive
         assert condition(np.array([1.0]))

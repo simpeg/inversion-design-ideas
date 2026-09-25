@@ -16,26 +16,12 @@ The main goal of this repository is to build a working prototype of a new invers
     :padding: 0 0 0 0
     :gutter: 4
 
-    .. grid-item-card:: :fas:`book-open` Getting Started
-        :text-align: center
-        :class-title: sd-fs-5
-        :class-card: sd-p-3
-
-        Start using the framework.
-
-        .. button-ref:: getting-started
-            :ref-type: ref
-            :click-parent:
-            :color: primary
-            :shadow:
-            :expand:
-
     .. grid-item-card:: :fas:`book-open` User Guide
         :text-align: center
         :class-title: sd-fs-5
         :class-card: sd-p-3
 
-        Learn how to use the framework.
+        Get started and learn how to use the framework.
 
         .. button-ref:: user-guide
             :ref-type: ref
@@ -63,6 +49,5 @@ The main goal of this repository is to build a working prototype of a new invers
    :caption: Contents:
    :hidden:
 
-   getting-started/index.rst
    user-guide/index.rst
    reference/index.rst

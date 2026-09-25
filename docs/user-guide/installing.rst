@@ -1,10 +1,7 @@
-.. _getting-started:
-
-Getting Started
-===============
+.. _installing:
 
 Installing
-----------
+==========
 
 Since this framework will not be maintained, you will not find it available in PyPI nor conda-forge. But, it's still possible to install it through pip with:
 
@@ -13,7 +10,7 @@ Since this framework will not be maintained, you will not find it available in P
 	pip install git+https://github.com/simpeg/inversion-design-ideas
 
 Install from source
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 Alternatively, we could clone the repository and install the package from source.
 

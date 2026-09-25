@@ -65,8 +65,7 @@ class TestMixin:
         assert not is_even(np.array([-3.0]))
         assert is_even(np.array([-4.0]))
 
-    def test_and(self):
-        is_even = Even()
+    def test_and(self, is_even):
         is_positive = Positive()
         condition = is_even & is_positive
         assert not condition(np.array([1.0]))
@@ -79,8 +78,7 @@ class TestMixin:
         assert not condition(np.array([-3.0]))
         assert not condition(np.array([-4.0]))
 
-    def test_or(self):
-        is_even = Even()
+    def test_or(self, is_even):
         is_positive = Positive()
         condition = is_even | is_positive
         assert condition(np.array([1.0]))

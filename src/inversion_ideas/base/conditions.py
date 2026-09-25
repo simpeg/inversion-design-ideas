@@ -92,11 +92,20 @@ class Condition(ABC):
     def __and__(self, other) -> "LogicalAnd":
         return LogicalAnd(self, other)
 
+    def __rand__(self, other) -> "LogicalAnd":
+        return LogicalAnd(other, self)
+
     def __or__(self, other) -> "LogicalOr":
         return LogicalOr(self, other)
 
+    def __ror__(self, other) -> "LogicalOr":
+        return LogicalOr(other, self)
+
     def __xor__(self, other) -> "LogicalXor":
         return LogicalXor(self, other)
+
+    def __rxor__(self, other) -> "LogicalXor":
+        return LogicalXor(other, self)
 
     def __iand__(self, other):
         msg = "Inplace AND binary operation is not supported for conditions."

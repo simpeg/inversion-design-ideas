@@ -114,10 +114,6 @@ jobs:
         run: |
           python -m coverage xml
 
-      - name: Fetch base branch
-        run: |
-          git fetch origin "$BASE_REF:refs/remotes/origin/$BASE_REF"
-
       - name: Check coverage of 100% on diff
         run: |
           diff-cover --compare-branch="origin/$BASE_REF" --fail-under=100 coverage.xml

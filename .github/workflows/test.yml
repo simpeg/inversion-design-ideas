@@ -121,8 +121,9 @@ jobs:
       - name: Report coverage diff if failed
         if: ${{ failure() }}
         run: |
+          echo '```' >> $GITHUB_STEP_SUMMARY
           diff-cover --compare-branch="origin/$BASE_REF" coverage.xml >> $GITHUB_STEP_SUMMARY
-
+          echo '```' >> $GITHUB_STEP_SUMMARY
 
 
   #############################################################################

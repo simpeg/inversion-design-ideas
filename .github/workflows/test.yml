@@ -72,6 +72,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       BASE_REF: ${{ github.base_ref || 'main' }}
+      DIFF_COVER_MARKDOWN: diff-cover.md
 
     steps:
 
@@ -116,7 +117,13 @@ jobs:
 
       - name: Check coverage of 100% on diff
         run: |
-          diff-cover --compare-branch="origin/$BASE_REF" --fail-under=100 coverage.xml
+          diff-cover --compare-branch="origin/$BASE_REF" --fail-under=100 --format markdown:$DIFF_COVER_MARKDOWN coverage.xml
+
+      - name: Report coverage diff if failed
+        if: ${{ failure() }}
+        run: |
+          cat $DIFF_COVER_MARKDOWN >> $GITHUB_STEP_SUMMARY
+
 
 
   #############################################################################

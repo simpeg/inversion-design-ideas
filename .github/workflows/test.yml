@@ -81,6 +81,8 @@ jobs:
           # The GitHub token is preserved by default but this job doesn't need
           # to be able to push to GitHub.
           persist-credentials: false
+          # Fetch all history for all tags and branches
+          fetch-depth: 0
 
       - uses: actions/setup-python@v6
         with:

@@ -9,7 +9,7 @@ import pytest
 
 from inversion_ideas import DataMisfit, LinearRegressor
 
-from .utils import assert_allclose_linear_operators
+from .utils import assert_allclose_linear_operators, assert_objective_derivative
 
 
 class TestDataMisfit:
@@ -123,6 +123,21 @@ class TestDataMisfit:
         assert_allclose_linear_operators(
             data_misfit.hessian(model), data_misfit_test.hessian(model)
         )
+
+    @pytest.mark.parametrize("order", [1, 2], ids=["first-order", "second-order"])
+    def test_derivative(self, data_and_uncertainties, regressor_matrix, order):
+        """
+        Test gradient and hessian by comparison with Taylor series expansion.
+        """
+        data, uncertainties = data_and_uncertainties
+        data_misfit = DataMisfit(
+            data,
+            uncertainties,
+            simulation=LinearRegressor(regressor_matrix),
+            build_hessian=True,
+        )
+        model = self.rng.uniform(size=self.n_params)
+        assert_objective_derivative(data_misfit, model, order, seed=4141)
 
 
 class TestSanityChecks:

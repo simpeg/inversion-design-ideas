@@ -9,6 +9,8 @@ from scipy.sparse import dia_array, sparray
 
 from inversion_ideas import Flatness, Smallness
 
+from .utils import assert_objective_derivative
+
 
 class TestBugfixFlatness:
     """
@@ -87,3 +89,21 @@ class TestSmallness:
         assert hessian.offsets == 0  # should be a diagonal matrix (only main diag)
         expected_diagonal = 2 * mesh.cell_volumes[active_cells] * cell_weights
         np.testing.assert_allclose(hessian.diagonal(), expected_diagonal)
+
+    @pytest.mark.parametrize("order", [1, 2], ids=["first-order", "second-order"])
+    def test_derivative(self, mesh, active_cells, order):
+        """
+        Test gradient and hessian by comparison with Taylor series expansion.
+        """
+        n_active = active_cells.sum()
+        cell_weights = np.full(n_active, fill_value=0.1)
+        reference_model = np.full(n_active, 1e-8)
+        smallness = Smallness(
+            mesh,
+            active_cells=active_cells,
+            cell_weights=cell_weights,
+            reference_model=reference_model,
+        )
+
+        model = np.random.default_rng(seed=12312).uniform(size=n_active)
+        assert_objective_derivative(smallness, model, order, seed=4141)

@@ -2,13 +2,15 @@
 Test utilities.
 """
 
+from typing import Literal
+
 import numpy as np
 from numpy.typing import NDArray
 from scipy.sparse import dia_array, sparray
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from inversion_ideas.base import Objective
-from inversion_ideas.typing import SparseArray
+from inversion_ideas.typing import Model, SparseArray
 
 
 class Dummy(Objective):
@@ -171,3 +173,67 @@ def assert_allclose_linear_operators(
         # rmatvec
         vector = rng.uniform(size=a.shape[0])
         np.testing.assert_allclose(a.T @ vector, b.T @ vector, **kwargs)
+
+
+def assert_objective_derivative(
+    phi: Objective,
+    model: Model,
+    order: Literal[1, 2],
+    step: Model | None = None,
+    scale: float = 1e-4,
+    seed: int | None = None,
+    **kwargs,
+):
+    r"""
+    Test derivative of the objective function by comparing with Taylor series expansion.
+
+    Approximate the objective function :math`\phi` (``order=1``) or its gradient
+    :math:`\nabla\phi` (``order=2``) throught a first order Taylor series expansion:
+
+    .. math::
+
+        \phi(\mathbf{m} + \Delta\mathbf{m}) \approx
+        \phi(\mathbf{m}) + \nabla\phi(\mathbf{m}) \cdot \Delta\mathbf{m} ,
+
+    and
+
+    .. math::
+
+        \nabla\phi(\mathbf{m} + \Delta\mathbf{m}) \approx
+        \nabla\phi(\mathbf{m}) +
+        \bar{\bar{\nabla}}\phi(\mathbf{m}) \cdot \Delta\mathbf{m} ,
+
+
+    where :math:`\Delta\mathbf{m}` is a perturbation vector in the model space,
+    and
+    :math:`\bar{\bar{\nabla}}\phi` is the Hessian of :math:`\phi`.
+
+
+    """
+    if order == 1:
+        function, derivative = phi, phi.gradient
+    elif order == 2:
+        function, derivative = phi.gradient, phi.hessian
+    else:
+        msg = f"Invalid order '{order}'. It must be '1' or '2'."
+        raise ValueError(msg)
+
+    # Define a random step if not provided
+    if step is None:
+        rng = np.random.default_rng(seed=seed)
+        step = rng.standard_normal(size=model.size)
+
+    delta_m = scale * step
+    approximation = function(model) + derivative(model) @ delta_m
+    value = function(model + delta_m)
+    try:
+        np.testing.assert_allclose(approximation, value, **kwargs)
+    except AssertionError as e:
+        msg = (
+            f"Failed derivative test for '{phi}' of order '{order}'. \n"
+            f"\nmodel: {model}"
+            f"\nstep:  {step}"
+            f"\nscale: {scale}"
+            "\n"
+        )
+        raise AssertionError(msg + str(e)) from None

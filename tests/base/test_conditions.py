@@ -320,3 +320,24 @@ class TestInfo:
                 raise ValueError(msg)
         model = np.array([1])
         combo.info(model)
+
+    @pytest.mark.parametrize("operation", ["and", "or", "xor"])
+    def test_info_combo_nested(self, operation):
+        """
+        Test ``info()`` method of a nested combo condition.
+        """
+        condition_a = GreaterThan(np.array([2]))
+        condition_b = Even()
+        condition_c = Positive()
+        match operation:
+            case "and":
+                combo = condition_a & (condition_b & condition_c)
+            case "or":
+                combo = condition_a | (condition_b & condition_c)
+            case "xor":
+                combo = condition_a ^ (condition_b & condition_c)
+            case _:
+                msg = f"{operation}"
+                raise ValueError(msg)
+        model = np.array([1])
+        combo.info(model)

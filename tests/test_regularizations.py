@@ -29,9 +29,9 @@ class TestBugfixFlatness:
         assert isinstance(flatness._cell_gradient, sparray)
 
 
-class TestSmallness:
+class MeshBasedTest:
     """
-    Test the :class:`inversion_ideas.Smallness` regularization class.
+    Base class for mesh-based regularizations.
     """
 
     @pytest.fixture
@@ -47,6 +47,12 @@ class TestSmallness:
         active_cells[z > -1.0] = False
         assert not active_cells.all()
         return active_cells
+
+
+class TestSmallness(MeshBasedTest):
+    """
+    Test the :class:`inversion_ideas.Smallness` regularization class.
+    """
 
     def test_smallness(self, mesh, active_cells):
         n_active = active_cells.sum()
@@ -107,3 +113,43 @@ class TestSmallness:
 
         model = np.random.default_rng(seed=12312).uniform(size=n_active)
         assert_objective_derivative(smallness, model, order, scale=1e-4, seed=4141)
+
+
+@pytest.mark.parametrize("direction", ["x", "y", "z"])
+class TestFlatness(MeshBasedTest):
+    """
+    Test the :class:`inversion_ideas.Flatness` regularization class.
+    """
+
+    @pytest.fixture
+    def mesh(self):
+        hx = [(1.0, 10)]
+        h = [hx, hx, hx]
+        return TensorMesh(h, origin="CCN")
+
+    @pytest.fixture
+    def active_cells(self, mesh: TensorMesh):
+        active_cells = np.ones(mesh.n_cells, dtype=bool)
+        _, _, z = mesh.cell_centers.T
+        active_cells[z > -1.0] = False
+        assert not active_cells.all()
+        return active_cells
+
+    @pytest.mark.parametrize("order", [1, 2], ids=["first-order", "second-order"])
+    def test_derivative(self, mesh, active_cells, direction, order):
+        """
+        Test gradient and hessian by comparison with Taylor series expansion.
+        """
+        n_active = active_cells.sum()
+        cell_weights = np.full(n_active, fill_value=0.1)
+        reference_model = np.full(n_active, 1e-8)
+        flatness = Flatness(
+            mesh,
+            direction=direction,
+            active_cells=active_cells,
+            cell_weights=cell_weights,
+            reference_model=reference_model,
+        )
+
+        model = np.random.default_rng(seed=12312).uniform(size=n_active)
+        assert_objective_derivative(flatness, model, order, scale=1e-5, seed=4141)

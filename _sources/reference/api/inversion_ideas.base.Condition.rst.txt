@@ -108,6 +108,12 @@ Methods
 
 
 
+
+
+
+
+
+
 .. automethod:: Condition.info
 
 ----

@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING, Protocol, TypeAlias, runtime_checkable
 
 import numpy as np
 import numpy.typing as npt
-from rich.tree import Tree
 from scipy.sparse import bsr_array, coo_array, csc_array, csr_array, dia_array
 from scipy.sparse.linalg import LinearOperator
 
@@ -115,14 +114,4 @@ class ConditionLike(Protocol):
     """
 
     def __call__(self, model: Model) -> bool:
-        raise NotImplementedError
-
-
-@runtime_checkable
-class HasInfo(Protocol):
-    """
-    Protocol for objects that have an ``info`` method.
-    """
-
-    def info(self, model: Model) -> Tree:
         raise NotImplementedError

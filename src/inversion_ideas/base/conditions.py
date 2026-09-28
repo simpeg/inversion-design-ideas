@@ -8,11 +8,22 @@ conditions together.
 """
 
 from abc import ABC, abstractmethod
+from typing import Protocol, runtime_checkable
 
 from rich.panel import Panel
 from rich.tree import Tree
 
-from ..typing import CanBeInitialized, CanBeUpdated, ConditionLike, HasInfo, Model
+from ..typing import CanBeInitialized, CanBeUpdated, ConditionLike, Model
+
+
+@runtime_checkable
+class _HasInfo(Protocol):
+    """
+    Protocol for objects that have an ``info`` method.
+    """
+
+    def info(self, model: Model) -> Tree:
+        raise NotImplementedError
 
 
 def _get_info_title(condition: ConditionLike, status: bool) -> str:
@@ -178,7 +189,7 @@ class _Mixin(ABC):
         tree = Tree(text, guide_style=color)
         for condition in (self.condition_a, self.condition_b):
             status = condition(model)
-            if isinstance(condition, HasInfo):
+            if isinstance(condition, _HasInfo):
                 # Add info for a Condition object
                 subtree = condition.info(model)
                 if isinstance(condition, _Mixin):

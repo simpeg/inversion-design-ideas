@@ -7,7 +7,7 @@ from ._mesh_based import Flatness, Smallness, SparseSmallness
 
 __all__ = [
     "Flatness",
+    "SimpleSmallness",
     "Smallness",
     "SparseSmallness",
-    "SimpleSmallness",
 ]

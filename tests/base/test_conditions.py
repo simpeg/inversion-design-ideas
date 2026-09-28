@@ -110,17 +110,20 @@ class GreaterThan(Condition):
     Check if model is greater than certain value for all elements in the model.
     """
 
-    def __init__(self, value: Model):
-        self.value = value
+    def __init__(self, value: float):
+        self.value = float(value)
 
     def __call__(self, model: Model) -> bool:
         return bool(np.all(model > self.value))
 
     def update(self, model: Model):
-        self.value = model
+        """
+        Update the ``value`` with the minimum value in the model.
+        """
+        self.value = model.min()
 
     def initialize(self):
-        self.value = np.array([0])
+        self.value = 0.0
 
 
 class TestUpdateMixin:
@@ -129,21 +132,21 @@ class TestUpdateMixin:
     """
 
     def test_greater_than(self):
-        condition = GreaterThan(np.array([2]))
+        condition = GreaterThan(2.0)
         assert condition(np.array([3]))
         assert not condition(np.array([2]))
         assert not condition(np.array([1]))
 
     def test_update(self):
-        condition = GreaterThan(np.array([2]))
+        condition = GreaterThan(2.0)
         new_value = np.array([3])
         condition.update(new_value)
         assert condition.value == new_value
 
     @pytest.mark.parametrize("operation", ["and", "or", "xor"])
     def test_update_mixin(self, operation):
-        condition_a = GreaterThan(np.array([2]))
-        condition_b = GreaterThan(np.array([3]))
+        condition_a = GreaterThan(2.0)
+        condition_b = GreaterThan(3.0)
         match operation:
             case "and":
                 condition = condition_a & condition_b
@@ -154,10 +157,10 @@ class TestUpdateMixin:
             case _:
                 msg = f"{operation}"
                 raise ValueError(msg)
-        new_value = 4
+        new_value = 4.0
         condition.update(np.array([new_value]))
-        assert (condition_a.value == new_value).all()
-        assert (condition_b.value == new_value).all()
+        assert condition_a.value == new_value
+        assert condition_b.value == new_value
 
     @pytest.mark.parametrize("operation", ["and", "or", "xor"])
     def test_update_mixin_with_function(self, operation):
@@ -168,7 +171,7 @@ class TestUpdateMixin:
         def is_even(model) -> bool:
             return bool(np.all((model % 2) == 0))
 
-        condition_a = GreaterThan(np.array([2]))
+        condition_a = GreaterThan(2.0)
         match operation:
             case "and":
                 condition = condition_a & is_even
@@ -179,8 +182,8 @@ class TestUpdateMixin:
             case _:
                 msg = f"{operation}"
                 raise ValueError(msg)
-        new_value = np.array([4])
-        condition.update(new_value)
+        new_value = 4.0
+        condition.update(np.array([new_value]))
         assert condition_a.value == new_value
         assert condition.condition_b is is_even
 
@@ -191,14 +194,14 @@ class TestInitializeMixin:
     """
 
     def test_initialize(self):
-        condition = GreaterThan(np.array([2]))
+        condition = GreaterThan(2.0)
         condition.initialize()
-        assert (condition.value == np.array([0])).all()
+        assert condition.value == 0.0
 
     @pytest.mark.parametrize("operation", ["and", "or", "xor"])
     def test_initialize_mixin(self, operation):
-        condition_a = GreaterThan(np.array([2]))
-        condition_b = GreaterThan(np.array([3]))
+        condition_a = GreaterThan(2.0)
+        condition_b = GreaterThan(3.0)
         match operation:
             case "and":
                 condition = condition_a & condition_b
@@ -210,8 +213,8 @@ class TestInitializeMixin:
                 msg = f"{operation}"
                 raise ValueError(msg)
         condition.initialize()
-        assert (condition_a.value == np.array([0])).all()
-        assert (condition_b.value == np.array([0])).all()
+        assert condition_a.value == 0.0
+        assert condition_b.value == 0.0
 
     @pytest.mark.parametrize("operation", ["and", "or", "xor"])
     def test_initialize_mixin_with_function(self, operation):
@@ -222,7 +225,7 @@ class TestInitializeMixin:
         def is_even(model) -> bool:
             return bool(np.all((model % 2) == 0))
 
-        condition_a = GreaterThan(np.array([2]))
+        condition_a = GreaterThan(2.0)
         match operation:
             case "and":
                 condition = condition_a & is_even
@@ -234,7 +237,7 @@ class TestInitializeMixin:
                 msg = f"{operation}"
                 raise ValueError(msg)
         condition.initialize()
-        assert (condition_a.value == np.array([0])).all()
+        assert condition_a.value == 0.0
         assert condition.condition_b is is_even
 
 
@@ -283,7 +286,7 @@ class TestInfo:
         """
         Test ``info()`` method of the combo condition classes.
         """
-        condition_a = GreaterThan(np.array([2]))
+        condition_a = GreaterThan(2.0)
         condition_b = Even()
         match operation:
             case "and":
@@ -307,7 +310,7 @@ class TestInfo:
         def is_even(model: Model) -> bool:
             return bool(np.all((model % 2) == 0))
 
-        condition = GreaterThan(np.array([2]))
+        condition = GreaterThan(2.0)
         match operation:
             case "and":
                 combo = condition & is_even
@@ -326,7 +329,7 @@ class TestInfo:
         """
         Test ``info()`` method of a nested combo condition.
         """
-        condition_a = GreaterThan(np.array([2]))
+        condition_a = GreaterThan(2.0)
         condition_b = Even()
         condition_c = Positive()
         match operation:

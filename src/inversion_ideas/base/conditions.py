@@ -23,7 +23,7 @@ class _HasInfo(Protocol):
     """
 
     def info(self, model: Model) -> Tree:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: nocover
 
 
 def _get_info_title(condition: ConditionLike, status: bool) -> str:

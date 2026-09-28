@@ -21,7 +21,7 @@ General purpose:
 .. autosummary::
    :toctree: api/
 
-    TikhonovZero
+    SimpleSmallness
 
 Mesh-based:
 

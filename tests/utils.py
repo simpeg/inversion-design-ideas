@@ -179,8 +179,8 @@ def assert_objective_derivative(
     phi: Objective,
     model: Model,
     order: Literal[1, 2],
-    step: Model | None = None,
-    scale: float = 1e-4,
+    delta_m: Model | None = None,
+    scale: float = 1.0,
     seed: int | None = None,
     **kwargs,
 ):
@@ -192,22 +192,47 @@ def assert_objective_derivative(
 
     .. math::
 
-        \phi(\mathbf{m} + \Delta\mathbf{m}) \approx
-        \phi(\mathbf{m}) + \nabla\phi(\mathbf{m}) \cdot \Delta\mathbf{m} ,
+        \phi(\mathbf{m} + \alpha \Delta\mathbf{m}) \approx
+        \phi(\mathbf{m}) + \nabla\phi(\mathbf{m}) \cdot \alpha \Delta\mathbf{m} ,
 
     and
 
     .. math::
 
-        \nabla\phi(\mathbf{m} + \Delta\mathbf{m}) \approx
+        \nabla\phi(\mathbf{m} + \alpha \Delta\mathbf{m}) \approx
         \nabla\phi(\mathbf{m}) +
-        \bar{\bar{\nabla}}\phi(\mathbf{m}) \cdot \Delta\mathbf{m} ,
+        \bar{\bar{\nabla}}\phi(\mathbf{m}) \cdot \alpha \Delta\mathbf{m} ,
 
 
     where :math:`\Delta\mathbf{m}` is a perturbation vector in the model space,
+    :math:`\alpha` is a factor to scale that vector,
     and
     :math:`\bar{\bar{\nabla}}\phi` is the Hessian of :math:`\phi`.
 
+    Parameters
+    ----------
+    phi : Objective
+        Objective function to test.
+    model : (n_params) array
+        Array with model values.
+    order : {1, 2}
+        Which derivative to test.
+        If ``1``, the ``phi.gradient`` will be tested.
+        If ``2``, the ``phi.hessian`` will be tested.
+    delta_m : (n_params) array or None, optional
+        Perturbation vector in the model space.
+        If None, a random vector will be generated using ``standard_normal``
+        distribution and the passed ``seed``, and multiplied by a factor of ``1e-4``.
+    scale : float, optional
+        Factor used to multiply the ``delta_m`` vector.
+    seed : int or None, optional
+        Random seed used to build ``delta_m`` if it's None.
+        If None, no random seed will be used.
+
+    Raises
+    ------
+    AssertionError :
+        If the derivative test fails.
 
     """
     if order == 1:
@@ -219,21 +244,26 @@ def assert_objective_derivative(
         raise ValueError(msg)
 
     # Define a random step if not provided
-    if step is None:
+    if delta_m is None:
         rng = np.random.default_rng(seed=seed)
-        step = rng.standard_normal(size=model.size)
+        delta_m = rng.standard_normal(size=model.size)
 
-    delta_m = scale * step
+    # Scale the delta_m vector
+    delta_m = scale * delta_m
+
+    # Approximate the function to test
     approximation = function(model) + derivative(model) @ delta_m
+
+    # Evaluate the function to test
     value = function(model + delta_m)
+
     try:
         np.testing.assert_allclose(approximation, value, **kwargs)
     except AssertionError as e:
         msg = (
             f"Failed derivative test for '{phi}' of order '{order}'. \n"
-            f"\nmodel: {model}"
-            f"\nstep:  {step}"
-            f"\nscale: {scale}"
+            f"\nmodel:    {model}"
+            f"\ndelta_m:  {delta_m}"
             "\n"
         )
         raise AssertionError(msg + str(e)) from None

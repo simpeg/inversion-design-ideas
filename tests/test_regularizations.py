@@ -106,4 +106,4 @@ class TestSmallness:
         )
 
         model = np.random.default_rng(seed=12312).uniform(size=n_active)
-        assert_objective_derivative(smallness, model, order, seed=4141)
+        assert_objective_derivative(smallness, model, order, scale=1e-4, seed=4141)

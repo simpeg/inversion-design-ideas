@@ -137,7 +137,7 @@ class TestDataMisfit:
             build_hessian=True,
         )
         model = self.rng.uniform(size=self.n_params)
-        assert_objective_derivative(data_misfit, model, order, seed=4141)
+        assert_objective_derivative(data_misfit, model, order, scale=1e-4, seed=4141)
 
 
 class TestSanityChecks:

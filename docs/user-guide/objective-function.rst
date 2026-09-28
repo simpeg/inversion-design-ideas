@@ -282,8 +282,8 @@ If we don't want to have this kind of structure,  we can
 
    first in flat_phi
 
-Is in or contains?
-^^^^^^^^^^^^^^^^^^
+*Is in* or *contains*?
+^^^^^^^^^^^^^^^^^^^^^^
 
 When using the ``in`` statement to check whether an objective function is part of a :class:`~inversion_ideas.base.Combo`, we are only checking if that function is one of its elements, but not a recursive search through its nested :class:`~inversion_ideas.base.Combo`.
 

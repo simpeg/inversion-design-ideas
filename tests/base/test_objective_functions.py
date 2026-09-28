@@ -652,6 +652,16 @@ class TestScaledMethods:
         model = rng.uniform(size=self.n_params)
         return model
 
+    def test_invalid_function(self):
+        """Test error if invalid function type is passed."""
+        class NonObjective:
+            ...
+
+        non_objective = NonObjective()
+        multiplier = 3.0
+        with pytest.raises(TypeError, match="Invalid function of type"):
+            Scaled(multiplier, non_objective)
+
     def test_call(self, model):
         """
         Test the call method of Scaled objective functions.

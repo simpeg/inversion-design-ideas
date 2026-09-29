@@ -231,11 +231,36 @@ class Objective(ABC):
 class Scaled(Objective):
     """
     Scaled objective function.
+
+    .. important::
+
+        This class is not meant to be instantiated.
+        Multiply an :class:`~inversion_ideas.base.Objective` by a scalar to
+        generate a :class:`~inversion_ideas.base.Scaled` object.
+
     """
 
     def __init__(self, multiplier, function):
         self.multiplier = multiplier
-        self.function = function
+        if not isinstance(function, Objective):
+            msg = f"Invalid function of type {function!r}."
+            raise TypeError(msg)
+        self._function = function
+
+    @property
+    def function(self) -> Objective:
+        """Objective function that gets scaled."""
+        return self._function
+
+    @property
+    def multiplier(self) -> Real:
+        """Scalar multiplier."""
+        return self._multiplier
+
+    @multiplier.setter
+    def multiplier(self, value: Real):
+        self._multiplier = value
+        return self._multiplier
 
     @property
     def n_params(self) -> int:
@@ -322,6 +347,12 @@ class Scaled(Objective):
 class Combo(Objective):
     """
     Sum of objective functions.
+
+    .. important::
+
+        This class is not meant to be instantiated.
+        Add together two or more :class:`~inversion_ideas.base.Objective` to generate a
+        :class:`~inversion_ideas.base.Combo` object.
     """
 
     # Combo behaves like a list and therefore it's not hashable
@@ -340,6 +371,15 @@ class Combo(Objective):
                 "The list of objective functions must contain at least one function."
             )
             raise ValueError(msg)
+
+        # Check they are all objective functions
+        for objective in functions:
+            if not isinstance(objective, Objective):
+                msg = (
+                    f"Invalid function '{objective!r}' of type "
+                    f"'{type(objective).__name__}'."
+                )
+                raise TypeError(msg)
 
         # Call the _get_n_params function to check if functions have the same n_params
         _get_n_params(functions)

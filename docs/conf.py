@@ -19,6 +19,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx_design",
     "numpydoc",
+    "jupyter_sphinx",
 ]
 
 intersphinx_mapping = {

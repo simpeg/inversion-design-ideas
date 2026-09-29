@@ -129,9 +129,17 @@ class SimpleSmallness(Objective):
         return diags_array(np.sqrt(weights_array))
 
 
-class TikhonovFirst(Objective):
+class SimpleFlatness(Objective):
     r"""
-    Tikhonov first order regularization.
+    Simple smallness regularization.
+
+    Implement a simple flatness regularization that evaluates the norm of the
+    finite differences of the model vector.
+
+    .. hint::
+
+        Use this regularization in non mesh-based inversions, in which we don't need to
+        include mesh details such as cell volumes.
 
     Parameters
     ----------

@@ -12,6 +12,14 @@ Attributes
 
 
 
+.. autoattribute:: Scaled.function
+
+
+
+.. autoattribute:: Scaled.multiplier
+
+
+
 .. autoattribute:: Scaled.n_params
 
 
@@ -38,6 +46,10 @@ Methods
 .. automethod:: Scaled.__call__
 
 ----
+
+
+
+
 
 
 

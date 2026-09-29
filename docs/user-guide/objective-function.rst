@@ -165,18 +165,18 @@ Add two functions
 
 It's possible to define any linear combination of objective functions.
 
-Consider we have a :class:`~inversion_ideas.TikhonovZero` regularization function:
+Consider we have a :class:`~inversion_ideas.SimpleSmallness` regularization function:
 
 .. jupyter-execute::
 
-   zeroth = ii.TikhonovZero(n_params)
-   zeroth
+   smallness = ii.SimpleSmallness(n_params)
+   smallness
 
 We can add it to the ``data_misfit`` one by summing them together to obtain a new objective function:
 
 .. jupyter-execute::
 
-   phi = data_misfit + zeroth
+   phi = data_misfit + smallness
    phi
 
 This :class:`inversion_ideas.base.Combo` is an objective function that works as its mathematical counterpart :math:`\phi(\mathbf{m}) = \phi_\text{d}(\mathbf{m}) + \phi_\text{0}(\mathbf{m})` does: we can evaluate it on a given model, get its gradient and Hessian:
@@ -217,25 +217,25 @@ The :class:`inversion_ideas.base.Combo` works as a collection of objective funct
 .. jupyter-execute::
 
    print(data_misfit in phi)
-   print(zeroth in phi)
+   print(smallness in phi)
 
 Add multiple functions
 ~~~~~~~~~~~~~~~~~~~~~~
 
-We can also add more than two objective functions together. For example, consider that we want to add the ``data_misfit`` and the ``zeroth`` regularization with a :class:`~inversion_ideas.TikhonovFirst` regularization:
+We can also add more than two objective functions together. For example, consider that we want to add the ``data_misfit`` and the ``smallness`` regularization with a :class:`~inversion_ideas.SimpleFlatness` regularization:
 
 .. jupyter-execute::
 
-   # TODO: Use TikhonovFirst here!
-   first = ii.TikhonovZero(n_params).set_name("1")
-   first
+   # TODO: Use SimpleFlatness here!
+   flatness = ii.SimpleSmallness(n_params).set_name("1")
+   flatness
 
 .. jupyter-execute::
 
-   phi = data_misfit + zeroth + first
+   phi = data_misfit + smallness + flatness
    phi
 
-By default, when adding more than two objective functions together, we'll get a *nested* :class:`inversion_ideas.base.Combo` object: the first element will be a :class:`inversion_ideas.base.Combo` containing the ``data_misfit`` and the ``zeroth`` regularization, and the second element will be the ``first`` regularization.
+By default, when adding more than two objective functions together, we'll get a *nested* :class:`inversion_ideas.base.Combo` object: the first element will be a :class:`inversion_ideas.base.Combo` containing the ``data_misfit`` and the ``smallness`` regularization, and the second element will be the ``flatness`` regularization.
 
 .. jupyter-execute::
 
@@ -276,18 +276,18 @@ If we don't want to have this kind of structure,  we can
 
 .. jupyter-execute::
 
-   zeroth in flat_phi
+   smallness in flat_phi
 
 .. jupyter-execute::
 
-   first in flat_phi
+   flatness in flat_phi
 
 *Is in* or *contains*?
 ^^^^^^^^^^^^^^^^^^^^^^
 
 When using the ``in`` statement to check whether an objective function is part of a :class:`~inversion_ideas.base.Combo`, we are only checking if that function is one of its elements, but not a recursive search through its nested :class:`~inversion_ideas.base.Combo`.
 
-For example, in we know that ``first`` is the second element of ``phi``:
+For example, in we know that ``flatness`` is the second element of ``phi``:
 
 .. jupyter-execute::
 
@@ -298,23 +298,23 @@ For example, in we know that ``first`` is the second element of ``phi``:
 
    phi[1]
 
-So, we know that ``first in phi`` should be ``True``:
+So, we know that ``flatness in phi`` should be ``True``:
 
 .. jupyter-execute::
 
-   first in phi
+   flatness in phi
 
-But, the first element of ``phi`` is a :class:`~inversion_ideas.base.Combo` containing ``data_misfit`` and ``zeroth``, so ``data_misfit in phi`` should be ``False``:
+But, the flatness element of ``phi`` is a :class:`~inversion_ideas.base.Combo` containing ``data_misfit`` and ``smallness``, so ``data_misfit in phi`` should be ``False``:
 
 .. jupyter-execute::
 
    data_misfit in phi
 
-And the same goes for ``zeroth``:
+And the same goes for ``smallness``:
 
 .. jupyter-execute::
 
-   zeroth in phi
+   smallness in phi
 
 Alternatively, we can use the :meth:`~inversion_ideas.base.Combo.contains` method to check recursively for a particular term:
 
@@ -324,11 +324,11 @@ Alternatively, we can use the :meth:`~inversion_ideas.base.Combo.contains` metho
 
 .. jupyter-execute::
 
-   phi.contains(zeroth)
+   phi.contains(smallness)
 
 .. jupyter-execute::
 
-   phi.contains(first)
+   phi.contains(flatness)
 
 
 Linear combination of functions
@@ -348,7 +348,7 @@ as follows:
 
    beta = 1e2
    alpha = 3.0
-   phi = data_misfit + beta * (zeroth + alpha * first)
+   phi = data_misfit + beta * (smallness + alpha * flatness)
    phi
 
 We can evaluate the ``phi`` function and get its gradient and Hessian as with any other objective function:
@@ -395,7 +395,7 @@ Because the ``phi[1]`` is a  :class:`~inversion_ideas.base.Scaled`, it has a ``m
 
    phi[1].function
 
-The ``phi[1].function`` is another :class:`~inversion_ideas.base.Combo` that contains the ``zeroth`` and a scaled version of ``first``.
+The ``phi[1].function`` is another :class:`~inversion_ideas.base.Combo` that contains the ``smallness`` and a scaled version of ``flatness``.
 
 .. jupyter-execute::
 
@@ -414,8 +414,8 @@ We can use the  :meth:`~inversion_ideas.base.Combo.contains` to perform a recurs
 
 .. jupyter-execute::
 
-   phi.contains(zeroth)
+   phi.contains(smallness)
 
 .. jupyter-execute::
 
-   phi.contains(first)
+   phi.contains(flatness)

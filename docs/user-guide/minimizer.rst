@@ -46,12 +46,12 @@ where the ``true_model`` was:
    true_model
 
 
-Let's define an objective function by adding a :class:`~inversion_ideas.TikhonovZero` regularization:
+Let's define an objective function by adding a :class:`~inversion_ideas.SimpleSmallness` regularization:
 
 .. jupyter-execute::
 
    beta = 30.0
-   phi = data_misfit + beta * ii.TikhonovZero(n_params)
+   phi = data_misfit + beta * ii.SimpleSmallness(n_params)
    phi
 
 And use the  :func:`~inversion_ideas.conjugate_gradient` to minimize it by setting an initial model full of zeros:

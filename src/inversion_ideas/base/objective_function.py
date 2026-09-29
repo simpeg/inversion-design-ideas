@@ -149,7 +149,7 @@ class Objective(ABC):
             # Replace underscores since they are not valid in LaTeX text mode.
             name = self.name.replace("_", "-")
             repr_ += r"_\text{" + name + "}"
-        return f"${repr_} (m)$"
+        return rf"${repr_} (\mathbf{{m}})$"
 
     def info(self):
         """Get information about the objective function."""

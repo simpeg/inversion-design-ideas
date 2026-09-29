@@ -371,6 +371,15 @@ class Combo(Objective):
             )
             raise ValueError(msg)
 
+        # Check they are all objective functions
+        for objective in functions:
+            if not isinstance(objective, Objective):
+                msg = (
+                    f"Invalid function '{objective!r}' of type "
+                    f"'{type(objective).__name__}'."
+                )
+                raise TypeError(msg)
+
         # Call the _get_n_params function to check if functions have the same n_params
         _get_n_params(functions)
 

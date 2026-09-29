@@ -23,6 +23,7 @@ dependencies:
   - pytest
   - pytest-cov
   - coverage
+  - diff-cover
   - ruff
   - mypy
   - scipy-stubs

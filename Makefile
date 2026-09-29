@@ -2,23 +2,28 @@ PYTEST_TARGETS=src tests
 CHECK_STYLE=src notebooks tests
 CHECK_TYPE=src
 
-.PHONY: help install test check check-format check_style format mypy
+.PHONY: help install diff-cover test check check-format check_style format mypy
 
 help:
 	@echo "Commands:"
 	@echo ""
-	@echo "  install   install in editable mode"
-	@echo "  test      run the test suite (including doctests) and report coverage"
-	@echo "  check     run code style and quality checks with Ruff"
-	@echo "  format    automatically format the code with Ruff"
-	@echo "  mypy      run type checks with mypy"
+	@echo "  install    install in editable mode"
+	@echo "  test       run the test suite (including doctests) and report coverage"
+	@echo "  diff-cover check coverage of diff against default branch"
+	@echo "  check      run code style and quality checks with Ruff"
+	@echo "  format     automatically format the code with Ruff"
+	@echo "  mypy       run type checks with mypy"
 	@echo ""
 
 install:
 	python -m pip install --no-deps --editable .
 
 test:
-	pytest --cov-report=term-missing --cov --doctest-modules --verbose $(PYTEST_TARGETS)
+	pytest --cov --cov-report=term-missing --doctest-modules --verbose $(PYTEST_TARGETS)
+
+diff-cover:
+	coverage xml
+	diff-cover --fail-under 100 coverage.xml
 
 check: check-format check-style
 

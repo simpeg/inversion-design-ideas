@@ -43,6 +43,16 @@ class CanBeUpdated(Protocol):
 
 
 @runtime_checkable
+class CanBeInitialized(Protocol):
+    """
+    Protocol for objects that can be initialized.
+    """
+
+    def initialize(self) -> None:
+        raise NotImplementedError
+
+
+@runtime_checkable
 class SimulationProtocol(Protocol):
     """Protocol for simulation objects."""
 
@@ -94,4 +104,14 @@ class HasDiagonal(Protocol):
     """
 
     def diagonal(self) -> npt.NDArray[np.float64]:
+        raise NotImplementedError
+
+
+@runtime_checkable
+class ConditionLike(Protocol):
+    """
+    Protocol for condition and condition-like objects.
+    """
+
+    def __call__(self, model: Model) -> bool:
         raise NotImplementedError

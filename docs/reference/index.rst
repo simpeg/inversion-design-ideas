@@ -18,5 +18,6 @@ API Reference
    inversion
    operators
    utils
+   decorators
    errors
    base

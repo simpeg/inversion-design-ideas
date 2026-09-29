@@ -12,7 +12,7 @@ from ..typing import Model
 def backtracking_line_search(
     phi: Objective,
     model: Model,
-    search_direction: npt.NDArray[np.float64],
+    search_direction: Model,
     *,
     contraction_factor: float = 0.5,
     c_factor: float = 0.5,
@@ -31,14 +31,14 @@ def backtracking_line_search(
         Current model.
     search_direction: (n_params) array
         Vector used as a search direction.
-    contraction_factor : float
+    contraction_factor : float, optional
         Contraction factor for the step length. Must be greater than 0 and lower than 1.
-    c_factor : float
+    c_factor : float, optional
         The c factor used in the descent condition.
         Must be greater than 0 and lower than 1.
     phi_value : float or None, optional
         Precomputed value of ``phi(model)``. If None, it will be computed.
-    phi_gradient : (n_params) array, optional
+    phi_gradient : (n_params) array or None, optional
         Precomputed value of ``phi.gradient(model)``. If None, it will be computed.
     maxiter : int, optional
         Maximum number of line search iterations.
@@ -46,8 +46,8 @@ def backtracking_line_search(
     Returns
     -------
     step_length : float or None
-        Alpha for which `x_new = x0 + alpha * pk`, or None if the line search algorithm
-        did not converge.
+        Alpha for which ``x_new = x0 + alpha * pk``, or None if the line search
+        algorithm did not converge.
     n_iterations : int
         Number of line search iterations.
 

@@ -4,13 +4,16 @@ rich
 pytest
 pytest-cov
 coverage
+diff-cover
 ruff
 mypy
 scipy-stubs
 discretize==0.12.0
 simpeg==0.25.2
 pymatsolver==0.4.0
+xxhash
 sphinx
 numpydoc
 pydata-sphinx-theme
 sphinx_design
+choclo

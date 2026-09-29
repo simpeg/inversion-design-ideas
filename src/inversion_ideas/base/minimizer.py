@@ -65,3 +65,27 @@ class Minimizer(ABC):
         Generator[Model]
             Generator that yields models after each iteration of the minimizer.
         """
+
+    def run(self, objective: Objective, initial_model: Model, *args, **kwargs) -> Model:
+        """
+        Run all iterations of the minimizer at once.
+
+        Parameters
+        ----------
+        objective : Objective
+            Objective function to be minimized.
+        initial_model : (n_params) array
+            Initial model used to start the minimization.
+        *args :
+            Any extra positional argument will be passed to the ``__call__`` method.
+        *kwargs :
+            Any extra keyword argument will be passed to the ``__call__`` method.
+
+        Returns
+        -------
+        inverted_model : (n_params) array
+            Final inverted model.
+        """
+        # Unpack the generator and keep only the last model
+        *_, inverted_model = self(objective, initial_model, *args, **kwargs)
+        return inverted_model

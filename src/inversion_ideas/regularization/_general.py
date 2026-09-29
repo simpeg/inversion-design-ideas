@@ -11,9 +11,17 @@ from ..base import Objective
 from ..typing import Model
 
 
-class TikhonovZero(Objective):
+class SimpleSmallness(Objective):
     r"""
-    Tikhonov zero-th order regularization.
+    Simple smallness regularization.
+
+    Implement a simple smallness regularization that evaluates the norm of the model
+    vector.
+
+    .. hint::
+
+        Use this regularization in non mesh-based inversions, in which we don't need to
+        include mesh details such as cell volumes.
 
     Parameters
     ----------
@@ -29,7 +37,8 @@ class TikhonovZero(Objective):
 
     Notes
     -----
-    Implement a Tikhonov zero-th order regularization as follows:
+    Implement a simple smallness regularization that evaluates the weighted L2 model
+    norm:
 
     .. math::
 
@@ -64,40 +73,15 @@ class TikhonovZero(Objective):
         self.set_name("0")
 
     def __call__(self, model: Model) -> float:
-        """
-        Evaluate the regularization on a given model.
-
-        Parameters
-        ----------
-        model : (n_params) array
-            Array with model values.
-        """
-        model_diff = model - self.reference_model
-        weights_matrix = self.weights_matrix
-        return model_diff.T @ weights_matrix.T @ weights_matrix @ model_diff
+        vector = self.weights_matrix @ (model - self.reference_model)
+        return vector.T @ vector
 
     def gradient(self, model: Model):
-        """
-        Gradient vector.
-
-        Parameters
-        ----------
-        model : (n_params) array
-            Array with model values.
-        """
         model_diff = model - self.reference_model
         weights_matrix = self.weights_matrix
         return 2 * weights_matrix.T @ weights_matrix @ model_diff
 
     def hessian(self, model: Model):  # noqa: ARG002
-        """
-        Hessian matrix.
-
-        Parameters
-        ----------
-        model : (n_params) array
-            Array with model values.
-        """
         weights_matrix = self.weights_matrix
         return 2 * weights_matrix.T @ weights_matrix
 

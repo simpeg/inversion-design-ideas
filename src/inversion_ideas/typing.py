@@ -42,6 +42,35 @@ class CanBeUpdated(Protocol):
         raise NotImplementedError
 
 
+@runtime_checkable
+class CanBeInitialized(Protocol):
+    """
+    Protocol for objects that can be initialized.
+    """
+
+    def initialize(self) -> None:
+        raise NotImplementedError
+
+
+@runtime_checkable
+class SimulationProtocol(Protocol):
+    """Protocol for simulation objects."""
+
+    @property
+    def n_data(self) -> int:
+        raise NotImplementedError
+
+    @property
+    def n_params(self) -> int:
+        raise NotImplementedError
+
+    def __call__(self, model) -> npt.NDArray[np.float64]:
+        raise NotImplementedError
+
+    def jacobian(self, model) -> npt.NDArray[np.float64] | LinearOperator:
+        raise NotImplementedError
+
+
 class SparseRegularization(Protocol):
     """
     Protocol to define sparse regularizations that can be used with a IRLS algorithm.
@@ -75,4 +104,14 @@ class HasDiagonal(Protocol):
     """
 
     def diagonal(self) -> npt.NDArray[np.float64]:
+        raise NotImplementedError
+
+
+@runtime_checkable
+class ConditionLike(Protocol):
+    """
+    Protocol for condition and condition-like objects.
+    """
+
+    def __call__(self, model: Model) -> bool:
         raise NotImplementedError

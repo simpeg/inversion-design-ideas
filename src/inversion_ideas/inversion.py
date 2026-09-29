@@ -18,10 +18,12 @@ from rich.tree import Tree
 
 from inversion_ideas.errors import ConvergenceWarning
 
+from ._utils import array_to_str
 from .base import Condition, Directive, Minimizer, Objective
+from .decorators import debug
 from .inversion_log import InversionLog, InversionLogRich, MinimizerLog
 from .typing import Log, Model
-from .utils import array_to_str, debug, get_logger
+from .utils import get_logger
 
 
 class Inversion:
@@ -39,7 +41,7 @@ class Inversion:
         function during the inversion. It must take the objective function and a model
         as arguments.
     directives : list of Directive
-        List of ``Directive``s used to modify the objective function after each
+        List of ``Directive`` used to modify the objective function after each
         iteration.
     stopping_criterion : Condition or callable
         Boolean function that takes the model as argument. If this function returns
@@ -92,8 +94,9 @@ class Inversion:
         if log is False:
             self.log = None
         elif log is True:
-            # TODO: this could fail if the objective function is not
-            # phi_d + beta * phi_m. We should try-error here maybe...
+            # TODO: # ruff: ignore[FIX002]
+            #   This could fail if the objective function is not
+            #     phi_d + beta * phi_m. We should try-error here maybe...
             self.log = InversionLogRich.create_from(self.objective_function)
         else:
             self.log = log
@@ -101,7 +104,8 @@ class Inversion:
         # Assign model as a copy of the initial model
         self.model = initial_model.copy()
 
-        # TODO: Support for handling custom callbacks for the minimizer
+        # TODO: # ruff: ignore[FIX002]
+        #   Support for handling custom callbacks for the minimizer.
         if log is not None and "callback" in self.minimizer_kwargs:
             msg = "Passing a custom callback for the minimizer is not yet supported."
             raise NotImplementedError(msg)
@@ -123,7 +127,7 @@ class Inversion:
             if self.log is not None:
                 self.log.update(self.counter, self.model)
 
-            # Initialize stopping criteria (if necessary)
+            # Initialize stopping criterion (if necessary)
             if hasattr(self.stopping_criterion, "initialize"):
                 self.stopping_criterion.initialize()
 
@@ -134,10 +138,10 @@ class Inversion:
         get_logger().debug(f"Running {self.counter}-th iteration of {self}.")
         # ---
 
-        # Check for stopping criteria before trying to run the iteration
+        # Check for stopping criterion before trying to run the iteration
         if self.stopping_criterion(self.model):
             get_logger().debug(
-                "🎉 Inversion successfully finished due to stopping criteria."
+                "🎉 Inversion successfully finished due to stopping criterion."
             )
             self._stop_code = 0
             raise StopIteration
@@ -153,11 +157,11 @@ class Inversion:
             self._stop_code = 1
             raise StopIteration
 
-        # Update stopping criteria (if necessary)
+        # Update stopping criterion (if necessary)
         if hasattr(self.stopping_criterion, "update"):
             # -- Debug --
             get_logger().debug(
-                f"Update stopping criteria '{self.stopping_criterion}' with "
+                f"Update stopping criterion '{self.stopping_criterion}' with "
                 f"{array_to_str(self.model)} and counter '{self.counter}'."
             )
             # ---
@@ -199,9 +203,7 @@ class Inversion:
                 minimizer_log = MinimizerLog()
                 self.minimizer_logs.append(minimizer_log)
                 minimizer_kwargs["callback"] = minimizer_log.update
-
-            # Unpack the generator and keep only the last model
-            *_, model = self.minimizer(
+            model = self.minimizer.run(
                 self.objective_function, self.model, **minimizer_kwargs
             )
         else:
@@ -231,7 +233,7 @@ class Inversion:
         """
         Code obtained after inversion stopped.
 
-        Code 0: the stopping criteria was met.
+        Code 0: the stopping criterion was met.
         Code 1: the inversion stopped due to that the maximum number of iterations was
         encountered..
         Code ``None``: the inversion is still running or hasn't started yet.
@@ -266,7 +268,7 @@ class Inversion:
         return self._log_minimizers and isinstance(self.minimizer, Minimizer)
 
     @property
-    def minimizer_logs(self) -> list[None | MinimizerLog] | None:
+    def minimizer_logs(self) -> list[MinimizerLog | None] | None:
         """
         Logs of minimizers.
         """
@@ -287,7 +289,7 @@ class Inversion:
         """
         if show_log and self.log is not None:
             if not isinstance(self.log, RenderableType):
-                # TODO: Add message
+                # TODO: Add message # ruff: ignore[FIX002]
                 raise NotImplementedError()
 
             spinner = Spinner(
@@ -312,7 +314,7 @@ class Inversion:
                 group.renderables.pop(-1)  # remove spinner
                 if self.stop_code == 0:
                     text = Text(
-                        "🎉 Inversion successfully finished due to stopping criteria."
+                        "🎉 Inversion successfully finished due to stopping criterion."
                     )
                 elif self.stop_code == 1:
                     text = Text(

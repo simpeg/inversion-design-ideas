@@ -365,7 +365,7 @@ class UpdateSensitivityWeights(Directive):
         Select regularizations to update their sensitivity weights.
 
         Extract a selection of the regularizations passed as arguments to build the
-        ``self.regularizations`` attribute. Follow this criteria:
+        ``self.regularizations`` attribute. Follow this criterion:
 
         - Any objective function that is not a ``Combo`` or a ``Scaled`` will be added
           as is. We'll check if the regularization has sensitivity weights (see below).

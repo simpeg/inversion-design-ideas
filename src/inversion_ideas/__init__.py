@@ -2,7 +2,7 @@
 Ideas for inversion framework.
 """
 
-from . import base, conditions, directives, errors, operators, typing, utils
+from . import base, conditions, decorators, directives, errors, operators, typing, utils
 from ._version import __version__
 from .data_misfit import DataMisfit
 from .inversion import Inversion
@@ -18,14 +18,8 @@ from .recipes import (
     create_sparse_inversion,
     create_tikhonov_regularization,
 )
-from .regularization import (
-    Flatness,
-    Smallness,
-    SparseSmallness,
-    TikhonovFirst,
-    TikhonovZero,
-)
-from .simulations import wrap_simulation
+from .regularization import Flatness, SimpleSmallness, Smallness, SparseSmallness, TikhonovFirst
+from .simulations import LinearRegressor, WrappedSimulation, wrap_simulation
 
 __all__ = [
     "BFGSPreconditioner",
@@ -36,16 +30,18 @@ __all__ = [
     "InversionLog",
     "InversionLogRich",
     "JacobiPreconditioner",
+    "LinearRegressor",
+    "SimpleSmallness",
     "Smallness",
     "SparseSmallness",
     "TikhonovFirst",
-    "TikhonovZero",
     "__version__",
     "base",
     "conjugate_gradient",
     "create_l2_inversion",
     "create_sparse_inversion",
     "create_tikhonov_regularization",
+    "decorators",
     "directives",
     "errors",
     "get_jacobi_preconditioner",

@@ -183,7 +183,7 @@ class InversionLog:
         where :math:`\phi_d(m)` is the data misfit term, :math:`\phi_m(\mathbf{m})` is
         the model norm, and :math:`\beta` is the trade-off parameter.
         """
-        # TODO: write proper error messages
+        # TODO: write proper error messages  # ruff: ignore[FIX002]
         assert len(objective_function) == 2
         data_misfit = objective_function[0]
         assert not hasattr(data_misfit, "multiplier")
@@ -291,7 +291,8 @@ class InversionLogRich(InversionLog):
         ----------
         model : (n_params) array
         """
-        # TODO: Check that each entry in the log has the same amount of elements
+        # TODO: # ruff: ignore[FIX002]
+        #   Check that each entry in the log has the same amount of elements.
         row = []
         for name, column in self.columns.items():
             value = self.log[name][-1]  # last element in the log

@@ -12,6 +12,47 @@ import numpy.typing as npt
 
 from .base.objective_function import Objective, Scaled
 
+try:
+    import xxhash
+except ImportError:
+    import hashlib
+
+    HASHING_FUNCTION = hashlib.sha256
+else:
+    HASHING_FUNCTION = xxhash.xxh32
+
+
+def compute_hash(*args, **kwargs):
+    """
+    Compute hash of inputs using the default hashing function.
+
+    If ``xxhash`` is installed, then :func:`xxhash.xx32` will be used to compute the hash. Otherwise, :func:`hashlib.sha256` will be used instead.
+
+    Parameters
+    ----------
+    *args :
+        Positional arguments will be passed to the hashing function.
+    **kwargs :
+        Keyword arguments will be passed to the hashing function.
+    """
+    return HASHING_FUNCTION(*args, **kwargs)
+
+
+def hash_to_str(hash):
+    """
+    Convert hash to string in the form of ``f"{hash.name}:{hash.hexdigest()}"``.
+
+    Parameters
+    ----------
+    hash : hash-like object
+        Hash-like object with ``name`` property and ``hexdigest`` method.
+
+    Returns
+    -------
+    str
+    """
+    return f"{hash.name}:{hash.hexdigest()}"
+
 
 def array_to_str(array: npt.NDArray, *, single_line=True, threshold=10, **kwargs):
     """

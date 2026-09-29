@@ -538,6 +538,17 @@ class TestComboMethods:
         model = rng.uniform(size=self.n_params)
         return model
 
+    def test_error_invalid_function(self):
+        """Test error after passing an invalid function in the list."""
+
+        class NonObjective: ...
+
+        dummy = Dummy(3)
+        non_objective = NonObjective()
+        msg = re.escape(f"Invalid function '{non_objective!r}' of type 'NonObjective'.")
+        with pytest.raises(TypeError, match=msg):
+            Combo([dummy, non_objective])
+
     def test_call(self, model):
         """
         Test the call method of Combo objective functions.
@@ -651,6 +662,16 @@ class TestScaledMethods:
         rng = np.random.default_rng(seed=42)
         model = rng.uniform(size=self.n_params)
         return model
+
+    def test_invalid_function(self):
+        """Test error if invalid function type is passed."""
+
+        class NonObjective: ...
+
+        non_objective = NonObjective()
+        multiplier = 3.0
+        with pytest.raises(TypeError, match="Invalid function of type"):
+            Scaled(multiplier, non_objective)
 
     def test_call(self, model):
         """

@@ -43,6 +43,16 @@ class CanBeUpdated(Protocol):
 
 
 @runtime_checkable
+class CanBeInitialized(Protocol):
+    """
+    Protocol for objects that can be initialized.
+    """
+
+    def initialize(self) -> None:
+        raise NotImplementedError
+
+
+@runtime_checkable
 class SimulationProtocol(Protocol):
     """Protocol for simulation objects."""
 
@@ -110,9 +120,18 @@ class ArrayLike(Protocol):
     def __array__(
         self, dtype: npt.DTypeLike | None = None, copy: bool | None = None
     ) -> npt.NDArray:
-        return np.asarray(self.array, dtype=dtype, copy=copy)
         raise NotImplementedError
 
     @property
     def size(self) -> int:
+        raise NotImplementedError
+
+
+@runtime_checkable
+class ConditionLike(Protocol):
+    """
+    Protocol for condition and condition-like objects.
+    """
+
+    def __call__(self, model: Model) -> bool:
         raise NotImplementedError

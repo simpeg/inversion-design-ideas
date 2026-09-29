@@ -28,7 +28,7 @@ from .recipes import (
     create_sparse_inversion,
     create_tikhonov_regularization,
 )
-from .regularization import Flatness, Smallness, SparseSmallness, TikhonovZero
+from .regularization import Flatness, SimpleSmallness, Smallness, SparseSmallness
 from .simulations import LinearRegressor, WrappedSimulation, wrap_simulation
 
 __all__ = [
@@ -41,9 +41,9 @@ __all__ = [
     "InversionLogRich",
     "JacobiPreconditioner",
     "LinearRegressor",
+    "SimpleSmallness",
     "Smallness",
     "SparseSmallness",
-    "TikhonovZero",
     "__version__",
     "base",
     "conjugate_gradient",

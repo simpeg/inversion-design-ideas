@@ -235,8 +235,9 @@ class Scaled(Objective):
     .. important::
 
         This class is not meant to be instantiated.
-        Multiply an objective functions by a scalar to generate a
-        :class:`~inversion_ideas.base.Scaled` object.
+        Multiply an :class:`~inversion_ideas.base.Objective` by a scalar to
+        generate a :class:`~inversion_ideas.base.Scaled` object.
+
     """
 
     def __init__(self, multiplier, function):
@@ -350,7 +351,7 @@ class Combo(Objective):
     .. important::
 
         This class is not meant to be instantiated.
-        Add together two or more objective functions to generate a
+        Add together two or more :class:`~inversion_ideas.base.Objective` to generate a
         :class:`~inversion_ideas.base.Combo` object.
     """
 

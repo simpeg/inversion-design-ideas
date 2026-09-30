@@ -7,7 +7,8 @@ from numpy.typing import NDArray
 from scipy.sparse import dia_array, sparray
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
-from inversion_ideas.base import Objective
+from inversion_ideas.base import Objective, Simulation
+from inversion_ideas.decorators import cache_on_model
 from inversion_ideas.typing import SparseArray
 
 
@@ -171,3 +172,85 @@ def assert_allclose_linear_operators(
         # rmatvec
         vector = rng.uniform(size=a.shape[0])
         np.testing.assert_allclose(a.T @ vector, b.T @ vector, **kwargs)
+
+
+class NonLinearRegressor(Simulation):
+    r"""
+    Non-linear regressor simulation.
+
+    Parameters
+    ----------
+    a_matrix : (n_data, n_params) array
+        The :math:`\mathbf{A}` matrix.
+    b_matrix : (n_data, n_params) array
+        The :math:`\mathbf{A}` matrix.
+    build_jacobian : bool, optional
+        Whether the Jacobian matrix will be created as a dense matrix (True) or as a
+        :class:`~scipy.sparse.linalg.LinearOperator` (False). Default to True.
+    cache : bool, optional
+        Whether to cache the results of the ``__call__`` method for the last model
+        vector or not. Default to True.
+
+    Notes
+    -----
+    Implements a simple non-linear simulation as a non-linear regressor in the form:
+
+    .. math::
+
+        \mathbf{y} = \mathbf{A} \cdot \mathbf{m}^2 + \mathbf{B} \cdot \mathbf{m}
+
+    where :math:`\mathbf{y}` is the predicted data, :math:`\mathbf{m}` is the model
+    vector, and :math:`\mathbf{A}` and :math:`\mathbf{B}` are two
+    (``n_data``, ``n_params``) matrices.
+    """
+
+    def __init__(self, a_matrix, b_matrix, *, build_jacobian=True, cache=True):
+        if a_matrix.shape != b_matrix.shape:
+            raise ValueError()
+        self.a_matrix = a_matrix
+        self.b_matrix = b_matrix
+        self.build_jacobian = build_jacobian
+        self.cache = cache
+
+    @classmethod
+    def create_random(cls, n_data: int, n_params: int, *, seed=None, **kwargs):
+        """Create a non-linear regressor with random matrices.
+
+        Parameters
+        ----------
+        n_data : int
+            Number of data values that the simulation will generate.
+        n_params : int
+            Number of elements in the model vector.
+        seed : int or None, optional
+            Random seed or random state used to generate the matrix.
+        **kwargs
+            Keyword arguents passed to
+            the constructor of :class:`~inversion_ideas.LinearRegressor`.
+        """
+        shape = (n_data, n_params)
+        rng = np.random.default_rng(seed=seed)
+        a_matrix = rng.uniform(low=-1.0, high=1.0, size=shape)
+        b_matrix = rng.uniform(low=-1.0, high=1.0, size=shape)
+        return cls(a_matrix, b_matrix, **kwargs)
+
+    @property
+    def n_params(self) -> int:
+        return self.a_matrix.shape[1]
+
+    @property
+    def n_data(self) -> int:
+        return self.a_matrix.shape[0]
+
+    @cache_on_model
+    def __call__(self, model) -> NDArray[np.float64]:
+        return self.a_matrix @ model**2 + self.b_matrix @ model
+
+    def jacobian(self, model) -> NDArray[np.float64] | LinearOperator:
+        jacobian = (
+            2 * self.a_matrix * model  # element-wise operation
+            + self.b_matrix
+        )
+        if not self.build_jacobian:
+            return aslinearoperator(jacobian)
+        return jacobian

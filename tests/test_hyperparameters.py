@@ -2,9 +2,14 @@
 Test custom hyperparameter objects.
 """
 
+import numpy as np
 import pytest
+from scipy.sparse import diags_array
 
-from inversion_ideas.hyperparams import CooledMultiplier
+from inversion_ideas.hyperparams import CooledMultiplier, SensitivityWeights
+from inversion_ideas.utils import get_sensitivity_weights
+
+from .utils import NonLinearRegressor
 
 
 class TestCooledMultiplier:
@@ -50,3 +55,49 @@ class TestCooledMultiplier:
             multiplier.update()
         assert multiplier == initial / cooling_factor**n
         assert multiplier.value == initial / cooling_factor**n
+
+
+class TestSensitivityWeights:
+    """
+    Test the :class:`~inversion_ideas.hyperparams.SensitivityWeights` hyperparameter.
+    """
+
+    n_params = 5
+    n_data = 3
+
+    @pytest.fixture
+    def simulation(self):
+        """Non-linear simulation for the tests."""
+        return NonLinearRegressor.create_random(self.n_data, self.n_params, seed=4141)
+
+    @pytest.fixture
+    def kwargs(self):
+        """Extra keyword arguments for the sensitivity weights function."""
+        data_weights = diags_array(0.1 * np.ones(self.n_data))
+        volumes = np.linspace(1, self.n_params + 1, self.n_params, dtype=np.float64)
+        vmin = 1e-2
+        kwargs = {"data_weights": data_weights, "volumes": volumes, "vmin": vmin}
+        return kwargs
+
+    def test_initialization(self, simulation, kwargs):
+        """Test initialization of sensitivity weights."""
+        # Define a SensitivityWeights object
+        initial_model = np.ones(self.n_params)
+        sensitivity_weights = SensitivityWeights(simulation, initial_model, **kwargs)
+        # Check if they match the expected sensitivity weights
+        expected = get_sensitivity_weights(simulation.jacobian(initial_model), **kwargs)
+        np.testing.assert_allclose(sensitivity_weights, expected)
+
+    def test_update(self, simulation, kwargs):
+        """Test update of sensitivity weights."""
+        # Define a SensitivityWeights object
+        initial_model = np.ones(self.n_params)
+        sensitivity_weights = SensitivityWeights(simulation, initial_model, **kwargs)
+        # Update the weights with a new model
+        model = np.random.default_rng(seed=4124).uniform(
+            low=-1.0, high=1.0, size=self.n_params
+        )
+        sensitivity_weights.update(model)
+        # Check if they match the expected sensitivity weights
+        expected = get_sensitivity_weights(simulation.jacobian(model), **kwargs)
+        np.testing.assert_allclose(sensitivity_weights, expected)

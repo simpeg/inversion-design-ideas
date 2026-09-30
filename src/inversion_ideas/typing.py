@@ -126,6 +126,14 @@ class ArrayLike(Protocol):
     def size(self) -> int:
         raise NotImplementedError
 
+    @property
+    def ndim(self) -> int:
+        raise NotImplementedError
+
+    @property
+    def shape(self) -> tuple[int,...]:
+        raise NotImplementedError
+
 
 @runtime_checkable
 class ConditionLike(Protocol):

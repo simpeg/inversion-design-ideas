@@ -62,26 +62,39 @@ class _MeshBasedRegularization(Objective):
         """
         if not isinstance(value, np.ndarray | ArrayLike | dict):
             msg = (
-                f"Invalid weights of type {type(value)}. "
+                f"Invalid cell_weights of type '{type(value)}'. "
                 "It must be an array or a dictionary."
             )
             raise TypeError(msg)
-        if isinstance(value, np.ndarray | ArrayLike) and value.size != self.n_active:
-            msg = (
-                f"Invalid cell_weights array with '{value.size}' elements. "
-                f"It must have '{self.n_active}' elements, "
-                "equal to the number of active cells."
-            )
-            raise ValueError(msg)
+        if isinstance(value, np.ndarray | ArrayLike):
+            if value.ndim != 1:
+                msg = (
+                    f"Invalid cell_weights array with '{value.ndim}' dimensions. "
+                    f"It must have a 1D array."
+                )
+                raise ValueError(msg)
+            if value.size != self.n_active:
+                msg = (
+                    f"Invalid cell_weights array with '{value.size}' elements. "
+                    f"It must have '{self.n_active}' elements, "
+                    "equal to the number of active cells."
+                )
+                raise ValueError(msg)
         if isinstance(value, dict):
             for key, array in value.items():
-                if not isinstance(value, np.ndarray | ArrayLike):
+                if not isinstance(array, np.ndarray | ArrayLike):
                     msg = (
-                        f"Invalid weight array '{key}' of type {type(value)} found "
-                        "in dictionary. "
+                        f"Invalid cell_weights array '{key}' of type {type(array)} "
+                        "found in dictionary. "
                         "Values of the dictionary must be arrays."
                     )
                     raise TypeError(msg)
+                if array.ndim != 1:
+                    msg = (
+                        f"Invalid cell_weights array '{key}' with '{array.ndim}' "
+                        "dimensions. It must have a 1D array."
+                    )
+                    raise ValueError(msg)
                 if array.size != self.n_active:
                     msg = (
                         f"Invalid cell_weights array '{key}' with "

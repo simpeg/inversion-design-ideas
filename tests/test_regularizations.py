@@ -8,6 +8,8 @@ from discretize.tensor_mesh import TensorMesh
 from scipy.sparse import dia_array, sparray
 
 from inversion_ideas import Flatness, Smallness
+from inversion_ideas.base import WrappedArray
+from inversion_ideas.regularization._mesh_based import _MeshBasedRegularization
 
 
 class TestBugfixFlatness:
@@ -87,3 +89,135 @@ class TestSmallness:
         assert hessian.offsets == 0  # should be a diagonal matrix (only main diag)
         expected_diagonal = 2 * mesh.cell_volumes[active_cells] * cell_weights
         np.testing.assert_allclose(hessian.diagonal(), expected_diagonal)
+
+
+class MockRegularization(_MeshBasedRegularization):
+    """Mock mesh-based regularization to test the methods of the base class."""
+
+    def __init__(self, active_cells):
+        self.active_cells = active_cells
+
+    def __call__(self, model):
+        raise NotImplementedError
+
+    def gradient(self, model):
+        raise NotImplementedError
+
+    def hessian(self, model):
+        raise NotImplementedError
+
+
+class TestMeshBasedRegularization:
+    """Test the ``_MeshBasedRegularization`` base class."""
+
+    active_cells = np.array([True, True, False, False])
+    n_active = active_cells.sum()
+
+    @pytest.mark.parametrize(
+        "wrapped_array", [False, True], ids=["array", "wrapped-array"]
+    )
+    def test_cell_weights_array(self, wrapped_array):
+        """Test cell_weights setter with an array or array-like object."""
+        cell_weights = np.ones(self.n_active)
+        if wrapped_array:
+            cell_weights = WrappedArray(cell_weights)
+        reg = MockRegularization(self.active_cells)
+        reg.cell_weights = cell_weights
+        assert reg.cell_weights is cell_weights
+
+    @pytest.mark.parametrize(
+        "wrapped_array", [False, True], ids=["array", "wrapped-array"]
+    )
+    def test_cell_weights_dictionary_arrays(self, wrapped_array):
+        """Test cell_weights setter with a dictionary."""
+        weights_a = np.ones(self.n_active)
+        weights_b = 2 * np.ones(self.n_active)
+        if wrapped_array:
+            weights_b = WrappedArray(weights_b)
+        cell_weights = {"a": weights_a, "b": weights_b}
+
+        reg = MockRegularization(self.active_cells)
+        reg.cell_weights = cell_weights
+        assert reg.cell_weights is cell_weights
+
+    def test_cell_weights_invalid_type(self):
+        """Test cell_weights error after passing an object of invalid type."""
+
+        class Blah: ...
+
+        cell_weights = Blah()
+        reg = MockRegularization(self.active_cells)
+        with pytest.raises(TypeError, match="Invalid cell_weights of type"):
+            reg.cell_weights = cell_weights
+
+    def test_cell_weights_invalid_type_in_dict(self):
+        """Test cell_weights error after passing an object of invalid type in dict."""
+
+        class Blah: ...
+
+        cell_weights = {"a": np.ones(self.n_active), "b": Blah()}
+        reg = MockRegularization(self.active_cells)
+        with pytest.raises(TypeError, match=r"Invalid cell_weights array 'b' of type"):
+            reg.cell_weights = cell_weights
+
+    @pytest.mark.parametrize(
+        "wrapped_array", [False, True], ids=["array", "wrapped-array"]
+    )
+    def test_cell_weights_invalid_size(self, wrapped_array):
+        """Test cell_weights error after passing array with wrong size."""
+        cell_weights = np.ones(self.n_active + 2)
+        if wrapped_array:
+            cell_weights = WrappedArray(cell_weights)
+        reg = MockRegularization(self.active_cells)
+        with pytest.raises(
+            ValueError, match=r"Invalid cell_weights array with '[0-9]+' elements"
+        ):
+            reg.cell_weights = cell_weights
+
+    @pytest.mark.parametrize(
+        "wrapped_array", [False, True], ids=["array", "wrapped-array"]
+    )
+    def test_cell_weights_invalid_size_in_dict(self, wrapped_array):
+        """Test cell_weights error after passing array within dict with wrong size."""
+        weights_a = np.ones(self.n_active)
+        weights_b = 2 * np.ones(self.n_active + 2)
+        if wrapped_array:
+            weights_b = WrappedArray(weights_b)
+        cell_weights = {"a": weights_a, "b": weights_b}
+
+        reg = MockRegularization(self.active_cells)
+        with pytest.raises(
+            ValueError, match=r"Invalid cell_weights array 'b' with '[0-9]+' elements"
+        ):
+            reg.cell_weights = cell_weights
+
+    @pytest.mark.parametrize(
+        "wrapped_array", [False, True], ids=["array", "wrapped-array"]
+    )
+    def test_cell_weights_invalid_dims(self, wrapped_array):
+        """Test cell_weights error after passing array with wrong dimensions."""
+        cell_weights = np.ones((1, self.n_active))
+        if wrapped_array:
+            cell_weights = WrappedArray(cell_weights)
+        reg = MockRegularization(self.active_cells)
+        with pytest.raises(
+            ValueError, match=r"Invalid cell_weights array with '[0-9]+' dimensions"
+        ):
+            reg.cell_weights = cell_weights
+
+    @pytest.mark.parametrize(
+        "wrapped_array", [False, True], ids=["array", "wrapped-array"]
+    )
+    def test_cell_weights_invalid_dims_in_dict(self, wrapped_array):
+        """Test cell_weights error after passing array with wrong dimensions in dict."""
+        weights_a = np.ones(self.n_active)
+        weights_b = 2 * np.ones((1, self.n_active))
+        if wrapped_array:
+            weights_b = WrappedArray(weights_b)
+        cell_weights = {"a": weights_a, "b": weights_b}
+
+        reg = MockRegularization(self.active_cells)
+        with pytest.raises(
+            ValueError, match=r"Invalid cell_weights array 'b' with '[0-9]+' dimensions"
+        ):
+            reg.cell_weights = cell_weights

@@ -2,6 +2,8 @@
 Test utilities.
 """
 
+from collections.abc import Callable
+
 from typing import Literal
 
 import numpy as np
@@ -262,6 +264,48 @@ def assert_objective_derivative(
     except AssertionError as e:
         msg = (
             f"Failed derivative test for '{phi}' of order '{order}'. \n"
+            f"\nmodel:    {model}"
+            f"\ndelta_m:  {delta_m}"
+            "\n"
+        )
+        raise AssertionError(msg + str(e)) from None
+
+
+def derivative_test(
+    function: Callable[[Model], float | NDArray[np.float64]],
+    derivative: Callable[[Model], NDArray[np.float64] | SparseArray | LinearOperator],
+    *,
+    model: Model,
+    delta_m: Model,
+    **kwargs,
+):
+    """
+    Check implementation of a derivative of a function.
+
+    Compare the value of a given function with an approximation of it using a first
+    order Taylor series expansion.
+
+    TODO:
+    - Add math
+    - Add math for when the function returns a float (N=1) or when it returns a vector
+      (N>1).
+    - Explain how the comparison is carried out.
+    - Maybe show an example that we can use it to test derivatives of an objective
+      function, but also derivatives of a simulation.
+    """
+    # Approximate the function using first order Taylor series
+    approximation = function(model) + derivative(model) @ delta_m
+
+    # Evaluate the function
+    expected = function(model + delta_m)
+
+    # Perform derivative test
+    try:
+        np.testing.assert_allclose(approximation, expected, **kwargs)
+    except AssertionError as e:
+        msg = (
+            f"Failed derivative test for function '{function}' and "
+            f"derivative '{derivative}' with:"
             f"\nmodel:    {model}"
             f"\ndelta_m:  {delta_m}"
             "\n"

@@ -149,7 +149,7 @@ class Objective(ABC):
             # Replace underscores since they are not valid in LaTeX text mode.
             name = self.name.replace("_", "-")
             repr_ += r"_\text{" + name + "}"
-        return f"${repr_} (m)$"
+        return rf"${repr_} (\mathbf{{m}})$"
 
     def info(self):
         """Get information about the objective function."""
@@ -231,11 +231,51 @@ class Objective(ABC):
 class Scaled(Objective):
     """
     Scaled objective function.
+
+    .. important::
+
+        This class is not meant to be instantiated.
+        Multiply an :class:`~inversion_ideas.base.Objective` by a scalar to
+        generate a :class:`~inversion_ideas.base.Scaled` object.
+
+    Parameters
+    ----------
+    multiplier : float or numbers.Real
+        Multiplier for the objective function. It can be a float or any instance of
+        :class:`numbers.Real`.
+    function : inversion_ideas.base.Objective
+        Objective function that will get scaled.
     """
 
     def __init__(self, multiplier, function):
         self.multiplier = multiplier
-        self.function = function
+        if not isinstance(function, Objective):
+            msg = f"Invalid function of type {function!r}."
+            raise TypeError(msg)
+        self._function = function
+
+    @property
+    def function(self) -> Objective:
+        """Objective function that gets scaled."""
+        # The function property doesn't have a setter because it's intended to be
+        # a read-only property to avoid any potential undesired behavior.
+        return self._function
+
+    @property
+    def multiplier(self) -> Real:
+        """Scalar multiplier."""
+        return self._multiplier
+
+    @multiplier.setter
+    def multiplier(self, value: Real):
+        if not isinstance(value, Real):
+            msg = (
+                f"Invalid multiplier '{value}' of type '{type(value)}'. "
+                "Multipliers must be a float or any numbers.Real object."
+            )
+            raise TypeError(msg)
+        self._multiplier = value
+        return self._multiplier
 
     @property
     def n_params(self) -> int:
@@ -322,6 +362,20 @@ class Scaled(Objective):
 class Combo(Objective):
     """
     Sum of objective functions.
+
+    .. important::
+
+        This class is not meant to be instantiated.
+        Add together two or more :class:`~inversion_ideas.base.Objective` to generate a
+        :class:`~inversion_ideas.base.Combo` object.
+
+    Parameters
+    ----------
+    functions : list of inversion_ideas.base.Objective
+        List of :class:`~inversion_ideas.base.Objective` objects that form the
+        sum. Empty lists are not accepted.
+        All functions in the list should have the same
+        :attr:`~inversion_ideas.base.Objective.n_params`.
     """
 
     # Combo behaves like a list and therefore it's not hashable
@@ -340,6 +394,15 @@ class Combo(Objective):
                 "The list of objective functions must contain at least one function."
             )
             raise ValueError(msg)
+
+        # Check they are all objective functions
+        for objective in functions:
+            if not isinstance(objective, Objective):
+                msg = (
+                    f"Invalid function '{objective!r}' of type "
+                    f"'{type(objective).__name__}'."
+                )
+                raise TypeError(msg)
 
         # Call the _get_n_params function to check if functions have the same n_params
         _get_n_params(functions)

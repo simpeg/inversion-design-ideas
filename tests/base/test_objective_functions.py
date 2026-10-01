@@ -238,6 +238,24 @@ class TestObjectiveOperations:
         assert scaled.function is a
         assert scaled.multiplier == scalar * new_scalar
 
+    def test_imul_scaled_error(self):
+        """Test error after trying to run imul with invalid type."""
+
+        class NonReal:
+            def __mul__(self, value):
+                return self
+
+            def __rmul__(self, value):
+                return self
+
+        a = Dummy(self.n_params)
+        scalar = 3.14
+        scaled = scalar * a
+        non_real_multiplier = NonReal()
+        match = f"Invalid multiplier '{non_real_multiplier}' of type"
+        with pytest.raises(TypeError, match=match):
+            scaled *= non_real_multiplier
+
     def test_floordiv_error(self):
         phi = Dummy(self.n_params)
         with pytest.raises(TypeError, match="Floor division is not implemented"):
@@ -538,6 +556,17 @@ class TestComboMethods:
         model = rng.uniform(size=self.n_params)
         return model
 
+    def test_error_invalid_function(self):
+        """Test error after passing an invalid function in the list."""
+
+        class NonObjective: ...
+
+        dummy = Dummy(3)
+        non_objective = NonObjective()
+        msg = re.escape(f"Invalid function '{non_objective!r}' of type 'NonObjective'.")
+        with pytest.raises(TypeError, match=msg):
+            Combo([dummy, non_objective])
+
     def test_call(self, model):
         """
         Test the call method of Combo objective functions.
@@ -640,7 +669,7 @@ class Failed(Objective):
 
 class TestScaledMethods:
     """
-    Test ``__call__``, ``gradient`` and ``hessian`` for a ``Scaled``.
+    Test public methods for a ``Scaled``.
     """
 
     scalar = 3.1416
@@ -651,6 +680,33 @@ class TestScaledMethods:
         rng = np.random.default_rng(seed=42)
         model = rng.uniform(size=self.n_params)
         return model
+
+    def test_invalid_multiplier(self):
+        class NonReal: ...
+
+        multiplier = NonReal()
+        phi = Dummy(self.n_params)
+
+        # Test error in constructor
+        match = f"Invalid multiplier '{multiplier}' of type"
+        with pytest.raises(TypeError, match=match):
+            Scaled(multiplier, phi)
+
+        # Test error in setter
+        scaled = Scaled(3.14, phi)
+        match = f"Invalid multiplier '{multiplier}' of type"
+        with pytest.raises(TypeError, match=match):
+            scaled.multiplier = multiplier
+
+    def test_invalid_function(self):
+        """Test error if invalid function type is passed."""
+
+        class NonObjective: ...
+
+        non_objective = NonObjective()
+        multiplier = 3.0
+        with pytest.raises(TypeError, match="Invalid function of type"):
+            Scaled(multiplier, non_objective)
 
     def test_call(self, model):
         """
@@ -784,13 +840,13 @@ class TestObjectiveFunRepresentations:
 
     def test_repr_latex(self):
         phi = Dummy(3)
-        assert phi._repr_latex_() == f"${phi._base_latex} (m)$"
+        assert phi._repr_latex_() == rf"${phi._base_latex} (\mathbf{{m}})$"
         phi = Dummy(3).set_name("a")
-        assert phi._repr_latex_() == rf"${phi._base_latex}_\text{{a}} (m)$"
+        assert phi._repr_latex_() == rf"${phi._base_latex}_\text{{a}} (\mathbf{{m}})$"
 
         # Test when name contains and underscore
         phi = Dummy(3).set_name("a_b")
-        assert phi._repr_latex_() == rf"${phi._base_latex}_\text{{a-b}} (m)$"
+        assert phi._repr_latex_() == rf"${phi._base_latex}_\text{{a-b}} (\mathbf{{m}})$"
 
 
 class TestScaledRepresentations:

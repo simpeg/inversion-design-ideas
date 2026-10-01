@@ -131,7 +131,7 @@ class ArrayLike(Protocol):
         raise NotImplementedError
 
     @property
-    def shape(self) -> tuple[int,...]:
+    def shape(self) -> tuple[int, ...]:
         raise NotImplementedError
 
 

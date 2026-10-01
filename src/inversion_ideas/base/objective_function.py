@@ -368,6 +368,14 @@ class Combo(Objective):
         This class is not meant to be instantiated.
         Add together two or more :class:`~inversion_ideas.base.Objective` to generate a
         :class:`~inversion_ideas.base.Combo` object.
+
+    Parameters
+    ----------
+    functions : list of inversion_ideas.base.Objective
+        List of :class:`~inversion_ideas.base.Objective` objects that form the
+        sum. Empty lists are not accepted.
+        All functions in the list should have the same
+        :attr:`~inversion_ideas.base.Objective.n_params`.
     """
 
     # Combo behaves like a list and therefore it's not hashable

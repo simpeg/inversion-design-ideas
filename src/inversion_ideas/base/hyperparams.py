@@ -260,6 +260,7 @@ class WrappedArray:  # ruff: ignore[PLW1641] (ignore undefined __hash__ method)
     WrappedArray([1., 2., 3., 4., 5.])
 
     We can operate with this ``array_wrapped`` as with any other array:
+
     >>> array_wrapped * 2
     array([ 2.,  4.,  6.,  8., 10.])
     >>> array_wrapped @ array_wrapped

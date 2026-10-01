@@ -238,6 +238,13 @@ class Scaled(Objective):
         Multiply an :class:`~inversion_ideas.base.Objective` by a scalar to
         generate a :class:`~inversion_ideas.base.Scaled` object.
 
+    Parameters
+    ----------
+    multiplier : float or numbers.Real
+        Multiplier for the objective function. It can be a float or any instance of
+        :class:`numbers.Real`.
+    function : inversion_ideas.base.Objective
+        Objective function that will get scaled.
     """
 
     def __init__(self, multiplier, function):
@@ -250,6 +257,8 @@ class Scaled(Objective):
     @property
     def function(self) -> Objective:
         """Objective function that gets scaled."""
+        # The function property doesn't have a setter because it's intended to be
+        # a read-only property to avoid any potential undesired behavior.
         return self._function
 
     @property
@@ -259,6 +268,12 @@ class Scaled(Objective):
 
     @multiplier.setter
     def multiplier(self, value: Real):
+        if not isinstance(value, Real):
+            msg = (
+                f"Invalid multiplier '{value}' of type '{type(value)}'. "
+                "Multipliers must be a float or any numbers.Real object."
+            )
+            raise TypeError(msg)
         self._multiplier = value
         return self._multiplier
 

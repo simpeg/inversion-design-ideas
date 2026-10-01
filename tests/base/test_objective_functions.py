@@ -238,6 +238,24 @@ class TestObjectiveOperations:
         assert scaled.function is a
         assert scaled.multiplier == scalar * new_scalar
 
+    def test_imul_scaled_error(self):
+        """Test error after trying to run imul with invalid type."""
+
+        class NonReal:
+            def __mul__(self, value):
+                return self
+
+            def __rmul__(self, value):
+                return self
+
+        a = Dummy(self.n_params)
+        scalar = 3.14
+        scaled = scalar * a
+        non_real_multiplier = NonReal()
+        match = f"Invalid multiplier '{non_real_multiplier}' of type"
+        with pytest.raises(TypeError, match=match):
+            scaled *= non_real_multiplier
+
     def test_floordiv_error(self):
         phi = Dummy(self.n_params)
         with pytest.raises(TypeError, match="Floor division is not implemented"):
@@ -651,7 +669,7 @@ class Failed(Objective):
 
 class TestScaledMethods:
     """
-    Test ``__call__``, ``gradient`` and ``hessian`` for a ``Scaled``.
+    Test public methods for a ``Scaled``.
     """
 
     scalar = 3.1416
@@ -662,6 +680,23 @@ class TestScaledMethods:
         rng = np.random.default_rng(seed=42)
         model = rng.uniform(size=self.n_params)
         return model
+
+    def test_invalid_multiplier(self):
+        class NonReal: ...
+
+        multiplier = NonReal()
+        phi = Dummy(self.n_params)
+
+        # Test error in constructor
+        match = f"Invalid multiplier '{multiplier}' of type"
+        with pytest.raises(TypeError, match=match):
+            Scaled(multiplier, phi)
+
+        # Test error in setter
+        scaled = Scaled(3.14, phi)
+        match = f"Invalid multiplier '{multiplier}' of type"
+        with pytest.raises(TypeError, match=match):
+            scaled.multiplier = multiplier
 
     def test_invalid_function(self):
         """Test error if invalid function type is passed."""

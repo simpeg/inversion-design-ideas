@@ -9,7 +9,7 @@ import pytest
 
 from inversion_ideas import DataMisfit, LinearRegressor
 
-from .utils import assert_allclose_linear_operators, assert_objective_derivative
+from .utils import assert_allclose_linear_operators, derivative_test
 
 
 class TestDataMisfit:
@@ -136,8 +136,21 @@ class TestDataMisfit:
             simulation=LinearRegressor(regressor_matrix),
             build_hessian=True,
         )
-        model = self.rng.uniform(size=self.n_params)
-        assert_objective_derivative(data_misfit, model, order, scale=1e-4, seed=4141)
+        rng = np.random.default_rng(seed=12312)
+        model = rng.uniform(low=-1.0, high=1.0, size=self.n_params)
+
+        # Define whether to test the gradient or the Hessian
+        if order == 1:
+            delta_m = rng.normal(scale=1e-4, size=self.n_params)
+            function, derivative = data_misfit, data_misfit.gradient
+        elif order == 2:
+            delta_m = rng.normal(size=self.n_params)
+            function, derivative = data_misfit.gradient, data_misfit.hessian
+        else:
+            raise ValueError()
+
+        # Perform derivative test
+        derivative_test(function, derivative, model, delta_m)
 
 
 class TestSanityChecks:

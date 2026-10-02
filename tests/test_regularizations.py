@@ -9,7 +9,7 @@ from scipy.sparse import dia_array, sparray
 
 from inversion_ideas import Flatness, Smallness
 
-from .utils import assert_objective_derivative
+from .utils import derivative_test
 
 
 class TestBugfixFlatness:
@@ -110,9 +110,21 @@ class TestSmallness(MeshBasedTest):
             cell_weights=cell_weights,
             reference_model=reference_model,
         )
+        rng = np.random.default_rng(seed=12312)
+        model = rng.uniform(low=-1.0, high=1.0, size=n_active)
 
-        model = np.random.default_rng(seed=12312).uniform(size=n_active)
-        assert_objective_derivative(smallness, model, order, scale=1e-4, seed=4141)
+        # Define whether to test the gradient or the Hessian
+        if order == 1:
+            delta_m = rng.normal(scale=1e-4, size=n_active)
+            function, derivative = smallness, smallness.gradient
+        elif order == 2:
+            delta_m = rng.normal(size=n_active)
+            function, derivative = smallness.gradient, smallness.hessian
+        else:
+            raise ValueError()
+
+        # Perform derivative test
+        derivative_test(function, derivative, model, delta_m)
 
 
 @pytest.mark.parametrize("direction", ["x", "y", "z"])
@@ -150,6 +162,18 @@ class TestFlatness(MeshBasedTest):
             cell_weights=cell_weights,
             reference_model=reference_model,
         )
+        rng = np.random.default_rng(seed=12312)
+        model = rng.uniform(low=-1.0, high=1.0, size=n_active)
 
-        model = np.random.default_rng(seed=12312).uniform(size=n_active)
-        assert_objective_derivative(flatness, model, order, scale=1e-5, seed=4141)
+        # Define whether to test the gradient or the Hessian
+        if order == 1:
+            delta_m = rng.normal(scale=1e-4, size=n_active)
+            function, derivative = flatness, flatness.gradient
+        elif order == 2:
+            delta_m = rng.normal(size=n_active)
+            function, derivative = flatness.gradient, flatness.hessian
+        else:
+            raise ValueError()
+
+        # Perform derivative test
+        derivative_test(function, derivative, model, delta_m)

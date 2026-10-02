@@ -4,8 +4,6 @@ Test utilities.
 
 from collections.abc import Callable
 
-from typing import Literal
-
 import numpy as np
 from numpy.typing import NDArray
 from scipy.sparse import dia_array, sparray
@@ -177,121 +175,86 @@ def assert_allclose_linear_operators(
         np.testing.assert_allclose(a.T @ vector, b.T @ vector, **kwargs)
 
 
-def assert_objective_derivative(
-    phi: Objective,
-    model: Model,
-    order: Literal[1, 2],
-    delta_m: Model | None = None,
-    scale: float = 1.0,
-    seed: int | None = None,
-    **kwargs,
-):
-    r"""
-    Test derivative of the objective function by comparing with Taylor series expansion.
-
-    Approximate the objective function :math`\phi` (``order=1``) or its gradient
-    :math:`\nabla\phi` (``order=2``) throught a first order Taylor series expansion:
-
-    .. math::
-
-        \phi(\mathbf{m} + \alpha \Delta\mathbf{m}) \approx
-        \phi(\mathbf{m}) + \nabla\phi(\mathbf{m}) \cdot \alpha \Delta\mathbf{m} ,
-
-    and
-
-    .. math::
-
-        \nabla\phi(\mathbf{m} + \alpha \Delta\mathbf{m}) \approx
-        \nabla\phi(\mathbf{m}) +
-        \bar{\bar{\nabla}}\phi(\mathbf{m}) \cdot \alpha \Delta\mathbf{m} ,
-
-
-    where :math:`\Delta\mathbf{m}` is a perturbation vector in the model space,
-    :math:`\alpha` is a factor to scale that vector,
-    and
-    :math:`\bar{\bar{\nabla}}\phi` is the Hessian of :math:`\phi`.
-
-    Parameters
-    ----------
-    phi : Objective
-        Objective function to test.
-    model : (n_params) array
-        Array with model values.
-    order : {1, 2}
-        Which derivative to test.
-        If ``1``, the ``phi.gradient`` will be tested.
-        If ``2``, the ``phi.hessian`` will be tested.
-    delta_m : (n_params) array or None, optional
-        Perturbation vector in the model space.
-        If None, a random vector will be generated using ``standard_normal``
-        distribution and the passed ``seed``, and multiplied by a factor of ``1e-4``.
-    scale : float, optional
-        Factor used to multiply the ``delta_m`` vector.
-    seed : int or None, optional
-        Random seed used to build ``delta_m`` if it's None.
-        If None, no random seed will be used.
-
-    Raises
-    ------
-    AssertionError :
-        If the derivative test fails.
-
-    """
-    if order == 1:
-        function, derivative = phi, phi.gradient
-    elif order == 2:
-        function, derivative = phi.gradient, phi.hessian
-    else:
-        msg = f"Invalid order '{order}'. It must be '1' or '2'."
-        raise ValueError(msg)
-
-    # Define a random step if not provided
-    if delta_m is None:
-        rng = np.random.default_rng(seed=seed)
-        delta_m = rng.standard_normal(size=model.size)
-
-    # Scale the delta_m vector
-    delta_m = scale * delta_m
-
-    # Approximate the function to test
-    approximation = function(model) + derivative(model) @ delta_m
-
-    # Evaluate the function to test
-    value = function(model + delta_m)
-
-    try:
-        np.testing.assert_allclose(approximation, value, **kwargs)
-    except AssertionError as e:
-        msg = (
-            f"Failed derivative test for '{phi}' of order '{order}'. \n"
-            f"\nmodel:    {model}"
-            f"\ndelta_m:  {delta_m}"
-            "\n"
-        )
-        raise AssertionError(msg + str(e)) from None
-
-
 def derivative_test(
     function: Callable[[Model], float | NDArray[np.float64]],
     derivative: Callable[[Model], NDArray[np.float64] | SparseArray | LinearOperator],
-    *,
     model: Model,
     delta_m: Model,
     **kwargs,
 ):
-    """
-    Check implementation of a derivative of a function.
+    r"""
+    Check implementation of the derivative of a function.
 
     Compare the value of a given function with an approximation of it using a first
     order Taylor series expansion.
 
-    TODO:
-    - Add math
-    - Add math for when the function returns a float (N=1) or when it returns a vector
-      (N>1).
-    - Explain how the comparison is carried out.
-    - Maybe show an example that we can use it to test derivatives of an objective
-      function, but also derivatives of a simulation.
+    Parameters
+    ----------
+    function : callable
+        Function that will be tested. It must take a ``model`` array as argument, and
+        return either a float or an array.
+    derivative : callable
+        Derivative of the ``function``. It must take a ``model`` array as argument,
+        and return a dense or sparse array, or a
+        :class:`~scipy.sparse.linalg.LinearOperator`.
+    model : (n_params) array
+        Array with model values that will be used to perform the test.
+    delta_m : (n_params) array
+        Array of small perturbation in the model space that will be used in the Taylor
+        series approximation.
+    **kwargs :
+        Extra arguments passed to :func:`numpy.testing.assert_allclose` when comparing
+        the value of the function and its first order approximation.
+
+    Raises
+    ------
+    AssertionError :
+        If the function and the approximation are not close enough for the given model
+        and perturbation vectors.
+
+    Notes
+    -----
+    This function will test the implementation of the derivative of a given function
+    by evaluating the function and comparing it with an approximation using a first
+    order Taylor series expansion.
+    Since the derivative plays a part in that approximation, the comparison allows us to
+    check if the derivative is correctly implemented for that particular function.
+
+    Consider a `scalar field <https://en.wikipedia.org/wiki/Scalar_field>`__
+    :math:`f: \mathbb{R}^M \rightarrow \mathbb{R}`, a model :math:`\mathbf{m}` and a
+    perturbation vector :math:`\Delta\mathbf{m}` with a magnitude significantly smaller
+    than the one of :math:`\mathbf{m}`.
+    We can approximate :math:`f(\mathbf{m} + \Delta\mathbf{m})` using a first-order
+    Taylor series expansion:
+
+    .. math::
+
+        f(\mathbf{m} + \Delta\mathbf{m}) =
+        f(\mathbf{m}) + \nabla f(\mathbf{m}) \cdot \Delta\mathbf{m} + \Delta_r,
+
+    where :math:`\nabla f(\mathbf{m})` is the gradient of :math:`f` evaluated on the
+    same model :math:`\mathbf{m}`, and :math:`\Delta_r` is the discrepancy between the
+    function and the first order approximation.
+
+    Consider now a `vector field <https://en.wikipedia.org/wiki/Vector_field>`__
+    :math:`\mathbf{f}: \mathbb{R}^M \rightarrow \mathbb{R}^N`.
+    Analogously, we can approximate :math:`\mathbf{f}(\mathbf{m} + \Delta\mathbf{m})`
+    using a first-order Taylor series expansion:
+
+    .. math::
+
+        \mathbf{f}(\mathbf{m} + \Delta\mathbf{m}) =
+        \mathbf{f}(\mathbf{m})
+        + \mathbf{J}_\mathbf{f}(\mathbf{m}) \cdot \Delta\mathbf{m} + \Delta_r,
+
+    where :math:`\mathbf{J}_\mathbf{f}(\mathbf{m})` is the Jacobian matrix of the
+    vector field :math:`\mathbf{f}` evaluated in the model :math:`\mathbf{m}`,
+    and :math:`\Delta_r` is also the discrepancy between the function and its
+    approximation.
+
+    If the perturbation :math:`\Delta\mathbf{m}` is sufficiently small, the discrepancy
+    :math:`\Delta_r` will also be small in both cases.
+
     """
     # Approximate the function using first order Taylor series
     approximation = function(model) + derivative(model) @ delta_m

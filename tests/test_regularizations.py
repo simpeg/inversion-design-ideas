@@ -97,7 +97,7 @@ class TestSmallness(MeshBasedTest):
         assert hessian.offsets == 0  # should be a diagonal matrix (only main diag)
         expected_diagonal = 2 * mesh.cell_volumes[active_cells] * cell_weights
         np.testing.assert_allclose(hessian.diagonal(), expected_diagonal)
-        
+
     @pytest.mark.parametrize("order", [1, 2], ids=["first-order", "second-order"])
     def test_derivative(self, mesh, active_cells, order):
         """

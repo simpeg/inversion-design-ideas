@@ -11,8 +11,6 @@ from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from inversion_ideas.base import Objective, Simulation
 from inversion_ideas.decorators import cache_on_model
-from inversion_ideas.typing import SparseArray
-from inversion_ideas.base import Objective
 from inversion_ideas.typing import Model, SparseArray
 
 
@@ -258,8 +256,8 @@ class NonLinearRegressor(Simulation):
         if not self.build_jacobian:
             return aslinearoperator(jacobian)
         return jacobian
-      
-      
+
+
 def derivative_test(
     function: Callable[[Model], float | NDArray[np.float64]],
     derivative: Callable[[Model], NDArray[np.float64] | SparseArray | LinearOperator],

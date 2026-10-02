@@ -183,10 +183,11 @@ def derivative_test(
     **kwargs,
 ):
     r"""
-    Check implementation of the derivative of a function.
+    Validate the implementation of the derivative of a function.
 
     Compare the value of a given function with an approximation of it using a first
     order Taylor series expansion.
+    If the discrepancy is not small enough, an :exc:`AssertionError` will be raised.
 
     Parameters
     ----------
@@ -268,6 +269,123 @@ def derivative_test(
     except AssertionError as e:
         msg = (
             f"Failed derivative test for function '{function}' and "
+            f"derivative '{derivative}' with:"
+            f"\nmodel:    {model}"
+            f"\ndelta_m:  {delta_m}"
+            "\n"
+        )
+        raise AssertionError(msg + str(e)) from None
+
+
+def derivative_convergence_test(
+    function: Callable[[Model], float | NDArray[np.float64]],
+    derivative: Callable[[Model], NDArray[np.float64] | SparseArray | LinearOperator],
+    model: Model,
+    delta_m: Model,
+    factors: list[float] | NDArray[np.float64] | None = None,
+):
+    r"""
+    Validate the implementation of the derivative of a function through convergence.
+
+    Tests the implementation of the derivative of the function by  performing a
+    convergence test of a first-order Taylor series expansion of the function.
+    If the convergence test fails, an :exc:`AssertionError` will be raised.
+
+    Parameters
+    ----------
+    function : callable
+        Function that will be tested. It must take a ``model`` array as argument, and
+        return either a float or an array.
+    derivative : callable
+        Derivative of the ``function``. It must take a ``model`` array as argument,
+        and return a dense or sparse array, or a
+        :class:`~scipy.sparse.linalg.LinearOperator`.
+    model : (n_params) array
+        Array with model values that will be used to perform the test.
+    delta_m : (n_params) array
+        Array of small perturbation in the model space that will be used in the Taylor
+        series approximation. This vector will be scaled using the ``factor`` during the
+        convergence test.
+    factors : list of float, array of float or None
+        List of factors that will be used to scale the ``delta_m`` vector.
+        If None, a default set of seven factors will be used as a logspace spanning from
+        ``1e-6`` to ``1.0``.
+
+    Raises
+    ------
+    AssertionError :
+        If the convergence test fails.
+
+    Notes
+    -----
+    This function will test the implementation of the derivative of a given function
+    by performing a convergence test of a first-order Taylor series expansion of such
+    function.
+
+    Consider a `scalar field <https://en.wikipedia.org/wiki/Scalar_field>`__
+    :math:`f: \mathbb{R}^M \rightarrow \mathbb{R}`, a model :math:`\mathbf{m}` a
+    perturbation vector :math:`\Delta\mathbf{m}` with a magnitude significantly smaller
+    than the one of :math:`\mathbf{m}`,
+    and a scaling factor :math:`\alpha \in \mathbb{R}`.
+    We can approximate :math:`f(\mathbf{m} + \alpha\Delta\mathbf{m})` using a
+    first-order Taylor series expansion:
+
+    .. math::
+
+        f(\mathbf{m} + \alpha \Delta\mathbf{m}) =
+        f(\mathbf{m}) + \nabla f(\mathbf{m}) \cdot \alpha \Delta\mathbf{m} + \Delta_r,
+
+    where :math:`\nabla f(\mathbf{m})` is the gradient of :math:`f` evaluated on the
+    same model :math:`\mathbf{m}`, and :math:`\Delta_r` is the discrepancy between the
+    function and the first order approximation.
+
+    Consider now a `vector field <https://en.wikipedia.org/wiki/Vector_field>`__
+    :math:`\mathbf{f}: \mathbb{R}^M \rightarrow \mathbb{R}^N`.
+    Analogously, we can approximate
+    :math:`\mathbf{f}(\mathbf{m} + \alpha\Delta\mathbf{m})`
+    using a first-order Taylor series expansion:
+
+    .. math::
+
+        \mathbf{f}(\mathbf{m} + \alpha\Delta\mathbf{m}) =
+        \mathbf{f}(\mathbf{m})
+        + \mathbf{J}_\mathbf{f}(\mathbf{m}) \cdot \alpha\Delta\mathbf{m} + \Delta_r,
+
+    where :math:`\mathbf{J}_\mathbf{f}(\mathbf{m})` is the Jacobian matrix of the
+    vector field :math:`\mathbf{f}` evaluated in the model :math:`\mathbf{m}`,
+    and :math:`\Delta_r` is also the discrepancy between the function and its
+    approximation.
+
+    The discrepances :math:`\Delta_r` should get smaller as the scaling factor
+    :math:`\alpha` decreases.
+    This test will check that the discrepances increases with the ``factors``, and error
+    out if such condition doesn't hold.
+    """
+    # Define factors if None or sort them if a list is passed
+    if factors is None:
+        factors = np.logspace(-6, 0, 7)
+    else:
+        factors = factors.copy()
+        factors.sort()
+
+    # Cache the value of function and derivative on the model to avoid recomputing them
+    function_m = function(model)
+    derivative_m = derivative(model)
+
+    # Compute the absolute value of the discrepances for each factor
+    discrepances = []
+    for factor in factors:
+        approximation = function_m + derivative_m @ (factor * delta_m)
+        abs_diff = np.abs(function(model + (factor * delta_m)) - approximation)
+        discrepances.append(abs_diff)
+    discrepances = np.array(discrepances)
+
+    # Check if the discrepances decrease with the factor
+    try:
+        assert np.all(discrepances[:-1] <= discrepances[1:])
+    except AssertionError as e:
+        msg = (
+            f"Failed convergence test on derivatives for function '{function}' and "
             f"derivative '{derivative}' with:"
             f"\nmodel:    {model}"
             f"\ndelta_m:  {delta_m}"

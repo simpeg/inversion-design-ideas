@@ -9,7 +9,11 @@ import pytest
 
 from inversion_ideas import DataMisfit, LinearRegressor
 
-from .utils import assert_allclose_linear_operators, derivative_test
+from .utils import (
+    assert_allclose_linear_operators,
+    derivative_convergence_test,
+    derivative_test,
+)
 
 
 class TestDataMisfit:
@@ -151,6 +155,22 @@ class TestDataMisfit:
 
         # Perform derivative test
         derivative_test(function, derivative, model, delta_m)
+
+    def test_derivative_convergence(self, data_and_uncertainties, regressor_matrix):
+        """
+        Test gradient through a convergence test of Taylor series approximation.
+        """
+        data, uncertainties = data_and_uncertainties
+        data_misfit = DataMisfit(
+            data,
+            uncertainties,
+            simulation=LinearRegressor(regressor_matrix),
+            build_hessian=True,
+        )
+        rng = np.random.default_rng(seed=12312)
+        model = rng.uniform(low=-1.0, high=1.0, size=self.n_params)
+        delta_m = rng.normal(size=self.n_params)
+        derivative_convergence_test(data_misfit, data_misfit.gradient, model, delta_m)
 
 
 class TestSanityChecks:

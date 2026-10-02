@@ -9,7 +9,7 @@ from scipy.sparse import dia_array, sparray
 
 from inversion_ideas import Flatness, Smallness
 
-from .utils import derivative_test
+from .utils import derivative_convergence_test, derivative_test
 
 
 class TestBugfixFlatness:
@@ -126,6 +126,24 @@ class TestSmallness(MeshBasedTest):
         # Perform derivative test
         derivative_test(function, derivative, model, delta_m)
 
+    def test_derivative_convergence(self, mesh, active_cells):
+        """
+        Test gradient through a convergence test of Taylor series approximation.
+        """
+        n_active = active_cells.sum()
+        cell_weights = np.full(n_active, fill_value=0.1)
+        reference_model = np.full(n_active, 1e-8)
+        smallness = Smallness(
+            mesh,
+            active_cells=active_cells,
+            cell_weights=cell_weights,
+            reference_model=reference_model,
+        )
+        rng = np.random.default_rng(seed=12312)
+        model = rng.uniform(low=-1.0, high=1.0, size=n_active)
+        delta_m = rng.normal(size=n_active)
+        derivative_convergence_test(smallness, smallness.gradient, model, delta_m)
+
 
 @pytest.mark.parametrize("direction", ["x", "y", "z"])
 class TestFlatness(MeshBasedTest):
@@ -177,3 +195,22 @@ class TestFlatness(MeshBasedTest):
 
         # Perform derivative test
         derivative_test(function, derivative, model, delta_m)
+
+    def test_derivative_convergence(self, mesh, active_cells, direction):
+        """
+        Test gradient through a convergence test of Taylor series approximation.
+        """
+        n_active = active_cells.sum()
+        cell_weights = np.full(n_active, fill_value=0.1)
+        reference_model = np.full(n_active, 1e-8)
+        flatness = Flatness(
+            mesh,
+            direction=direction,
+            active_cells=active_cells,
+            cell_weights=cell_weights,
+            reference_model=reference_model,
+        )
+        rng = np.random.default_rng(seed=12312)
+        model = rng.uniform(low=-1.0, high=1.0, size=n_active)
+        delta_m = rng.normal(size=n_active)
+        derivative_convergence_test(flatness, flatness.gradient, model, delta_m)

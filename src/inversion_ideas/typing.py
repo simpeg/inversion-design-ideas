@@ -108,6 +108,34 @@ class HasDiagonal(Protocol):
 
 
 @runtime_checkable
+class ArrayLike(Protocol):
+    """
+    Protocol for classes that implement the ``__array__`` method.
+
+    References
+    ----------
+    https://numpy.org/doc/stable/user/basics.interoperability.html
+    """
+
+    def __array__(
+        self, dtype: npt.DTypeLike | None = None, copy: bool | None = None
+    ) -> npt.NDArray:
+        raise NotImplementedError
+
+    @property
+    def size(self) -> int:
+        raise NotImplementedError
+
+    @property
+    def ndim(self) -> int:
+        raise NotImplementedError
+
+    @property
+    def shape(self) -> tuple[int, ...]:
+        raise NotImplementedError
+
+
+@runtime_checkable
 class ConditionLike(Protocol):
     """
     Protocol for condition and condition-like objects.

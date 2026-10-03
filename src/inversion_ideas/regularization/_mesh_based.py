@@ -17,7 +17,7 @@ from scipy.sparse import (
 
 from .._utils import prod_arrays
 from ..base import Objective
-from ..typing import Model
+from ..typing import ArrayLike, Model
 
 
 class _MeshBasedRegularization(Objective):
@@ -40,7 +40,11 @@ class _MeshBasedRegularization(Objective):
     @property
     def cell_weights(
         self,
-    ) -> npt.NDArray[np.float64] | dict[str, npt.NDArray[np.float64]]:
+    ) -> (
+        npt.NDArray[np.float64]
+        | ArrayLike
+        | dict[str, npt.NDArray[np.float64] | ArrayLike]
+    ):
         """
         Regularization weights on cells.
         """
@@ -48,26 +52,49 @@ class _MeshBasedRegularization(Objective):
 
     @cell_weights.setter
     def cell_weights(
-        self, value: npt.NDArray[np.float64] | dict[str, npt.NDArray[np.float64]]
+        self,
+        value: npt.NDArray[np.float64]
+        | ArrayLike
+        | dict[str, npt.NDArray[np.float64] | ArrayLike],
     ):
         """
         Setter for weights on cells.
         """
-        if not isinstance(value, np.ndarray | dict):
+        if not isinstance(value, np.ndarray | ArrayLike | dict):
             msg = (
-                f"Invalid weights of type {type(value)}. "
+                f"Invalid cell_weights of type '{type(value)}'. "
                 "It must be an array or a dictionary."
             )
             raise TypeError(msg)
-        if isinstance(value, np.ndarray) and value.size != self.n_active:
-            msg = (
-                f"Invalid cell_weights array with '{value.size}' elements. "
-                f"It must have '{self.n_active}' elements, "
-                "equal to the number of active cells."
-            )
-            raise ValueError(msg)
+        if isinstance(value, np.ndarray | ArrayLike):
+            if value.ndim != 1:
+                msg = (
+                    f"Invalid cell_weights array with '{value.ndim}' dimensions. "
+                    f"It must have a 1D array."
+                )
+                raise ValueError(msg)
+            if value.size != self.n_active:
+                msg = (
+                    f"Invalid cell_weights array with '{value.size}' elements. "
+                    f"It must have '{self.n_active}' elements, "
+                    "equal to the number of active cells."
+                )
+                raise ValueError(msg)
         if isinstance(value, dict):
             for key, array in value.items():
+                if not isinstance(array, np.ndarray | ArrayLike):
+                    msg = (
+                        f"Invalid cell_weights array '{key}' of type {type(array)} "
+                        "found in dictionary. "
+                        "Values of the dictionary must be arrays."
+                    )
+                    raise TypeError(msg)
+                if array.ndim != 1:
+                    msg = (
+                        f"Invalid cell_weights array '{key}' with '{array.ndim}' "
+                        "dimensions. It must have a 1D array."
+                    )
+                    raise ValueError(msg)
                 if array.size != self.n_active:
                     msg = (
                         f"Invalid cell_weights array '{key}' with "
@@ -217,13 +244,13 @@ class Smallness(_MeshBasedRegularization):
         """
         Diagonal matrix with the square root of regularization weights on cells.
         """
-        if isinstance(self.cell_weights, np.ndarray):
-            cell_weights = self.cell_weights
-        elif isinstance(self.cell_weights, dict):
-            cell_weights = prod_arrays(iter(self.cell_weights.values()))
-        else:
-            msg = f"Invalid weights of type '{type(self.cell_weights)}'."
-            raise TypeError(msg)
+        # We can assume that weights are either a dict or an array-like object,
+        # since the setter will perform sanity checks for them.
+        cell_weights = (
+            prod_arrays(iter(self.cell_weights.values()))
+            if isinstance(self.cell_weights, dict)
+            else self.cell_weights
+        )
         return diags_array(np.sqrt(cell_weights))
 
     @property
@@ -392,13 +419,13 @@ class Flatness(_MeshBasedRegularization):
         """
         Diagonal matrix with the square root of cell weights averaged on faces.
         """
-        if isinstance(self.cell_weights, np.ndarray):
-            cell_weights = self.cell_weights
-        elif isinstance(self.cell_weights, dict):
-            cell_weights = prod_arrays(iter(self.cell_weights.values()))
-        else:
-            msg = f"Invalid weights of type '{type(self.cell_weights)}'."
-            raise TypeError(msg)
+        # We can assume that weights are either a dict or an array-like object,
+        # since the setter will perform sanity checks for them.
+        cell_weights = (
+            prod_arrays(iter(self.cell_weights.values()))
+            if isinstance(self.cell_weights, dict)
+            else self.cell_weights
+        )
         return diags_array(self._average_cells_to_faces @ np.sqrt(cell_weights))
 
     @property
@@ -614,13 +641,13 @@ class SparseSmallness(_MeshBasedRegularization):
         """
         Diagonal matrix with the square root of regularization weights on cells.
         """
-        if isinstance(self.cell_weights, np.ndarray):
-            cell_weights = self.cell_weights
-        elif isinstance(self.cell_weights, dict):
-            cell_weights = prod_arrays(iter(self.cell_weights.values()))
-        else:
-            msg = f"Invalid weights of type '{type(self.cell_weights)}'."
-            raise TypeError(msg)
+        # We can assume that weights are either a dict or an array-like object,
+        # since the setter will perform sanity checks for them.
+        cell_weights = (
+            prod_arrays(iter(self.cell_weights.values()))
+            if isinstance(self.cell_weights, dict)
+            else self.cell_weights
+        )
         return diags_array(np.sqrt(cell_weights))
 
     @property

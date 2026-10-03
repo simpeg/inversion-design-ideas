@@ -47,7 +47,13 @@ class SensitivityWeights(WrappedArray):
         self.data_weights = data_weights
         self.volumes = volumes
         self.vmin = vmin
-        super().__init__(self._compute_sensitivity_weights(initial_model))
+        self._initial_model = initial_model.copy()
+        super().__init__(self._compute_sensitivity_weights(self.initial_model))
+
+    @property
+    def initial_model(self) -> Model:
+        """Model used to compute the initial sensitivity weights."""
+        return self._initial_model
 
     def update(self, model, *args):  # ruff: ignore[ARG002]
         """

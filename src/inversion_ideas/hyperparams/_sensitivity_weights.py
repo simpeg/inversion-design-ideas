@@ -25,8 +25,9 @@ class SensitivityWeights(WrappedArray):
         sensitivity weights.
     initial_model : (n_params) array
         Initial model used to initialize the sensitivity weights.
-    data_weights : (n_data, n_data) array or None, optional
-        Data weights matrix used to compute the sensitivity weights.
+    data_weights : (n_data,) array or None, optional
+        Array with data weights used to compute the sensitivty weights.
+        Can use the :attr:`inversion_ideas.DataMisfit.weights` property.
     volumes : (n_params) array
         Array with the volumes of the active cells. Sensitivity weights are
         divided by the volumes to account for sensitivity changes due to cell sizes.
@@ -39,7 +40,7 @@ class SensitivityWeights(WrappedArray):
         simulation: Simulation,
         initial_model: Model,
         *,
-        data_weights: npt.NDArray[np.float64] | SparseArray | None = None,
+        data_weights: npt.NDArray[np.float64] | None = None,
         volumes: npt.NDArray[np.float64] | None = None,
         vmin: float | None = 1e-12,
     ):

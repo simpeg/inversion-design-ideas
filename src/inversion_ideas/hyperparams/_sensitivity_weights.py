@@ -6,7 +6,7 @@ import numpy as np
 import numpy.typing as npt
 
 from ..base import Simulation, WrappedArray
-from ..typing import Model, SparseArray
+from ..typing import Model
 from ..utils import get_sensitivity_weights
 
 

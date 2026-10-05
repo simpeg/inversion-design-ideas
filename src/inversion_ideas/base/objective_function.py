@@ -15,8 +15,7 @@ from scipy.sparse import csr_array, spmatrix
 from scipy.sparse.linalg import LinearOperator, aslinearoperator
 
 from ..typing import HasDiagonal, Model, SparseArray
-
-FLOAT_TO_STR_PRECISION = 3
+from ._utils import float_to_latex, float_to_str
 
 
 class Objective(ABC):
@@ -149,7 +148,7 @@ class Objective(ABC):
             # Replace underscores since they are not valid in LaTeX text mode.
             name = self.name.replace("_", "-")
             repr_ += r"_\text{" + name + "}"
-        return f"${repr_} (m)$"
+        return rf"${repr_} (\mathbf{{m}})$"
 
     def info(self):
         """Get information about the objective function."""
@@ -209,7 +208,8 @@ class Objective(ABC):
         return self.__mul__(value)
 
     def __truediv__(self, denominator: Real):
-        return self * (1.0 / denominator)  # type: ignore[operator]
+        msg = "True division is not implemented for objective functions."
+        raise TypeError(msg)
 
     def __floordiv__(self, denominator):
         msg = "Floor division is not implemented for objective functions."
@@ -231,11 +231,51 @@ class Objective(ABC):
 class Scaled(Objective):
     """
     Scaled objective function.
+
+    .. important::
+
+        This class is not meant to be instantiated.
+        Multiply an :class:`~inversion_ideas.base.Objective` by a scalar to
+        generate a :class:`~inversion_ideas.base.Scaled` object.
+
+    Parameters
+    ----------
+    multiplier : float or numbers.Real
+        Multiplier for the objective function. It can be a float or any instance of
+        :class:`numbers.Real`.
+    function : inversion_ideas.base.Objective
+        Objective function that will get scaled.
     """
 
     def __init__(self, multiplier, function):
         self.multiplier = multiplier
-        self.function = function
+        if not isinstance(function, Objective):
+            msg = f"Invalid function of type {function!r}."
+            raise TypeError(msg)
+        self._function = function
+
+    @property
+    def function(self) -> Objective:
+        """Objective function that gets scaled."""
+        # The function property doesn't have a setter because it's intended to be
+        # a read-only property to avoid any potential undesired behavior.
+        return self._function
+
+    @property
+    def multiplier(self) -> Real:
+        """Scalar multiplier."""
+        return self._multiplier
+
+    @multiplier.setter
+    def multiplier(self, value: Real):
+        if not isinstance(value, Real):
+            msg = (
+                f"Invalid multiplier '{value}' of type '{type(value)}'. "
+                "Multipliers must be a float or any numbers.Real object."
+            )
+            raise TypeError(msg)
+        self._multiplier = value
+        return self._multiplier
 
     @property
     def n_params(self) -> int:
@@ -282,7 +322,7 @@ class Scaled(Objective):
         sys.stdout.write(info + "\n")
 
     def __repr__(self):
-        multiplier = _float_to_str(self.multiplier)
+        multiplier = float_to_str(self.multiplier)
         phi_repr = f"{self.function}"
         # Add brackets in case that the function has a multiplier or is a Combo
         if isinstance(self.function, Iterable) or hasattr(self.function, "multiplier"):
@@ -290,12 +330,10 @@ class Scaled(Objective):
         return f"{multiplier:} {phi_repr}"
 
     def _repr_latex_(self):
-        multiplier = _float_to_str(self.multiplier)
-        if "e" in multiplier:
-            base, exp = multiplier.split("e")
-            exp = exp.replace("+", "")
-            exp = str(int(exp))
-            multiplier = rf"{base} \cdot 10^{{{exp}}}"
+        if hasattr(self.multiplier, "_repr_latex_"):
+            multiplier = self.multiplier._repr_latex_().strip("$")
+        else:
+            multiplier = float_to_latex(self.multiplier)
         phi_str = self.function._repr_latex_().strip("$")
         # Add brackets in case that the function has a multiplier or is a Combo
         if isinstance(self.function, Iterable) or hasattr(self.function, "multiplier"):
@@ -322,6 +360,20 @@ class Scaled(Objective):
 class Combo(Objective):
     """
     Sum of objective functions.
+
+    .. important::
+
+        This class is not meant to be instantiated.
+        Add together two or more :class:`~inversion_ideas.base.Objective` to generate a
+        :class:`~inversion_ideas.base.Combo` object.
+
+    Parameters
+    ----------
+    functions : list of inversion_ideas.base.Objective
+        List of :class:`~inversion_ideas.base.Objective` objects that form the
+        sum. Empty lists are not accepted.
+        All functions in the list should have the same
+        :attr:`~inversion_ideas.base.Objective.n_params`.
     """
 
     # Combo behaves like a list and therefore it's not hashable
@@ -340,6 +392,15 @@ class Combo(Objective):
                 "The list of objective functions must contain at least one function."
             )
             raise ValueError(msg)
+
+        # Check they are all objective functions
+        for objective in functions:
+            if not isinstance(objective, Objective):
+                msg = (
+                    f"Invalid function '{objective!r}' of type "
+                    f"'{type(objective).__name__}'."
+                )
+                raise TypeError(msg)
 
         # Call the _get_n_params function to check if functions have the same n_params
         _get_n_params(functions)
@@ -585,37 +646,3 @@ def _raise_if_sparse_matrix(operator):
             "sparse.migration_to_sparray.html)."
         )
         raise TypeError(msg)
-
-
-def _float_to_str(number: float, precision: int = FLOAT_TO_STR_PRECISION) -> str:
-    """
-    Format float to string.
-
-    Formats a floating point number into string.
-
-    Parameters
-    ----------
-    number : float
-        Floating point number to represent as a string.
-    precision : int
-        Decimal point precision for positional and scientific representation. The
-        ``precision`` is used to choose between a positional representation (e.g. 1.013)
-        and a scientific notation. If the absolute value of the number is between
-        ``10**(-precision)`` and ``10**precision``, then the positional representation
-        will be used, otherwise the scientific notation will be chosen.
-        It must be a positive integer.
-
-    Returns
-    -------
-    str
-        String representation of the floating point number.
-    """
-    if precision <= 0:
-        msg = f"Invalid precision value '{precision}'. It must be a positive integer."
-        raise ValueError(msg)
-    if number == 0.0:
-        return "0.0"
-    min_bound, max_bound = 10 ** (-precision), 10**precision
-    if min_bound <= np.abs(number) <= max_bound:
-        return np.format_float_positional(number, precision=precision, trim="0")
-    return np.format_float_scientific(number, precision=precision)

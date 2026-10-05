@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>inversion_ideas.utils.Counter &#8212; inversion-ideas  documentation</title>
+    <title>inversion_ideas.base.Multiplier &#8212; inversion-ideas  documentation</title>
   
   
   
@@ -42,12 +42,12 @@
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/api/inversion_ideas.utils.Counter';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/api/inversion_ideas.base.Multiplier';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Hyperparameters" href="../hyperparams.html" />
-    <link rel="prev" title="inversion_ideas.utils.get_sensitivity_weights" href="inversion_ideas.utils.get_sensitivity_weights.html" />
+    <link rel="next" title="inversion_ideas.base.WrappedArray" href="inversion_ideas.base.WrappedArray.html" />
+    <link rel="prev" title="inversion_ideas.base.Directive" href="inversion_ideas.base.Directive.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -383,11 +383,11 @@
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.operators.get_diagonal.html">inversion_ideas.operators.get_diagonal</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../utils.html">Utilities</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../utils.html">Utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.utils.html">inversion_ideas.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.utils.get_logger.html">inversion_ideas.utils.get_logger</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.utils.get_sensitivity_weights.html">inversion_ideas.utils.get_sensitivity_weights</a></li>
-<li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">inversion_ideas.utils.Counter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inversion_ideas.utils.Counter.html">inversion_ideas.utils.Counter</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../hyperparams.html">Hyperparameters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -408,7 +408,7 @@
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.errors.NotInitializedError.html">inversion_ideas.errors.NotInitializedError</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../base.html">Base submodule</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../base.html">Base submodule</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.base.html">inversion_ideas.base</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.base.Objective.html">inversion_ideas.base.Objective</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.base.Scaled.html">inversion_ideas.base.Scaled</a></li>
@@ -418,7 +418,7 @@
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.base.MinimizerResult.html">inversion_ideas.base.MinimizerResult</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.base.Condition.html">inversion_ideas.base.Condition</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.base.Directive.html">inversion_ideas.base.Directive</a></li>
-<li class="toctree-l2"><a class="reference internal" href="inversion_ideas.base.Multiplier.html">inversion_ideas.base.Multiplier</a></li>
+<li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">inversion_ideas.base.Multiplier</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.base.WrappedArray.html">inversion_ideas.base.WrappedArray</a></li>
 </ul>
 </details></li>
@@ -466,9 +466,9 @@
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">API Reference</a></li>
     
     
-    <li class="breadcrumb-item"><a href="../utils.html" class="nav-link">Utilities</a></li>
+    <li class="breadcrumb-item"><a href="../base.html" class="nav-link">Base submodule</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">inversion_ideas.utils.Counter</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">inversion_ideas.base.Multiplier</span></li>
   </ul>
 </nav>
 </div>
@@ -485,17 +485,21 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="inversion-ideas-utils-counter">
-<h1>inversion_ideas.utils.Counter<a class="headerlink" href="#inversion-ideas-utils-counter" title="Link to this heading">#</a></h1>
+  <section id="inversion-ideas-base-multiplier">
+<h1>inversion_ideas.base.Multiplier<a class="headerlink" href="#inversion-ideas-base-multiplier" title="Link to this heading">#</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="inversion_ideas.utils.Counter">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inversion_ideas.utils.</span></span><span class="sig-name descname"><span class="pre">Counter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.utils.Counter" title="Link to this definition">#</a></dt>
-<dd><p>Simple counter callable class.</p>
-<p>Count how many times the object gets called.</p>
+<dt class="sig sig-object py" id="inversion_ideas.base.Multiplier">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inversion_ideas.base.</span></span><span class="sig-name descname"><span class="pre">Multiplier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">mutable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.base.Multiplier" title="Link to this definition">#</a></dt>
+<dd><p>Multiplier hyperparameter.</p>
+<p>Wraps a single float that can be used as a multiplier for objective functions.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>initial_value</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Initial value used in the counts.</p>
+<dt><strong>value</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a></span></dt><dd><p>Value of the wrapped multiplier.</p>
+</dd>
+<dt><strong>mutable</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bltin-boolean-values" title="(in Python v3.14)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>If False, the wrapped value is immutable, i.e. we cannot change it through
+public properties and methods.
+If True, the wrapped value is mutable and can be modified.</p>
 </dd>
 </dl>
 </dd>
@@ -503,11 +507,17 @@
 <p class="rubric">Attributes</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.utils.Counter.counts" title="inversion_ideas.utils.Counter.counts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">counts</span></code></a></p></td>
-<td><p>Return current amount of counts.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.base.Multiplier.imag" title="inversion_ideas.base.Multiplier.imag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">imag</span></code></a></p></td>
+<td><p>Real numbers have no imaginary component.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.utils.Counter.initial_value" title="inversion_ideas.utils.Counter.initial_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initial_value</span></code></a></p></td>
-<td><p>Initial value for the counter.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.base.Multiplier.mutable" title="inversion_ideas.base.Multiplier.mutable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mutable</span></code></a></p></td>
+<td><p>Mutable flag.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.base.Multiplier.real" title="inversion_ideas.base.Multiplier.real"><code class="xref py py-obj docutils literal notranslate"><span class="pre">real</span></code></a></p></td>
+<td><p>Real numbers are their real component.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.base.Multiplier.value" title="inversion_ideas.base.Multiplier.value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">value</span></code></a></p></td>
+<td><p>Wrapped multiplier.</p></td>
 </tr>
 </tbody>
 </table>
@@ -515,29 +525,68 @@
 <p class="rubric">Methods</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.utils.Counter.__call__" title="inversion_ideas.utils.Counter.__call__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code></a>(*args, **kwargs)</p></td>
-<td><p>Increase <code class="docutils literal notranslate"><span class="pre">counts</span></code> by one.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.utils.Counter.reset" title="inversion_ideas.utils.Counter.reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code></a>()</p></td>
-<td><p>Reset counter to the initial value.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.base.Multiplier.conjugate" title="inversion_ideas.base.Multiplier.conjugate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">conjugate</span></code></a>()</p></td>
+<td><p>Conjugate is a no-op for Reals.</p></td>
 </tr>
 </tbody>
 </table>
+</div>
+<p class="rubric">Examples</p>
+<p>A wrapped multiplier behaves like any regular float:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beta</span> <span class="o">=</span> <span class="n">Multiplier</span><span class="p">(</span><span class="mf">5.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">beta</span><span class="p">)</span>
+<span class="go">Multiplier(5.0)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="mi">3</span> <span class="o">*</span> <span class="n">beta</span>
+<span class="go">15.0</span>
+</pre></div>
+</div>
+<p>By default the multiplier is immutable, i.e. we cannot change the value thorugh
+public methods.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beta</span> <span class="o">*=</span> <span class="mi">5</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="gr">TypeError</span>: <span class="n">...</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beta</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mf">10.0</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="gr">TypeError</span>: <span class="n">...</span>
+</pre></div>
+</div>
+<p>We can make it mutable when defining the multiplier:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beta</span> <span class="o">=</span> <span class="n">Multiplier</span><span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">mutable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">beta</span> <span class="o">*=</span> <span class="mi">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">beta</span><span class="p">)</span>
+<span class="go">Multiplier(25.0)</span>
+</pre></div>
 </div>
 </dd></dl>
 
 <section id="attributes">
 <h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading">#</a></h2>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="inversion_ideas.utils.Counter.counts">
-<span class="sig-prename descclassname"><span class="pre">Counter.</span></span><span class="sig-name descname"><span class="pre">counts</span></span><a class="headerlink" href="#inversion_ideas.utils.Counter.counts" title="Link to this definition">#</a></dt>
-<dd><p>Return current amount of counts.</p>
+<dt class="sig sig-object py" id="inversion_ideas.base.Multiplier.imag">
+<span class="sig-prename descclassname"><span class="pre">Multiplier.</span></span><span class="sig-name descname"><span class="pre">imag</span></span><a class="headerlink" href="#inversion_ideas.base.Multiplier.imag" title="Link to this definition">#</a></dt>
+<dd><p>Real numbers have no imaginary component.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="inversion_ideas.utils.Counter.initial_value">
-<span class="sig-prename descclassname"><span class="pre">Counter.</span></span><span class="sig-name descname"><span class="pre">initial_value</span></span><a class="headerlink" href="#inversion_ideas.utils.Counter.initial_value" title="Link to this definition">#</a></dt>
-<dd><p>Initial value for the counter.</p>
+<dt class="sig sig-object py" id="inversion_ideas.base.Multiplier.mutable">
+<span class="sig-prename descclassname"><span class="pre">Multiplier.</span></span><span class="sig-name descname"><span class="pre">mutable</span></span><a class="headerlink" href="#inversion_ideas.base.Multiplier.mutable" title="Link to this definition">#</a></dt>
+<dd><p>Mutable flag.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="inversion_ideas.base.Multiplier.real">
+<span class="sig-prename descclassname"><span class="pre">Multiplier.</span></span><span class="sig-name descname"><span class="pre">real</span></span><a class="headerlink" href="#inversion_ideas.base.Multiplier.real" title="Link to this definition">#</a></dt>
+<dd><p>Real numbers are their real component.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="inversion_ideas.base.Multiplier.value">
+<span class="sig-prename descclassname"><span class="pre">Multiplier.</span></span><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#inversion_ideas.base.Multiplier.value" title="Link to this definition">#</a></dt>
+<dd><p>Wrapped multiplier.</p>
 </dd></dl>
 
 </section>
@@ -545,26 +594,9 @@
 <h2>Methods<a class="headerlink" href="#methods" title="Link to this heading">#</a></h2>
 <p class="rubric">Methods documentation</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="inversion_ideas.utils.Counter.__call__">
-<span class="sig-prename descclassname"><span class="pre">Counter.</span></span><span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.utils.Counter.__call__" title="Link to this definition">#</a></dt>
-<dd><p>Increase <code class="docutils literal notranslate"><span class="pre">counts</span></code> by one.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>*args</strong></dt><dd><p>Position-based arguments that will be ignored.</p>
-</dd>
-<dt><strong>**kwargs</strong></dt><dd><p>Keyword arguments that will be ignored.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<hr class="docutils" />
-<dl class="py method">
-<dt class="sig sig-object py" id="inversion_ideas.utils.Counter.reset">
-<span class="sig-prename descclassname"><span class="pre">Counter.</span></span><span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.utils.Counter.reset" title="Link to this definition">#</a></dt>
-<dd><p>Reset counter to the initial value.</p>
+<dt class="sig sig-object py" id="inversion_ideas.base.Multiplier.conjugate">
+<span class="sig-prename descclassname"><span class="pre">Multiplier.</span></span><span class="sig-name descname"><span class="pre">conjugate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.base.Multiplier.conjugate" title="Link to this definition">#</a></dt>
+<dd><p>Conjugate is a no-op for Reals.</p>
 </dd></dl>
 
 <hr class="docutils" />
@@ -582,20 +614,20 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="inversion_ideas.utils.get_sensitivity_weights.html"
+       href="inversion_ideas.base.Directive.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">inversion_ideas.utils.get_sensitivity_weights</p>
+        <p class="prev-next-title">inversion_ideas.base.Directive</p>
       </div>
     </a>
     <a class="right-next"
-       href="../hyperparams.html"
+       href="inversion_ideas.base.WrappedArray.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Hyperparameters</p>
+        <p class="prev-next-title">inversion_ideas.base.WrappedArray</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -618,15 +650,16 @@
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.utils.Counter"><code class="docutils literal notranslate"><span class="pre">Counter</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.base.Multiplier"><code class="docutils literal notranslate"><span class="pre">Multiplier</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#attributes">Attributes</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.utils.Counter.counts"><code class="docutils literal notranslate"><span class="pre">Counter.counts</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.utils.Counter.initial_value"><code class="docutils literal notranslate"><span class="pre">Counter.initial_value</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.base.Multiplier.imag"><code class="docutils literal notranslate"><span class="pre">Multiplier.imag</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.base.Multiplier.mutable"><code class="docutils literal notranslate"><span class="pre">Multiplier.mutable</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.base.Multiplier.real"><code class="docutils literal notranslate"><span class="pre">Multiplier.real</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.base.Multiplier.value"><code class="docutils literal notranslate"><span class="pre">Multiplier.value</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#methods">Methods</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.utils.Counter.__call__"><code class="docutils literal notranslate"><span class="pre">Counter.__call__()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.utils.Counter.reset"><code class="docutils literal notranslate"><span class="pre">Counter.reset()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.base.Multiplier.conjugate"><code class="docutils literal notranslate"><span class="pre">Multiplier.conjugate()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -635,7 +668,7 @@
   <div class="sidebar-secondary-item">
 
   <div class="tocsection sourcelink">
-    <a href="../../_sources/reference/api/inversion_ideas.utils.Counter.rst.txt">
+    <a href="../../_sources/reference/api/inversion_ideas.base.Multiplier.rst.txt">
       <i class="fa-solid fa-file-lines"></i> Show Source
     </a>
   </div>

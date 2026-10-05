@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Minimizers &#8212; inversion-ideas  documentation</title>
+    <title>Hyperparameters &#8212; inversion-ideas  documentation</title>
   
   
   
@@ -42,12 +42,12 @@
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/minimizers';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/hyperparams';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="inversion_ideas.GaussNewtonConjugateGradient" href="api/inversion_ideas.GaussNewtonConjugateGradient.html" />
-    <link rel="prev" title="inversion_ideas.SparseSmallness" href="api/inversion_ideas.SparseSmallness.html" />
+    <link rel="next" title="inversion_ideas.hyperparams.CooledMultiplier" href="api/inversion_ideas.hyperparams.CooledMultiplier.html" />
+    <link rel="prev" title="inversion_ideas.utils.Counter" href="api/inversion_ideas.utils.Counter.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -336,7 +336,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.SparseSmallness.html">inversion_ideas.SparseSmallness</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active has-children"><a aria-current="page" class="current reference internal" href="#">Minimizers</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="minimizers.html">Minimizers</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.GaussNewtonConjugateGradient.html">inversion_ideas.GaussNewtonConjugateGradient</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.conjugate_gradient.html">inversion_ideas.conjugate_gradient</a></li>
 </ul>
@@ -390,7 +390,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.utils.Counter.html">inversion_ideas.utils.Counter</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="hyperparams.html">Hyperparameters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l1 current active has-children"><a aria-current="page" class="current reference internal" href="#">Hyperparameters</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.hyperparams.CooledMultiplier.html">inversion_ideas.hyperparams.CooledMultiplier</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.hyperparams.SensitivityWeights.html">inversion_ideas.hyperparams.SensitivityWeights</a></li>
 </ul>
@@ -465,7 +465,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">API Reference</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Minimizers</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Hyperparameters</span></li>
   </ul>
 </nav>
 </div>
@@ -482,15 +482,20 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="minimizers">
-<span id="api-minimizers"></span><h1>Minimizers<a class="headerlink" href="#minimizers" title="Link to this heading">#</a></h1>
+  <section id="hyperparameters">
+<span id="api-hyperparams"></span><h1>Hyperparameters<a class="headerlink" href="#hyperparameters" title="Link to this heading">#</a></h1>
+<p>Hyperparameters objects can be used as dynamic multipliers, weights, etc.: they have an <code class="docutils literal notranslate"><span class="pre">update</span></code> method that can be used to modify its values during an inversion.</p>
+<p>For example, we could use the <a class="reference internal" href="api/inversion_ideas.hyperparams.CooledMultiplier.html#inversion_ideas.hyperparams.CooledMultiplier" title="inversion_ideas.hyperparams.CooledMultiplier"><code class="xref py py-class docutils literal notranslate"><span class="pre">CooledMultiplier</span></code></a> as a multiplier that after each call of the <a class="reference internal" href="api/inversion_ideas.hyperparams.CooledMultiplier.html#inversion_ideas.hyperparams.CooledMultiplier.update" title="inversion_ideas.hyperparams.CooledMultiplier.update"><code class="xref py py-meth docutils literal notranslate"><span class="pre">update()</span></code></a> method it will get <em>cooled down</em> by a constant factor.</p>
+<p>The <a class="reference internal" href="api/inversion_ideas.hyperparams.SensitivityWeights.html#inversion_ideas.hyperparams.SensitivityWeights" title="inversion_ideas.hyperparams.SensitivityWeights"><code class="xref py py-class docutils literal notranslate"><span class="pre">SensitivityWeights</span></code></a> can be used as weights to a regularization. When the
+<a class="reference internal" href="api/inversion_ideas.hyperparams.SensitivityWeights.html#inversion_ideas.hyperparams.SensitivityWeights.update" title="inversion_ideas.hyperparams.SensitivityWeights.update"><code class="xref py py-meth docutils literal notranslate"><span class="pre">update()</span></code></a> method is called, the sensitivity weights will get updated for a given <code class="docutils literal notranslate"><span class="pre">model</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">update</span></code> methods of hyperparameter objects can be included in the <code class="docutils literal notranslate"><span class="pre">directives</span></code> list of  <a class="reference internal" href="api/inversion_ideas.Inversion.html#inversion_ideas.Inversion" title="inversion_ideas.Inversion"><code class="xref py py-class docutils literal notranslate"><span class="pre">inversion_ideas.Inversion</span></code></a> so they get called after each iteration within the inversion.</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/inversion_ideas.GaussNewtonConjugateGradient.html#inversion_ideas.GaussNewtonConjugateGradient" title="inversion_ideas.GaussNewtonConjugateGradient"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GaussNewtonConjugateGradient</span></code></a>(*[, maxiter, ...])</p></td>
-<td><p>Minimize non-linear objective functions using a Gauss-Newton Conjugate Gradient.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/inversion_ideas.hyperparams.CooledMultiplier.html#inversion_ideas.hyperparams.CooledMultiplier" title="inversion_ideas.hyperparams.CooledMultiplier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hyperparams.CooledMultiplier</span></code></a>(initial_value, ...)</p></td>
+<td><p>Multiplier hyperparameter that can be cooled down.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/inversion_ideas.conjugate_gradient.html#inversion_ideas.conjugate_gradient" title="inversion_ideas.conjugate_gradient"><code class="xref py py-obj docutils literal notranslate"><span class="pre">conjugate_gradient</span></code></a>(objective, initial_model)</p></td>
-<td><p>Minimize objective function with a Conjugate Gradient method.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/inversion_ideas.hyperparams.SensitivityWeights.html#inversion_ideas.hyperparams.SensitivityWeights" title="inversion_ideas.hyperparams.SensitivityWeights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hyperparams.SensitivityWeights</span></code></a>(simulation, ...)</p></td>
+<td><p>Updatable sensitivity weights.</p></td>
 </tr>
 </tbody>
 </table>
@@ -508,20 +513,20 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="api/inversion_ideas.SparseSmallness.html"
+       href="api/inversion_ideas.utils.Counter.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">inversion_ideas.SparseSmallness</p>
+        <p class="prev-next-title">inversion_ideas.utils.Counter</p>
       </div>
     </a>
     <a class="right-next"
-       href="api/inversion_ideas.GaussNewtonConjugateGradient.html"
+       href="api/inversion_ideas.hyperparams.CooledMultiplier.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">inversion_ideas.GaussNewtonConjugateGradient</p>
+        <p class="prev-next-title">inversion_ideas.hyperparams.CooledMultiplier</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -539,7 +544,7 @@
   <div class="sidebar-secondary-item">
 
   <div class="tocsection sourcelink">
-    <a href="../_sources/reference/minimizers.rst.txt">
+    <a href="../_sources/reference/hyperparams.rst.txt">
       <i class="fa-solid fa-file-lines"></i> Show Source
     </a>
   </div>

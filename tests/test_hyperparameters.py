@@ -4,7 +4,6 @@ Test custom hyperparameter objects.
 
 import numpy as np
 import pytest
-from scipy.sparse import diags_array
 
 from inversion_ideas.hyperparams import CooledMultiplier, SensitivityWeights
 from inversion_ideas.utils import get_sensitivity_weights
@@ -135,7 +134,7 @@ class TestSensitivityWeights:
     @pytest.fixture
     def kwargs(self):
         """Extra keyword arguments for the sensitivity weights function."""
-        data_weights = diags_array(0.1 * np.ones(self.n_data))
+        data_weights = 0.1 * np.ones(self.n_data)
         volumes = np.linspace(1, self.n_params + 1, self.n_params, dtype=np.float64)
         vmin = 1e-2
         kwargs = {"data_weights": data_weights, "volumes": volumes, "vmin": vmin}

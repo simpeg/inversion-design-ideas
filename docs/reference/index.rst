@@ -18,6 +18,7 @@ API Reference
    inversion
    operators
    utils
+   hyperparams
    decorators
    errors
    base

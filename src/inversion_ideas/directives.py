@@ -23,6 +23,10 @@ class Irls(Directive):
     This directive is intended to work with a single inversion that performs the two
     stages.
 
+    .. warning::
+
+        This directive is still in experimental stages and might change in the future.
+
     .. note::
 
         This directive can only be applied to sparse (lp norm) regularizations. In
@@ -30,6 +34,7 @@ class Irls(Directive):
 
         1. have a ``irls`` bool attribute,
         2. have a ``update_irls`` and a ``activate_irls`` methods.
+
 
     Parameters
     ----------

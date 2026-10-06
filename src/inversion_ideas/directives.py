@@ -192,7 +192,7 @@ class Irls(Directive):
         if self.cool_beta:
             self._cool_down_beta()
 
-    def _stage_two(self, model: Model, iteration: int): # ruff: ignore[ARG002]
+    def _stage_two(self, model: Model, iteration: int):  # ruff: ignore[ARG002]
         """
         Implement second stage of the IRLS inversion.
         """

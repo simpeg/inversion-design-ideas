@@ -88,17 +88,15 @@ def create_l2_inversion(
     """
     # Define objective function
     beta = CooledMultiplier(
-            starting_beta,
-            cooling_factor=beta_cooling_factor,
-            cooling_rate=beta_cooling_rate,
+        starting_beta,
+        cooling_factor=beta_cooling_factor,
+        cooling_rate=beta_cooling_rate,
     )
     regularization = beta * model_norm
     objective_function = data_misfit + regularization
 
     # Define directives
-    directives = [
-        beta.update
-    ]
+    directives = [beta.update]
 
     # Stopping criterion
     stopping_criterion = ChiTarget(data_misfit, chi_target=chi_target)

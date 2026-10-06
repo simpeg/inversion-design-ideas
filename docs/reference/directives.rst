@@ -10,5 +10,3 @@ Directives
 
    directives
    directives.Irls
-   directives.MultiplierCooler
-   directives.UpdateSensitivityWeights

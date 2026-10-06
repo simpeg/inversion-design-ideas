@@ -381,14 +381,20 @@ def derivative_convergence_test(
 
         Use this test only on functions that are not linear. A first-order Taylor series
         approximation on a linear function is exact, therefore the errors are going
-        to be only due to numerical precision, making the estimation of rate of
-        convergence not suitable.
+        to be due only to numerical precision, making the estimation of rate of
+        convergence not suitable for such functions.
 
     Parameters
     ----------
     function : callable
         Function that will be tested. It must take a ``model`` array as argument, and
         return either a float or an array.
+
+        .. important::
+
+            Make sure this function is non-linear, otherwise the test will likely fail
+            even if the derivative is correctly implemented.
+
     derivative : callable
         Derivative of the ``function``. It must take a ``model`` array as argument,
         and return a dense or sparse array, or a
@@ -403,6 +409,12 @@ def derivative_convergence_test(
         List of factors that will be used to scale the ``delta_m`` vector.
         If None, a default set of seven factors will be used as a logspace spanning from
         ``1e-6`` to ``1.0``.
+    rtol : float, optional
+        Relative tolerance that will be used when checking that the rate of convergence
+        is close enough to 2.0.
+    atol : float, optional
+        Absolute tolerance that will be used when checking that the rate of convergence
+        is close enough to 2.0.
 
     Raises
     ------
@@ -536,4 +548,15 @@ def derivative_convergence_test(
     rates_of_convergence = denominator / numerator
 
     # Check if the rates of convergence are within the expected values
-    np.testing.assert_allclose(rates_of_convergence, 2.0, rtol=rtol, atol=atol)
+    try:
+        np.testing.assert_allclose(rates_of_convergence, 2.0, rtol=rtol, atol=atol)
+    except AssertionError as e:
+        msg = (
+            f"Failed convergence test for function '{function}' and "
+            f"derivative '{derivative}' with:"
+            f"\nmodel:    {model}"
+            f"\ndelta_m:  {delta_m}"
+            f"\nfactors:  {factors}"
+            "\n"
+        )
+        raise AssertionError(msg + str(e)) from None

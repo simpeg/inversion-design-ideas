@@ -42,6 +42,7 @@
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'reference/api/inversion_ideas.utils.get_sensitivity_weights';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -497,9 +498,10 @@
 <dt><strong>jacobian</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_data</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">sparse</span></code> <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Jacobian matrix used to compute sensitivity weights. It must be a dense or
 sparse array.</p>
 </dd>
-<dt><strong>data_weights</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_data</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">n_data</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Data weights matrix used to compute the sensitivity weights.</p>
+<dt><strong>data_weights</strong><span class="classifier">(n_data,) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Array with data weights used to compute the sensitivty weights.
+Can use the <a class="reference internal" href="inversion_ideas.DataMisfit.html#inversion_ideas.DataMisfit.weights" title="inversion_ideas.DataMisfit.weights"><code class="xref py py-attr docutils literal notranslate"><span class="pre">inversion_ideas.DataMisfit.weights</span></code></a> property.</p>
 </dd>
-<dt><strong>volumes</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Array with the volumes of the active cells. Sensitivity weights are
+<dt><strong>volumes</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Array with the volumes of the active cells. Sensitivity weights are
 divided by the volumes to account for sensitivity changes due to cell sizes.</p>
 </dd>
 <dt><strong>vmin</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Minimum value used for clipping.</p>
@@ -507,6 +509,44 @@ divided by the volumes to account for sensitivity changes due to cell sizes.</p>
 </dl>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>Given a Jacobian matrix <span class="math notranslate nohighlight">\(\mathbf{J}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbf{J} = \begin{bmatrix}
+J_{11} &amp; \cdots &amp; J_{1M} \\
+\vdots &amp; \ddots &amp; \vdots \\
+J_{N1} &amp; \cdots &amp; J_{NM}
+\end{bmatrix}\end{split}\]</div>
+<p>a data weights vector <span class="math notranslate nohighlight">\(\mathbf{w}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{w} = \left[ w_1, \dots, w_N \right],\]</div>
+<p>and a cell volumes vector <span class="math notranslate nohighlight">\(\mathbf{V}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{V} = \left[ V_1, \dots, V_M \right],\]</div>
+<p>the <span class="math notranslate nohighlight">\(j\)</span> -th component of the initial sensitivity weights vector
+<span class="math notranslate nohighlight">\(\hat{\mathbf{s}}\)</span> is defined as:</p>
+<div class="math notranslate nohighlight">
+\[\hat{s}_j = \frac{1}{V_j} \sqrt{ \sum\limits_{i=0}^N w_i J_{ij}^2 }.\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">data_weights</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code>, each one of the <span class="math notranslate nohighlight">\(w_i\)</span> elements will be
+equal to one.</p>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">volumes</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code>, then each one of the <span class="math notranslate nohighlight">\(V_j\)</span> elements will be
+equal to one.</p>
+</div>
+<p>Each one of the components of the sensitivity weights vector <span class="math notranslate nohighlight">\(\mathbf{s}\)</span> is
+obtained by normalizing the components of <span class="math notranslate nohighlight">\(\hat{\mathbf{s}}\)</span> by its maximum
+value:</p>
+<div class="math notranslate nohighlight">
+\[s_j = \frac{\hat{s}_j}{\max({\hat{\mathbf{s}}})}\]</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">vmin</span></code> is passed, then all sensitivity weights below or equal to that value
+will be assigned the same <code class="docutils literal notranslate"><span class="pre">vmin</span></code> value.</p>
+</div>
 </dd></dl>
 
 </section>

@@ -5,56 +5,15 @@ Directives to modify the objective function between iterations of an inversion.
 import numpy as np
 
 from ._utils import extract_from_combo
-from .base import Combo, Directive, Objective, Scaled, Simulation
+from .base import Combo, Directive, Objective, Scaled
 from .conditions import ObjectiveChanged
 from .data_misfit import DataMisfit
 from .typing import Model, SparseRegularization
-from .utils import get_logger, get_sensitivity_weights
+from .utils import get_logger
 
 __all__ = [
     "Irls",
-    "MultiplierCooler",
-    "UpdateSensitivityWeights",
 ]
-
-
-class MultiplierCooler(Directive):
-    r"""
-    Cool the multiplier of an objective function.
-
-    Parameters
-    ----------
-    scaled_objective : Scaled
-        Scaled objective function whose multiplier will be cooled.
-    cooling_factor : float
-        Factor by which the multiplier will be cooled.
-    cooling_rate : int, optional
-        Cool down the multiplier every ``cooling_rate`` call to this directive.
-
-    Notes
-    -----
-    Given a scaled objective function :math:`\phi(\mathbf{m}) = \alpha
-    \varphi(\mathbf{m})`, and a cooling factor :math:`k`, this directive will *cool* the
-    multiplier `\alpha` by dividing it by :math:`k` on every ``cooling_rate`` call to
-    the directive.
-    """
-
-    def __init__(
-        self, scaled_objective: Scaled, cooling_factor: float, cooling_rate: int = 1
-    ):
-        if not hasattr(scaled_objective, "multiplier"):
-            msg = "Invalid 'scaled_objective': it must have a `multiplier` attribute."
-            raise TypeError(msg)
-        self.regularization = scaled_objective
-        self.cooling_factor = cooling_factor
-        self.cooling_rate = cooling_rate
-
-    def __call__(self, model: Model, iteration: int):  # noqa: ARG002
-        """
-        Cool the multiplier.
-        """
-        if iteration % self.cooling_rate == 0:
-            self.regularization.multiplier /= self.cooling_factor
 
 
 class Irls(Directive):
@@ -172,14 +131,9 @@ class Irls(Directive):
         self.data_misfit_rtol = data_misfit_rtol
         self.chi_l2_target = chi_l2_target
 
-        # Define a beta cooler
-        self._beta_cooler = (
-            MultiplierCooler(
-                self.regularization_with_beta, cooling_factor=beta_cooling_factor
-            )
-            if cool_beta
-            else None
-        )
+        # Define beta cooling variables
+        self._beta_cooling_factor = beta_cooling_factor
+        self._cool_beta = cool_beta
 
         # Define a condition for the data misfit.
         # Compare it always with the data misfit obtained with the model from l2
@@ -189,13 +143,24 @@ class Irls(Directive):
         )
 
     @property
+    def cool_beta(self) -> bool:
+        """
+        Whether if beta will be cooled or not.
+        """
+        return self._cool_beta
+
+    @property
     def beta_cooling_factor(self) -> float | None:
         """
         Current beta cooling factor.
         """
-        if self._beta_cooler is None:
+        if not self.cool_beta:
             return None
-        return self._beta_cooler.cooling_factor
+        return self._beta_cooling_factor
+
+    def _cool_down_beta(self):
+        """Cool down the beta multiplier."""
+        self.regularization_with_beta.multiplier /= self.beta_cooling_factor
 
     def __call__(self, model: Model, iteration: int):
         """
@@ -209,7 +174,7 @@ class Irls(Directive):
         else:
             self._stage_two(model, iteration)
 
-    def _stage_one(self, model: Model, iteration: int):
+    def _stage_one(self, model: Model, iteration: int):  # ruff: ignore[ARG002]
         """
         Implement first stage of the IRLS inversion.
         """
@@ -224,10 +189,10 @@ class Irls(Directive):
             return
 
         # Cool down beta otherwise
-        if self._beta_cooler is not None:
-            self._beta_cooler(model, iteration)
+        if self.cool_beta:
+            self._cool_down_beta()
 
-    def _stage_two(self, model: Model, iteration: int):
+    def _stage_two(self, model: Model, iteration: int): # ruff: ignore[ARG002]
         """
         Implement second stage of the IRLS inversion.
         """
@@ -236,17 +201,17 @@ class Irls(Directive):
             phi_d = self.data_misfit(model)
             # Adjust the cooling factor
             # (following current implementation of UpdateIRLS)
-            if self._beta_cooler is not None:
-                if self._beta_cooler.cooling_factor != 1:
+            if self.cool_beta:
+                if self.beta_cooling_factor != 1:
                     if phi_d > self._dmisfit_l2:
-                        self._beta_cooler.cooling_factor = float(
+                        self._beta_cooling_factor = float(
                             1 / np.mean([0.75, self._dmisfit_l2 / phi_d])
                         )
                     else:
-                        self._beta_cooler.cooling_factor = float(
+                        self._beta_cooling_factor = float(
                             1 / np.mean([2.0, self._dmisfit_l2 / phi_d])
                         )
-                self._beta_cooler(model, iteration)
+                self._cool_down_beta()
         else:
             # Update the IRLS
             for sparse_reg in self.sparse_regs:
@@ -284,153 +249,3 @@ class Irls(Directive):
                 sparse_regs.append(objective)
 
         return sparse_regs
-
-
-class UpdateSensitivityWeights(Directive):
-    """
-    Update sensitivity weights on regularizations.
-
-    .. note::
-
-        This directive can only be applied to regularizations that:
-
-        1. have a ``cell_weights`` attribute,
-        2. the ``cell_weights`` attribute is a dictionary, and
-        3. the ``cell_weights`` attribute contains weights under the key specified
-           through the ``weights_key`` argument ("sensitivity" by default).
-
-    Parameters
-    ----------
-    *args : Objective
-        Regularizations to which the sensitivity weights will be updated.
-        If a :class:`inversion_ideas.base.Combo` or
-        a :class:`inversion_ideas.base.Scaled` are passed, they will be explored
-        recursively to use regularizations that have sensitivity weights that can be
-        updated.
-    simulation : Simulation
-        Simulation used to get the jacobian matrix that will be used while updating the
-        sensitivity weights.
-    weights_key : str, optional
-        Key used to store the sensitivity weights on the regularization's
-        ``cell_weights`` dictionary. Only the weights under this key will be updated.
-    **kwargs
-        Extra arguments passed to the
-        :func:`inversion_ideas.utils.get_sensitivity_weights` function.
-
-    See Also
-    --------
-    inversion_ideas.utils.get_sensitivity_weights
-    """
-
-    def __init__(
-        self,
-        *args: Objective,
-        simulation: Simulation,
-        weights_key: str = "sensitivity",
-        **kwargs,
-    ):
-        if not args:
-            msg = "Missing regularization. Pass at least one."
-            raise TypeError(msg)
-
-        self.weights_key = weights_key
-        self.simulation = simulation
-        self.kwargs = kwargs
-        self.regularizations: list[Objective] = self._extract_regularizations(args)
-
-        if not self.regularizations:
-            msg = (
-                "Invalid regularizations passed through the `args` argument. "
-                "Couldn't locate any regularization term to update "
-                "their sensitivity weights."
-            )
-            raise TypeError(msg)
-
-    def __call__(self, model: Model, iteration: int):  # noqa: ARG002
-        """
-        Update sensitivity weights.
-        """
-        # Compute the jacobian and the new sensitivity weights
-        jacobian = self.simulation.jacobian(model)
-        self._check_jacobian_type(jacobian)
-        new_sensitivity_weights = get_sensitivity_weights(jacobian, **self.kwargs)
-
-        # Update sensitivity weights on regularizations
-        for regularization in self.regularizations:
-            self._check_cell_weights(regularization)
-            regularization.cell_weights[self.weights_key] = new_sensitivity_weights
-
-    def _extract_regularizations(self, args: tuple[Objective, ...]) -> list[Objective]:
-        """
-        Select regularizations to update their sensitivity weights.
-
-        Extract a selection of the regularizations passed as arguments to build the
-        ``self.regularizations`` attribute. Follow this criterion:
-
-        - Any objective function that is not a ``Combo`` or a ``Scaled`` will be added
-          as is. We'll check if the regularization has sensitivity weights (see below).
-        - Any ``Combo`` or ``Scaled`` will be recursively explored to extract any
-          regularization function contained by them that has sensitivity weights.
-
-        A regularization is considered to have sensitivity weights if:
-
-        1. Has a ``cell_weights`` attribute.
-        2. Its ``cell_weights`` attribute is a dictionary.
-        3. Its ``cell_weights`` attribute has a key equal to ``self.weights_key``.
-        """
-
-        def has_sensitivity_weights(regularization: Objective) -> bool:
-            return (
-                hasattr(regularization, "cell_weights")
-                and isinstance(regularization.cell_weights, dict)
-                and self.weights_key in regularization.cell_weights
-            )
-
-        regularizations = []
-        for objective in args:
-            if isinstance(objective, Scaled | Combo):
-                extracted_regs = extract_from_combo(objective, has_sensitivity_weights)
-                for reg in extracted_regs:
-                    get_logger().debug(
-                        f"Sensitivity weights of {reg} will be updated "
-                        f"by the {self} directive."
-                    )
-                regularizations += extracted_regs
-            else:
-                self._check_cell_weights(objective)
-                regularizations.append(objective)
-
-        return regularizations
-
-    def _check_jacobian_type(self, jacobian):
-        """Check if jacobian is a dense array."""
-        if not isinstance(jacobian, np.ndarray):
-            msg = (
-                "Cannot compute sensitivity weights for simulation "
-                f"{self.simulation} : its jacobian is a {type(jacobian)}. "
-                "It must be a dense array."
-            )
-            raise TypeError(msg)
-
-    def _check_cell_weights(self, regularization: Objective):
-        """Sanity checks for cell_weights in regularization."""
-        # Check if regularization have cell_weights attribute
-        if not hasattr(regularization, "cell_weights"):
-            msg = (
-                "Missing `cell-weights` attribute in regularization "
-                f"'{regularization}'."
-            )
-            raise AttributeError(msg)
-
-        if not isinstance(regularization.cell_weights, dict):
-            msg = (
-                f"Invalid `cell_weights` attribute of type '{type(regularization)}' "
-                f"for the '{regularization}'. It must be a dictionary."
-            )
-            raise TypeError(msg)
-        if self.weights_key not in regularization.cell_weights:
-            msg = (
-                f"Missing '{self.weights_key}' weights in "
-                f"{regularization}.cell_weights. "
-            )
-            raise KeyError(msg)

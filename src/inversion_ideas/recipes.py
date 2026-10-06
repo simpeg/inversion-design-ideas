@@ -11,7 +11,8 @@ import numpy.typing as npt
 from .base import Combo, Minimizer, Objective
 from .conditions import ChiTarget, ObjectiveChanged
 from .data_misfit import DataMisfit
-from .directives import Irls, MultiplierCooler
+from .directives import Irls
+from .hyperparams import CooledMultiplier
 from .inversion import Inversion
 from .inversion_log import Column
 from .preconditioners import (
@@ -86,16 +87,17 @@ def create_l2_inversion(
     Inversion
     """
     # Define objective function
-    regularization = starting_beta * model_norm
+    beta = CooledMultiplier(
+            starting_beta,
+            cooling_factor=beta_cooling_factor,
+            cooling_rate=beta_cooling_rate,
+    )
+    regularization = beta * model_norm
     objective_function = data_misfit + regularization
 
     # Define directives
     directives = [
-        MultiplierCooler(
-            regularization,
-            cooling_factor=beta_cooling_factor,
-            cooling_rate=beta_cooling_rate,
-        ),
+        beta.update
     ]
 
     # Stopping criterion

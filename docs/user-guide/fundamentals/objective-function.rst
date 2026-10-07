@@ -6,7 +6,7 @@ Objective function
 Defining objective functions
 ----------------------------
 
-Any objective function is defined as a vector function :math:`\phi: \mathbb{R}^M \rightarrow \mathbb{R}`, i.e. it takes a model vector :math:`\mathbf{m}` with :math:`M` elements and returns a single value.
+Any objective function is defined as a scalar field :math:`\phi: \mathbb{R}^M \rightarrow \mathbb{R}`, i.e. it takes a model vector :math:`\mathbf{m}` with :math:`M` elements and returns a single real value.
 
 In the new SimPEG's inversion framework, objective functions are represented by a child of the :class:`inversion_ideas.base.Objective`, like the :class:`inversion_ideas.DataMisfit` for example.
 

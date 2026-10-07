@@ -474,7 +474,7 @@ class TestSimpleFlatness:
             delta_m = rng.normal(size=self.n_params)
             function, derivative = flatness.gradient, flatness.hessian
         else:
-            raise ValueError()
+            raise ValueError()  # pragma: nocover
 
         # Perform derivative test
         derivative_test(function, derivative, model, delta_m)

@@ -7,7 +7,7 @@ import pytest
 from discretize.tensor_mesh import TensorMesh
 from scipy.sparse import dia_array, sparray
 
-from inversion_ideas import Flatness, Smallness
+from inversion_ideas import Flatness, SimpleFlatness, SimpleSmallness, Smallness
 from inversion_ideas.base import WrappedArray
 from inversion_ideas.regularization._mesh_based import _MeshBasedRegularization
 
@@ -123,7 +123,7 @@ class TestSmallness(MeshBasedTest):
             delta_m = rng.normal(size=n_active)
             function, derivative = smallness.gradient, smallness.hessian
         else:
-            raise ValueError()
+            raise ValueError()  # pragma: nocover
 
         # Perform derivative test
         derivative_test(function, derivative, model, delta_m)
@@ -154,13 +154,13 @@ class MockRegularization(_MeshBasedRegularization):
         self.active_cells = active_cells
 
     def __call__(self, model):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: nocover
 
     def gradient(self, model):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: nocover
 
     def hessian(self, model):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: nocover
 
 
 class TestMeshBasedRegularization:
@@ -199,7 +199,7 @@ class TestMeshBasedRegularization:
     def test_cell_weights_invalid_type(self):
         """Test cell_weights error after passing an object of invalid type."""
 
-        class Blah: ...
+        class Blah: ...  # pragma: nocover
 
         cell_weights = Blah()
         reg = MockRegularization(self.active_cells)
@@ -209,7 +209,7 @@ class TestMeshBasedRegularization:
     def test_cell_weights_invalid_type_in_dict(self):
         """Test cell_weights error after passing an object of invalid type in dict."""
 
-        class Blah: ...
+        class Blah: ...  # pragma: nocover
 
         cell_weights = {"a": np.ones(self.n_active), "b": Blah()}
         reg = MockRegularization(self.active_cells)
@@ -325,7 +325,7 @@ class TestFlatness(MeshBasedTest):
             delta_m = rng.normal(size=n_active)
             function, derivative = flatness.gradient, flatness.hessian
         else:
-            raise ValueError()
+            raise ValueError()  # pragma: nocover
 
         # Perform derivative test
         derivative_test(function, derivative, model, delta_m)
@@ -347,4 +347,144 @@ class TestFlatness(MeshBasedTest):
         rng = np.random.default_rng(seed=12312)
         model = rng.uniform(low=-1.0, high=1.0, size=n_active)
         delta_m = rng.normal(size=n_active)
+        derivative_convergence_test(flatness, flatness.gradient, model, delta_m)
+
+
+class TestSimpleSmallnes:
+    """Test the ``SimpleSmallness`` regularization class."""
+
+    n_params = 5
+
+    @pytest.fixture(params=[None, "array"])
+    def reference_model(self, request):
+        if request.param is None:
+            return None
+        if request.param == "array":
+            return np.ones(self.n_params)
+        raise ValueError()  # pragma: nocover
+
+    @pytest.fixture(params=[None, "array", "dict"])
+    def weights(self, request):
+        if request.param is None:
+            return None
+        ones = np.ones(self.n_params)
+        if request.param == "array":
+            return 1e-1 * ones
+        if request.param == "dict":
+            return {"a": 1e-1 * ones, "b": 0.5 * ones}
+        raise ValueError()  # pragma: nocover
+
+    def test_n_params(self, reference_model, weights):
+        flatness = SimpleSmallness(
+            self.n_params, reference_model=reference_model, weights=weights
+        )
+        assert flatness.n_params == self.n_params
+
+    @pytest.mark.parametrize("order", [1, 2], ids=["first-order", "second-order"])
+    def test_derivative(self, reference_model, weights, order):
+        """
+        Test gradient and hessian by comparison with Taylor series expansion.
+        """
+        flatness = SimpleSmallness(
+            self.n_params, reference_model=reference_model, weights=weights
+        )
+        rng = np.random.default_rng(seed=12312)
+        model = rng.uniform(low=-1.0, high=1.0, size=self.n_params)
+
+        # Define whether to test the gradient or the Hessian
+        if order == 1:
+            delta_m = rng.normal(scale=1e-4, size=self.n_params)
+            function, derivative = flatness, flatness.gradient
+        elif order == 2:
+            delta_m = rng.normal(size=self.n_params)
+            function, derivative = flatness.gradient, flatness.hessian
+        else:
+            raise ValueError()  # pragma: nocover
+
+        # Perform derivative test
+        derivative_test(function, derivative, model, delta_m)
+
+    def test_derivative_convergence(self, reference_model, weights):
+        """
+        Test gradient through a convergence test of Taylor series approximation.
+        """
+        flatness = SimpleSmallness(
+            self.n_params, reference_model=reference_model, weights=weights
+        )
+        rng = np.random.default_rng(seed=12312)
+        model = rng.uniform(low=-1.0, high=1.0, size=self.n_params)
+        delta_m = rng.normal(size=self.n_params)
+        derivative_convergence_test(flatness, flatness.gradient, model, delta_m)
+
+    def test_invalid_weights(self):
+        invalid_weights = ["blah"]
+        match = "Invalid weights of type 'list'"
+        with pytest.raises(TypeError, match=match):
+            SimpleSmallness(self.n_params, weights=invalid_weights)
+
+    def test_weights_matrix(self, weights):
+        """Test the weights_matrix property."""
+        smallness = SimpleSmallness(self.n_params, weights=weights)
+        matrix = smallness.weights_matrix
+        assert isinstance(matrix, dia_array)
+
+        if weights is None:
+            expected = np.eye(self.n_params)
+        elif isinstance(weights, np.ndarray):
+            expected = np.sqrt(weights) * np.eye(self.n_params)
+        elif isinstance(weights, dict):
+            expected = np.sqrt(weights["a"] * weights["b"]) * np.eye(self.n_params)
+        else:
+            raise TypeError()  # pragma: nocover
+
+        np.testing.assert_allclose(matrix.toarray(), expected)
+
+    def test_invalid_weights_matrix(self, weights):
+        """Test rare error for invalid weights within weights_matrix."""
+        smallness = SimpleSmallness(self.n_params, weights=weights)
+
+        # Assign weights through private attribute since the property setter wouldn't
+        # allow us to do so.
+        smallness._weights = ["blah"]
+
+        match = "Invalid weights of type 'list'"
+        with pytest.raises(TypeError, match=match):
+            smallness.weights_matrix  # ruff: ignore[B018]
+
+
+class TestSimpleFlatness:
+    """Test the ``SimpleFlatness`` regularization class."""
+
+    n_params = 5
+
+    @pytest.mark.parametrize("order", [1, 2], ids=["first-order", "second-order"])
+    def test_derivative(self, order):
+        """
+        Test gradient and hessian by comparison with Taylor series expansion.
+        """
+        flatness = SimpleFlatness(self.n_params)
+        rng = np.random.default_rng(seed=12312)
+        model = rng.uniform(low=-1.0, high=1.0, size=self.n_params)
+
+        # Define whether to test the gradient or the Hessian
+        if order == 1:
+            delta_m = rng.normal(scale=1e-4, size=self.n_params)
+            function, derivative = flatness, flatness.gradient
+        elif order == 2:
+            delta_m = rng.normal(size=self.n_params)
+            function, derivative = flatness.gradient, flatness.hessian
+        else:
+            raise ValueError()  # pragma: nocover
+
+        # Perform derivative test
+        derivative_test(function, derivative, model, delta_m)
+
+    def test_derivative_convergence(self):
+        """
+        Test gradient through a convergence test of Taylor series approximation.
+        """
+        flatness = SimpleFlatness(self.n_params)
+        rng = np.random.default_rng(seed=12312)
+        model = rng.uniform(low=-1.0, high=1.0, size=self.n_params)
+        delta_m = rng.normal(size=self.n_params)
         derivative_convergence_test(flatness, flatness.gradient, model, delta_m)

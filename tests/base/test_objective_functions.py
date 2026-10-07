@@ -177,13 +177,13 @@ class TestObjectiveOperations:
                 pass
 
             def __call__(self, model):
-                pass
+                raise NotImplementedError  # pragma: nocover
 
             def gradient(self, model):
-                pass
+                raise NotImplementedError  # pragma: nocover
 
             def hessian(self, model):
-                pass
+                raise NotImplementedError  # pragma: nocover
 
             def __add__(self, other):
                 # Override __add__ so it doesn't implement it, and will trigger the
@@ -191,9 +191,7 @@ class TestObjectiveOperations:
                 return NotImplemented
 
             def __radd__(self, other):
-                # Override __radd__ so it doesn't implement it, and will trigger the
-                # __add__ of the other objective function.
-                return NotImplemented
+                raise NotImplementedError  # pragma: nocover
 
         a = DullObjectiveFunction()
         b = Dummy(self.n_params)
@@ -240,7 +238,7 @@ class TestObjectiveOperations:
 
         class NonReal:
             def __mul__(self, value):
-                return self
+                raise NotImplementedError  # pragma: nocover
 
             def __rmul__(self, value):
                 return self
@@ -556,7 +554,7 @@ class TestComboMethods:
     def test_error_invalid_function(self):
         """Test error after passing an invalid function in the list."""
 
-        class NonObjective: ...
+        class NonObjective: ...  # pragma: nocover
 
         dummy = Dummy(3)
         non_objective = NonObjective()
@@ -679,7 +677,7 @@ class TestScaledMethods:
         return model
 
     def test_invalid_multiplier(self):
-        class NonReal: ...
+        class NonReal: ...  # pragma: nocover
 
         multiplier = NonReal()
         phi = Dummy(self.n_params)
@@ -698,7 +696,7 @@ class TestScaledMethods:
     def test_invalid_function(self):
         """Test error if invalid function type is passed."""
 
-        class NonObjective: ...
+        class NonObjective: ...  # pragma: nocover
 
         non_objective = NonObjective()
         multiplier = 3.0

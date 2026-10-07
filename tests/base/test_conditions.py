@@ -154,7 +154,7 @@ class TestUpdateMixin:
                 condition = condition_a | condition_b
             case "xor":
                 condition = condition_a ^ condition_b
-            case _:
+            case _:  # pragma: nocover
                 msg = f"{operation}"
                 raise ValueError(msg)
         new_value = 4.0
@@ -169,7 +169,8 @@ class TestUpdateMixin:
         """
 
         def is_even(model) -> bool:
-            return bool(np.all((model % 2) == 0))
+            # No need to implement this since it won't be called
+            raise NotImplementedError  # pragma: nocover
 
         condition_a = GreaterThan(2.0)
         match operation:
@@ -179,7 +180,7 @@ class TestUpdateMixin:
                 condition = condition_a | is_even
             case "xor":
                 condition = condition_a ^ is_even
-            case _:
+            case _:  # pragma: nocover
                 msg = f"{operation}"
                 raise ValueError(msg)
         new_value = 4.0
@@ -209,7 +210,7 @@ class TestInitializeMixin:
                 condition = condition_a | condition_b
             case "xor":
                 condition = condition_a ^ condition_b
-            case _:
+            case _:  # pragma: nocover
                 msg = f"{operation}"
                 raise ValueError(msg)
         condition.initialize()
@@ -223,7 +224,8 @@ class TestInitializeMixin:
         """
 
         def is_even(model) -> bool:
-            return bool(np.all((model % 2) == 0))
+            # No need to implement this since it won't be called
+            raise NotImplementedError  # pragma: nocover
 
         condition_a = GreaterThan(2.0)
         match operation:
@@ -233,7 +235,7 @@ class TestInitializeMixin:
                 condition = condition_a | is_even
             case "xor":
                 condition = condition_a ^ is_even
-            case _:
+            case _:  # pragma: nocover
                 msg = f"{operation}"
                 raise ValueError(msg)
         condition.initialize()
@@ -295,7 +297,7 @@ class TestInfo:
                 combo = condition_a | condition_b
             case "xor":
                 combo = condition_a ^ condition_b
-            case _:
+            case _: # pragma: nocover
                 msg = f"{operation}"
                 raise ValueError(msg)
         model = np.array([1])
@@ -318,7 +320,7 @@ class TestInfo:
                 combo = condition | is_even
             case "xor":
                 combo = condition ^ is_even
-            case _:
+            case _: # pragma: nocover
                 msg = f"{operation}"
                 raise ValueError(msg)
         model = np.array([1])
@@ -339,7 +341,7 @@ class TestInfo:
                 combo = condition_a | (condition_b & condition_c)
             case "xor":
                 combo = condition_a ^ (condition_b & condition_c)
-            case _:
+            case _: # pragma: nocover
                 msg = f"{operation}"
                 raise ValueError(msg)
         model = np.array([1])

@@ -5,7 +5,7 @@ Directives to modify the objective function between iterations of an inversion.
 import numpy as np
 
 from ._utils import extract_from_combo
-from .base import Combo, Directive, Objective, Scaled
+from .base import Combo, Objective, Scaled
 from .conditions import ObjectiveChanged
 from .data_misfit import DataMisfit
 from .typing import Model, SparseRegularization
@@ -16,7 +16,7 @@ __all__ = [
 ]
 
 
-class Irls(Directive):
+class Irls:
     """
     Apply iterative reweighed least squares (IRLS).
 
@@ -167,7 +167,7 @@ class Irls(Directive):
         """Cool down the beta multiplier."""
         self.regularization_with_beta.multiplier /= self.beta_cooling_factor
 
-    def __call__(self, model: Model, iteration: int):
+    def __call__(self, model: Model):
         """
         Apply IRLS.
 
@@ -175,11 +175,11 @@ class Irls(Directive):
         """
         # Cool down beta until IRLS gets activated
         if not all(sparse_reg.irls for sparse_reg in self.sparse_regs):
-            self._stage_one(model, iteration)
+            self._stage_one(model)
         else:
-            self._stage_two(model, iteration)
+            self._stage_two(model)
 
-    def _stage_one(self, model: Model, iteration: int):  # ruff: ignore[ARG002]
+    def _stage_one(self, model: Model):
         """
         Implement first stage of the IRLS inversion.
         """
@@ -197,7 +197,7 @@ class Irls(Directive):
         if self.cool_beta:
             self._cool_down_beta()
 
-    def _stage_two(self, model: Model, iteration: int):  # ruff: ignore[ARG002]
+    def _stage_two(self, model: Model):
         """
         Implement second stage of the IRLS inversion.
         """

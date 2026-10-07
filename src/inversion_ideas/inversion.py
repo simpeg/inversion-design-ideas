@@ -19,7 +19,7 @@ from rich.tree import Tree
 from inversion_ideas.errors import ConvergenceWarning
 
 from ._utils import array_to_str
-from .base import Condition, Directive, Minimizer, Objective
+from .base import Condition, Minimizer, Objective
 from .decorators import debug
 from .inversion_log import InversionLog, InversionLogRich, MinimizerLog
 from .typing import Log, Model
@@ -40,9 +40,9 @@ class Inversion:
         Instance of :class:`Minimizer` or callable used to minimize the objective
         function during the inversion. It must take the objective function and a model
         as arguments.
-    directives : list of Directive
-        List of ``Directive`` used to modify the objective function after each
-        iteration.
+    directives : list of callable
+        List of callables that take the ``model`` as argument.
+        They are used to modify the objective functiona after each iteration.
     stopping_criterion : Condition or callable
         Boolean function that takes the model as argument. If this function returns
         ``True``, then the inversion will stop.
@@ -70,7 +70,7 @@ class Inversion:
         initial_model: Model,
         minimizer: Minimizer | Callable[[Objective, Model], Model],
         *,
-        directives: typing.Sequence[Directive],
+        directives: typing.Sequence[Callable[[Model], typing.Any]],
         stopping_criterion: Condition | Callable[[Model], bool],
         max_iterations: int | None = None,
         cache_models=True,
@@ -182,7 +182,7 @@ class Inversion:
                     f"counter '{self.counter}'."
                 )
                 # ---
-                directive(self.model, self.counter)
+                directive(self.model)
 
         # Minimize objective function
         # ---------------------------

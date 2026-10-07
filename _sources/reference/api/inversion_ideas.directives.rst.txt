@@ -9,6 +9,4 @@
    .. autosummary::
    
       Irls
-      MultiplierCooler
-      UpdateSensitivityWeights
    

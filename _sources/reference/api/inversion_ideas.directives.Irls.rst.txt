@@ -16,6 +16,10 @@ Attributes
 
 
 
+.. autoattribute:: Irls.cool_beta
+
+
+
 
 
 Methods
@@ -32,6 +36,10 @@ Methods
 .. automethod:: Irls.__call__
 
 ----
+
+
+
+
 
 
 

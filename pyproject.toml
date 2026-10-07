@@ -95,7 +95,7 @@ ignore = [
 convention = "numpy"
 
 [tool.coverage.run]
-source = ["inversion_ideas"]
+source = ["src", "tests"]
 omit = [
     "**/_version.py",
     "**/__init__.py",

@@ -123,7 +123,7 @@ class TestSmallness(MeshBasedTest):
             delta_m = rng.normal(size=n_active)
             function, derivative = smallness.gradient, smallness.hessian
         else:
-            raise ValueError()
+            raise ValueError()  # pragma: nocover
 
         # Perform derivative test
         derivative_test(function, derivative, model, delta_m)
@@ -154,13 +154,13 @@ class MockRegularization(_MeshBasedRegularization):
         self.active_cells = active_cells
 
     def __call__(self, model):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: nocover
 
     def gradient(self, model):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: nocover
 
     def hessian(self, model):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: nocover
 
 
 class TestMeshBasedRegularization:
@@ -199,7 +199,7 @@ class TestMeshBasedRegularization:
     def test_cell_weights_invalid_type(self):
         """Test cell_weights error after passing an object of invalid type."""
 
-        class Blah: ...
+        class Blah: ...  # pragma: nocover
 
         cell_weights = Blah()
         reg = MockRegularization(self.active_cells)
@@ -209,7 +209,7 @@ class TestMeshBasedRegularization:
     def test_cell_weights_invalid_type_in_dict(self):
         """Test cell_weights error after passing an object of invalid type in dict."""
 
-        class Blah: ...
+        class Blah: ...  # pragma: nocover
 
         cell_weights = {"a": np.ones(self.n_active), "b": Blah()}
         reg = MockRegularization(self.active_cells)
@@ -325,7 +325,7 @@ class TestFlatness(MeshBasedTest):
             delta_m = rng.normal(size=n_active)
             function, derivative = flatness.gradient, flatness.hessian
         else:
-            raise ValueError()
+            raise ValueError()  # pragma: nocover
 
         # Perform derivative test
         derivative_test(function, derivative, model, delta_m)
@@ -399,7 +399,7 @@ class TestSimpleSmallnes:
             delta_m = rng.normal(size=self.n_params)
             function, derivative = flatness.gradient, flatness.hessian
         else:
-            raise ValueError()
+            raise ValueError()  # pragma: nocover
 
         # Perform derivative test
         derivative_test(function, derivative, model, delta_m)

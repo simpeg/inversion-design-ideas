@@ -142,7 +142,7 @@ class TestMultiplier:
             with pytest.raises(TypeError, match="True division is not supported"):
                 dunder(phi)
         else:
-            raise ValueError() # pragma: nocover
+            raise ValueError()  # pragma: nocover
 
     def test_floordiv(self):
         """Test the floor division."""
@@ -590,7 +590,7 @@ class TestWrappedArray:
                 else other_array != wrapped_array
             )
         else:
-            raise ValueError() # pragma: nocover
+            raise ValueError()  # pragma: nocover
         assert isinstance(result, np.ndarray)
         np.testing.assert_allclose(expected, result, strict=True)
 
@@ -750,7 +750,7 @@ class TestWrappedArrayVsWrappedArray:
             expected = array_a != array_b
             result = wrapped_a != wrapped_b
         else:
-            raise ValueError() # pragma: nocover
+            raise ValueError()  # pragma: nocover
         np.testing.assert_allclose(expected, result)
 
 

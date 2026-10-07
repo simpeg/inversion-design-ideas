@@ -297,7 +297,7 @@ class TestInfo:
                 combo = condition_a | condition_b
             case "xor":
                 combo = condition_a ^ condition_b
-            case _: # pragma: nocover
+            case _:  # pragma: nocover
                 msg = f"{operation}"
                 raise ValueError(msg)
         model = np.array([1])
@@ -320,7 +320,7 @@ class TestInfo:
                 combo = condition | is_even
             case "xor":
                 combo = condition ^ is_even
-            case _: # pragma: nocover
+            case _:  # pragma: nocover
                 msg = f"{operation}"
                 raise ValueError(msg)
         model = np.array([1])
@@ -341,7 +341,7 @@ class TestInfo:
                 combo = condition_a | (condition_b & condition_c)
             case "xor":
                 combo = condition_a ^ (condition_b & condition_c)
-            case _: # pragma: nocover
+            case _:  # pragma: nocover
                 msg = f"{operation}"
                 raise ValueError(msg)
         model = np.array([1])

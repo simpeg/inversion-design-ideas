@@ -79,7 +79,7 @@ class TestCooledMultiplier:
         assert multiplier.value == initial / cooling_factor**2
 
     def test_invalid_cooling_factor_type(self):
-        class NonReal: ...
+        class NonReal: ...  # pragma: nocover
 
         cooling_factor = NonReal()
         with pytest.raises(

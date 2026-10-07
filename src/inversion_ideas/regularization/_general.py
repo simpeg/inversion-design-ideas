@@ -108,7 +108,7 @@ class SimpleSmallness(Objective):
         """
         if not isinstance(value, np.ndarray | dict):
             msg = (
-                f"Invalid weights of type {type(value)}. "
+                f"Invalid weights of type '{type(value).__name__}'. "
                 "It must be an array or a dictionary."
             )
             raise TypeError(msg)
@@ -124,7 +124,7 @@ class SimpleSmallness(Objective):
         elif isinstance(self.weights, dict):
             weights_array = prod_arrays(iter(self.weights.values()))
         else:
-            msg = f"Invalid weights of type '{type(self.weights)}'."
+            msg = f"Invalid weights of type '{type(self.weights).__name__}'."
             raise TypeError(msg)
         return diags_array(np.sqrt(weights_array))
 

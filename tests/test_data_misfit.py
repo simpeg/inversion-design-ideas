@@ -151,7 +151,7 @@ class TestDataMisfit:
             delta_m = rng.normal(size=self.n_params)
             function, derivative = data_misfit.gradient, data_misfit.hessian
         else:
-            raise ValueError()
+            raise ValueError()  # pragma: nocover
 
         # Perform derivative test
         derivative_test(function, derivative, model, delta_m)
@@ -221,7 +221,7 @@ class TestSanityChecks:
             uncertainty = self.rng.uniform(size=self.n_data + 1)
             simulation = LinearRegressor(regressor_matrix)
         else:
-            raise ValueError()
+            raise ValueError()  # pragma: nocover
         msg = re.escape(
             f"Invalid `data` and `uncertainty` arguments with {data.size} and "
             f"{uncertainty.size} elements, respectively, and `simulation` "
@@ -256,14 +256,14 @@ class TestSanityChecks:
 
             @property
             def n_params(self):
-                return 30
+                raise NotImplementedError  # pragma: nocover
 
             @property
             def n_data(self):
-                return 25
+                raise NotImplementedError  # pragma: nocover
 
             def __call__(self, model):
-                pass
+                raise NotImplementedError  # pragma: nocover
 
         data = self.rng.uniform(size=self.n_data)
         uncertainty = self.rng.uniform(size=self.n_data)

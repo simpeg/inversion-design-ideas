@@ -365,7 +365,10 @@ def derivative_convergence_test(
     derivative: Callable[[Model], NDArray[np.float64] | SparseArray | LinearOperator],
     model: Model,
     delta_m: Model,
+    *,
     factors: list[float] | NDArray[np.float64] | None = None,
+    rtol: float = 1e-3,
+    atol: float = 0.0,
 ):
     r"""
     Validate the implementation of the derivative of a function through convergence.
@@ -374,11 +377,24 @@ def derivative_convergence_test(
     convergence test of a first-order Taylor series expansion of the function.
     If the convergence test fails, an :exc:`AssertionError` will be raised.
 
+    .. hint::
+
+        Use this test only on functions that are not linear. A first-order Taylor series
+        approximation on a linear function is exact, therefore the errors are going
+        to be due only to numerical precision, making the estimation of rate of
+        convergence not suitable for such functions.
+
     Parameters
     ----------
     function : callable
         Function that will be tested. It must take a ``model`` array as argument, and
         return either a float or an array.
+
+        .. important::
+
+            Make sure this function is non-linear, otherwise the test will likely fail
+            even if the derivative is correctly implemented.
+
     derivative : callable
         Derivative of the ``function``. It must take a ``model`` array as argument,
         and return a dense or sparse array, or a
@@ -393,6 +409,12 @@ def derivative_convergence_test(
         List of factors that will be used to scale the ``delta_m`` vector.
         If None, a default set of seven factors will be used as a logspace spanning from
         ``1e-6`` to ``1.0``.
+    rtol : float, optional
+        Relative tolerance that will be used when checking that the rate of convergence
+        is close enough to 2.0.
+    atol : float, optional
+        Absolute tolerance that will be used when checking that the rate of convergence
+        is close enough to 2.0.
 
     Raises
     ------
@@ -405,23 +427,40 @@ def derivative_convergence_test(
     by performing a convergence test of a first-order Taylor series expansion of such
     function.
 
+    Scalar field
+    ~~~~~~~~~~~~
     Consider a `scalar field <https://en.wikipedia.org/wiki/Scalar_field>`__
     :math:`f: \mathbb{R}^M \rightarrow \mathbb{R}`, a model :math:`\mathbf{m}` a
     perturbation vector :math:`\Delta\mathbf{m}` with a magnitude significantly smaller
     than the one of :math:`\mathbf{m}`,
-    and a scaling factor :math:`\alpha \in \mathbb{R}`.
+    and a scaling factor :math:`\alpha \in \mathbb{R}, \, \alpha > 0`.
     We can approximate :math:`f(\mathbf{m} + \alpha\Delta\mathbf{m})` using a
     first-order Taylor series expansion:
 
     .. math::
 
         f(\mathbf{m} + \alpha \Delta\mathbf{m}) =
-        f(\mathbf{m}) + \nabla f(\mathbf{m}) \cdot \alpha \Delta\mathbf{m} + \Delta_r,
+        f(\mathbf{m}) + \nabla f(\mathbf{m}) \cdot \alpha \Delta\mathbf{m}
+        + R_2(\alpha\Delta\mathbf{m}),
 
     where :math:`\nabla f(\mathbf{m})` is the gradient of :math:`f` evaluated on the
-    same model :math:`\mathbf{m}`, and :math:`\Delta_r` is the discrepancy between the
-    function and the first order approximation.
+    same model :math:`\mathbf{m}`, and :math:`R_2(\alpha\Delta\mathbf{m})` is the
+    remainder term.
 
+    Let's define the error :math:`e(\alpha)` as:
+
+    .. math::
+
+        e(\alpha) = \lVert
+            f(\mathbf{m} + \alpha \Delta\mathbf{m})
+            - f(\mathbf{m})
+            - \nabla f(\mathbf{m}) \cdot \alpha \Delta\mathbf{m}
+        \rVert
+
+    where :math:`\lVert\cdot\rVert` represents the L2 norm.
+
+    Vector field
+    ~~~~~~~~~~~~
     Consider now a `vector field <https://en.wikipedia.org/wiki/Vector_field>`__
     :math:`\mathbf{f}: \mathbb{R}^M \rightarrow \mathbb{R}^N`.
     Analogously, we can approximate
@@ -432,46 +471,92 @@ def derivative_convergence_test(
 
         \mathbf{f}(\mathbf{m} + \alpha\Delta\mathbf{m}) =
         \mathbf{f}(\mathbf{m})
-        + \mathbf{J}_\mathbf{f}(\mathbf{m}) \cdot \alpha\Delta\mathbf{m} + \Delta_r,
+        + \mathbf{J}_\mathbf{f}(\mathbf{m}) \cdot \alpha\Delta\mathbf{m}
+        + \mathbf{R}_2(\alpha\Delta\mathbf{m}),
 
     where :math:`\mathbf{J}_\mathbf{f}(\mathbf{m})` is the Jacobian matrix of the
     vector field :math:`\mathbf{f}` evaluated in the model :math:`\mathbf{m}`,
-    and :math:`\Delta_r` is also the discrepancy between the function and its
-    approximation.
+    and :math:`\mathbf{R}_2(\alpha\Delta\mathbf{m})` is also the remainder term.
 
-    The discrepances :math:`\Delta_r` should get smaller as the scaling factor
-    :math:`\alpha` decreases.
-    This test will check that the discrepances increases with the ``factors``, and error
-    out if such condition doesn't hold.
+    Let's define the error :math:`e(\alpha)` for the vector field as:
+
+    .. math::
+
+        e(\alpha) = \lVert
+            \mathbf{f}(\mathbf{m} + \alpha\Delta\mathbf{m})
+            - \mathbf{f}(\mathbf{m})
+            - \mathbf{J}_\mathbf{f}(\mathbf{m}) \cdot \alpha\Delta\mathbf{m}
+        \rVert
+
+    where :math:`\lVert\cdot\rVert` represents the L2 norm.
+
+    Rate of convergence
+    ~~~~~~~~~~~~~~~~~~~
+    Considering two different values of :math:`\alpha`: :math:`\alpha_1` and
+    :math:`\alpha_2` such as :math:`0 < \alpha_1 < \alpha_2`, we can define the *rate of
+    convergence* :math:`p` as:
+
+    .. math::
+
+        p = \frac{\ln(e(\alpha_2) / e(\alpha_1))}{\ln(\alpha_2 / \alpha_1))}.
+
+    For the first-order Taylor series approximation, if :math:`\alpha` is sufficiently
+    small, the errors :math:`e(\alpha)` can be approximated by:
+
+    .. math::
+
+        e(\alpha) \approx C \alpha^2
+
+    So:
+
+    .. math::
+
+        p
+        = \frac{\ln(e(\alpha_2) / e(\alpha_1))}{\ln(\alpha_2 / \alpha_1))}
+        \approx
+        \frac{\ln(C \alpha_2 / C\alpha_1)^2}{\ln(\alpha_2 / \alpha_1)}
+        = 2
+
+    Therefore, for a first-order Taylor series approximation, the rate of convergence
+    should be equal to zero.
+
+    This test will perform a convergence test and ensure that the rate of convergence is
+    equal to 2.
     """
     # Define factors if None or sort them if a list is passed
     if factors is None:
         factors = np.logspace(-6, 0, 7)
     else:
-        factors = factors.copy()
+        factors = np.asarray(factors).copy()
         factors.sort()
 
     # Cache the value of function and derivative on the model to avoid recomputing them
     function_m = function(model)
     derivative_m = derivative(model)
 
-    # Compute the absolute value of the discrepances for each factor
-    discrepances = []
+    # Compute the approximation error for each factor as the l2 norm of the discrepancy
+    errors = []
     for factor in factors:
         approximation = function_m + derivative_m @ (factor * delta_m)
-        abs_diff = np.abs(function(model + (factor * delta_m)) - approximation)
-        discrepances.append(abs_diff)
-    discrepances = np.array(discrepances)
+        error = np.linalg.norm(function(model + factor * delta_m) - approximation)
+        errors.append(error)
+    errors = np.asarray(errors)
 
-    # Check if the discrepances decrease with the factor
+    # Compute rate of convergence
+    denominator = np.log(errors[1:] / errors[:-1])
+    numerator = np.log(factors[1:] / factors[:-1])
+    rates_of_convergence = denominator / numerator
+
+    # Check if the rates of convergence are within the expected values
     try:
-        assert np.all(discrepances[:-1] <= discrepances[1:])
+        np.testing.assert_allclose(rates_of_convergence, 2.0, rtol=rtol, atol=atol)
     except AssertionError as e:
         msg = (
-            f"Failed convergence test on derivatives for function '{function}' and "
+            f"Failed convergence test for function '{function}' and "
             f"derivative '{derivative}' with:"
             f"\nmodel:    {model}"
             f"\ndelta_m:  {delta_m}"
+            f"\nfactors:  {factors}"
             "\n"
         )
         raise AssertionError(msg + str(e)) from None

@@ -131,7 +131,7 @@ class SimpleSmallness(Objective):
 
 class SimpleFlatness(Objective):
     r"""
-    Simple smallness regularization.
+    Simple flatness regularization.
 
     Implement a simple flatness regularization that evaluates the norm of the
     finite differences of the model vector.
@@ -148,7 +148,7 @@ class SimpleFlatness(Objective):
 
     Notes
     -----
-    Implement a Tikhonov first order regularization as follows:
+    Implement a mesh-less flatness regularization as follows:
 
     .. math::
 
@@ -157,7 +157,7 @@ class SimpleFlatness(Objective):
         = \lVert \mathbf{R} \mathbf{m} \rVert^2
         = \mathbf{m}^\text{T} \mathbf{R}^\text{T} \mathbf{R} \mathbf{m}
 
-    where :math:`\mathbf{m} = [m_1, \dots, m_M]` is the model, and
+    where :math:`\mathbf{m} = [m_1, \dots, m_M]` is the model vector, and
     :math:`\mathbf{R}` is the matrix of finite differences:
 
     .. math::
@@ -168,7 +168,7 @@ class SimpleFlatness(Objective):
                &  1      & -1     &        &        &        \\
                &         & \ddots & \ddots &        &        \\
                &         &        & 1      & -1     &        \\
-        0      &         &        &        & -1     & 1      \\
+        0      &         &        &        &  1     & -1     \\
         \end{bmatrix}.
 
     """

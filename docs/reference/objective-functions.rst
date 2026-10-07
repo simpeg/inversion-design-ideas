@@ -22,6 +22,7 @@ General purpose:
    :toctree: api/
 
     SimpleSmallness
+    SimpleFlatness
 
 Mesh-based:
 

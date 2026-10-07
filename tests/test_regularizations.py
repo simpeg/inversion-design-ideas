@@ -7,7 +7,7 @@ import pytest
 from discretize.tensor_mesh import TensorMesh
 from scipy.sparse import dia_array, sparray
 
-from inversion_ideas import Flatness, Smallness
+from inversion_ideas import Flatness, SimpleFlatness, Smallness
 from inversion_ideas.base import WrappedArray
 from inversion_ideas.regularization._mesh_based import _MeshBasedRegularization
 
@@ -348,3 +348,31 @@ class TestFlatness(MeshBasedTest):
         model = rng.uniform(low=-1.0, high=1.0, size=n_active)
         delta_m = rng.normal(size=n_active)
         derivative_convergence_test(flatness, flatness.gradient, model, delta_m)
+
+
+class TestSimpleFlatness:
+    """Test the ``SimpleFlatness`` regularization class."""
+
+    n_params = 5
+
+    @pytest.mark.parametrize("order", [1, 2], ids=["first-order", "second-order"])
+    def test_derivative(self, order):
+        """
+        Test gradient and hessian by comparison with Taylor series expansion.
+        """
+        flatness = SimpleFlatness(self.n_params)
+        rng = np.random.default_rng(seed=12312)
+        model = rng.uniform(low=-1.0, high=1.0, size=self.n_params)
+
+        # Define whether to test the gradient or the Hessian
+        if order == 1:
+            delta_m = rng.normal(scale=1e-4, size=self.n_params)
+            function, derivative = flatness, flatness.gradient
+        elif order == 2:
+            delta_m = rng.normal(size=self.n_params)
+            function, derivative = flatness.gradient, flatness.hessian
+        else:
+            raise ValueError()
+
+        # Perform derivative test
+        derivative_test(function, derivative, model, delta_m)

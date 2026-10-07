@@ -7,21 +7,21 @@ User Guide
    :maxdepth: 1
    :caption: Getting started
 
-   what
-   installing
-   gravity-inversion
-   dc-inversion
+   getting-started/what
+   getting-started/installing
+   getting-started/gravity-inversion
+   getting-started/dc-inversion
 
 .. toctree::
    :maxdepth: 1
    :caption: Fundamentals
 
-   inversion-concept
-   objective-function
-   minimizer
+   fundamentals/inversion-concept
+   fundamentals/objective-function
+   fundamentals/minimizer
 
 .. toctree::
    :maxdepth: 1
    :caption: How To
 
-   logging
+   how-to/logging

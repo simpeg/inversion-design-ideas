@@ -376,3 +376,13 @@ class TestSimpleFlatness:
 
         # Perform derivative test
         derivative_test(function, derivative, model, delta_m)
+
+    def test_derivative_convergence(self):
+        """
+        Test gradient through a convergence test of Taylor series approximation.
+        """
+        flatness = SimpleFlatness(self.n_params)
+        rng = np.random.default_rng(seed=12312)
+        model = rng.uniform(low=-1.0, high=1.0, size=self.n_params)
+        delta_m = rng.normal(size=self.n_params)
+        derivative_convergence_test(flatness, flatness.gradient, model, delta_m)

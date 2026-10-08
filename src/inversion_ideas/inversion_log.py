@@ -196,7 +196,7 @@ class InversionLog:
                 title="Iteration", callable=lambda iteration, _: iteration, fmt="d"
             ),
             "beta": Column(
-                title="β", callable=lambda _, __: regularization.multiplier, fmt=".2e"
+                title="β", callable=lambda _, __: float(regularization.multiplier), fmt=".2e"
             ),
             "phi_d": Column(
                 title="φ_d", callable=lambda _, model: data_misfit(model), fmt=".2e"

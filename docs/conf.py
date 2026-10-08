@@ -28,6 +28,7 @@ intersphinx_mapping = {
     "numba": ("https://numba.readthedocs.io/en/stable/", None),
     "scipy": ("https://docs.scipy.org/doc/scipy/", None),
     "simpeg": ("https://docs.simpeg.xyz/latest/", None),
+    "pandas": ("https://pandas.pydata.org/docs/", None),
 }
 
 templates_path = ["_templates"]

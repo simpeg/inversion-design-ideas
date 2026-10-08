@@ -13,7 +13,7 @@ User Guide
    getting-started/dc-inversion
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Fundamentals
 
    fundamentals/inversion-concept
@@ -22,7 +22,7 @@ User Guide
    fundamentals/inversion
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: How To
 
    how-to/logging

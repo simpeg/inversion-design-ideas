@@ -230,6 +230,10 @@ In order to define it we need:
 - the **minimizer** we'll use in each iteration, and
 - a **stopping criterion** that the inversion use to decide if it should finish or continue.
 
+We can optionally pass a set of **directives**: these are functions that will be called after each iteration.
+We can use these directives to modify the objective function and update
+hyperparameters, like cooling down the trade-off parameter.
+
 For example, let's define the following :class:`~inversion_ideas.Inversion`:
 
 .. jupyter-execute::

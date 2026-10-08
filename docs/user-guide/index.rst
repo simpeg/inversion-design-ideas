@@ -19,6 +19,7 @@ User Guide
    fundamentals/inversion-concept
    fundamentals/objective-function
    fundamentals/minimizer
+   fundamentals/inversion
 
 .. toctree::
    :maxdepth: 1

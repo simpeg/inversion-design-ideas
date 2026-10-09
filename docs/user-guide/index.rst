@@ -29,3 +29,4 @@ User Guide
    :caption: How To
 
    how-to/logging
+   how-to/extend

@@ -20,6 +20,9 @@ User Guide
    fundamentals/objective-function
    fundamentals/minimizer
    fundamentals/inversion
+   fundamentals/conditions
+   fundamentals/hyperparameters
+   fundamentals/simulations
 
 .. toctree::
    :maxdepth: 2

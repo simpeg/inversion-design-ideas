@@ -76,7 +76,7 @@ def get_sensitivity_weights(
 
     Parameters
     ----------
-    jacobian : (n_data, n_params) array or sparse array
+    jacobian : (n_data, n_params) array or sparray
         Jacobian matrix used to compute sensitivity weights. It must be a dense or
         sparse array.
     data_weights : (n_data,) array or None, optional
@@ -253,12 +253,12 @@ def get_largest_eigenvalue(
 
     Parameters
     ----------
-    matrix : (n, n) array or (n, n) sparse array or (n, n) LinearOperator
+    matrix : (n,n) array or (n,n) sparray or (n,n) LinearOperator
         Square matrix or :class:`~scipy.sparse.linalg.LinearOperator` which eigenvalue
         will be estimated.
     n_iters : int, optional
         Number of iterations used in the power iteration method.
-    seed : int or np.random.Generator or None, optional
+    seed : int or numpy.random.Generator or None, optional
         Random seed used to define a random initial guess for the eigenvector.
     atol : float, optional
         Absolute tolerance that will be passed to :func:`numpy.isclose` when checking if
@@ -284,7 +284,7 @@ def get_largest_eigenvalue(
     Notes
     -----
     Given a diagonalizable matrix :math:`\mathbf{A}`, we can estimate the eigenvector
-    related to its largest absolute eigenvalue :math:`|\lambda|`through the power
+    related to its largest absolute eigenvalue :math:`|\lambda|` through the power
     iteration method.
     In a nutshell, we start with a random unit vector :math:`\mathbf{b}_0`, and
     estimate that eigenvector through a recursive relation:
@@ -294,7 +294,7 @@ def get_largest_eigenvalue(
         \mathbf{b}_{k+1} = \frac{
             \mathbf{A}\mathbf{b}_k
         }{
-            \lVect \mathbf{A}\mathbf{b}_k \rVect
+            \lVert \mathbf{A}\mathbf{b}_k \rVert
         }
 
     Once we obtained the :math:`\mathbf{b}_k` eigenvector, we can get the absolute value
@@ -303,9 +303,9 @@ def get_largest_eigenvalue(
     .. math::
 
         |\lambda| = \frac{
-            \lVect \mathbf{A} \mathbf{b}_k \rVect
+            \lVert \mathbf{A} \mathbf{b}_k \rVert
         }{
-            \lVect \mathbf{b}_k \rVect
+            \lVert \mathbf{b}_k \rVert
         }
 
     If the eigenvector :math:`\mathbf{b}_k` is a unit vector (normalized by its
@@ -313,7 +313,7 @@ def get_largest_eigenvalue(
 
     .. math::
 
-        |\lambda| = \lVect \mathbf{A} \mathbf{b}_k \rVect
+        |\lambda| = \lVert \mathbf{A} \mathbf{b}_k \rVert
 
     Examples
     --------
@@ -387,7 +387,7 @@ def estimate_tradeoff_parameter(
 
     Parameters
     ----------
-    objective_one, objective_two : Objective
+    objective_one, objective_two : base.Objective
         First and second objective functions.
         The Hessian matrices of the two of them will be computed and then used to
         calculate their largest absolute eigenvalues.
@@ -412,13 +412,13 @@ def estimate_tradeoff_parameter(
 
     .. math::
 
-        \phi_1(\mathbf{m}) + \beta \phi_2(\mathbf{m})
+        \phi_1(\mathbf{m}) + \beta \, \phi_2(\mathbf{m})
 
     This function will estimate the largest absolute eigenvalues
     :math:`|\lambda_1|` and
     :math:`|\lambda_2|` for the Hessian matrices
     :math:`\nabla^2 \phi_1(\mathbf{m})` and
-    :math:`\nabla^2 \phi_1(\mathbf{m})`, respectively, for a given model
+    :math:`\nabla^2 \phi_2(\mathbf{m})`, respectively, for a given model
     :math:`\mathbf{m}`.
 
     And finally estimate a balanced value for trade-off parameter :math:`\beta` as:

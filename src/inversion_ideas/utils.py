@@ -325,7 +325,7 @@ def get_largest_eigenvalue(
     ...         [0., 0., 3.],
     ...     ]
     ... )
-    >>> get_largest_eigenvalue(matrix) # doctest: +NUMBER
+    >>> get_largest_eigenvalue(matrix, seed=42) # doctest: +NUMBER
     3.0
 
     """
@@ -372,7 +372,6 @@ def get_largest_eigenvalue(
 def estimate_tradeoff_parameter(
     objective_one: Objective,
     objective_two: Objective,
-    *,
     model: Model,
     **kwargs,
 ):

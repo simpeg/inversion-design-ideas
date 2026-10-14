@@ -246,7 +246,7 @@ def get_largest_eigenvalue(
     atol: float = 1e-16,
 ) -> float:
     r"""
-    Estimate largest absolute eigenvalue for a diagonadiagonalizable matrix.
+    Estimate largest absolute eigenvalue for a diagonalizable matrix.
 
     Use the power iteration method to estimate the eigenvector associated with the
     largest absolute eigenvalue for the given matrix.

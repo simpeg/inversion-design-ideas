@@ -9,5 +9,6 @@ Errors and warnings
    :toctree: api/
 
    errors
+   errors.ConvergenceError
    errors.ConvergenceWarning
    errors.NotInitializedError

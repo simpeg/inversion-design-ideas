@@ -8,8 +8,9 @@ from numpy.typing import NDArray
 from scipy.sparse import csr_array, diags_array, eye_array, sparray
 from scipy.sparse.linalg import aslinearoperator
 
+from inversion_ideas.errors import ConvergenceError
 from inversion_ideas.typing import SparseArray
-from inversion_ideas.utils import get_sensitivity_weights
+from inversion_ideas.utils import get_largest_eigenvalue, get_sensitivity_weights
 
 
 def dumb_sensitivity_weights(
@@ -87,3 +88,58 @@ class TestSensitivityWeights:
             ValueError, match="Invalid data_weights array with '2' dimensions"
         ):
             get_sensitivity_weights(jacobian, data_weights=data_weights)
+
+
+class TestLargestEigenvalue:
+    """Test the ``get_largest_eigenvalue`` function."""
+
+    n = 5
+
+    @pytest.fixture
+    def dense_matrix(self):
+        """Sample dense matrix."""
+        rng = np.random.default_rng(seed=42)
+        matrix = rng.random(size=(self.n, self.n))
+        return matrix
+
+    @pytest.fixture(params=["dense", "sparse", "linop"])
+    def matrix(self, dense_matrix, request):
+        """Sample matrix argument for the ``get_largest_eigenvalue`` function."""
+        match request.param:
+            case "dense":
+                return dense_matrix
+            case "sparse":
+                return csr_array(dense_matrix)
+            case "linop":
+                return aslinearoperator(dense_matrix)
+            case _:  # pragma: nocover
+                raise ValueError()
+
+    def test_largest_eigenvalue(self, matrix, dense_matrix):
+        """Compare estimated eigenvalue with true one computed using Numpy."""
+        # Estimate absolute largest eigenvalue
+        eigenvalue = get_largest_eigenvalue(matrix, seed=42)
+
+        # Get exact eigenvalues
+        eigenvalues, _ = np.linalg.eig(dense_matrix)
+        eigenvalues = np.abs(eigenvalues)
+        eigenvalues.sort()
+
+        # Compare estimated with desired
+        np.testing.assert_allclose(eigenvalue, eigenvalues[-1], rtol=5e-4)
+
+    def test_null_vector_error(self):
+        """Check that null vector error is raised."""
+        matrix = np.zeros((self.n, self.n))
+        with pytest.raises(ConvergenceError, match="null vector"):
+            get_largest_eigenvalue(matrix)
+
+    def test_invalid_matrix(self):
+        matrix = np.zeros(self.n)
+        with pytest.raises(ValueError, match="It must be a 2D dense or sparse array"):
+            get_largest_eigenvalue(matrix)
+
+    def test_non_square_matrix(self):
+        matrix = np.zeros((5, 4))
+        with pytest.raises(ValueError, match="Invalid non-square matrix"):
+            get_largest_eigenvalue(matrix)

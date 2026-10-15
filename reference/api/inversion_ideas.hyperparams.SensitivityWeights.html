@@ -502,13 +502,13 @@ sensitivity weights.</p>
 </dd>
 <dt><strong>initial_model</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Initial model used to initialize the sensitivity weights.</p>
 </dd>
-<dt><strong>data_weights</strong><span class="classifier">(n_data,) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Array with data weights used to compute the sensitivty weights.
+<dt><strong>data_weights</strong><span class="classifier">(n_data,) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Array with data weights used to compute the sensitivty weights.
 Can use the <a class="reference internal" href="inversion_ideas.DataMisfit.html#inversion_ideas.DataMisfit.weights" title="inversion_ideas.DataMisfit.weights"><code class="xref py py-attr docutils literal notranslate"><span class="pre">inversion_ideas.DataMisfit.weights</span></code></a> property.</p>
 </dd>
 <dt><strong>volumes</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Array with the volumes of the active cells. Sensitivity weights are
 divided by the volumes to account for sensitivity changes due to cell sizes.</p>
 </dd>
-<dt><strong>vmin</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Minimum value used for clipping.</p>
+<dt><strong>vmin</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Minimum value used for clipping.</p>
 </dd>
 </dl>
 </dd>
@@ -599,7 +599,7 @@ divided by the volumes to account for sensitivity changes due to cell sizes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a></dt><dd></dd>
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a></dt><dd></dd>
 </dl>
 </dd>
 </dl>
@@ -612,7 +612,7 @@ divided by the volumes to account for sensitivity changes due to cell sizes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a> <code class="xref py py-obj docutils literal notranslate"><span class="pre">of</span></code> <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a></dt><dd></dd>
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a> <code class="xref py py-obj docutils literal notranslate"><span class="pre">of</span></code> <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a></dt><dd></dd>
 </dl>
 </dd>
 </dl>
@@ -625,7 +625,7 @@ divided by the volumes to account for sensitivity changes due to cell sizes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a></dt><dd></dd>
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a></dt><dd></dd>
 </dl>
 </dd>
 </dl>

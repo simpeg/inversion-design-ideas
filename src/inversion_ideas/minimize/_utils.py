@@ -1,6 +1,7 @@
 """
 Utility functions for minimizers.
 """
+
 import copy
 
 import numpy as np
@@ -124,7 +125,7 @@ def backtracking_line_search(
     }.items():
         if not (0 < value < 1):
             msg = (
-                f"Invalid contraction_factor value of '{argument}'. "
+                f"Invalid {argument} value of '{value}'. "
                 "It must be larger than zero and lower than one."
             )
             raise ValueError(msg)

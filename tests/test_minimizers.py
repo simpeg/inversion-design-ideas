@@ -6,8 +6,9 @@ import numpy as np
 import pytest
 
 from inversion_ideas import DataMisfit, GaussNewtonConjugateGradient, SimpleSmallness
+from inversion_ideas.minimize import backtracking_line_search
 
-from .utils import NonLinearRegressor
+from .utils import Dummy, NonLinearRegressor
 
 
 class TestGaussNewtonConjugateGradient:
@@ -62,3 +63,23 @@ class TestGaussNewtonConjugateGradient:
         cg_kwargs = {argument: 0.1}
         with pytest.raises(KeyError, match=f"Cannot pass '{argument}'"):
             GaussNewtonConjugateGradient(cg_kwargs=cg_kwargs)
+
+
+class TestBacktrackingLineSearch:
+    """Test the ``backtracking_line_search`` function."""
+
+    def test_invalid_contraction_factor(self):
+        phi = Dummy(3)
+        model = np.zeros(phi.n_params)
+        search_direction = np.ones(phi.n_params)
+        with pytest.raises(ValueError, match="Invalid contraction_factor value of"):
+            backtracking_line_search(
+                phi, model, search_direction, contraction_factor=1.5
+            )
+
+    def test_invalid_c_factor(self):
+        phi = Dummy(3)
+        model = np.zeros(phi.n_params)
+        search_direction = np.ones(phi.n_params)
+        with pytest.raises(ValueError, match="Invalid c_factor value of"):
+            backtracking_line_search(phi, model, search_direction, c_factor=1.5)

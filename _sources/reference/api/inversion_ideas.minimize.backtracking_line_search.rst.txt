@@ -1,0 +1,6 @@
+﻿inversion\_ideas.minimize.backtracking\_line\_search
+====================================================
+
+.. currentmodule:: inversion_ideas.minimize
+
+.. autofunction:: backtracking_line_search

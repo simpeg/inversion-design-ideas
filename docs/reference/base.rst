@@ -22,6 +22,5 @@ The :mod:`inversion_ideas.base` submodule contains abstract classes and base cla
    base.Minimizer
    base.MinimizerResult
    base.Condition
-   base.Directive
    base.Multiplier
    base.WrappedArray

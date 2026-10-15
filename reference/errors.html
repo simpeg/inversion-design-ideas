@@ -385,8 +385,10 @@
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="utils.html">Utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.utils.html">inversion_ideas.utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.utils.get_logger.html">inversion_ideas.utils.get_logger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.utils.estimate_tradeoff_parameter.html">inversion_ideas.utils.estimate_tradeoff_parameter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.utils.get_largest_eigenvalue.html">inversion_ideas.utils.get_largest_eigenvalue</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.utils.get_sensitivity_weights.html">inversion_ideas.utils.get_sensitivity_weights</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.utils.get_logger.html">inversion_ideas.utils.get_logger</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.utils.Counter.html">inversion_ideas.utils.Counter</a></li>
 </ul>
 </details></li>
@@ -404,6 +406,7 @@
 </details></li>
 <li class="toctree-l1 current active has-children"><a aria-current="page" class="current reference internal" href="#">Errors and warnings</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.errors.html">inversion_ideas.errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.errors.ConvergenceError.html">inversion_ideas.errors.ConvergenceError</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.errors.ConvergenceWarning.html">inversion_ideas.errors.ConvergenceWarning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.errors.NotInitializedError.html">inversion_ideas.errors.NotInitializedError</a></li>
 </ul>
@@ -489,10 +492,13 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="api/inversion_ideas.errors.html#module-inversion_ideas.errors" title="inversion_ideas.errors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">errors</span></code></a></p></td>
 <td><p>Custom errors and warnings.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/inversion_ideas.errors.ConvergenceWarning.html#inversion_ideas.errors.ConvergenceWarning" title="inversion_ideas.errors.ConvergenceWarning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">errors.ConvergenceWarning</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/inversion_ideas.errors.ConvergenceError.html#inversion_ideas.errors.ConvergenceError" title="inversion_ideas.errors.ConvergenceError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">errors.ConvergenceError</span></code></a>([message])</p></td>
+<td><p>Error raised for failed convergence.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/inversion_ideas.errors.ConvergenceWarning.html#inversion_ideas.errors.ConvergenceWarning" title="inversion_ideas.errors.ConvergenceWarning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">errors.ConvergenceWarning</span></code></a></p></td>
 <td><p>Warning raised for issues with convergence.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/inversion_ideas.errors.NotInitializedError.html#inversion_ideas.errors.NotInitializedError" title="inversion_ideas.errors.NotInitializedError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">errors.NotInitializedError</span></code></a>([message])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/inversion_ideas.errors.NotInitializedError.html#inversion_ideas.errors.NotInitializedError" title="inversion_ideas.errors.NotInitializedError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">errors.NotInitializedError</span></code></a>([message])</p></td>
 <td><p>Exception raised when inversion is not yet initialized.</p></td>
 </tr>
 </tbody>

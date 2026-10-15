@@ -47,8 +47,8 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="inversion_ideas.utils.Counter" href="inversion_ideas.utils.Counter.html" />
-    <link rel="prev" title="inversion_ideas.utils.get_logger" href="inversion_ideas.utils.get_logger.html" />
+    <link rel="next" title="inversion_ideas.utils.get_logger" href="inversion_ideas.utils.get_logger.html" />
+    <link rel="prev" title="inversion_ideas.utils.get_largest_eigenvalue" href="inversion_ideas.utils.get_largest_eigenvalue.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
@@ -386,8 +386,10 @@
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../utils.html">Utilities</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.utils.html">inversion_ideas.utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="inversion_ideas.utils.get_logger.html">inversion_ideas.utils.get_logger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inversion_ideas.utils.estimate_tradeoff_parameter.html">inversion_ideas.utils.estimate_tradeoff_parameter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inversion_ideas.utils.get_largest_eigenvalue.html">inversion_ideas.utils.get_largest_eigenvalue</a></li>
 <li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">inversion_ideas.utils.get_sensitivity_weights</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inversion_ideas.utils.get_logger.html">inversion_ideas.utils.get_logger</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.utils.Counter.html">inversion_ideas.utils.Counter</a></li>
 </ul>
 </details></li>
@@ -405,6 +407,7 @@
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../errors.html">Errors and warnings</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.errors.html">inversion_ideas.errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inversion_ideas.errors.ConvergenceError.html">inversion_ideas.errors.ConvergenceError</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.errors.ConvergenceWarning.html">inversion_ideas.errors.ConvergenceWarning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.errors.NotInitializedError.html">inversion_ideas.errors.NotInitializedError</a></li>
 </ul>
@@ -495,7 +498,7 @@
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>jacobian</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_data</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">sparse</span></code> <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Jacobian matrix used to compute sensitivity weights. It must be a dense or
+<dt><strong>jacobian</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_data</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.sparray.html#scipy.sparse.sparray" title="(in SciPy v1.18.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sparray</span></code></a></span></dt><dd><p>Jacobian matrix used to compute sensitivity weights. It must be a dense or
 sparse array.</p>
 </dd>
 <dt><strong>data_weights</strong><span class="classifier">(n_data,) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Array with data weights used to compute the sensitivty weights.
@@ -562,20 +565,20 @@ will be assigned the same <code class="docutils literal notranslate"><span class
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="inversion_ideas.utils.get_logger.html"
+       href="inversion_ideas.utils.get_largest_eigenvalue.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">inversion_ideas.utils.get_logger</p>
+        <p class="prev-next-title">inversion_ideas.utils.get_largest_eigenvalue</p>
       </div>
     </a>
     <a class="right-next"
-       href="inversion_ideas.utils.Counter.html"
+       href="inversion_ideas.utils.get_logger.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">inversion_ideas.utils.Counter</p>
+        <p class="prev-next-title">inversion_ideas.utils.get_logger</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

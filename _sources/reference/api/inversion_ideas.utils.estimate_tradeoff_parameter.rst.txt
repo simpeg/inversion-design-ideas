@@ -1,0 +1,6 @@
+﻿inversion\_ideas.utils.estimate\_tradeoff\_parameter
+====================================================
+
+.. currentmodule:: inversion_ideas.utils
+
+.. autofunction:: estimate_tradeoff_parameter

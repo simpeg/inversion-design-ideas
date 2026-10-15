@@ -8,6 +8,8 @@
 
    .. autosummary::
    
+      estimate_tradeoff_parameter
+      get_largest_eigenvalue
       get_logger
       get_sensitivity_weights
    

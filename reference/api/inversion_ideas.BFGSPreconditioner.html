@@ -386,8 +386,10 @@
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../utils.html">Utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.utils.html">inversion_ideas.utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="inversion_ideas.utils.get_logger.html">inversion_ideas.utils.get_logger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inversion_ideas.utils.estimate_tradeoff_parameter.html">inversion_ideas.utils.estimate_tradeoff_parameter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inversion_ideas.utils.get_largest_eigenvalue.html">inversion_ideas.utils.get_largest_eigenvalue</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.utils.get_sensitivity_weights.html">inversion_ideas.utils.get_sensitivity_weights</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inversion_ideas.utils.get_logger.html">inversion_ideas.utils.get_logger</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.utils.Counter.html">inversion_ideas.utils.Counter</a></li>
 </ul>
 </details></li>
@@ -405,6 +407,7 @@
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../errors.html">Errors and warnings</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.errors.html">inversion_ideas.errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inversion_ideas.errors.ConvergenceError.html">inversion_ideas.errors.ConvergenceError</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.errors.ConvergenceWarning.html">inversion_ideas.errors.ConvergenceWarning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.errors.NotInitializedError.html">inversion_ideas.errors.NotInitializedError</a></li>
 </ul>
@@ -500,7 +503,7 @@ dynamically update the preconditioner.</p>
 <dd class="field-odd"><dl>
 <dt><strong>objective_function</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Objective</span></code></span></dt><dd><p>Objective function for which the Jacobi preconditioner will be built.</p>
 </dd>
-<dt><strong>initial_matrix</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">sparray</span></code> or <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LinearOperator</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Square matrix that will be used as the initial estimate of the inverse of the
+<dt><strong>initial_matrix</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.sparray.html#scipy.sparse.sparray" title="(in SciPy v1.18.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sparray</span></code></a> or <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LinearOperator</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Square matrix that will be used as the initial estimate of the inverse of the
 Hessian of the <code class="docutils literal notranslate"><span class="pre">objective_function</span></code>.
 If None, the identity matrix will be used.</p>
 </dd>

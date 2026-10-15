@@ -385,8 +385,10 @@
 </details></li>
 <li class="toctree-l1 current active has-children"><a aria-current="page" class="current reference internal" href="#">Utilities</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.utils.html">inversion_ideas.utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.utils.get_logger.html">inversion_ideas.utils.get_logger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.utils.estimate_tradeoff_parameter.html">inversion_ideas.utils.estimate_tradeoff_parameter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.utils.get_largest_eigenvalue.html">inversion_ideas.utils.get_largest_eigenvalue</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.utils.get_sensitivity_weights.html">inversion_ideas.utils.get_sensitivity_weights</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.utils.get_logger.html">inversion_ideas.utils.get_logger</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.utils.Counter.html">inversion_ideas.utils.Counter</a></li>
 </ul>
 </details></li>
@@ -404,6 +406,7 @@
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="errors.html">Errors and warnings</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.errors.html">inversion_ideas.errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.errors.ConvergenceError.html">inversion_ideas.errors.ConvergenceError</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.errors.ConvergenceWarning.html">inversion_ideas.errors.ConvergenceWarning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/inversion_ideas.errors.NotInitializedError.html">inversion_ideas.errors.NotInitializedError</a></li>
 </ul>
@@ -489,11 +492,17 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="api/inversion_ideas.utils.html#module-inversion_ideas.utils" title="inversion_ideas.utils"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils</span></code></a></p></td>
 <td><p>Utility functions.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/inversion_ideas.utils.get_logger.html#inversion_ideas.utils.get_logger" title="inversion_ideas.utils.get_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.get_logger</span></code></a>()</p></td>
-<td><p>Get the default event logger.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/inversion_ideas.utils.estimate_tradeoff_parameter.html#inversion_ideas.utils.estimate_tradeoff_parameter" title="inversion_ideas.utils.estimate_tradeoff_parameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.estimate_tradeoff_parameter</span></code></a>(...)</p></td>
+<td><p>Estimate balanced value for the trade-off parameter between two objective functions.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/inversion_ideas.utils.get_sensitivity_weights.html#inversion_ideas.utils.get_sensitivity_weights" title="inversion_ideas.utils.get_sensitivity_weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.get_sensitivity_weights</span></code></a>(jacobian, *[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/inversion_ideas.utils.get_largest_eigenvalue.html#inversion_ideas.utils.get_largest_eigenvalue" title="inversion_ideas.utils.get_largest_eigenvalue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.get_largest_eigenvalue</span></code></a>(matrix, *[, ...])</p></td>
+<td><p>Estimate largest absolute eigenvalue for a diagonalizable matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/inversion_ideas.utils.get_sensitivity_weights.html#inversion_ideas.utils.get_sensitivity_weights" title="inversion_ideas.utils.get_sensitivity_weights"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.get_sensitivity_weights</span></code></a>(jacobian, *[, ...])</p></td>
 <td><p>Compute sensitivity weights.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/inversion_ideas.utils.get_logger.html#inversion_ideas.utils.get_logger" title="inversion_ideas.utils.get_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.get_logger</span></code></a>()</p></td>
+<td><p>Get the default event logger.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="api/inversion_ideas.utils.Counter.html#inversion_ideas.utils.Counter" title="inversion_ideas.utils.Counter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils.Counter</span></code></a>([initial_value])</p></td>
 <td><p>Simple counter callable class.</p></td>

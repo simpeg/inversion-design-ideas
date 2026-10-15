@@ -18,7 +18,6 @@ from ._version import __version__
 from .data_misfit import DataMisfit
 from .inversion import Inversion
 from .inversion_log import InversionLog, InversionLogRich
-from .minimize import GaussNewtonConjugateGradient, conjugate_gradient
 from .preconditioners import (
     BFGSPreconditioner,
     JacobiPreconditioner,
@@ -69,3 +68,17 @@ __all__ = [
     "utils",
     "wrap_simulation",
 ]
+
+
+def __getattr__(name):
+    if name in ("GaussNewtonConjugateGradient", "conjugate_gradient"):
+        import warnings  # ruff: ignore[PLC0415]
+
+        warnings.warn(
+            f"Importing '{name}' from top level of the module is deprecated. "
+            "Import it from `inversion_ideas.minimize` instead. ",
+            FutureWarning,
+            stacklevel=2,
+        )
+        return getattr(minimize, name)
+    raise AttributeError(name)

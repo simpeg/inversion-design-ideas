@@ -17,10 +17,10 @@ def backtracking_line_search(
     *,
     contraction_factor: float = 0.5,
     c_factor: float = 0.5,
-    phi_value: float | None = None,
-    phi_gradient: npt.NDArray[np.float64] | None = None,
     maxiter: int = 20,
     initial_step_length: float = 1.0,
+    phi_value: float | None = None,
+    phi_gradient: npt.NDArray[np.float64] | None = None,
 ) -> tuple[float | None, int]:
     r"""
     Implement the backtracking line search algorithm.
@@ -38,6 +38,10 @@ def backtracking_line_search(
     c_factor : float, optional
         The c factor used in the descent condition.
         Must be greater than 0 and lower than 1.
+    maxiter : int, optional
+        Maximum number of line search iterations.
+    initial_step_length : float, optional
+        Initial value for the step length.
     phi_value : float or None, optional
         Precomputed value of ``phi(model)``. If None, it will be computed.
         Pass a value to avoid retriggering a call of ``phi`` in case you've already
@@ -46,10 +50,6 @@ def backtracking_line_search(
         Precomputed value of ``phi.gradient(model)``. If None, it will be computed.
         Pass a value to avoid retriggering a call of ``phi.gradient`` in case you've
         already called it.
-    maxiter : int, optional
-        Maximum number of line search iterations.
-    initial_step_length : float, optional
-        Initial value for the step length.
 
     Returns
     -------

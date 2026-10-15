@@ -24,4 +24,4 @@ Functions related to minimizers:
 .. autosummary::
    :toctree: api/
 
-   minimizers.backtracking_line_search
+   minimize.backtracking_line_search

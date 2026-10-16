@@ -23,6 +23,9 @@ class GaussNewtonConjugateGradient(Minimizer):
 
     Apply Gauss-Newton iterations using a Conjugate Gradient to find search directions,
     and use a backtracking line search to update the model after each iteration.
+    The conjugate gradient algorithm is applied through the
+    :func:`scipy.sparse.linalg.cg` function, and the backtracking line search through
+    :func:`~inversion_ideas.minimize.backtracking_line_search`.
 
     Parameters
     ----------
@@ -32,7 +35,7 @@ class GaussNewtonConjugateGradient(Minimizer):
         Relative tolerance for the objective function. If the relative difference
         between the current and previous value of the objective function is below
         ``rtol``, then the minimization is considered as converged.
-    stopping_criterion : Condition, Callable or None, optional
+    stopping_criterion : base.Condition, callable or None, optional
         Additional stopping condition that will make the Gauss-Newton iterations to
         finish. When a condition is passed, the Gauss-Newton iterations will finish if
         the condition is met, the Gauss-Newton converges (relative difference below

@@ -61,8 +61,30 @@ class TestGaussNewtonConjugateGradient:
         Test error after passing 'rtol' or 'atol' through 'cg_kwargs'.
         """
         cg_kwargs = {argument: 0.1}
-        with pytest.raises(KeyError, match=f"Cannot pass '{argument}'"):
+        with pytest.raises(KeyError, match=f"Cannot pass '{argument}' .*scipy.sparse.linalg.cg"):
             GaussNewtonConjugateGradient(cg_kwargs=cg_kwargs)
+
+    def test_invalid_maxiter_line_search_kwargs(self):
+        """
+        Test error after passing 'maxiter' through 'line_search_kwargs'.
+        """
+        kwargs = {"maxiter": 30}
+        with pytest.raises(
+            KeyError, match="Cannot pass 'maxiter' .*backtracking_line_search"
+        ):
+            GaussNewtonConjugateGradient(line_search_kwargs=kwargs)
+
+    @pytest.mark.parametrize("argument", ["phi_value", "phi_gradient"])
+    def test_invalid_line_search_kwargs(self, argument):
+        """
+        Test error after 'phi_value' or 'phi_gradient' in 'line_search_kwargs'.
+        """
+        kwargs = {argument: None}
+        with pytest.raises(
+            KeyError,
+            match=f"Cannot pass '{argument}' argument .* is handled by .*internally",
+        ):
+            GaussNewtonConjugateGradient(line_search_kwargs=kwargs)
 
 
 class TestBacktrackingLineSearch:

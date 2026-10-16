@@ -10,14 +10,14 @@ Minimizer classes:
 .. autosummary::
    :toctree: api/
 
-    GaussNewtonConjugateGradient
+    minimize.GaussNewtonConjugateGradient
 
 Minimizer functions:
 
 .. autosummary::
    :toctree: api/
 
-    conjugate_gradient
+    minimize.conjugate_gradient
 
 Functions related to minimizers:
 

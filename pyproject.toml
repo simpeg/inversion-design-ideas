@@ -105,3 +105,8 @@ branch = true
 
 [tool.coverage.report]
 show_missing = true
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "error:Importing '.*' from top level of the module is deprecated:FutureWarning",
+]

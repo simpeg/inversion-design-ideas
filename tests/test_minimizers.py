@@ -5,8 +5,11 @@ Test minimizer classes and functions.
 import numpy as np
 import pytest
 
-from inversion_ideas import DataMisfit, GaussNewtonConjugateGradient, SimpleSmallness
-from inversion_ideas.minimize import backtracking_line_search
+from inversion_ideas import DataMisfit, SimpleSmallness
+from inversion_ideas.minimize import (
+    GaussNewtonConjugateGradient,
+    backtracking_line_search,
+)
 
 from .utils import Dummy, NonLinearRegressor
 

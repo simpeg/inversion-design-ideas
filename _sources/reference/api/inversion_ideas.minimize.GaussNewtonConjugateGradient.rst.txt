@@ -1,7 +1,7 @@
-﻿inversion\_ideas.GaussNewtonConjugateGradient
-=============================================
+﻿inversion\_ideas.minimize.GaussNewtonConjugateGradient
+======================================================
 
-.. currentmodule:: inversion_ideas
+.. currentmodule:: inversion_ideas.minimize
 
 .. autoclass:: GaussNewtonConjugateGradient
 

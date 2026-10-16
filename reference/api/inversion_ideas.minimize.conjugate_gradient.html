@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>inversion_ideas.GaussNewtonConjugateGradient &#8212; inversion-ideas  documentation</title>
+    <title>inversion_ideas.minimize.conjugate_gradient &#8212; inversion-ideas  documentation</title>
   
   
   
@@ -42,12 +42,13 @@
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/api/inversion_ideas.GaussNewtonConjugateGradient';</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/api/inversion_ideas.minimize.conjugate_gradient';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="inversion_ideas.conjugate_gradient" href="inversion_ideas.conjugate_gradient.html" />
-    <link rel="prev" title="Minimizers" href="../minimizers.html" />
+    <link rel="next" title="inversion_ideas.minimize.backtracking_line_search" href="inversion_ideas.minimize.backtracking_line_search.html" />
+    <link rel="prev" title="inversion_ideas.minimize.GaussNewtonConjugateGradient" href="inversion_ideas.minimize.GaussNewtonConjugateGradient.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
@@ -339,8 +340,8 @@
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../minimizers.html">Minimizers</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">inversion_ideas.GaussNewtonConjugateGradient</a></li>
-<li class="toctree-l2"><a class="reference internal" href="inversion_ideas.conjugate_gradient.html">inversion_ideas.conjugate_gradient</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inversion_ideas.minimize.GaussNewtonConjugateGradient.html">inversion_ideas.minimize.GaussNewtonConjugateGradient</a></li>
+<li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">inversion_ideas.minimize.conjugate_gradient</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inversion_ideas.minimize.backtracking_line_search.html">inversion_ideas.minimize.backtracking_line_search</a></li>
 </ul>
 </details></li>
@@ -472,7 +473,7 @@
     
     <li class="breadcrumb-item"><a href="../minimizers.html" class="nav-link">Minimizers</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">inversion_ideas.GaussNewtonConjugateGradient</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">inversion_ideas.minimize.conjugate_gradient</span></li>
   </ul>
 </nav>
 </div>
@@ -489,72 +490,16 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="inversion-ideas-gaussnewtonconjugategradient">
-<h1>inversion_ideas.GaussNewtonConjugateGradient<a class="headerlink" href="#inversion-ideas-gaussnewtonconjugategradient" title="Link to this heading">#</a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="inversion_ideas.GaussNewtonConjugateGradient">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inversion_ideas.</span></span><span class="sig-name descname"><span class="pre">GaussNewtonConjugateGradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rtol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopping_criterion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_search_maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cg_rtol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cg_atol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cg_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.GaussNewtonConjugateGradient" title="Link to this definition">#</a></dt>
-<dd><p>Minimize non-linear objective functions using a Gauss-Newton Conjugate Gradient.</p>
-<p>Apply Gauss-Newton iterations using a Conjugate Gradient to find search directions,
-and use a backtracking line search to update the model after each iteration.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl>
-<dt><strong>maxiter</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Maximum number of Gauss-Newton iterations.</p>
-</dd>
-<dt><strong>rtol</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>Relative tolerance for the objective function. If the relative difference
-between the current and previous value of the objective function is below
-<code class="docutils literal notranslate"><span class="pre">rtol</span></code>, then the minimization is considered as converged.</p>
-</dd>
-<dt><strong>stopping_criterion</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Condition</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">Callable</span></code> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Additional stopping condition that will make the Gauss-Newton iterations to
-finish. When a condition is passed, the Gauss-Newton iterations will finish if
-the condition is met, the Gauss-Newton converges (relative difference below
-<code class="docutils literal notranslate"><span class="pre">rtol</span></code>), or if maximum number of iterations are reached.
-If None, Gauss-Newton iterations will finish if convergence or maximum number of
-iterations are reached.</p>
-</dd>
-<dt><strong>line_search_maxiter</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>Maximum number of line search iterations.</p>
-</dd>
-<dt><strong>cg_rtol</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>Relative tolerance for the conjugate gradient algorithm.
-This value will be passed to the <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.cg.html#scipy.sparse.linalg.cg" title="(in SciPy v1.18.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.sparse.linalg.cg()</span></code></a> through the
-<code class="docutils literal notranslate"><span class="pre">rtol</span></code> argument.</p>
-</dd>
-<dt><strong>cg_atol</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>Absolute tolerance for the conjugate gradient algorithm.
-This value will be passed to the <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.cg.html#scipy.sparse.linalg.cg" title="(in SciPy v1.18.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.sparse.linalg.cg()</span></code></a> through the
-<code class="docutils literal notranslate"><span class="pre">atol</span></code> argument.</p>
-</dd>
-<dt><strong>cg_kwargs</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Dictionary with extra arguments passed to the <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.cg.html#scipy.sparse.linalg.cg" title="(in SciPy v1.18.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.sparse.linalg.cg()</span></code></a>
-function.</p>
-<div class="admonition hint">
-<p class="admonition-title">Hint</p>
-<p>Don’t include <code class="docutils literal notranslate"><span class="pre">&quot;rtol&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;atol&quot;</span></code> in this dictionary. Pass them
-directly through the <code class="docutils literal notranslate"><span class="pre">cg_rtol</span></code> and <code class="docutils literal notranslate"><span class="pre">cg_atol</span></code> arguments.</p>
+  <section id="inversion-ideas-minimize-conjugate-gradient">
+<h1>inversion_ideas.minimize.conjugate_gradient<a class="headerlink" href="#inversion-ideas-minimize-conjugate-gradient" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="inversion_ideas.minimize.conjugate_gradient">
+<span class="sig-prename descclassname"><span class="pre">inversion_ideas.minimize.</span></span><span class="sig-name descname"><span class="pre">conjugate_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objective</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preconditioner</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.minimize.conjugate_gradient" title="Link to this definition">#</a></dt>
+<dd><p>Minimize objective function with a Conjugate Gradient method.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This minimizer should be used only for linear objective functions.</p>
 </div>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Methods</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#inversion_ideas.GaussNewtonConjugateGradient.__call__" title="inversion_ideas.GaussNewtonConjugateGradient.__call__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code></a>(objective, initial_model, *[, ...])</p></td>
-<td><p>Create iterator over Gauss-Newton minimization.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#inversion_ideas.GaussNewtonConjugateGradient.run" title="inversion_ideas.GaussNewtonConjugateGradient.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>(objective, initial_model, *args, **kwargs)</p></td>
-<td><p>Run all iterations of the minimizer at once.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</dd></dl>
-
-<section id="methods">
-<h2>Methods<a class="headerlink" href="#methods" title="Link to this heading">#</a></h2>
-<p class="rubric">Methods documentation</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="inversion_ideas.GaussNewtonConjugateGradient.__call__">
-<span class="sig-prename descclassname"><span class="pre">GaussNewtonConjugateGradient.</span></span><span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objective</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_model</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">preconditioner</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.GaussNewtonConjugateGradient.__call__" title="Link to this definition">#</a></dt>
-<dd><p>Create iterator over Gauss-Newton minimization.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
@@ -564,45 +509,30 @@ directly through the <code class="docutils literal notranslate"><span class="pre
 </dd>
 <dt><strong>preconditioner</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">sparse</span></code> <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LinearOperator</span></code></a>, optional</span></dt><dd><p>Matrix used as preconditioner in the conjugate gradient algorithm.
 If None, no preconditioner will be used.
-If the preconditioner implements an <code class="docutils literal notranslate"><span class="pre">update</span></code> method, the preconditioner
-will be updated <strong>before</strong> every conjugate gradient minimization.</p>
+If the preconditioner implements an <code class="docutils literal notranslate"><span class="pre">initialize</span></code> method, the preconditioner
+will be initialized before being used in the conjugate gradient algorithm.</p>
 </dd>
-<dt><strong>callback</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#callable" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">callable()</span></code></a>, optional</span></dt><dd><p>Callable that gets called after each iteration.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<hr class="docutils" />
-<dl class="py method">
-<dt class="sig sig-object py" id="inversion_ideas.GaussNewtonConjugateGradient.run">
-<span class="sig-prename descclassname"><span class="pre">GaussNewtonConjugateGradient.</span></span><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objective</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_model</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.GaussNewtonConjugateGradient.run" title="Link to this definition">#</a></dt>
-<dd><p>Run all iterations of the minimizer at once.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl>
-<dt><strong>objective</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Objective</span></code></span></dt><dd><p>Objective function to be minimized.</p>
-</dd>
-<dt><strong>initial_model</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Initial model used to start the minimization.</p>
-</dd>
-<dt><strong>*args</strong></dt><dd><p>Any extra positional argument will be passed to the <code class="docutils literal notranslate"><span class="pre">__call__</span></code> method.</p>
-</dd>
-<dt><strong>*kwargs</strong></dt><dd><p>Any extra keyword argument will be passed to the <code class="docutils literal notranslate"><span class="pre">__call__</span></code> method.</p>
+<dt><strong>kwargs</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>Extra arguments that will be passed to the <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.cg.html#scipy.sparse.linalg.cg" title="(in SciPy v1.18.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.sparse.linalg.cg()</span></code></a>
+function.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl>
-<dt><strong>inverted_model</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Final inverted model.</p>
+<dt><strong>inverted_model</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Inverted model obtained after minimization.</p>
 </dd>
 </dl>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>Minimize the objective function <span class="math notranslate nohighlight">\(\phi(\mathbf{m})\)</span> by solving the system:</p>
+<div class="math notranslate nohighlight">
+\[\bar{\bar{\nabla}} \phi \mathbf{m}^{*} = - \bar{\nabla} \phi\]</div>
+<p>through a Conjugate Gradient algorithm, where <span class="math notranslate nohighlight">\(\bar{\bar{\nabla}} \phi\)</span>
+and <span class="math notranslate nohighlight">\(\bar{\nabla} \phi\)</span> are the the Hessian and the gradient of the
+objective function, respectively.</p>
 </dd></dl>
 
-<hr class="docutils" />
-<div style='clear:both'></div></section>
 </section>
 
 
@@ -616,20 +546,20 @@ will be updated <strong>before</strong> every conjugate gradient minimization.</
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../minimizers.html"
+       href="inversion_ideas.minimize.GaussNewtonConjugateGradient.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Minimizers</p>
+        <p class="prev-next-title">inversion_ideas.minimize.GaussNewtonConjugateGradient</p>
       </div>
     </a>
     <a class="right-next"
-       href="inversion_ideas.conjugate_gradient.html"
+       href="inversion_ideas.minimize.backtracking_line_search.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">inversion_ideas.conjugate_gradient</p>
+        <p class="prev-next-title">inversion_ideas.minimize.backtracking_line_search</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -652,19 +582,14 @@ will be updated <strong>before</strong> every conjugate gradient minimization.</
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.GaussNewtonConjugateGradient"><code class="docutils literal notranslate"><span class="pre">GaussNewtonConjugateGradient</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#methods">Methods</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.GaussNewtonConjugateGradient.__call__"><code class="docutils literal notranslate"><span class="pre">GaussNewtonConjugateGradient.__call__()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.GaussNewtonConjugateGradient.run"><code class="docutils literal notranslate"><span class="pre">GaussNewtonConjugateGradient.run()</span></code></a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inversion_ideas.minimize.conjugate_gradient"><code class="docutils literal notranslate"><span class="pre">conjugate_gradient()</span></code></a></li>
 </ul>
   </nav></div>
 
   <div class="sidebar-secondary-item">
 
   <div class="tocsection sourcelink">
-    <a href="../../_sources/reference/api/inversion_ideas.GaussNewtonConjugateGradient.rst.txt">
+    <a href="../../_sources/reference/api/inversion_ideas.minimize.conjugate_gradient.rst.txt">
       <i class="fa-solid fa-file-lines"></i> Show Source
     </a>
   </div>

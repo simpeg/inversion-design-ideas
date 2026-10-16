@@ -61,7 +61,9 @@ class TestGaussNewtonConjugateGradient:
         Test error after passing 'rtol' or 'atol' through 'cg_kwargs'.
         """
         cg_kwargs = {argument: 0.1}
-        with pytest.raises(KeyError, match=f"Cannot pass '{argument}' .*scipy.sparse.linalg.cg"):
+        with pytest.raises(
+            KeyError, match=f"Cannot pass '{argument}' .*scipy.sparse.linalg.cg"
+        ):
             GaussNewtonConjugateGradient(cg_kwargs=cg_kwargs)
 
     def test_invalid_maxiter_line_search_kwargs(self):
@@ -70,7 +72,7 @@ class TestGaussNewtonConjugateGradient:
         """
         kwargs = {"maxiter": 30}
         with pytest.raises(
-            KeyError, match="Cannot pass 'maxiter' .*backtracking_line_search"
+            KeyError, match=r"Cannot pass 'maxiter' .*backtracking_line_search"
         ):
             GaussNewtonConjugateGradient(line_search_kwargs=kwargs)
 

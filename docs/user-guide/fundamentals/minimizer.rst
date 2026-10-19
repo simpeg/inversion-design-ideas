@@ -80,13 +80,13 @@ Non-linear minimizers
 
 If our inversion is non-linear (DC-IP, EM inversions, etc.), we'll need to use a suitable minimizer for non-linear inversion problems, like the Gauss-Newton method.
 
-The :class:`inversion_ideas.GaussNewtonConjugateGradient` object implements a Gauss-Newton algorithm using Conjugate Gradient to find search directions, and performing a backtracking line search.
+The :class:`inversion_ideas.minimize.GaussNewtonConjugateGradient` object implements a Gauss-Newton algorithm using Conjugate Gradient to find search directions, and performing a backtracking line search.
 
-We can use it to minimize the non-linear objective function through the :meth:`inversion_ideas.GaussNewtonConjugateGradient.run` method:
+We can use it to minimize the non-linear objective function through the :meth:`inversion_ideas.minimize.GaussNewtonConjugateGradient.run` method:
 
 .. code:: python
 
-   minimizer = GaussNewtonConjugateGradient()
+   minimizer = ii.minimize.GaussNewtonConjugateGradient()
    inverted_model = minimizer.run(phi, initial_model)
 
 
@@ -94,7 +94,7 @@ Alternatively we can iterate over it after calling the minimizer:
 
 .. code:: python
 
-   minimizer = GaussNewtonConjugateGradient()
+   minimizer = ii.minimize.GaussNewtonConjugateGradient()
 
    for model in minimizer(phi, initial_model):
       # The model is the one obtained after each Gauss-Newton iteration

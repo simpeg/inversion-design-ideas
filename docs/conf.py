@@ -82,4 +82,5 @@ html_context = {
     "github_version": "main",
     "doc_path": "docs",
 }
-html_static_path = []  # avoid warning by overwriting the default ["_static"]
+html_static_path = ["_static"]
+html_css_files = ["custom.css"]

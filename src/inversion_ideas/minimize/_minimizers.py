@@ -23,43 +23,106 @@ class GaussNewtonConjugateGradient(Minimizer):
 
     Apply Gauss-Newton iterations using a Conjugate Gradient to find search directions,
     and use a backtracking line search to update the model after each iteration.
+    The conjugate gradient algorithm is applied through the
+    :func:`scipy.sparse.linalg.cg` function, and the backtracking line search through
+    :func:`~inversion_ideas.minimize.backtracking_line_search`.
 
     Parameters
     ----------
     maxiter : int, optional
         Maximum number of Gauss-Newton iterations.
-    maxiter_line_search : int, optional
-        Maximum number of line search iterations.
     rtol : float, optional
         Relative tolerance for the objective function. If the relative difference
         between the current and previous value of the objective function is below
         ``rtol``, then the minimization is considered as converged.
-    stopping_criterion : Condition, Callable or None, optional
+    stopping_criterion : base.Condition, callable or None, optional
         Additional stopping condition that will make the Gauss-Newton iterations to
         finish. When a condition is passed, the Gauss-Newton iterations will finish if
         the condition is met, the Gauss-Newton converges (relative difference below
         ``rtol``), or if maximum number of iterations are reached.
         If None, Gauss-Newton iterations will finish if convergence or maximum number of
         iterations are reached.
+    cg_rtol : float, optional
+        Relative tolerance for the conjugate gradient algorithm.
+        This value will be passed to the :func:`scipy.sparse.linalg.cg` through the
+        ``rtol`` argument.
+    cg_atol : float, optional
+        Absolute tolerance for the conjugate gradient algorithm.
+        This value will be passed to the :func:`scipy.sparse.linalg.cg` through the
+        ``atol`` argument.
     cg_kwargs : dict or None, optional
         Dictionary with extra arguments passed to the :func:`scipy.sparse.linalg.cg`
         function.
+
+        .. hint::
+
+            Don't include ``"rtol"`` or ``"atol"`` in this dictionary. Pass them
+            directly through the ``cg_rtol`` and ``cg_atol`` arguments.
+
+    line_search_maxiter : int, optional
+        Maximum number of line search iterations.
+    line_search_kwargs : dict or None, optional
+        Dictionary with extra arguments passed to the
+        :func:`~inversion_ideas.minimize.backtracking_line_search`
+        function.
+
+        .. hint::
+
+            Don't include ``"maxiter"`` in this dictionary. Pass it
+            directly through the ``line_search_maxiter`` arguments.
+
     """
 
     def __init__(
         self,
         *,
         maxiter: int = 100,
-        maxiter_line_search: int = 10,
         rtol=1e-5,
         stopping_criterion: Condition | Callable[[Model], bool] | None = None,
+        cg_rtol: float = 1e-5,
+        cg_atol: float = 0.0,
         cg_kwargs: dict[str, Any] | None = None,
+        line_search_maxiter: int = 10,
+        line_search_kwargs: dict[str, Any] | None = None,
     ):
         self.maxiter = maxiter
-        self.maxiter_line_search = maxiter_line_search
         self.rtol = rtol
         self.stopping_criterion = stopping_criterion
+
+        self.cg_rtol = cg_rtol
+        self.cg_atol = cg_atol
         self.cg_kwargs = cg_kwargs if cg_kwargs is not None else {}
+        for invalid_arg in ("rtol", "atol"):
+            if invalid_arg in self.cg_kwargs:
+                msg = (
+                    f"Cannot pass '{invalid_arg}' argument for the "
+                    "`scipy.sparse.linalg.cg` function through `cg_kwargs`. "
+                    f"Pass it through `cg_{invalid_arg}` directly to the "
+                    f"constructor of {type(self).__name__}."
+                )
+                raise KeyError(msg)
+
+        self.line_search_maxiter = line_search_maxiter
+        self.line_search_kwargs = (
+            line_search_kwargs if line_search_kwargs is not None else {}
+        )
+        if "maxiter" in self.line_search_kwargs:
+            msg = (
+                "Cannot pass 'maxiter' argument for the "
+                "`inversion_ideas.minimize.backtracking_line_search` function through "
+                "`line_search_kwargs`. "
+                "Pass it through `line_search_maxiter` directly to the "
+                f"constructor of {type(self).__name__}."
+            )
+            raise KeyError(msg)
+        for invalid_arg in ("phi_value", "phi_gradient"):
+            if invalid_arg in self.line_search_kwargs:
+                msg = (
+                    f"Cannot pass '{invalid_arg}' argument for the "
+                    "`inversion_ideas.minimize.backtracking_line_search` function. "
+                    f"That argument is handled by `{type(self).__name__}` internally."
+                )
+                raise KeyError(msg)
 
     def __call__(
         self,
@@ -154,7 +217,9 @@ class GaussNewtonConjugateGradient(Minimizer):
             gradient, hessian = objective.gradient(model), objective.hessian(model)
 
             # Apply Conjugate Gradient to get search direction
-            search_direction, cg_code = cg(hessian, -gradient, **cg_kwargs)
+            search_direction, cg_code = cg(
+                hessian, -gradient, rtol=self.cg_rtol, atol=self.cg_atol, **cg_kwargs
+            )
 
             # Get number of cg iterations from callback
             cg_iters = cg_kwargs["callback"].counts
@@ -176,7 +241,8 @@ class GaussNewtonConjugateGradient(Minimizer):
                 search_direction,
                 phi_value=phi_value,
                 phi_gradient=gradient,
-                maxiter=self.maxiter_line_search,
+                maxiter=self.line_search_maxiter,
+                **self.line_search_kwargs,
             )
             if alpha is None:
                 msg = (

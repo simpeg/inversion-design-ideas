@@ -226,8 +226,7 @@ We can also add more than two objective functions together. For example, conside
 
 .. jupyter-execute::
 
-   # TODO: Use SimpleFlatness here!
-   flatness = ii.SimpleSmallness(n_params).set_name("1")
+   flatness = ii.SimpleFlatness(n_params).set_name("1")
    flatness
 
 .. jupyter-execute::

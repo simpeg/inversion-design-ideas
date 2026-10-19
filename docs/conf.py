@@ -43,6 +43,7 @@ numpydoc_show_inherited_class_members = True  # Show inherited methods in docs
 # Configure numpydoc xref
 numpydoc_xref_param_type = True
 numpydoc_xref_aliases = {
+    "base.Condition": "inversion_ideas.base.Condition",
     "base.Objective": "inversion_ideas.base.Objective",
     "LinearOperator": "scipy.sparse.linalg.LinearOperator",
     "sparray": "scipy.sparse.sparray",

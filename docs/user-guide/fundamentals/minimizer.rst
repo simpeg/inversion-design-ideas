@@ -13,8 +13,8 @@ model* or *recovered model*, i.e. the model that minimize that objective functio
 Linear minimizers
 -----------------
 
-If our inversion is linear (e.g. potential field inversions), we can make use of linear minimizers, like :func:`inversion_ideas.conjugate_gradient` to minimize the objective function.
-The :func:`~inversion_ideas.conjugate_gradient` function will ask the objective function and an initial model from which it'll start the conjugate gradient algorithm, and it will return the recovered model after convergence has been achieved.
+If our inversion is linear (e.g. potential field inversions), we can make use of linear minimizers, like :func:`inversion_ideas.minimize.conjugate_gradient` to minimize the objective function.
+The :func:`~inversion_ideas.minimize.conjugate_gradient` function will ask the objective function and an initial model from which it'll start the conjugate gradient algorithm, and it will return the recovered model after convergence has been achieved.
 
 For example, let's consider the :class:`~inversion_ideas.LinearRegressor` simulation and the ``data_misfit`` object we built when we introduced the :ref:`objective function <objective-function>`:
 
@@ -54,12 +54,12 @@ Let's define an objective function by adding a :class:`~inversion_ideas.SimpleSm
    phi = data_misfit + beta * ii.SimpleSmallness(n_params)
    phi
 
-And use the  :func:`~inversion_ideas.conjugate_gradient` to minimize it by setting an initial model full of zeros:
+And use the  :func:`~inversion_ideas.minimize.conjugate_gradient` to minimize it by setting an initial model full of zeros:
 
 .. jupyter-execute::
 
    initial_model = np.zeros(n_params, dtype=np.float64)
-   model = ii.conjugate_gradient(phi, initial_model)
+   model = ii.minimize.conjugate_gradient(phi, initial_model)
    model
 
 We were able to recover a model that is close to the true model used to generate the synthetic data.

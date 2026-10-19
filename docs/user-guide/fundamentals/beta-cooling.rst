@@ -83,7 +83,7 @@ Let's use this capability to implement a simple beta-cooling schedule:
 
       # Minimize the objective function using a conjugate gradient minimizer.
       # Overwrite the model variable with the minimized model.
-      model = ii.conjugate_gradient(phi, model)
+      model = ii.minimize.conjugate_gradient(phi, model)
 
       # Define a stopping criterion:
       #   finish the inversion if the chi factor is below 1.
@@ -152,7 +152,7 @@ And finally re-write our inversion in a slicker way:
    while True:
 
       # Minimize the objective function
-      model = ii.conjugate_gradient(phi, model)
+      model = ii.minimize.conjugate_gradient(phi, model)
 
       # Finish the inversion if the stopping criterion is met
       if chi_target(model):
@@ -192,7 +192,7 @@ We can also explore the custom ``beta`` hyperparameter and see how its value cha
       while True:
 
          # Minimize the objective function
-         model = ii.conjugate_gradient(phi, model)
+         model = ii.minimize.conjugate_gradient(phi, model)
 
          # Print information
          iteration += 1

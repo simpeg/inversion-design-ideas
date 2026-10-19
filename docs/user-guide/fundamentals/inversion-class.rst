@@ -121,7 +121,7 @@ Finally, let's create our :class:`~inversion_ideas.Inversion` object. We'll add 
    inversion = ii.Inversion(
       phi,
       initial_model,
-      minimizer=ii.conjugate_gradient,
+      minimizer=ii.minimize.conjugate_gradient,
       directives=[beta.update],
       stopping_criterion=chi_target,
    )
@@ -152,7 +152,7 @@ Alternatively, we can iterate over the :class:`~inversion_ideas.Inversion` objec
    inversion = ii.Inversion(
       phi,
       initial_model,
-      minimizer=ii.conjugate_gradient,
+      minimizer=ii.minimize.conjugate_gradient,
       directives=[beta.update],
       stopping_criterion=chi_target,
    )

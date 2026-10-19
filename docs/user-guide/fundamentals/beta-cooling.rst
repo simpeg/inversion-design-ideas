@@ -129,7 +129,7 @@ Following the previous example, we can define our objective function as:
 
 .. seealso::
 
-   Learn more about custom hyperparameter objects in **TODO**
+   Learn more about custom hyperparameter objects in :ref:`hyperparameters`.
 
 
 We can also define a stopping criterion to define when our inversion should stop.

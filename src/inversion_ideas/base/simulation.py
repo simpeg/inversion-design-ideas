@@ -47,7 +47,9 @@ class Simulation(ABC):
         """
 
     @abstractmethod
-    def jacobian(self, model: Model) -> NDArray[np.float64] | SparseArray | LinearOperator:
+    def jacobian(
+        self, model: Model
+    ) -> NDArray[np.float64] | SparseArray | LinearOperator:
         """
         Jacobian matrix for a given model.
 

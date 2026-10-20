@@ -31,12 +31,14 @@ The inversion will require the ability to evaluate that function :math:`\mathbf{
 
 .. math::
 
-    \mathbf{J}_\mathbf{f} =
+    \mathbf{J}_\mathbf{f}(\mathbf{m}) =
     \begin{bmatrix}
-       \frac{\partial f_1}{\partial m_1} & \dots  & \frac{\partial f_1}{\partial m_M} \\
+       \frac{\partial f_1(\mathbf{m})}{\partial m_1} & \dots  & \frac{\partial f_1(\mathbf{m})}{\partial m_M} \\
        \vdots                            & \ddots & \vdots \\
-       \frac{\partial f_N}{\partial m_1} & \dots  & \frac{\partial f_N}{\partial m_M}
+       \frac{\partial f_N(\mathbf{m})}{\partial m_1} & \dots  & \frac{\partial f_N(\mathbf{m})}{\partial m_M}
     \end{bmatrix}
+
+where :math:`\frac{\partial f_i(\mathbf{m})}{\partial m_j}` is the derivative of the :math:`i`-th element of the forward modelling function with respect to the :math:`j`-th element of the model vector evaluated on a given model :math:`\mathbf{m}`.
 
 
 In the inversion framework the forward modelling functions are represented through :class:`~inversion_ideas.base.Simulation` classes. These classes always provide two attributes:
@@ -60,7 +62,13 @@ For example, let's define a :class:`inversion_ideas.LinearRegressor` simulation 
     n_params = 10
     simulation = ii.LinearRegressor.create_random(n_data, n_params, seed=42)
 
-We can call the ``simulation`` with a given model vector to evaluate the function.
+We can access the ``n_params`` and ``n_data`` attributes of the simulation:
+
+.. jupyter-execute::
+
+    simulation.n_data, simulation.n_params
+
+We can call the ``simulation`` with a given model vector to evaluate the forward modelling function:
 
 .. jupyter-execute::
 
@@ -68,6 +76,7 @@ We can call the ``simulation`` with a given model vector to evaluate the functio
 
     rng = np.random.default_rng(seed=43)
     model = rng.uniform(low=-1.0, high=1.0, size=n_params)
+
     simulation(model)
 
 We can also get its Jacobian matrix for the same ``model``:

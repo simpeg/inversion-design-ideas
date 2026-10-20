@@ -18,7 +18,7 @@ For example, the following function that checks if a given model is close to zer
 
 But in most situations, the stopping criteria for an inversion will not only depend on the current model, but on the values of certain functions when they are evaluated on the current model.
 
-For such cases, the new framework offers a :class:`inversion_ideas.base.Condition` class that implements a ``__call__`` method that takes the ``model`` as argument and returns either ``True`` or ``False`` depending if the desired conditions is met or not.
+For such cases, the new framework offers a :class:`inversion_ideas.base.Condition` class that implements a :meth:`~inversion_ideas.base.Condition.__call__` method that takes the ``model`` as argument and returns either ``True`` or ``False`` depending if the desired conditions is met or not.
 For example, the :class:`inversion_ideas.conditions.ChiTarget` holds a
 :class:`~inversion_ideas.DataMisfit` object, and everytime its
 :meth:`inversion_ideas.conditions.ChiTarget.__call__` method gets called, it will evaluate the data misfit term, get its :math:`\chi` factor, and return ``True`` or ``False`` if it's below or equal to 1.
@@ -100,9 +100,6 @@ But in some situations we might want the inversion to stop when multiple conditi
 For those cases, we can combine :class:`~inversion_ideas.base.Condition` objects together through the logical binary operators ``&`` (AND), ``|`` (OR), and ``^`` (XOR).
 
 For example, consider this very simple :class:`~inversion_ideas.base.Condition` classes:
-.. note::
-
-   These classes are presented for learning purposes, not intended to be used in real-world inversions.
 
 .. jupyter-execute::
 
@@ -120,6 +117,11 @@ For example, consider this very simple :class:`~inversion_ideas.base.Condition` 
 
       def __call__(self, model) -> bool:
          return bool(np.all(model % 2 == 0))
+
+.. note::
+
+   These classes are presented for learning purposes, not intended to be used in real-world inversions.
+
 
 Let's create one instance of each:
 

@@ -8,7 +8,7 @@ import numpy as np
 from numpy.typing import NDArray
 from scipy.sparse.linalg import LinearOperator
 
-from ..typing import Model
+from ..typing import Model, SparseArray
 
 
 class Simulation(ABC):
@@ -47,7 +47,9 @@ class Simulation(ABC):
         """
 
     @abstractmethod
-    def jacobian(self, model: Model) -> NDArray[np.float64] | LinearOperator:
+    def jacobian(
+        self, model: Model
+    ) -> NDArray[np.float64] | SparseArray | LinearOperator:
         """
         Jacobian matrix for a given model.
 
@@ -58,7 +60,7 @@ class Simulation(ABC):
 
         Returns
         -------
-        (n_data, n_params) array or LinearOperator
+        (n_data, n_params) array or sparray or LinearOperator
             Jacobian matrix as a dense or sparse array,
             or as a :class:`~scipy.sparse.linalg.LinearOperator`.
         """

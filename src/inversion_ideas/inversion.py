@@ -10,6 +10,7 @@ import typing
 import warnings
 from collections.abc import Callable
 
+import numpy as np
 from rich.console import Group, RenderableType
 from rich.live import Live
 from rich.spinner import Spinner
@@ -78,8 +79,31 @@ class Inversion:
         log_minimizers: bool = True,
         minimizer_kwargs: dict | None = None,
     ):
+        # Sanity checks for the objective function
+        if not isinstance(objective_function, Objective):
+            msg = (
+                f"Invalid objective_function argument '{objective_function}' "
+                f"of type {type(objective_function).__name__}. "
+                "Only `inversion_ideas.base.Objective` objects are accepted."
+            )
+            raise TypeError(msg)
+
+        # Sanity checks for the initial_model
+        initial_model = np.asarray(initial_model)
+        if initial_model.ndim != 1:
+            msg = (
+                f"Invalid initial_model with '{initial_model.ndim}' dimensions."
+            )
+            raise ValueError(msg)
+        if initial_model.size != objective_function.n_params:
+            msg = (
+                f"Incompatible initial_model with '{initial_model.size}' parameters "
+                f"and objective_function with n_params={objective_function.n_params}."
+            )
+            raise ValueError(msg)
+
         self.objective_function = objective_function
-        self.initial_model = initial_model
+        self._initial_model = np.asarray(initial_model)
         self.minimizer = minimizer
         self.directives = directives
         self.stopping_criterion = stopping_criterion
@@ -102,13 +126,18 @@ class Inversion:
             self.log = log
 
         # Assign model as a copy of the initial model
-        self.model = initial_model.copy()
+        self.model = self._initial_model.copy()
 
         # TODO: # ruff: ignore[FIX002]
         #   Support for handling custom callbacks for the minimizer.
         if log is not None and "callback" in self.minimizer_kwargs:
             msg = "Passing a custom callback for the minimizer is not yet supported."
             raise NotImplementedError(msg)
+
+    @property
+    def initial_model(self):
+        """Initial model in the inversion."""
+        return self._initial_model
 
     def __next__(self):
         """
@@ -233,10 +262,10 @@ class Inversion:
         """
         Code obtained after inversion stopped.
 
-        Code 0: the stopping criterion was met.
-        Code 1: the inversion stopped due to that the maximum number of iterations was
-        encountered..
-        Code ``None``: the inversion is still running or hasn't started yet.
+        * Code 0: the stopping criterion was met.
+        * Code 1: the inversion stopped due to that the maximum number of iterations was
+        encountered.
+        * Code ``None``: the inversion is still running or hasn't started yet.
         """
         return getattr(self, "_stop_code", None)
 
@@ -245,6 +274,12 @@ class Inversion:
         """
         Iteration counter.
         """
+        if not hasattr(self, "_counter"):
+            msg = (
+                f"Missing attribute 'counter' for Inversion '{self}'. "
+                "The 'counter' attribute gets assigned after the inversion started."
+            )
+            raise AttributeError(msg)
         return self._counter
 
     @property

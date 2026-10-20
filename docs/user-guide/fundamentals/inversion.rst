@@ -15,7 +15,6 @@ inversions with the inversion framework.
 .. toctree::
    :hidden:
    :maxdepth: 1
-   :caption: Getting started
 
    beta-cooling
    inversion-class

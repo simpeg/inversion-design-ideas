@@ -1,4 +1,4 @@
 .. _extend-simulations:
 
-Writing new simulations
-=======================
+Write new simulations
+=====================

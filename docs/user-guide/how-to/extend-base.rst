@@ -43,7 +43,8 @@ But we can instantiate the :class:`inversion_ideas.SimpleSmallness` a subclass o
    as long as it correctly implements its abstract methods.
 
 
-The :mod:`inversion_ideas.base` submodule also contains container classes like the :class:`base.Combo <inversion_ideas.base.Combo>` and :class:`base.Combo <inversion_ideas.base.Scaled>`. These classes are non-abstract :class:`~inversion_ideas.base.Objective` that implements all of its abstract methods, but they are not intended to be instantiated by end users: they are formed when adding together two :class:`~inversion_ideas.base.Objective` functions, or when multiplying one of them by a scalar.
+The :mod:`inversion_ideas.base` submodule also contains container classes like the :class:`base.Combo <inversion_ideas.base.Combo>` and :class:`base.Combo <inversion_ideas.base.Scaled>`.
+These classes are non-abstract :class:`~inversion_ideas.base.Objective` that implements all of its abstract methods, but they are not intended to be instantiated by end users: they are formed when adding together two :class:`~inversion_ideas.base.Objective` functions, or when multiplying one of them by a scalar.
 
 .. jupyter-execute::
 
@@ -53,5 +54,5 @@ The :mod:`inversion_ideas.base` submodule also contains container classes like t
 
 .. jupyter-execute::
 
-   scaled = 2.4 * smalness
+   scaled = 2.4 * smallness
    type(scaled)

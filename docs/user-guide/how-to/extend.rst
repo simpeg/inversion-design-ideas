@@ -1,7 +1,7 @@
 .. _extend:
 
-Extending the framework
-=======================
+Extend the framework
+====================
 
 .. toctree::
    :hidden:

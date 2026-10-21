@@ -15,6 +15,7 @@ The :mod:`inversion_ideas.base` submodule contains mostly abstract classes and b
 .. autosummary::
    :toctree: api/
 
+   base
    base.Objective
    base.Scaled
    base.Combo

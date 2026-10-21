@@ -16,4 +16,8 @@ sphinx
 numpydoc
 pydata-sphinx-theme
 sphinx_design
+jupyter-sphinx
 choclo
+pandas
+bordado
+harmonica

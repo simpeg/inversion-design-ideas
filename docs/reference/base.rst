@@ -5,11 +5,12 @@
 Base submodule
 ==============
 
-The :mod:`inversion_ideas.base` submodule contains abstract classes and base classes that work as the foundation of the framework. Inherit from these classes when defining your own subclasses.
+The :mod:`inversion_ideas.base` submodule contains mostly abstract classes and base classes that work as the foundation of the framework. Inherit from these classes when defining your own subclasses.
 
-.. admonition:: important
 
-   These classes are not meant to be instantiated. They are abstract classes only intended to be inherited from, or containers (like :class:`inversion_ideas.base.Scaled` and :class:`inversion_ideas.base.Combo`) that should not be instantiated by end users either.
+.. important::
+
+   Most of these classes are not meant to be instantiated. They are abstract classes only intended to be inherited from, or containers (like :class:`inversion_ideas.base.Scaled` and :class:`inversion_ideas.base.Combo`) that should not be instantiated by end users.
 
 .. autosummary::
    :toctree: api/

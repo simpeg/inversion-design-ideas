@@ -19,6 +19,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx_design",
     "numpydoc",
+    "jupyter_sphinx",
 ]
 
 intersphinx_mapping = {
@@ -27,6 +28,7 @@ intersphinx_mapping = {
     "numba": ("https://numba.readthedocs.io/en/stable/", None),
     "scipy": ("https://docs.scipy.org/doc/scipy/", None),
     "simpeg": ("https://docs.simpeg.xyz/latest/", None),
+    "pandas": ("https://pandas.pydata.org/docs/", None),
 }
 
 templates_path = ["_templates"]
@@ -80,4 +82,5 @@ html_context = {
     "github_version": "main",
     "doc_path": "docs",
 }
-html_static_path = []  # avoid warning by overwriting the default ["_static"]
+html_static_path = ["_static"]
+html_css_files = ["custom.css"]

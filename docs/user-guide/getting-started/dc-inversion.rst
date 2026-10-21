@@ -1,4 +1,0 @@
-DC Inversion
-============
-
-Coming soon...

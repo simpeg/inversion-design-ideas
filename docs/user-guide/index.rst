@@ -10,7 +10,6 @@ User Guide
    getting-started/what
    getting-started/installing
    getting-started/gravity-inversion
-   getting-started/dc-inversion
 
 .. toctree::
    :maxdepth: 2

@@ -9,7 +9,6 @@ User Guide
 
    getting-started/what
    getting-started/installing
-   getting-started/gravity-inversion
 
 .. toctree::
    :maxdepth: 2
@@ -22,6 +21,12 @@ User Guide
    fundamentals/conditions
    fundamentals/hyperparameters
    fundamentals/simulations
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Examples
+
+   examples/gravity-inversion
 
 .. toctree::
    :maxdepth: 2

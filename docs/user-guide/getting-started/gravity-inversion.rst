@@ -4,7 +4,6 @@ Gravity Inversion
 Let's start this gravity inversion example by generating a synthetic gravity dataset that consists in two prisms with opposite density constrast:
 
 .. jupyter-execute::
-    :hide-code:
 
     import bordado as bd
     import harmonica as hm
@@ -52,14 +51,6 @@ Let's start this gravity inversion example by generating a synthetic gravity dat
 
    dataset.gz.plot.pcolormesh(cbar_kwargs={"label": "gz [mGal]"})
    plt.show()
-
-
-.. juypter-execute::
-
-   from matplotlib.patches import Rectangle
-
-   _, ax = plt.subplots()
-
 
 Start by defining SimPEG's gravity simulation for the inversion:
 

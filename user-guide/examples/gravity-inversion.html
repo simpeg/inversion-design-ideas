@@ -49,12 +49,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'user-guide/getting-started/gravity-inversion';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'user-guide/examples/gravity-inversion';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Inversion problem" href="../fundamentals/inversion-concept.html" />
-    <link rel="prev" title="Installing" href="installing.html" />
+    <link rel="next" title="Logging and debugging" href="../how-to/logging.html" />
+    <link rel="prev" title="Plugging in SimPEG simulations" href="../fundamentals/simulations-simpeg.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
@@ -322,10 +322,9 @@
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting started</span></p>
-<ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="what.html">What is this new framework?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installing.html">Installing</a></li>
-<li class="toctree-l1 current active"><a aria-current="page" class="current reference internal" href="#">Gravity Inversion</a></li>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/what.html">What is this new framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/installing.html">Installing</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Fundamentals</span></p>
 <ul class="nav bd-sidenav">
@@ -346,6 +345,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../fundamentals/simulations-simpeg.html">Plugging in SimPEG simulations</a></li>
 </ul>
 </details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a aria-current="page" class="current reference internal" href="#">Gravity Inversion</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">How To</span></p>
 <ul class="nav bd-sidenav">
@@ -1013,19 +1016,19 @@ Coordinates:
     upward    (northing, easting) float64 8kB 0.0 0.0 0.0 0.0 ... 0.0 0.0 0.0
 Data variables:
     gz        (northing, easting) float64 8kB 0.0002054 0.0002152 ... -0.0002245
-    gz_std    (northing, easting) float64 8kB 2.575e-05 2.575e-05 ... 2.575e-05</pre><div class='xr-wrap' style='display:none'><div class='xr-header'><div class='xr-obj-type'>xarray.Dataset</div></div><ul class='xr-sections'><li class='xr-section-item'><input id='section-d7d645b0-f329-4041-b0f8-0dfbbea8c79a' class='xr-section-summary-in' type='checkbox' disabled /><label for='section-d7d645b0-f329-4041-b0f8-0dfbbea8c79a' class='xr-section-summary'>Dimensions:</label><div class='xr-section-inline-details'><ul class='xr-dim-list'><li><span class='xr-has-index'>northing</span>: 31</li><li><span class='xr-has-index'>easting</span>: 31</li></ul></div></li><li class='xr-section-item'><input id='section-d9894b70-d7d6-434e-98d1-6ba5414d8e6f' class='xr-section-summary-in' type='checkbox' checked /><label for='section-d9894b70-d7d6-434e-98d1-6ba5414d8e6f' class='xr-section-summary' title='Expand/collapse section'>Coordinates: <span>(3)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>northing</span></div><div class='xr-var-dims'>(northing)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>-100.0 -93.33 ... 93.33 100.0</div><input id='attrs-d493140c-9186-47d3-9fe8-15a5b1b1a98d' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-d493140c-9186-47d3-9fe8-15a5b1b1a98d' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-2d244dec-75a3-4cc9-bef8-6f84d7ab44be' class='xr-var-data-in' type='checkbox'><label for='data-2d244dec-75a3-4cc9-bef8-6f84d7ab44be' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([-100.      ,  -93.333333,  -86.666667,  -80.      ,  -73.333333,
+    gz_std    (northing, easting) float64 8kB 2.575e-05 2.575e-05 ... 2.575e-05</pre><div class='xr-wrap' style='display:none'><div class='xr-header'><div class='xr-obj-type'>xarray.Dataset</div></div><ul class='xr-sections'><li class='xr-section-item'><input id='section-4896794d-2c99-41f7-a4ad-544e7ed5cbda' class='xr-section-summary-in' type='checkbox' disabled /><label for='section-4896794d-2c99-41f7-a4ad-544e7ed5cbda' class='xr-section-summary'>Dimensions:</label><div class='xr-section-inline-details'><ul class='xr-dim-list'><li><span class='xr-has-index'>northing</span>: 31</li><li><span class='xr-has-index'>easting</span>: 31</li></ul></div></li><li class='xr-section-item'><input id='section-eb87545e-e822-4bc9-ac86-f88aec718bc6' class='xr-section-summary-in' type='checkbox' checked /><label for='section-eb87545e-e822-4bc9-ac86-f88aec718bc6' class='xr-section-summary' title='Expand/collapse section'>Coordinates: <span>(3)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>northing</span></div><div class='xr-var-dims'>(northing)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>-100.0 -93.33 ... 93.33 100.0</div><input id='attrs-e2de5cbe-5331-4c54-a44b-08f3251990d1' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-e2de5cbe-5331-4c54-a44b-08f3251990d1' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-3887d42c-157e-4d45-b00f-3f9cccae8aa2' class='xr-var-data-in' type='checkbox'><label for='data-3887d42c-157e-4d45-b00f-3f9cccae8aa2' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([-100.      ,  -93.333333,  -86.666667,  -80.      ,  -73.333333,
         -66.666667,  -60.      ,  -53.333333,  -46.666667,  -40.      ,
         -33.333333,  -26.666667,  -20.      ,  -13.333333,   -6.666667,
           0.      ,    6.666667,   13.333333,   20.      ,   26.666667,
          33.333333,   40.      ,   46.666667,   53.333333,   60.      ,
          66.666667,   73.333333,   80.      ,   86.666667,   93.333333,
-        100.      ])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>easting</span></div><div class='xr-var-dims'>(easting)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>-100.0 -93.33 ... 93.33 100.0</div><input id='attrs-f84783a9-7202-47b7-98de-a4dd9136766c' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-f84783a9-7202-47b7-98de-a4dd9136766c' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-ce637a89-1147-4614-9d45-bfb6c3926e57' class='xr-var-data-in' type='checkbox'><label for='data-ce637a89-1147-4614-9d45-bfb6c3926e57' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([-100.      ,  -93.333333,  -86.666667,  -80.      ,  -73.333333,
+        100.      ])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>easting</span></div><div class='xr-var-dims'>(easting)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>-100.0 -93.33 ... 93.33 100.0</div><input id='attrs-b63ab10e-bfe8-43fb-b9f7-811445bd63ed' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-b63ab10e-bfe8-43fb-b9f7-811445bd63ed' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-a0f2269a-5e73-4802-a9f5-4ed3e6944484' class='xr-var-data-in' type='checkbox'><label for='data-a0f2269a-5e73-4802-a9f5-4ed3e6944484' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([-100.      ,  -93.333333,  -86.666667,  -80.      ,  -73.333333,
         -66.666667,  -60.      ,  -53.333333,  -46.666667,  -40.      ,
         -33.333333,  -26.666667,  -20.      ,  -13.333333,   -6.666667,
           0.      ,    6.666667,   13.333333,   20.      ,   26.666667,
          33.333333,   40.      ,   46.666667,   53.333333,   60.      ,
          66.666667,   73.333333,   80.      ,   86.666667,   93.333333,
-        100.      ])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>upward</span></div><div class='xr-var-dims'>(northing, easting)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.0 0.0 0.0 0.0 ... 0.0 0.0 0.0 0.0</div><input id='attrs-5970724c-2364-4a42-8f8a-a0430f4165a7' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-5970724c-2364-4a42-8f8a-a0430f4165a7' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-ba82f02f-8c36-400a-9a81-f1e8d4eff631' class='xr-var-data-in' type='checkbox'><label for='data-ba82f02f-8c36-400a-9a81-f1e8d4eff631' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        100.      ])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>upward</span></div><div class='xr-var-dims'>(northing, easting)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.0 0.0 0.0 0.0 ... 0.0 0.0 0.0 0.0</div><input id='attrs-f4d0db69-1686-4aec-ab04-f0accb74b760' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-f4d0db69-1686-4aec-ab04-f0accb74b760' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-66fa61cb-b73e-4786-8ec7-7a7b325b5a65' class='xr-var-data-in' type='checkbox'><label for='data-66fa61cb-b73e-4786-8ec7-7a7b325b5a65' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
         0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
        [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
         0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
@@ -1065,7 +1068,7 @@ Data variables:
        [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
         0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
        [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
-        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.]])</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-ac2e4412-3f15-4d67-b903-03aef76a6b5a' class='xr-section-summary-in' type='checkbox' checked /><label for='section-ac2e4412-3f15-4d67-b903-03aef76a6b5a' class='xr-section-summary' title='Expand/collapse section'>Data variables: <span>(2)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span>gz</span></div><div class='xr-var-dims'>(northing, easting)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.0002054 0.0002152 ... -0.0002245</div><input id='attrs-290afca4-1b0f-44f5-8cec-a9c6bdfcb564' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-290afca4-1b0f-44f5-8cec-a9c6bdfcb564' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-3e981c14-d63e-4bcc-8160-00aa7f338259' class='xr-var-data-in' type='checkbox'><label for='data-3e981c14-d63e-4bcc-8160-00aa7f338259' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[ 2.05421875e-04,  2.15173253e-04,  2.42288294e-04,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.]])</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-60aaab02-c7bb-4e00-8cbf-14901a29ae9e' class='xr-section-summary-in' type='checkbox' checked /><label for='section-60aaab02-c7bb-4e00-8cbf-14901a29ae9e' class='xr-section-summary' title='Expand/collapse section'>Data variables: <span>(2)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span>gz</span></div><div class='xr-var-dims'>(northing, easting)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.0002054 0.0002152 ... -0.0002245</div><input id='attrs-98389259-9de6-428c-9e4f-1492c99fc879' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-98389259-9de6-428c-9e4f-1492c99fc879' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-f11987fd-be8c-4e3d-ad1a-909d9904bb0c' class='xr-var-data-in' type='checkbox'><label for='data-f11987fd-be8c-4e3d-ad1a-909d9904bb0c' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[ 2.05421875e-04,  2.15173253e-04,  2.42288294e-04,
          2.78913270e-04,  2.41518209e-04,  2.20798372e-04,
          2.23475086e-04,  2.79856617e-04,  2.10095948e-04,
          1.68640601e-04,  1.66533226e-04,  1.52850740e-04,
@@ -1105,7 +1108,7 @@ Data variables:
         -1.38463201e-04, -2.04699930e-04, -2.54249379e-04,
         -2.66550906e-04, -2.33900084e-04, -2.25393229e-04,
         -2.75729161e-04, -2.33030101e-04, -2.64066232e-04,
-        -2.24452929e-04]])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>gz_std</span></div><div class='xr-var-dims'>(northing, easting)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>2.575e-05 2.575e-05 ... 2.575e-05</div><input id='attrs-60ad6a74-ba6d-4d27-919f-40a0e7cb7544' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-60ad6a74-ba6d-4d27-919f-40a0e7cb7544' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-721689a0-724b-4132-b349-3ebd9698364f' class='xr-var-data-in' type='checkbox'><label for='data-721689a0-724b-4132-b349-3ebd9698364f' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[2.57458547e-05, 2.57458547e-05, 2.57458547e-05, 2.57458547e-05,
+        -2.24452929e-04]])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>gz_std</span></div><div class='xr-var-dims'>(northing, easting)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>2.575e-05 2.575e-05 ... 2.575e-05</div><input id='attrs-f31d61d7-46a8-4f7e-8ac7-70eb4d165843' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-f31d61d7-46a8-4f7e-8ac7-70eb4d165843' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-fc5e3bde-bf7a-4579-8d4e-51093064e432' class='xr-var-data-in' type='checkbox'><label for='data-fc5e3bde-bf7a-4579-8d4e-51093064e432' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[2.57458547e-05, 2.57458547e-05, 2.57458547e-05, 2.57458547e-05,
         2.57458547e-05, 2.57458547e-05, 2.57458547e-05, 2.57458547e-05,
         2.57458547e-05, 2.57458547e-05, 2.57458547e-05, 2.57458547e-05,
         2.57458547e-05, 2.57458547e-05, 2.57458547e-05, 2.57458547e-05,
@@ -1243,7 +1246,7 @@ Data variables:
 </div>
 <div class="cell_output docutils container">
 <div class="output text_latex math notranslate nohighlight">
-\[\phi_\text{s} (\mathbf{m}) + 6.632 \, \phi_\text{x} (\mathbf{m}) + 6.583 \, \phi_\text{y} (\mathbf{m}) + 20.218 \, \phi_\text{z} (\mathbf{m})\]</div>
+\[\phi_\text{s} (\mathbf{m}) + 6.63 \, \phi_\text{x} (\mathbf{m}) + 6.639 \, \phi_\text{y} (\mathbf{m}) + 20.218 \, \phi_\text{z} (\mathbf{m})\]</div>
 </div>
 </div>
 <p>Estimate a trade-off parameter between the <code class="docutils literal notranslate"><span class="pre">data_misfit</span></code> and the <code class="docutils literal notranslate"><span class="pre">model_norm</span></code>, and use it as an initial value for the <a class="reference internal" href="../../reference/api/inversion_ideas.hyperparams.CooledMultiplier.html#inversion_ideas.hyperparams.CooledMultiplier" title="inversion_ideas.hyperparams.CooledMultiplier"><code class="xref py py-class docutils literal notranslate"><span class="pre">hyperparams.CooledMultiplier</span></code></a>:</p>
@@ -1258,7 +1261,7 @@ Data variables:
 </div>
 <div class="cell_output docutils container">
 <div class="output text_latex math notranslate nohighlight">
-\[\text{CooledMultiplier}(2.590 \cdot 10^{6})\]</div>
+\[\text{CooledMultiplier}(2.59 \cdot 10^{6})\]</div>
 </div>
 </div>
 <p>And finally, define the objective function:</p>
@@ -1271,7 +1274,7 @@ Data variables:
 </div>
 <div class="cell_output docutils container">
 <div class="output text_latex math notranslate nohighlight">
-\[\phi_\text{d} (\mathbf{m}) + \text{CooledMultiplier}(2.590 \cdot 10^{6}) \, [\phi_\text{s} (\mathbf{m}) + 6.632 \, \phi_\text{x} (\mathbf{m}) + 6.583 \, \phi_\text{y} (\mathbf{m}) + 20.218 \, \phi_\text{z} (\mathbf{m})]\]</div>
+\[\phi_\text{d} (\mathbf{m}) + \text{CooledMultiplier}(2.59 \cdot 10^{6}) \, [\phi_\text{s} (\mathbf{m}) + 6.63 \, \phi_\text{x} (\mathbf{m}) + 6.639 \, \phi_\text{y} (\mathbf{m}) + 20.218 \, \phi_\text{z} (\mathbf{m})]\]</div>
 </div>
 </div>
 <section id="build-the-inversion">
@@ -1332,7 +1335,7 @@ Since we’ll need the <a class="reference internal" href="../../reference/api/i
 </div>
 <div class="cell_output docutils container">
 <script type="application/vnd.jupyter.widget-view+json">
-{"version_major": 2, "version_minor": 0, "model_id": "a136633b33fe4e7e91273304c99605e4"}
+{"version_major": 2, "version_minor": 0, "model_id": "12cef563215f4f7a9793db40cb20c24c"}
 </script><div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
 </div></div>
 </div>
@@ -1383,7 +1386,7 @@ Since we’ll need the <a class="reference internal" href="../../reference/api/i
   <tbody>
     <tr>
       <th>0</th>
-      <td>2.590010e+06</td>
+      <td>2.589599e+06</td>
       <td>1.667546e+06</td>
       <td>0.000000</td>
       <td>0.000000</td>
@@ -1392,48 +1395,48 @@ Since we’ll need the <a class="reference internal" href="../../reference/api/i
     </tr>
     <tr>
       <th>1</th>
-      <td>2.590010e+06</td>
-      <td>2.906793e+04</td>
-      <td>0.048323</td>
-      <td>125157.613384</td>
-      <td>1.542255e+05</td>
-      <td>30.247591</td>
+      <td>2.589599e+06</td>
+      <td>2.906385e+04</td>
+      <td>0.048326</td>
+      <td>125145.565542</td>
+      <td>1.542094e+05</td>
+      <td>30.243342</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>1.295005e+06</td>
-      <td>1.106026e+04</td>
-      <td>0.057845</td>
-      <td>74909.734459</td>
-      <td>8.597000e+04</td>
-      <td>11.509118</td>
+      <td>1.294800e+06</td>
+      <td>1.105883e+04</td>
+      <td>0.057848</td>
+      <td>74901.885948</td>
+      <td>8.596072e+04</td>
+      <td>11.507627</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>6.475025e+05</td>
-      <td>4.176950e+03</td>
-      <td>0.065076</td>
-      <td>42136.970242</td>
-      <td>4.631392e+04</td>
-      <td>4.346462</td>
+      <td>6.473998e+05</td>
+      <td>4.176611e+03</td>
+      <td>0.065079</td>
+      <td>42132.300476</td>
+      <td>4.630891e+04</td>
+      <td>4.346109</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>3.237512e+05</td>
-      <td>1.776304e+03</td>
-      <td>0.070105</td>
-      <td>22696.651843</td>
-      <td>2.447296e+04</td>
-      <td>1.848391</td>
+      <td>3.236999e+05</td>
+      <td>1.776379e+03</td>
+      <td>0.070108</td>
+      <td>22694.031804</td>
+      <td>2.447041e+04</td>
+      <td>1.848469</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>1.618756e+05</td>
-      <td>9.328977e+02</td>
-      <td>0.073660</td>
-      <td>11923.703431</td>
-      <td>1.285660e+04</td>
-      <td>0.970757</td>
+      <td>1.618499e+05</td>
+      <td>9.331655e+02</td>
+      <td>0.073662</td>
+      <td>11922.259733</td>
+      <td>1.285543e+04</td>
+      <td>0.971036</td>
     </tr>
   </tbody>
 </table>
@@ -1478,7 +1481,7 @@ Since we’ll need the <a class="reference internal" href="../../reference/api/i
 
 
 <script type="application/vnd.jupyter.widget-state+json">
-{"state": {"f0085ac2b3c7446ea55ebe78f969b5bf": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "a136633b33fe4e7e91273304c99605e4": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_f0085ac2b3c7446ea55ebe78f969b5bf", "msg_id": "", "outputs": [{"output_type": "display_data", "metadata": {}, "data": {"text/plain": "\u250f\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2513\n\u2503\u001b[1m \u001b[0m\u001b[1mIteration\u001b[0m\u001b[1m \u001b[0m\u2503\u001b[1m \u001b[0m\u001b[1m\u03b2       \u001b[0m\u001b[1m \u001b[0m\u2503\u001b[1m \u001b[0m\u001b[1m\u03c6_d     \u001b[0m\u001b[1m \u001b[0m\u2503\u001b[1m \u001b[0m\u001b[1m\u03c6_m     \u001b[0m\u001b[1m \u001b[0m\u2503\u001b[1m \u001b[0m\u001b[1m\u03b2 \u03c6_m   \u001b[0m\u001b[1m \u001b[0m\u2503\u001b[1m \u001b[0m\u001b[1m\u03c6       \u001b[0m\u001b[1m \u001b[0m\u2503\u001b[1m \u001b[0m\u001b[1m\u03c7       \u001b[0m\u001b[1m \u001b[0m\u2503\n\u2521\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2529\n\u2502 0         \u2502 2.59e+06 \u2502 1.67e+06 \u2502 0.00e+00 \u2502 0.00e+00 \u2502 1.67e+06 \u2502 1.74e+03 \u2502\n\u2502 1         \u2502 2.59e+06 \u2502 2.91e+04 \u2502 4.83e-02 \u2502 1.25e+05 \u2502 1.54e+05 \u2502 3.02e+01 \u2502\n\u2502 2         \u2502 1.30e+06 \u2502 1.11e+04 \u2502 5.78e-02 \u2502 7.49e+04 \u2502 8.60e+04 \u2502 1.15e+01 \u2502\n\u2502 3         \u2502 6.48e+05 \u2502 4.18e+03 \u2502 6.51e-02 \u2502 4.21e+04 \u2502 4.63e+04 \u2502 4.35e+00 \u2502\n\u2502 4         \u2502 3.24e+05 \u2502 1.78e+03 \u2502 7.01e-02 \u2502 2.27e+04 \u2502 2.45e+04 \u2502 1.85e+00 \u2502\n\u2502 5         \u2502 1.62e+05 \u2502 9.33e+02 \u2502 7.37e-02 \u2502 1.19e+04 \u2502 1.29e+04 \u2502 9.71e-01 \u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n\ud83c\udf89 Inversion successfully finished due to stopping criterion.\n", "text/html": "<pre style=\"white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace\">\u250f\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2513\n\u2503<span style=\"font-weight: bold\"> Iteration </span>\u2503<span style=\"font-weight: bold\"> \u03b2        </span>\u2503<span style=\"font-weight: bold\"> \u03c6_d      </span>\u2503<span style=\"font-weight: bold\"> \u03c6_m      </span>\u2503<span style=\"font-weight: bold\"> \u03b2 \u03c6_m    </span>\u2503<span style=\"font-weight: bold\"> \u03c6        </span>\u2503<span style=\"font-weight: bold\"> \u03c7        </span>\u2503\n\u2521\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2529\n\u2502 0         \u2502 2.59e+06 \u2502 1.67e+06 \u2502 0.00e+00 \u2502 0.00e+00 \u2502 1.67e+06 \u2502 1.74e+03 \u2502\n\u2502 1         \u2502 2.59e+06 \u2502 2.91e+04 \u2502 4.83e-02 \u2502 1.25e+05 \u2502 1.54e+05 \u2502 3.02e+01 \u2502\n\u2502 2         \u2502 1.30e+06 \u2502 1.11e+04 \u2502 5.78e-02 \u2502 7.49e+04 \u2502 8.60e+04 \u2502 1.15e+01 \u2502\n\u2502 3         \u2502 6.48e+05 \u2502 4.18e+03 \u2502 6.51e-02 \u2502 4.21e+04 \u2502 4.63e+04 \u2502 4.35e+00 \u2502\n\u2502 4         \u2502 3.24e+05 \u2502 1.78e+03 \u2502 7.01e-02 \u2502 2.27e+04 \u2502 2.45e+04 \u2502 1.85e+00 \u2502\n\u2502 5         \u2502 1.62e+05 \u2502 9.33e+02 \u2502 7.37e-02 \u2502 1.19e+04 \u2502 1.29e+04 \u2502 9.71e-01 \u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n\ud83c\udf89 Inversion successfully finished due to stopping criterion.\n</pre>\n"}}], "tabbable": null, "tooltip": null}}}, "version_major": 2, "version_minor": 0}
+{"state": {"10ac56e6a4d84a68be772e420d4f9208": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "12cef563215f4f7a9793db40cb20c24c": {"model_name": "OutputModel", "model_module": "@jupyter-widgets/output", "model_module_version": "1.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/output", "_model_module_version": "1.0.0", "_model_name": "OutputModel", "_view_count": null, "_view_module": "@jupyter-widgets/output", "_view_module_version": "1.0.0", "_view_name": "OutputView", "layout": "IPY_MODEL_10ac56e6a4d84a68be772e420d4f9208", "msg_id": "", "outputs": [{"output_type": "display_data", "metadata": {}, "data": {"text/plain": "\u250f\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2513\n\u2503\u001b[1m \u001b[0m\u001b[1mIteration\u001b[0m\u001b[1m \u001b[0m\u2503\u001b[1m \u001b[0m\u001b[1m\u03b2       \u001b[0m\u001b[1m \u001b[0m\u2503\u001b[1m \u001b[0m\u001b[1m\u03c6_d     \u001b[0m\u001b[1m \u001b[0m\u2503\u001b[1m \u001b[0m\u001b[1m\u03c6_m     \u001b[0m\u001b[1m \u001b[0m\u2503\u001b[1m \u001b[0m\u001b[1m\u03b2 \u03c6_m   \u001b[0m\u001b[1m \u001b[0m\u2503\u001b[1m \u001b[0m\u001b[1m\u03c6       \u001b[0m\u001b[1m \u001b[0m\u2503\u001b[1m \u001b[0m\u001b[1m\u03c7       \u001b[0m\u001b[1m \u001b[0m\u2503\n\u2521\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2529\n\u2502 0         \u2502 2.59e+06 \u2502 1.67e+06 \u2502 0.00e+00 \u2502 0.00e+00 \u2502 1.67e+06 \u2502 1.74e+03 \u2502\n\u2502 1         \u2502 2.59e+06 \u2502 2.91e+04 \u2502 4.83e-02 \u2502 1.25e+05 \u2502 1.54e+05 \u2502 3.02e+01 \u2502\n\u2502 2         \u2502 1.29e+06 \u2502 1.11e+04 \u2502 5.78e-02 \u2502 7.49e+04 \u2502 8.60e+04 \u2502 1.15e+01 \u2502\n\u2502 3         \u2502 6.47e+05 \u2502 4.18e+03 \u2502 6.51e-02 \u2502 4.21e+04 \u2502 4.63e+04 \u2502 4.35e+00 \u2502\n\u2502 4         \u2502 3.24e+05 \u2502 1.78e+03 \u2502 7.01e-02 \u2502 2.27e+04 \u2502 2.45e+04 \u2502 1.85e+00 \u2502\n\u2502 5         \u2502 1.62e+05 \u2502 9.33e+02 \u2502 7.37e-02 \u2502 1.19e+04 \u2502 1.29e+04 \u2502 9.71e-01 \u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n\ud83c\udf89 Inversion successfully finished due to stopping criterion.\n", "text/html": "<pre style=\"white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace\">\u250f\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2513\n\u2503<span style=\"font-weight: bold\"> Iteration </span>\u2503<span style=\"font-weight: bold\"> \u03b2        </span>\u2503<span style=\"font-weight: bold\"> \u03c6_d      </span>\u2503<span style=\"font-weight: bold\"> \u03c6_m      </span>\u2503<span style=\"font-weight: bold\"> \u03b2 \u03c6_m    </span>\u2503<span style=\"font-weight: bold\"> \u03c6        </span>\u2503<span style=\"font-weight: bold\"> \u03c7        </span>\u2503\n\u2521\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2529\n\u2502 0         \u2502 2.59e+06 \u2502 1.67e+06 \u2502 0.00e+00 \u2502 0.00e+00 \u2502 1.67e+06 \u2502 1.74e+03 \u2502\n\u2502 1         \u2502 2.59e+06 \u2502 2.91e+04 \u2502 4.83e-02 \u2502 1.25e+05 \u2502 1.54e+05 \u2502 3.02e+01 \u2502\n\u2502 2         \u2502 1.29e+06 \u2502 1.11e+04 \u2502 5.78e-02 \u2502 7.49e+04 \u2502 8.60e+04 \u2502 1.15e+01 \u2502\n\u2502 3         \u2502 6.47e+05 \u2502 4.18e+03 \u2502 6.51e-02 \u2502 4.21e+04 \u2502 4.63e+04 \u2502 4.35e+00 \u2502\n\u2502 4         \u2502 3.24e+05 \u2502 1.78e+03 \u2502 7.01e-02 \u2502 2.27e+04 \u2502 2.45e+04 \u2502 1.85e+00 \u2502\n\u2502 5         \u2502 1.62e+05 \u2502 9.33e+02 \u2502 7.37e-02 \u2502 1.19e+04 \u2502 1.29e+04 \u2502 9.71e-01 \u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n\ud83c\udf89 Inversion successfully finished due to stopping criterion.\n</pre>\n"}}], "tabbable": null, "tooltip": null}}}, "version_major": 2, "version_minor": 0}
 </script>
 
 
@@ -1493,20 +1496,20 @@ Since we’ll need the <a class="reference internal" href="../../reference/api/i
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="installing.html"
+       href="../fundamentals/simulations-simpeg.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Installing</p>
+        <p class="prev-next-title">Plugging in SimPEG simulations</p>
       </div>
     </a>
     <a class="right-next"
-       href="../fundamentals/inversion-concept.html"
+       href="../how-to/logging.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Inversion problem</p>
+        <p class="prev-next-title">Logging and debugging</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1536,7 +1539,7 @@ Since we’ll need the <a class="reference internal" href="../../reference/api/i
   <div class="sidebar-secondary-item">
 
   <div class="tocsection sourcelink">
-    <a href="../../_sources/user-guide/getting-started/gravity-inversion.rst.txt">
+    <a href="../../_sources/user-guide/examples/gravity-inversion.rst.txt">
       <i class="fa-solid fa-file-lines"></i> Show Source
     </a>
   </div>

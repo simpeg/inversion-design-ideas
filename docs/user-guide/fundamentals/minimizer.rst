@@ -3,6 +3,12 @@
 Minimizer
 =========
 
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+
+   preconditioners.rst
+
 Once we defined the :ref:`objective function <objective-function>` for our inversion, we need to find a model vector that would minimize it.
 To do so we need to make use of a **minimizer**.
 

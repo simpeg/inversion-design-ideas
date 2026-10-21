@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Objective function &#8212; inversion-ideas  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=83ab51c1" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=18bd87630a240e9c25be"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
+
+    <script src="../../_static/documentation_options.js?v=8a448e45"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/thebelab-helper.js"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'user-guide/fundamentals/objective-function';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Minimizer" href="minimizer.html" />
+    <link rel="prev" title="Inversion problem" href="inversion-concept.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">⚠️ This repo contains an experimental prototype for SimPEG's new inversion framework. </div>
+</aside>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">inversion-ideas  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/simpeg/inversion-design-ideas" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/simpeg/inversion-design-ideas" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/what.html">What is this new framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/installing.html">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started/gravity-inversion.html">Gravity Inversion</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Fundamentals</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="inversion-concept.html">Inversion problem</a></li>
+<li class="toctree-l1 current active"><a aria-current="page" class="current reference internal" href="#">Objective function</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="minimizer.html">Minimizer</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="preconditioners.html">Preconditioners</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="inversion.html">Inversions</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="beta-cooling.html">Beta-cooling schedule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inversion-class.html">The <code class="xref py py-class docutils literal notranslate"><span class="pre">Inversion</span></code> class</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="conditions.html">Conditions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hyperparameters.html">Hyperparameters</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="simulations.html">Simulations</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="simulations-simpeg.html">Plugging in SimPEG simulations</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">How To</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../how-to/logging.html">Logging and debugging</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../how-to/extend.html">Extend the framework</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/extend-base.html">The <code class="xref py py-mod docutils literal notranslate"><span class="pre">base</span></code> submodule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/extend-objective.html">Write new objective functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../how-to/extend-simulations.html">Write new simulations</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">User Guide</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Objective function</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="objective-function">
+<span id="id1"></span><h1>Objective function<a class="headerlink" href="#objective-function" title="Link to this heading">#</a></h1>
+<section id="defining-objective-functions">
+<h2>Defining objective functions<a class="headerlink" href="#defining-objective-functions" title="Link to this heading">#</a></h2>
+<p>Any objective function is defined as a scalar field <span class="math notranslate nohighlight">\(\phi: \mathbb{R}^M \rightarrow \mathbb{R}\)</span>, i.e. it takes a model vector <span class="math notranslate nohighlight">\(\mathbf{m}\)</span> with <span class="math notranslate nohighlight">\(M\)</span> elements and returns a single real value.</p>
+<p>In the new SimPEG’s inversion framework, objective functions are represented by a child of the <a class="reference internal" href="../../reference/api/inversion_ideas.base.Objective.html#inversion_ideas.base.Objective" title="inversion_ideas.base.Objective"><code class="xref py py-class docutils literal notranslate"><span class="pre">inversion_ideas.base.Objective</span></code></a>, like the <a class="reference internal" href="../../reference/api/inversion_ideas.DataMisfit.html#inversion_ideas.DataMisfit" title="inversion_ideas.DataMisfit"><code class="xref py py-class docutils literal notranslate"><span class="pre">inversion_ideas.DataMisfit</span></code></a> for example.</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inversion_ideas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ii</span>
+
+<span class="c1"># Define a linear regressor as a simulation</span>
+<span class="n">n_data</span><span class="p">,</span> <span class="n">n_params</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span>
+<span class="n">simulation</span> <span class="o">=</span> <span class="n">ii</span><span class="o">.</span><span class="n">simulations</span><span class="o">.</span><span class="n">LinearRegressor</span><span class="o">.</span><span class="n">create_random</span><span class="p">(</span><span class="n">n_data</span><span class="p">,</span> <span class="n">n_params</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Create some synthetic data and uncertainties</span>
+<span class="n">true_model</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">5.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">])</span>
+<span class="n">std</span> <span class="o">=</span> <span class="mf">1e-2</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">simulation</span><span class="p">(</span><span class="n">true_model</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n_data</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">std</span><span class="p">)</span>
+<span class="n">uncertainties</span> <span class="o">=</span> <span class="n">std</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># Define a data misfit function</span>
+<span class="n">data_misfit</span> <span class="o">=</span> <span class="n">ii</span><span class="o">.</span><span class="n">DataMisfit</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">uncertainties</span><span class="p">,</span> <span class="n">simulation</span><span class="p">)</span>
+<span class="n">data_misfit</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\phi_\text{d} (\mathbf{m})\]</div>
+</div>
+</div>
+<p>Once defined, the objective functions can only be evaluated on model vectors with <code class="docutils literal notranslate"><span class="pre">n_params</span></code> elements. We can check that property on every objective function:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"Expected size of model vector:"</span><span class="p">,</span> <span class="n">data_misfit</span><span class="o">.</span><span class="n">n_params</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Expected size of model vector: 5
+</pre></div>
+</div>
+</div>
+</div>
+<p>Objective functions can be evaluated by calling them:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define some model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">2.</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">])</span>
+
+<span class="c1"># Evaluate the data_misfit on that model</span>
+<span class="n">data_misfit</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>np.float64(516777.97897255165)
+</pre></div>
+</div>
+</div>
+</div>
+<p>All objective functions have two methods to compute its derivatives:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../reference/api/inversion_ideas.base.Objective.html#inversion_ideas.base.Objective.gradient" title="inversion_ideas.base.Objective.gradient"><code class="xref py py-meth docutils literal notranslate"><span class="pre">gradient()</span></code></a> computes the gradient of the objective function: <span class="math notranslate nohighlight">\(\nabla \phi(\mathbf{m})\)</span>.</p></li>
+<li><p><a class="reference internal" href="../../reference/api/inversion_ideas.base.Objective.html#inversion_ideas.base.Objective.hessian" title="inversion_ideas.base.Objective.hessian"><code class="xref py py-meth docutils literal notranslate"><span class="pre">hessian()</span></code></a> computes the Hessian of the objective function, i.e. the matrix of the second derivatives: <span class="math notranslate nohighlight">\(\nabla^2 \phi(\mathbf{m})\)</span>.</p></li>
+</ul>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get gradient</span>
+<span class="n">gradient</span> <span class="o">=</span> <span class="n">data_misfit</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">gradient</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>array([ 145012.76749299,  -28865.37179219,   63841.4074464 ,
+       -117950.76338047,  -35073.33393289])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get Hessian</span>
+<span class="n">hessian</span> <span class="o">=</span> <span class="n">data_misfit</span><span class="o">.</span><span class="n">hessian</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">hessian</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;5x5 _ProductLinearOperator with dtype=float64&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>By default, the <a class="reference internal" href="../../reference/api/inversion_ideas.DataMisfit.html#inversion_ideas.DataMisfit" title="inversion_ideas.DataMisfit"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataMisfit</span></code></a> and many other
+objective functions in the framework won’t build the whole Hessian matrix, but
+return a <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code></a> instead.
+Hessian matrices are <code class="docutils literal notranslate"><span class="pre">n_params</span></code> <span class="math notranslate nohighlight">\(\times\)</span> <code class="docutils literal notranslate"><span class="pre">n_params</span></code> square matrices
+that can grow very large when <code class="docutils literal notranslate"><span class="pre">n_params</span></code> is big.
+A <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearOperator</span></code></a> allows us to operate with such
+matrix as if it were an array, but without storing it entirely in memory.</p>
+<p>For example, we can compute the dot product of the <code class="docutils literal notranslate"><span class="pre">hessian</span></code> with the
+<code class="docutils literal notranslate"><span class="pre">model</span></code> vector:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hessian</span> <span class="o">@</span> <span class="n">model</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>array([-88614.46048782, -28378.74681096, -69639.8526546 ,  33764.94681921,
+        42242.44031587])
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="renaming-a-function">
+<h2>Renaming a function<a class="headerlink" href="#renaming-a-function" title="Link to this heading">#</a></h2>
+<p>An objective function can be renamed using the <a class="reference internal" href="../../reference/api/inversion_ideas.base.Objective.html#inversion_ideas.base.Objective.set_name" title="inversion_ideas.base.Objective.set_name"><code class="xref py py-meth docutils literal notranslate"><span class="pre">set_name()</span></code></a> method. For example:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_misfit</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">"data_misfit"</span><span class="p">)</span>
+<span class="n">data_misfit</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\phi_\text{data-misfit} (\mathbf{m})\]</div>
+</div>
+</div>
+<p>Let’s rename it to its previous name:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_misfit</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">"d"</span><span class="p">)</span>
+<span class="n">data_misfit</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\phi_\text{d} (\mathbf{m})\]</div>
+</div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The <a class="reference internal" href="../../reference/api/inversion_ideas.base.Objective.html#inversion_ideas.base.Objective.set_name" title="inversion_ideas.base.Objective.set_name"><code class="xref py py-meth docutils literal notranslate"><span class="pre">set_name()</span></code></a> method returns the same objective function, so we can use it directly when defining a new one. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data_misfit</span> <span class="o">=</span> <span class="n">ii</span><span class="o">.</span><span class="n">DataMisfit</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">uncertainties</span><span class="p">,</span> <span class="n">simulation</span><span class="p">)</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">"data_misfit"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="scaling-a-function">
+<h2>Scaling a function<a class="headerlink" href="#scaling-a-function" title="Link to this heading">#</a></h2>
+<p>We can easily multiply an <a class="reference internal" href="../../reference/api/inversion_ideas.base.Objective.html#inversion_ideas.base.Objective" title="inversion_ideas.base.Objective"><code class="xref py py-class docutils literal notranslate"><span class="pre">Objective</span></code></a> function by a scalar, obtaining a <a class="reference internal" href="../../reference/api/inversion_ideas.base.Scaled.html#inversion_ideas.base.Scaled" title="inversion_ideas.base.Scaled"><code class="xref py py-class docutils literal notranslate"><span class="pre">inversion_ideas.base.Scaled</span></code></a> object.
+The  <a class="reference internal" href="../../reference/api/inversion_ideas.base.Scaled.html#inversion_ideas.base.Scaled" title="inversion_ideas.base.Scaled"><code class="xref py py-class docutils literal notranslate"><span class="pre">inversion_ideas.base.Scaled</span></code></a> is another type of objective functions that represents an objective function (encapsulated in the <a class="reference internal" href="../../reference/api/inversion_ideas.base.Scaled.html#inversion_ideas.base.Scaled.function" title="inversion_ideas.base.Scaled.function"><code class="xref py py-attr docutils literal notranslate"><span class="pre">function</span></code></a> attribute) multiplied by a scalar (encapsulated in the <a class="reference internal" href="../../reference/api/inversion_ideas.base.Scaled.html#inversion_ideas.base.Scaled.multiplier" title="inversion_ideas.base.Scaled.multiplier"><code class="xref py py-attr docutils literal notranslate"><span class="pre">multiplier</span></code></a> attribute).</p>
+<p>For example, we can build a new <code class="docutils literal notranslate"><span class="pre">scaled</span></code> function by multiplying the <code class="docutils literal notranslate"><span class="pre">data_misfit</span></code> by a <code class="docutils literal notranslate"><span class="pre">float</span></code>:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scaled</span> <span class="o">=</span> <span class="mf">5.0</span> <span class="o">*</span> <span class="n">data_misfit</span>
+<span class="n">scaled</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[5.0 \, \phi_\text{d} (\mathbf{m})\]</div>
+</div>
+</div>
+<p>We can still access the underlying objects:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scaled</span><span class="o">.</span><span class="n">multiplier</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>5.0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scaled</span><span class="o">.</span><span class="n">function</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\phi_\text{d} (\mathbf{m})\]</div>
+</div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The  <a class="reference internal" href="../../reference/api/inversion_ideas.base.Scaled.html#inversion_ideas.base.Scaled.function" title="inversion_ideas.base.Scaled.function"><code class="xref py py-attr docutils literal notranslate"><span class="pre">function</span></code></a> variable stores a reference to the original objective function. The
+<a class="reference internal" href="../../reference/api/inversion_ideas.base.Scaled.html#inversion_ideas.base.Scaled" title="inversion_ideas.base.Scaled"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scaled</span></code></a> doesn’t perform any copy of it. Therefore <code class="docutils literal notranslate"><span class="pre">scaled.function</span></code> <strong>is</strong> the <code class="docutils literal notranslate"><span class="pre">data_misfit</span></code> object:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scaled</span><span class="o">.</span><span class="n">function</span> <span class="ow">is</span> <span class="n">data_misfit</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<p>We can evaluate the <code class="docutils literal notranslate"><span class="pre">scaled</span></code> function and get its gradient and Hessian as with any other objective function:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scaled</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>np.float64(2583889.894862758)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scaled</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>array([ 725063.83746496, -144326.85896097,  319207.03723201,
+       -589753.81690234, -175366.66966446])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scaled</span><span class="o">.</span><span class="n">hessian</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;5x5 _ScaledLinearOperator with dtype=float64&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="combining-functions">
+<h2>Combining functions<a class="headerlink" href="#combining-functions" title="Link to this heading">#</a></h2>
+<section id="add-two-functions">
+<h3>Add two functions<a class="headerlink" href="#add-two-functions" title="Link to this heading">#</a></h3>
+<p>It’s possible to define any linear combination of objective functions.</p>
+<p>Consider we have a <a class="reference internal" href="../../reference/api/inversion_ideas.SimpleSmallness.html#inversion_ideas.SimpleSmallness" title="inversion_ideas.SimpleSmallness"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimpleSmallness</span></code></a> regularization function:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">smallness</span> <span class="o">=</span> <span class="n">ii</span><span class="o">.</span><span class="n">SimpleSmallness</span><span class="p">(</span><span class="n">n_params</span><span class="p">)</span>
+<span class="n">smallness</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\phi_\text{0} (\mathbf{m})\]</div>
+</div>
+</div>
+<p>We can add it to the <code class="docutils literal notranslate"><span class="pre">data_misfit</span></code> one by summing them together to obtain a new objective function:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">phi</span> <span class="o">=</span> <span class="n">data_misfit</span> <span class="o">+</span> <span class="n">smallness</span>
+<span class="n">phi</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\phi_\text{d} (\mathbf{m}) + \phi_\text{0} (\mathbf{m})\]</div>
+</div>
+</div>
+<p>This <a class="reference internal" href="../../reference/api/inversion_ideas.base.Combo.html#inversion_ideas.base.Combo" title="inversion_ideas.base.Combo"><code class="xref py py-class docutils literal notranslate"><span class="pre">inversion_ideas.base.Combo</span></code></a> is an objective function that works as its mathematical counterpart <span class="math notranslate nohighlight">\(\phi(\mathbf{m}) = \phi_\text{d}(\mathbf{m}) + \phi_\text{0}(\mathbf{m})\)</span> does: we can evaluate it on a given model, get its gradient and Hessian:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">phi</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>np.float64(516787.97897255165)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">phi</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>array([ 145008.76749299,  -28867.37179219,   63841.4074464 ,
+       -117948.76338047,  -35069.33393289])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">phi</span><span class="o">.</span><span class="n">hessian</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;5x5 _SumLinearOperator with dtype=float64&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The <a class="reference internal" href="../../reference/api/inversion_ideas.base.Combo.html#inversion_ideas.base.Combo" title="inversion_ideas.base.Combo"><code class="xref py py-class docutils literal notranslate"><span class="pre">inversion_ideas.base.Combo</span></code></a> class is not meant to be instantiated.
+Add two or more objective functions together to obtain one.</p>
+</div>
+<p>The <a class="reference internal" href="../../reference/api/inversion_ideas.base.Combo.html#inversion_ideas.base.Combo" title="inversion_ideas.base.Combo"><code class="xref py py-class docutils literal notranslate"><span class="pre">inversion_ideas.base.Combo</span></code></a> works as a collection of objective functions. This means that we can get the number of objective functions it contains through the <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#len" title="(in Python v3.15)"><code class="xref py py-func docutils literal notranslate"><span class="pre">len()</span></code></a> function, and we can also access each one of its terms by index:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>2
+</pre></div>
+</div>
+</div>
+</div>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">phi</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">phi</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>φd(m)
+φ0(m)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">term</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">phi</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Term </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">term</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Term 0: φd(m)
+Term 1: φ0(m)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">data_misfit</span> <span class="ow">in</span> <span class="n">phi</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">smallness</span> <span class="ow">in</span> <span class="n">phi</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>True
+True
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="add-multiple-functions">
+<h3>Add multiple functions<a class="headerlink" href="#add-multiple-functions" title="Link to this heading">#</a></h3>
+<p>We can also add more than two objective functions together. For example, consider that we want to add the <code class="docutils literal notranslate"><span class="pre">data_misfit</span></code> and the <code class="docutils literal notranslate"><span class="pre">smallness</span></code> regularization with a <a class="reference internal" href="../../reference/api/inversion_ideas.SimpleFlatness.html#inversion_ideas.SimpleFlatness" title="inversion_ideas.SimpleFlatness"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimpleFlatness</span></code></a> regularization:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">flatness</span> <span class="o">=</span> <span class="n">ii</span><span class="o">.</span><span class="n">SimpleFlatness</span><span class="p">(</span><span class="n">n_params</span><span class="p">)</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">"1"</span><span class="p">)</span>
+<span class="n">flatness</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\phi_\text{1} (\mathbf{m})\]</div>
+</div>
+</div>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">phi</span> <span class="o">=</span> <span class="n">data_misfit</span> <span class="o">+</span> <span class="n">smallness</span> <span class="o">+</span> <span class="n">flatness</span>
+<span class="n">phi</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[[\phi_\text{d} (\mathbf{m}) + \phi_\text{0} (\mathbf{m})] + \phi_\text{1} (\mathbf{m})\]</div>
+</div>
+</div>
+<p>By default, when adding more than two objective functions together, we’ll get a <em>nested</em> <a class="reference internal" href="../../reference/api/inversion_ideas.base.Combo.html#inversion_ideas.base.Combo" title="inversion_ideas.base.Combo"><code class="xref py py-class docutils literal notranslate"><span class="pre">inversion_ideas.base.Combo</span></code></a> object: the first element will be a <a class="reference internal" href="../../reference/api/inversion_ideas.base.Combo.html#inversion_ideas.base.Combo" title="inversion_ideas.base.Combo"><code class="xref py py-class docutils literal notranslate"><span class="pre">inversion_ideas.base.Combo</span></code></a> containing the <code class="docutils literal notranslate"><span class="pre">data_misfit</span></code> and the <code class="docutils literal notranslate"><span class="pre">smallness</span></code> regularization, and the second element will be the <code class="docutils literal notranslate"><span class="pre">flatness</span></code> regularization.</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">phi</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">phi</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">phi</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>2
+φd(m) + φ0(m)
+φ1(m)
+</pre></div>
+</div>
+</div>
+</div>
+<p>And since the first element is a <a class="reference internal" href="../../reference/api/inversion_ideas.base.Combo.html#inversion_ideas.base.Combo" title="inversion_ideas.base.Combo"><code class="xref py py-class docutils literal notranslate"><span class="pre">Combo</span></code></a>, we can also treat it as a collection:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">phi</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">phi</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">phi</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>2
+φd(m)
+φ0(m)
+</pre></div>
+</div>
+</div>
+</div>
+<p>If we don’t want to have this kind of structure,  we can
+<em>flatten</em> any <a class="reference internal" href="../../reference/api/inversion_ideas.base.Combo.html#inversion_ideas.base.Combo" title="inversion_ideas.base.Combo"><code class="xref py py-class docutils literal notranslate"><span class="pre">Combo</span></code></a> through the
+<a class="reference internal" href="../../reference/api/inversion_ideas.base.Combo.html#inversion_ideas.base.Combo.flatten" title="inversion_ideas.base.Combo.flatten"><code class="xref py py-meth docutils literal notranslate"><span class="pre">flatten()</span></code></a> method:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">flat_phi</span> <span class="o">=</span> <span class="n">phi</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+<span class="n">flat_phi</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\phi_\text{d} (\mathbf{m}) + \phi_\text{0} (\mathbf{m}) + \phi_\text{1} (\mathbf{m})\]</div>
+</div>
+</div>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">flat_phi</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>3
+</pre></div>
+</div>
+</div>
+</div>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">flat_phi</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">flat_phi</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">flat_phi</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>φd(m)
+φ0(m)
+φ1(m)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_misfit</span> <span class="ow">in</span> <span class="n">flat_phi</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">smallness</span> <span class="ow">in</span> <span class="n">flat_phi</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">flatness</span> <span class="ow">in</span> <span class="n">flat_phi</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<section id="is-in-or-contains">
+<h4><em>Is in</em> or <em>contains</em>?<a class="headerlink" href="#is-in-or-contains" title="Link to this heading">#</a></h4>
+<p>When using the <code class="docutils literal notranslate"><span class="pre">in</span></code> statement to check whether an objective function is part of a <a class="reference internal" href="../../reference/api/inversion_ideas.base.Combo.html#inversion_ideas.base.Combo" title="inversion_ideas.base.Combo"><code class="xref py py-class docutils literal notranslate"><span class="pre">Combo</span></code></a>, we are only checking if that function is one of its elements, but not a recursive search through its nested <a class="reference internal" href="../../reference/api/inversion_ideas.base.Combo.html#inversion_ideas.base.Combo" title="inversion_ideas.base.Combo"><code class="xref py py-class docutils literal notranslate"><span class="pre">Combo</span></code></a>.</p>
+<p>For example, in we know that <code class="docutils literal notranslate"><span class="pre">flatness</span></code> is the second element of <code class="docutils literal notranslate"><span class="pre">phi</span></code>:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">phi</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[[\phi_\text{d} (\mathbf{m}) + \phi_\text{0} (\mathbf{m})] + \phi_\text{1} (\mathbf{m})\]</div>
+</div>
+</div>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">phi</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\phi_\text{1} (\mathbf{m})\]</div>
+</div>
+</div>
+<p>So, we know that <code class="docutils literal notranslate"><span class="pre">flatness</span> <span class="pre">in</span> <span class="pre">phi</span></code> should be <code class="docutils literal notranslate"><span class="pre">True</span></code>:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">flatness</span> <span class="ow">in</span> <span class="n">phi</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<p>But, the flatness element of <code class="docutils literal notranslate"><span class="pre">phi</span></code> is a <a class="reference internal" href="../../reference/api/inversion_ideas.base.Combo.html#inversion_ideas.base.Combo" title="inversion_ideas.base.Combo"><code class="xref py py-class docutils literal notranslate"><span class="pre">Combo</span></code></a> containing <code class="docutils literal notranslate"><span class="pre">data_misfit</span></code> and <code class="docutils literal notranslate"><span class="pre">smallness</span></code>, so <code class="docutils literal notranslate"><span class="pre">data_misfit</span> <span class="pre">in</span> <span class="pre">phi</span></code> should be <code class="docutils literal notranslate"><span class="pre">False</span></code>:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_misfit</span> <span class="ow">in</span> <span class="n">phi</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>False
+</pre></div>
+</div>
+</div>
+</div>
+<p>And the same goes for <code class="docutils literal notranslate"><span class="pre">smallness</span></code>:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">smallness</span> <span class="ow">in</span> <span class="n">phi</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>False
+</pre></div>
+</div>
+</div>
+</div>
+<p>Alternatively, we can use the <a class="reference internal" href="../../reference/api/inversion_ideas.base.Combo.html#inversion_ideas.base.Combo.contains" title="inversion_ideas.base.Combo.contains"><code class="xref py py-meth docutils literal notranslate"><span class="pre">contains()</span></code></a> method to check recursively for a particular term:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">phi</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">data_misfit</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">phi</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">smallness</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">phi</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">flatness</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="linear-combination-of-functions">
+<h2>Linear combination of functions<a class="headerlink" href="#linear-combination-of-functions" title="Link to this heading">#</a></h2>
+<p>Since it’s possible to scale objective functions and also to add them up, we can define any linear combination of objective functions.
+For example, we could build an classic objective function like:</p>
+<div class="math notranslate nohighlight">
+\[\phi(\mathbf{m}) = \phi_\text{d}(\mathbf{m}) + \beta \left[ \phi_\text{0}(\mathbf{m}) + \alpha \phi_\text{1}(\mathbf{m}) \right]\]</div>
+<p>as follows:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">beta</span> <span class="o">=</span> <span class="mf">1e2</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">3.0</span>
+<span class="n">phi</span> <span class="o">=</span> <span class="n">data_misfit</span> <span class="o">+</span> <span class="n">beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">smallness</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">flatness</span><span class="p">)</span>
+<span class="n">phi</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\phi_\text{d} (\mathbf{m}) + 100.0 \, [\phi_\text{0} (\mathbf{m}) + 3.0 \, \phi_\text{1} (\mathbf{m})]\]</div>
+</div>
+</div>
+<p>We can evaluate the <code class="docutils literal notranslate"><span class="pre">phi</span></code> function and get its gradient and Hessian as with any other objective function:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">phi</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>np.float64(518977.97897255165)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">phi</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>array([ 144012.76749299,  -29065.37179219,   63841.4074464 ,
+       -117750.76338047,  -34073.33393289])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">phi</span><span class="o">.</span><span class="n">hessian</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;5x5 _SumLinearOperator with dtype=float64&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<section id="internal-structure">
+<h3>Internal structure<a class="headerlink" href="#internal-structure" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">phi</span></code> object is a <a class="reference internal" href="../../reference/api/inversion_ideas.base.Combo.html#inversion_ideas.base.Combo" title="inversion_ideas.base.Combo"><code class="xref py py-class docutils literal notranslate"><span class="pre">Combo</span></code></a> with a nested structure. It contains two elements: the <code class="docutils literal notranslate"><span class="pre">data_misfit</span></code> and a <a class="reference internal" href="../../reference/api/inversion_ideas.base.Scaled.html#inversion_ideas.base.Scaled" title="inversion_ideas.base.Scaled"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scaled</span></code></a> object that represents the <span class="math notranslate nohighlight">\(\beta \left[ phi_\text{0}(\mathbf{m}) + \alpha \phi_\text{1}(\mathbf{m}) \right]\)</span>:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>2
+</pre></div>
+</div>
+</div>
+</div>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">phi</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\phi_\text{d} (\mathbf{m})\]</div>
+</div>
+</div>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">phi</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[100.0 \, [\phi_\text{0} (\mathbf{m}) + 3.0 \, \phi_\text{1} (\mathbf{m})]\]</div>
+</div>
+</div>
+<p>Because the <code class="docutils literal notranslate"><span class="pre">phi[1]</span></code> is a  <a class="reference internal" href="../../reference/api/inversion_ideas.base.Scaled.html#inversion_ideas.base.Scaled" title="inversion_ideas.base.Scaled"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scaled</span></code></a>, it has a <code class="docutils literal notranslate"><span class="pre">multiplier</span></code> (the value of <span class="math notranslate nohighlight">\(\beta\)</span>) and a <code class="docutils literal notranslate"><span class="pre">function</span></code>:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">phi</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">multiplier</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>100.0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">phi</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">function</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\phi_\text{0} (\mathbf{m}) + 3.0 \, \phi_\text{1} (\mathbf{m})\]</div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">phi[1].function</span></code> is another <a class="reference internal" href="../../reference/api/inversion_ideas.base.Combo.html#inversion_ideas.base.Combo" title="inversion_ideas.base.Combo"><code class="xref py py-class docutils literal notranslate"><span class="pre">Combo</span></code></a> that contains the <code class="docutils literal notranslate"><span class="pre">smallness</span></code> and a scaled version of <code class="docutils literal notranslate"><span class="pre">flatness</span></code>.</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">phi</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">function</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[\phi_\text{0} (\mathbf{m})\]</div>
+</div>
+</div>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">phi</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">function</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[3.0 \, \phi_\text{1} (\mathbf{m})\]</div>
+</div>
+</div>
+<p>We can use the  <a class="reference internal" href="../../reference/api/inversion_ideas.base.Combo.html#inversion_ideas.base.Combo.contains" title="inversion_ideas.base.Combo.contains"><code class="xref py py-meth docutils literal notranslate"><span class="pre">contains()</span></code></a> to perform a recursive check for a given objective function within the <code class="docutils literal notranslate"><span class="pre">phi</span></code> function. This recursive check also explores
+<a class="reference internal" href="../../reference/api/inversion_ideas.base.Scaled.html#inversion_ideas.base.Scaled" title="inversion_ideas.base.Scaled"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scaled</span></code></a> objects:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">phi</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">data_misfit</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">phi</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">smallness</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">phi</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">flatness</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="inversion-concept.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Inversion problem</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="minimizer.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Minimizer</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#defining-objective-functions">Defining objective functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#renaming-a-function">Renaming a function</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scaling-a-function">Scaling a function</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#combining-functions">Combining functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#add-two-functions">Add two functions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#add-multiple-functions">Add multiple functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#is-in-or-contains"><em>Is in</em> or <em>contains</em>?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-combination-of-functions">Linear combination of functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#internal-structure">Internal structure</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/user-guide/fundamentals/objective-function.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, SimPEG Developers.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.2.0.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.23.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

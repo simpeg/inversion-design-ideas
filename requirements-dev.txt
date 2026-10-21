@@ -20,3 +20,4 @@ jupyter-sphinx
 choclo
 pandas
 bordado
+harmonica

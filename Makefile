@@ -1,5 +1,5 @@
 PYTEST_TARGETS=src tests
-CHECK_STYLE=src notebooks tests
+CHECK_STYLE=src notebooks tests docs
 CHECK_TYPE=src
 
 .PHONY: help install diff-cover test check check-format check_style format mypy

@@ -485,7 +485,7 @@
 <h1>inversion_ideas.base.Objective<a class="headerlink" href="#inversion-ideas-base-objective" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="inversion_ideas.base.Objective">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inversion_ideas.base.</span></span><span class="sig-name descname"><span class="pre">Objective</span></span><a class="headerlink" href="#inversion_ideas.base.Objective" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inversion_ideas.base.</span></span><span class="sig-name descname"><span class="pre">Objective</span></span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/base/objective_function.py#L21-L228"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.base.Objective" title="Link to this definition">#</a></dt>
 <dd><p>Abstract representation of an objective function.</p>
 <p class="rubric">Attributes</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
@@ -545,7 +545,7 @@
 <p class="rubric">Methods documentation</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.base.Objective.__call__">
-<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">Objective.</span></span><span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.base.Objective.__call__" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">Objective.</span></span><span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/base/objective_function.py#L36-L50"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.base.Objective.__call__" title="Link to this definition">#</a></dt>
 <dd><p>Evaluate the objective function for a given model.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -566,7 +566,7 @@
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.base.Objective.gradient">
-<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">Objective.</span></span><span class="sig-name descname"><span class="pre">gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.base.Objective.gradient" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">Objective.</span></span><span class="sig-name descname"><span class="pre">gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/base/objective_function.py#L52-L66"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.base.Objective.gradient" title="Link to this definition">#</a></dt>
 <dd><p>Evaluate the gradient of the objective function for a given model.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -587,7 +587,7 @@
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.base.Objective.hessian">
-<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">Objective.</span></span><span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.base.Objective.hessian" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">Objective.</span></span><span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/base/objective_function.py#L68-L86"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.base.Objective.hessian" title="Link to this definition">#</a></dt>
 <dd><p>Evaluate the hessian of the objective function for a given model.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -610,7 +610,7 @@ of it.</p>
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.base.Objective.hessian_diagonal">
-<span class="sig-prename descclassname"><span class="pre">Objective.</span></span><span class="sig-name descname"><span class="pre">hessian_diagonal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.base.Objective.hessian_diagonal" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">Objective.</span></span><span class="sig-name descname"><span class="pre">hessian_diagonal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/base/objective_function.py#L88-L110"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.base.Objective.hessian_diagonal" title="Link to this definition">#</a></dt>
 <dd><p>Get the main diagonal of the Hessian.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -631,14 +631,14 @@ of it.</p>
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.base.Objective.info">
-<span class="sig-prename descclassname"><span class="pre">Objective.</span></span><span class="sig-name descname"><span class="pre">info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.base.Objective.info" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">Objective.</span></span><span class="sig-name descname"><span class="pre">info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/base/objective_function.py#L153-L164"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.base.Objective.info" title="Link to this definition">#</a></dt>
 <dd><p>Get information about the objective function.</p>
 </dd></dl>
 
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.base.Objective.set_name">
-<span class="sig-prename descclassname"><span class="pre">Objective.</span></span><span class="sig-name descname"><span class="pre">set_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.base.Objective.set_name" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">Objective.</span></span><span class="sig-name descname"><span class="pre">set_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/base/objective_function.py#L132-L137"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.base.Objective.set_name" title="Link to this definition">#</a></dt>
 <dd><p>Set name for the objective function.</p>
 </dd></dl>
 

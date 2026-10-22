@@ -486,7 +486,7 @@
 <h1>inversion_ideas.SimpleFlatness<a class="headerlink" href="#inversion-ideas-simpleflatness" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="inversion_ideas.SimpleFlatness">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inversion_ideas.</span></span><span class="sig-name descname"><span class="pre">SimpleFlatness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.SimpleFlatness" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inversion_ideas.</span></span><span class="sig-name descname"><span class="pre">SimpleFlatness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/regularization/_general.py#L132-L247"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.SimpleFlatness" title="Link to this definition">#</a></dt>
 <dd><p>Simple flatness regularization.</p>
 <p>Implement a simple flatness regularization that evaluates the norm of the
 finite differences of the model vector.</p>
@@ -592,7 +592,7 @@ include mesh details such as cell volumes.</p>
 <p class="rubric">Methods documentation</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.SimpleFlatness.__call__">
-<span class="sig-prename descclassname"><span class="pre">SimpleFlatness.</span></span><span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.SimpleFlatness.__call__" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">SimpleFlatness.</span></span><span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/regularization/_general.py#L187-L201"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.SimpleFlatness.__call__" title="Link to this definition">#</a></dt>
 <dd><p>Evaluate the regularization on a given model.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -612,7 +612,7 @@ include mesh details such as cell volumes.</p>
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.SimpleFlatness.gradient">
-<span class="sig-prename descclassname"><span class="pre">SimpleFlatness.</span></span><span class="sig-name descname"><span class="pre">gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.SimpleFlatness.gradient" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">SimpleFlatness.</span></span><span class="sig-name descname"><span class="pre">gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/regularization/_general.py#L203-L217"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.SimpleFlatness.gradient" title="Link to this definition">#</a></dt>
 <dd><p>Gradient vector.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -632,7 +632,7 @@ include mesh details such as cell volumes.</p>
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.SimpleFlatness.hessian">
-<span class="sig-prename descclassname"><span class="pre">SimpleFlatness.</span></span><span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.SimpleFlatness.hessian" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">SimpleFlatness.</span></span><span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/regularization/_general.py#L219-L233"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.SimpleFlatness.hessian" title="Link to this definition">#</a></dt>
 <dd><p>Hessian matrix.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -652,7 +652,7 @@ include mesh details such as cell volumes.</p>
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.SimpleFlatness.hessian_diagonal">
-<span class="sig-prename descclassname"><span class="pre">SimpleFlatness.</span></span><span class="sig-name descname"><span class="pre">hessian_diagonal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.SimpleFlatness.hessian_diagonal" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">SimpleFlatness.</span></span><span class="sig-name descname"><span class="pre">hessian_diagonal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/base/objective_function.py#L88-L110"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.SimpleFlatness.hessian_diagonal" title="Link to this definition">#</a></dt>
 <dd><p>Get the main diagonal of the Hessian.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -673,14 +673,14 @@ include mesh details such as cell volumes.</p>
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.SimpleFlatness.info">
-<span class="sig-prename descclassname"><span class="pre">SimpleFlatness.</span></span><span class="sig-name descname"><span class="pre">info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.SimpleFlatness.info" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">SimpleFlatness.</span></span><span class="sig-name descname"><span class="pre">info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/base/objective_function.py#L153-L164"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.SimpleFlatness.info" title="Link to this definition">#</a></dt>
 <dd><p>Get information about the objective function.</p>
 </dd></dl>
 
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.SimpleFlatness.set_name">
-<span class="sig-prename descclassname"><span class="pre">SimpleFlatness.</span></span><span class="sig-name descname"><span class="pre">set_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.SimpleFlatness.set_name" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">SimpleFlatness.</span></span><span class="sig-name descname"><span class="pre">set_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/base/objective_function.py#L132-L137"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.SimpleFlatness.set_name" title="Link to this definition">#</a></dt>
 <dd><p>Set name for the objective function.</p>
 </dd></dl>
 

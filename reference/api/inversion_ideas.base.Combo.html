@@ -485,7 +485,7 @@
 <h1>inversion_ideas.base.Combo<a class="headerlink" href="#inversion-ideas-base-combo" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="inversion_ideas.base.Combo">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inversion_ideas.base.</span></span><span class="sig-name descname"><span class="pre">Combo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">functions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.base.Combo" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inversion_ideas.base.</span></span><span class="sig-name descname"><span class="pre">Combo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">functions</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/base/objective_function.py#L359-L524"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.base.Combo" title="Link to this definition">#</a></dt>
 <dd><p>Sum of objective functions.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
@@ -577,7 +577,7 @@ All functions in the list should have the same
 <p class="rubric">Methods documentation</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.base.Combo.__call__">
-<span class="sig-prename descclassname"><span class="pre">Combo.</span></span><span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.base.Combo.__call__" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">Combo.</span></span><span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/base/objective_function.py#L435-L436"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.base.Combo.__call__" title="Link to this definition">#</a></dt>
 <dd><p>Evaluate the objective function for a given model.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -598,14 +598,14 @@ All functions in the list should have the same
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.base.Combo.contains">
-<span class="sig-prename descclassname"><span class="pre">Combo.</span></span><span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objective</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.base.Combo.contains" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">Combo.</span></span><span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objective</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/base/objective_function.py#L461-L465"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.base.Combo.contains" title="Link to this definition">#</a></dt>
 <dd><p>Check if the <code class="docutils literal notranslate"><span class="pre">Combo</span></code> contains the given objective function, recursively.</p>
 </dd></dl>
 
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.base.Combo.flatten">
-<span class="sig-prename descclassname"><span class="pre">Combo.</span></span><span class="sig-name descname"><span class="pre">flatten</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.base.Combo.flatten" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">Combo.</span></span><span class="sig-name descname"><span class="pre">flatten</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/base/objective_function.py#L452-L459"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.base.Combo.flatten" title="Link to this definition">#</a></dt>
 <dd><p>Create a new flattened combo.</p>
 <p>Create a new <code class="docutils literal notranslate"><span class="pre">Combo</span></code> object by unpacking nested <code class="docutils literal notranslate"><span class="pre">Combo</span></code> in the
 current one.</p>
@@ -614,7 +614,7 @@ current one.</p>
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.base.Combo.gradient">
-<span class="sig-prename descclassname"><span class="pre">Combo.</span></span><span class="sig-name descname"><span class="pre">gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.base.Combo.gradient" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">Combo.</span></span><span class="sig-name descname"><span class="pre">gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/base/objective_function.py#L438-L439"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.base.Combo.gradient" title="Link to this definition">#</a></dt>
 <dd><p>Evaluate the gradient of the objective function for a given model.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -635,7 +635,7 @@ current one.</p>
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.base.Combo.hessian">
-<span class="sig-prename descclassname"><span class="pre">Combo.</span></span><span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.base.Combo.hessian" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">Combo.</span></span><span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/base/objective_function.py#L441-L444"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.base.Combo.hessian" title="Link to this definition">#</a></dt>
 <dd><p>Evaluate the hessian of the objective function for a given model.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -658,7 +658,7 @@ of it.</p>
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.base.Combo.hessian_diagonal">
-<span class="sig-prename descclassname"><span class="pre">Combo.</span></span><span class="sig-name descname"><span class="pre">hessian_diagonal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.base.Combo.hessian_diagonal" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">Combo.</span></span><span class="sig-name descname"><span class="pre">hessian_diagonal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/base/objective_function.py#L446-L450"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.base.Combo.hessian_diagonal" title="Link to this definition">#</a></dt>
 <dd><p>Get the main diagonal of the Hessian.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -679,14 +679,14 @@ of it.</p>
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.base.Combo.info">
-<span class="sig-prename descclassname"><span class="pre">Combo.</span></span><span class="sig-name descname"><span class="pre">info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.base.Combo.info" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">Combo.</span></span><span class="sig-name descname"><span class="pre">info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/base/objective_function.py#L467-L484"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.base.Combo.info" title="Link to this definition">#</a></dt>
 <dd><p>Get information about the combo objective function.</p>
 </dd></dl>
 
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.base.Combo.set_name">
-<span class="sig-prename descclassname"><span class="pre">Combo.</span></span><span class="sig-name descname"><span class="pre">set_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.base.Combo.set_name" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">Combo.</span></span><span class="sig-name descname"><span class="pre">set_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/base/objective_function.py#L132-L137"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.base.Combo.set_name" title="Link to this definition">#</a></dt>
 <dd><p>Set name for the objective function.</p>
 </dd></dl>
 

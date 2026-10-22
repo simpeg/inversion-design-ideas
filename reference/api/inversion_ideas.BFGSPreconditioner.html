@@ -486,7 +486,7 @@
 <h1>inversion_ideas.BFGSPreconditioner<a class="headerlink" href="#inversion-ideas-bfgspreconditioner" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inversion_ideas.</span></span><span class="sig-name descname"><span class="pre">BFGSPreconditioner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inversion_ideas.</span></span><span class="sig-name descname"><span class="pre">BFGSPreconditioner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/preconditioners.py#L104-L259"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner" title="Link to this definition">#</a></dt>
 <dd><p>BFGS Preconditioner.</p>
 <p>Use this class to define a dynamic BFGS preconditioner from an objective function.
 This class implements the <code class="docutils literal notranslate"><span class="pre">update</span></code> method that can be used by minimizers to
@@ -632,7 +632,7 @@ can set an initial value for it through the <code class="docutils literal notran
 <p class="rubric">Methods documentation</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner.__call__">
-<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.__call__" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/../../../../../../../opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages/scipy/sparse/linalg/_interface.py#L534-L539"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.__call__" title="Link to this definition">#</a></dt>
 <dd><p>Apply this linear operator.</p>
 <p>Equivalent to <cite>__matmul__</cite>.</p>
 </dd></dl>
@@ -640,7 +640,7 @@ can set an initial value for it through the <code class="docutils literal notran
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner.adjoint">
-<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">adjoint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.adjoint" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">adjoint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/../../../../../../../opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages/scipy/sparse/linalg/_interface.py#L796-L813"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.adjoint" title="Link to this definition">#</a></dt>
 <dd><p>Hermitian adjoint.</p>
 <p>Returns the Hermitian adjoint of this linear operator,
 also known as the Hermitian
@@ -666,7 +666,7 @@ Hermitian adjoint is equal to the conjugate transpose.</p>
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner.dot">
-<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.dot" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/../../../../../../../opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages/scipy/sparse/linalg/_interface.py#L569-L645"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.dot" title="Link to this definition">#</a></dt>
 <dd><p>Multi-purpose multiplication method.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -721,7 +721,7 @@ when interacting with dense vectors and matrices.</p>
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner.matmat">
-<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">matmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.matmat" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">matmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/../../../../../../../opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages/scipy/sparse/linalg/_interface.py#L467-L491"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.matmat" title="Link to this definition">#</a></dt>
 <dd><p>Matrix-matrix multiplication.</p>
 <p>Performs the operation <code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">&#64;</span> <span class="pre">X</span></code> where <code class="docutils literal notranslate"><span class="pre">A</span></code> is an <code class="docutils literal notranslate"><span class="pre">M</span></code> x <code class="docutils literal notranslate"><span class="pre">N</span></code>
 linear operator (or batch of linear operators)
@@ -750,7 +750,7 @@ and <cite>X</cite> is a dense <code class="docutils literal notranslate"><span c
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner.matvec">
-<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">matvec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.matvec" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">matvec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/../../../../../../../opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages/scipy/sparse/linalg/_interface.py#L363-L391"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.matvec" title="Link to this definition">#</a></dt>
 <dd><p>Matrix-vector multiplication.</p>
 <p>Applies <code class="docutils literal notranslate"><span class="pre">A</span></code> to <cite>x</cite>, where <code class="docutils literal notranslate"><span class="pre">A</span></code> is an <code class="docutils literal notranslate"><span class="pre">M</span></code> x <code class="docutils literal notranslate"><span class="pre">N</span></code>
 linear operator (or batch of linear operators)
@@ -783,7 +783,7 @@ and <cite>x</cite> is a row vector (or batch of such vectors).</p>
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner.rdot">
-<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">rdot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.rdot" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">rdot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/../../../../../../../opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages/scipy/sparse/linalg/_interface.py#L676-L760"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.rdot" title="Link to this definition">#</a></dt>
 <dd><p>Multi-purpose multiplication method from the right.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -839,7 +839,7 @@ integer <code class="docutils literal notranslate"><span class="pre">K</span></c
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner.reset">
-<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.reset" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/preconditioners.py#L194-L205"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.reset" title="Link to this definition">#</a></dt>
 <dd><p>Reset the BFGS preconditioner.</p>
 <p>Ditch the current preconditioner matrix estimation and start over with the
 initial matrix. Resets the <code class="docutils literal notranslate"><span class="pre">index</span></code> to None.</p>
@@ -848,7 +848,7 @@ initial matrix. Resets the <code class="docutils literal notranslate"><span clas
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner.rmatmat">
-<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">rmatmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.rmatmat" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">rmatmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/../../../../../../../opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages/scipy/sparse/linalg/_interface.py#L493-L519"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.rmatmat" title="Link to this definition">#</a></dt>
 <dd><p>Adjoint matrix-matrix multiplication.</p>
 <p>Performs the operation <code class="docutils literal notranslate"><span class="pre">A^H</span> <span class="pre">&#64;</span> <span class="pre">X</span></code> where <code class="docutils literal notranslate"><span class="pre">A</span></code> is an <code class="docutils literal notranslate"><span class="pre">M</span></code> x <code class="docutils literal notranslate"><span class="pre">N</span></code>
 linear operator (or batch of linear operators)
@@ -878,7 +878,7 @@ The default implementation defers to the adjoint.</p>
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner.rmatvec">
-<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">rmatvec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.rmatvec" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">rmatvec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/../../../../../../../opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages/scipy/sparse/linalg/_interface.py#L393-L422"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.rmatvec" title="Link to this definition">#</a></dt>
 <dd><p>Adjoint matrix-vector multiplication.</p>
 <p>Applies <code class="docutils literal notranslate"><span class="pre">A^H</span></code> to <cite>x</cite>, where <code class="docutils literal notranslate"><span class="pre">A</span></code> is an
 <code class="docutils literal notranslate"><span class="pre">M</span></code> x <code class="docutils literal notranslate"><span class="pre">N</span></code> linear operator (or batch of linear operators)
@@ -912,7 +912,7 @@ or an array with shape <code class="docutils literal notranslate"><span class="p
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner.transpose">
-<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">transpose</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.transpose" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">transpose</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/../../../../../../../opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages/scipy/sparse/linalg/_interface.py#L825-L837"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.transpose" title="Link to this definition">#</a></dt>
 <dd><p>Transpose.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -934,7 +934,7 @@ or an array with shape <code class="docutils literal notranslate"><span class="p
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.BFGSPreconditioner.update">
-<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.update" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">BFGSPreconditioner.</span></span><span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/preconditioners.py#L207-L259"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.BFGSPreconditioner.update" title="Link to this definition">#</a></dt>
 <dd><p>Update the BFGS preconditioner.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

@@ -3,6 +3,15 @@
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+
+# Imports for the linkcode function
+import inspect
+import os
+import pathlib
+import sys
+
+import inversion_ideas
+
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
@@ -17,6 +26,7 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.intersphinx",
+    "sphinx.ext.linkcode",
     "sphinx_design",
     "numpydoc",
     "jupyter_sphinx",
@@ -84,3 +94,82 @@ html_context = {
 }
 html_static_path = ["_static"]
 html_css_files = ["custom.css"]
+
+linkcode_template_url = (
+    "https://github.com/simpeg/inversion-design-ideas/blob/main/"
+    "{filepath}#L{linestart}-L{linestop}"
+)
+
+
+# ----------------------------------------
+# Function to resolve link to source files
+# ----------------------------------------
+
+github_org = "simpeg"
+github_repo = "inversion-design-ideas"
+package_name = "inversion_ideas"
+linkcode_template = (
+    "https://github.com/{github_org}/{github_repo}/"
+    "blob/main/src/{package_name}/"
+    "{fn}{linespec}"
+)
+
+
+def linkcode_resolve(domain, info):
+    """Resolve link to source code in GitHub."""
+    if domain != "py" or not info["module"]:
+        return None
+
+    modname = info["module"]
+    fullname = info["fullname"]
+
+    submod = sys.modules.get(modname)
+    if submod is None:
+        return None
+
+    obj = submod
+    for part in fullname.split("."):
+        try:
+            obj = getattr(obj, part)
+        except AttributeError:
+            return None
+
+    if inspect.isfunction(obj):
+        obj = inspect.unwrap(obj)
+
+    try:
+        fn = inspect.getsourcefile(obj)
+    except TypeError:
+        fn = None
+
+    if not fn or fn.endswith("__init__.py"):
+        try:
+            fn = inspect.getsourcefile(sys.modules[obj.__module__])
+        except (TypeError, AttributeError, KeyError):
+            fn = None
+
+    if not fn:
+        return None
+
+    # Get relative path to source file
+    path = pathlib.Path(inversion_ideas.__file__)
+    try:
+        fn = os.path.relpath(fn, start=path.parent)
+    except ValueError:
+        return None
+
+    # Build tag for line numbers
+    try:
+        source, lineno = inspect.getsourcelines(obj)
+    except (OSError, TypeError):
+        lineno = None
+    linespec = f"#L{lineno:d}-L{lineno + len(source) - 1:d}" if lineno else ""
+
+    url = linkcode_template.format(
+        github_org=github_org,
+        github_repo=github_repo,
+        package_name=package_name,
+        fn=fn,
+        linespec=linespec,
+    )
+    return url

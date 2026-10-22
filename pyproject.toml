@@ -90,6 +90,9 @@ ignore = [
   "PD901", # Allow to use df as variables for pandas DataFrames
   "T20",   # Allow print statements in notebooks
 ]
+"docs/conf.py" = [
+  "D100",  # Allow no docstring in public module
+]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"

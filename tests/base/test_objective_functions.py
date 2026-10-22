@@ -744,46 +744,89 @@ class TestScaledMethods:
             self.scalar * phi.hessian_diagonal(model),
         )
 
-    def test_call_null(self, model):
+    @pytest.mark.parametrize("multiplier_type", ["float", "Multiplier"])
+    def test_call_null(self, model, multiplier_type):
         """Test calling a Scaled with a zero multiplier."""
+        # Define an objective function that will fail if called.
+        # This way we can check if the Scaled returns the 0.0 float directly without
+        # calling the function.
         phi = Failed(self.n_params)
         with pytest.raises(NotImplementedError):
             phi(model)
 
-        scaled = 0.0 * phi
+        # Define a null multiplier
+        match multiplier_type:
+            case "float":
+                multiplier = 0.0
+            case "Multiplier":
+                multiplier = Multiplier(0.0)
+            case _:  # pragma: nocover
+                raise ValueError()
+
+        scaled = multiplier * phi
         result = scaled(model)
-        assert np.isscalar(result)
+        assert isinstance(result, float)
         assert result == 0.0
 
-    def test_gradient_null(self, model):
+    @pytest.mark.parametrize("multiplier_type", ["float", "Multiplier"])
+    def test_gradient_null(self, model, multiplier_type):
         """Test gradient of Scaled with a zero multiplier."""
         phi = Failed(self.n_params)
         with pytest.raises(NotImplementedError):
             phi.gradient(model)
 
-        scaled = 0.0 * phi
+        # Define a null multiplier
+        match multiplier_type:
+            case "float":
+                multiplier = 0.0
+            case "Multiplier":
+                multiplier = Multiplier(0.0)
+            case _:  # pragma: nocover
+                raise ValueError()
+
+        scaled = multiplier * phi
         gradient = scaled.gradient(model)
         assert gradient.shape == (self.n_params,)
         np.testing.assert_equal(gradient, 0.0)
 
-    def test_hessian_null(self, model):
+    @pytest.mark.parametrize("multiplier_type", ["float", "Multiplier"])
+    def test_hessian_null(self, model, multiplier_type):
         """Test hessian of Scaled with a zero multiplier."""
         phi = Failed(self.n_params)
         with pytest.raises(NotImplementedError):
             phi.hessian(model)
 
-        scaled = 0.0 * phi
+        # Define a null multiplier
+        match multiplier_type:
+            case "float":
+                multiplier = 0.0
+            case "Multiplier":
+                multiplier = Multiplier(0.0)
+            case _:  # pragma: nocover
+                raise ValueError()
+
+        scaled = multiplier * phi
         hessian = scaled.hessian(model)
         assert hessian.shape == (self.n_params, self.n_params)
         np.testing.assert_equal(hessian.toarray(), 0.0)
 
-    def test_hessian_diagonal_null(self, model):
+    @pytest.mark.parametrize("multiplier_type", ["float", "Multiplier"])
+    def test_hessian_diagonal_null(self, model, multiplier_type):
         """Test hessian_diagonal of Scaled with a zero multiplier."""
         phi = Failed(self.n_params)
         with pytest.raises(NotImplementedError):
             phi.hessian_diagonal(model)
 
-        scaled = 0.0 * phi
+        # Define a null multiplier
+        match multiplier_type:
+            case "float":
+                multiplier = 0.0
+            case "Multiplier":
+                multiplier = Multiplier(0.0)
+            case _:  # pragma: nocover
+                raise ValueError()
+
+        scaled = multiplier * phi
         hessian_diagonal = scaled.hessian_diagonal(model)
         assert hessian_diagonal.shape == (self.n_params,)
         np.testing.assert_equal(hessian_diagonal, 0.0)

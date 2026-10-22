@@ -286,7 +286,7 @@ class Scaled(Objective):
 
     def __call__(self, model: Model):
         if self.multiplier == 0.0:
-            return self.multiplier
+            return 0.0
         return self.multiplier * self.function(model)
 
     def gradient(self, model: Model) -> npt.NDArray[np.float64]:
@@ -298,7 +298,6 @@ class Scaled(Objective):
         self, model: Model
     ) -> npt.NDArray[np.float64] | SparseArray | LinearOperator:
         if self.multiplier == 0.0:
-            # TODO: replace this with a Zero operator? # ruff: ignore[FIX002]
             shape = (self.n_params, self.n_params)
             return csr_array(shape, dtype=np.float64)
         return self.multiplier * self.function.hessian(model)

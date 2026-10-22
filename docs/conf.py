@@ -95,16 +95,10 @@ html_context = {
 html_static_path = ["_static"]
 html_css_files = ["custom.css"]
 
-linkcode_template_url = (
-    "https://github.com/simpeg/inversion-design-ideas/blob/main/"
-    "{filepath}#L{linestart}-L{linestop}"
-)
-
 
 # ----------------------------------------
 # Function to resolve link to source files
 # ----------------------------------------
-
 github_org = "simpeg"
 github_repo = "inversion-design-ideas"
 package_name = "inversion_ideas"

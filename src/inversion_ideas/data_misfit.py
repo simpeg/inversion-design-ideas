@@ -236,7 +236,6 @@ class DataMisfit(Objective):
             \mathbf{J}^\text{T}
             \mathbf{W}^\text{T}
             \mathbf{W}
-            \mathbf{J}
             \left[ \mathbf{f}(\mathbf{m}) - \mathbf{d}^\text{obs} \right],
 
         where :math:`\mathbf{J}` is the Jacobian matrix of the ``simulation`` (the forward model),

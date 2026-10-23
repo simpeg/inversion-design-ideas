@@ -486,7 +486,7 @@
 <h1>inversion_ideas.DataMisfit<a class="headerlink" href="#inversion-ideas-datamisfit" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="inversion_ideas.DataMisfit">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inversion_ideas.</span></span><span class="sig-name descname"><span class="pre">DataMisfit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uncertainty</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulation</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">build_hessian</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimate_hessian_diagonal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/data_misfit.py#L17-L456"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.DataMisfit" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inversion_ideas.</span></span><span class="sig-name descname"><span class="pre">DataMisfit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uncertainty</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulation</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">build_hessian</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimate_hessian_diagonal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/data_misfit.py#L17-L455"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.DataMisfit" title="Link to this definition">#</a></dt>
 <dd><p>L2 data misfit.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -702,7 +702,7 @@ the <span class="math notranslate nohighlight">\(i\)</span>-th datum.</p>
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.DataMisfit.chi_factor">
-<span class="sig-prename descclassname"><span class="pre">DataMisfit.</span></span><span class="sig-name descname"><span class="pre">chi_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/data_misfit.py#L420-L456"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.DataMisfit.chi_factor" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">DataMisfit.</span></span><span class="sig-name descname"><span class="pre">chi_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/data_misfit.py#L419-L455"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.DataMisfit.chi_factor" title="Link to this definition">#</a></dt>
 <dd><p>Compute the chi factor for the given model.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -741,7 +741,7 @@ function of the model vector <span class="math notranslate nohighlight">\(\mathb
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.DataMisfit.gradient">
-<span class="sig-prename descclassname"><span class="pre">DataMisfit.</span></span><span class="sig-name descname"><span class="pre">gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/data_misfit.py#L214-L249"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.DataMisfit.gradient" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">DataMisfit.</span></span><span class="sig-name descname"><span class="pre">gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/data_misfit.py#L214-L248"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.DataMisfit.gradient" title="Link to this definition">#</a></dt>
 <dd><p>Gradient vector of the data misfit function.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -765,7 +765,6 @@ function of the model vector <span class="math notranslate nohighlight">\(\mathb
 \mathbf{J}^\text{T}
 \mathbf{W}^\text{T}
 \mathbf{W}
-\mathbf{J}
 \left[ \mathbf{f}(\mathbf{m}) - \mathbf{d}^\text{obs} \right],\]</div>
 <p>where <span class="math notranslate nohighlight">\(\mathbf{J}\)</span> is the Jacobian matrix of the <code class="docutils literal notranslate"><span class="pre">simulation</span></code> (the forward model),
 <span class="math notranslate nohighlight">\(\mathbf{W}\)</span> is a diagonal matrix with the square root of the weights,
@@ -776,7 +775,7 @@ function of the model vector <span class="math notranslate nohighlight">\(\mathb
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.DataMisfit.hessian">
-<span class="sig-prename descclassname"><span class="pre">DataMisfit.</span></span><span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/data_misfit.py#L251-L305"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.DataMisfit.hessian" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">DataMisfit.</span></span><span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/data_misfit.py#L250-L304"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.DataMisfit.hessian" title="Link to this definition">#</a></dt>
 <dd><p>Evaluate the hessian of the data misfit function for a given model.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
@@ -816,7 +815,7 @@ of it.</p>
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.DataMisfit.hessian_diagonal">
-<span class="sig-prename descclassname"><span class="pre">DataMisfit.</span></span><span class="sig-name descname"><span class="pre">hessian_diagonal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/data_misfit.py#L307-L363"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.DataMisfit.hessian_diagonal" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">DataMisfit.</span></span><span class="sig-name descname"><span class="pre">hessian_diagonal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/data_misfit.py#L306-L362"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.DataMisfit.hessian_diagonal" title="Link to this definition">#</a></dt>
 <dd><p>Get the main diagonal of the Hessian.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
@@ -852,7 +851,7 @@ problems. Make sure you to enable diagonal estimations only if you need it.</p>
 <hr class="docutils" />
 <dl class="py method">
 <dt class="sig sig-object py" id="inversion_ideas.DataMisfit.residual">
-<span class="sig-prename descclassname"><span class="pre">DataMisfit.</span></span><span class="sig-name descname"><span class="pre">residual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/data_misfit.py#L379-L404"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.DataMisfit.residual" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">DataMisfit.</span></span><span class="sig-name descname"><span class="pre">residual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/blob/main/src/inversion_ideas/data_misfit.py#L378-L403"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inversion_ideas.DataMisfit.residual" title="Link to this definition">#</a></dt>
 <dd><p>Residual vector.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

@@ -52,7 +52,7 @@ def create_l2_inversion(
         Model norm :math:`\phi_m`.
     starting_beta : float
         Starting value for the trade-off parameter :math:`\beta`.
-    initial_model : (n_params) array
+    initial_model : (n_params,) array
         Initial model to use in the inversion.
     minimizer : base.Minimizer or callable
         Instance of :class:`Minimizer` or callable used to minimize the objective
@@ -172,7 +172,7 @@ def create_sparse_inversion(
         term.
     starting_beta : float
         Starting value for the trade-off parameter :math:`\beta`.
-    initial_model : (n_params) array
+    initial_model : (n_params,) array
         Initial model to use in the inversion.
     minimizer : base.Minimizer or callable
         Instance of :class:`~inversion_ideas.base.Minimizer` or callable used to
@@ -308,12 +308,12 @@ def create_tikhonov_regularization(
     active_cells : (n_cells) array or None, optional
         Array full of bools that indicate the active cells in the mesh. It must have the
         same amount of elements as cells in the mesh.
-    cell_weights : (n_params) array or dict of (n_params) arrays or None, optional
+    cell_weights : (n_params,) array or dict of (n_params,) arrays or None, optional
         Array with cell weights.
         For multiple cell weights, pass a dictionary where keys are strings and values
         are the different weights arrays.
         If None, no cell weights are going to be used.
-    reference_model : (n_params) array or None, optional
+    reference_model : (n_params,) array or None, optional
         Array with values for the reference model.
     alpha_s : float or None, optional
         Multiplier for the smallness term.

@@ -139,7 +139,7 @@ class GaussNewtonConjugateGradient(Minimizer):
         ----------
         objective : base.Objective
             Objective function to be minimized.
-        initial_model : (n_params) array
+        initial_model : (n_params,) array
             Initial model used to start the minimization.
         preconditioner : (n_params, n_params) array, sparse array or LinearOperator, optional
             Matrix used as preconditioner in the conjugate gradient algorithm.

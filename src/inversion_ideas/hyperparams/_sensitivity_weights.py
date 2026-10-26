@@ -23,12 +23,12 @@ class SensitivityWeights(WrappedArray):
     simulation : base.Simulation
         Simulation used to get the jacobian matrix that will be used while updating the
         sensitivity weights.
-    initial_model : (n_params) array
+    initial_model : (n_params,) array
         Initial model used to initialize the sensitivity weights.
     data_weights : (n_data,) array or None, optional
         Array with data weights used to compute the sensitivty weights.
         Can use the :attr:`inversion_ideas.DataMisfit.weights` property.
-    volumes : (n_params) array
+    volumes : (n_params,) array
         Array with the volumes of the active cells. Sensitivity weights are
         divided by the volumes to account for sensitivity changes due to cell sizes.
     vmin : float or None, optional
@@ -62,7 +62,7 @@ class SensitivityWeights(WrappedArray):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
             Array with model parameters that will be used to update the sensitivity
             weights.
         *args :

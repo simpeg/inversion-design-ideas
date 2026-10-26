@@ -82,7 +82,7 @@ def get_sensitivity_weights(
     data_weights : (n_data,) array or None, optional
         Array with data weights used to compute the sensitivty weights.
         Can use the :attr:`inversion_ideas.DataMisfit.weights` property.
-    volumes : (n_params) array or None, optional
+    volumes : (n_params,) array or None, optional
         Array with the volumes of the active cells. Sensitivity weights are
         divided by the volumes to account for sensitivity changes due to cell sizes.
     vmin : float or None, optional

@@ -76,7 +76,7 @@ class Condition(ABC):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
             Array with model values.
 
         Returns
@@ -91,7 +91,7 @@ class Condition(ABC):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
             Array with model values.
         """
         # This is not an abstract method. Children classes can choose to override it if
@@ -112,7 +112,7 @@ class Condition(ABC):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
             Array with model values.
 
         Returns

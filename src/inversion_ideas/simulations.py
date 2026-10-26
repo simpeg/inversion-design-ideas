@@ -121,7 +121,7 @@ class WrappedSimulation(Simulation):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
             Array with model parameters.
 
         Returns
@@ -139,7 +139,7 @@ class WrappedSimulation(Simulation):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
             Array with model parameters.
 
         Returns
@@ -178,7 +178,7 @@ class WrappedSimulation(Simulation):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
 
         Returns
         -------

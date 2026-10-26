@@ -70,7 +70,7 @@ def get_jacobi_preconditioner(objective_function: Objective, model: Model) -> di
     ----------
     objective_function : base.Objective
         Objective function from which the preconditioner will be built.
-    model : (n_params) array
+    model : (n_params,) array
         Model used to build the preconditioner.
 
     Returns

@@ -30,9 +30,9 @@ def backtracking_line_search(
     ----------
     phi : base.Objective
         Objective function to which the line search will be applied.
-    model : (n_params) array
+    model : (n_params,) array
         Current model.
-    search_direction: (n_params) array
+    search_direction: (n_params,) array
         Vector used as a search direction.
     contraction_factor : float, optional
         Contraction factor for the step length. Must be greater than 0 and lower than 1.
@@ -47,7 +47,7 @@ def backtracking_line_search(
         Precomputed value of ``phi(model)``. If None, it will be computed.
         Pass a value to avoid retriggering a call of ``phi`` in case you've already
         called it.
-    phi_gradient : (n_params) array or None, optional
+    phi_gradient : (n_params,) array or None, optional
         Precomputed value of ``phi.gradient(model)``. If None, it will be computed.
         Pass a value to avoid retriggering a call of ``phi.gradient`` in case you've
         already called it.

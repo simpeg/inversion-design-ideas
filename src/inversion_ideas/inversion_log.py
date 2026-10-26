@@ -291,7 +291,7 @@ class InversionLogRich(InversionLog):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
         """
         # TODO: # ruff: ignore[FIX002]
         #   Check that each entry in the log has the same amount of elements.
@@ -351,7 +351,7 @@ class MinimizerLog:
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
         """
         row = []
         for key, values in self.log.items():

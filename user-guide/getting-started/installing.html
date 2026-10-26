@@ -421,11 +421,29 @@
   <section id="installing">
 <span id="id1"></span><h1>Installing<a class="headerlink" href="#installing" title="Link to this heading">#</a></h1>
 <p>Since this framework will not be maintained, you will not find it available in PyPI nor conda-forge. But, it’s still possible to install it through pip with:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/simpeg/inversion-design-ideas
+<section id="latest-release">
+<h2>Latest release<a class="headerlink" href="#latest-release" title="Link to this heading">#</a></h2>
+<p>We can specify which release we want to install by pinning the release number by the end of the repository url.</p>
+<p>Install <a class="reference external" href="https://github.com/simpeg/inversion-design-ideas/releases/tag/v0.0.1">v0.0.1</a> with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"git+https://github.com/simpeg/inversion-design-ideas@v0.0.1"</span>
 </pre></div>
 </div>
+</section>
+<section id="latest-development-version">
+<h2>Latest development version<a class="headerlink" href="#latest-development-version" title="Link to this heading">#</a></h2>
+<p>If we don’t specify any tag, we can install the latest version available in the <code class="docutils literal notranslate"><span class="pre">main</span></code> branch:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"git+https://github.com/simpeg/inversion-design-ideas"</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The new inversion framework is still in experimental stages.
+Breaking changes might be introduced without notice.</p>
+<p>We recommend installing a particular release and take note of the version you
+are using, so your code doesn’t break if you update your environment.</p>
+</div>
 <section id="install-from-source">
-<h2>Install from source<a class="headerlink" href="#install-from-source" title="Link to this heading">#</a></h2>
+<h3>Install from source<a class="headerlink" href="#install-from-source" title="Link to this heading">#</a></h3>
 <p>Alternatively, we could clone the repository and install the package from source.</p>
 <ol class="arabic">
 <li><p>Clone the repository:</p>
@@ -444,6 +462,7 @@
 </div>
 </li>
 </ol>
+</section>
 </section>
 </section>
 
@@ -494,7 +513,11 @@
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-from-source">Install from source</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#latest-release">Latest release</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#latest-development-version">Latest development version</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#install-from-source">Install from source</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 

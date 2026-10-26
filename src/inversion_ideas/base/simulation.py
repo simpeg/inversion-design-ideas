@@ -42,7 +42,7 @@ class Simulation(ABC):
 
         Returns
         -------
-        (n_data)
+        (n_data,)
             Array with predicted data values for the given model.
         """
 

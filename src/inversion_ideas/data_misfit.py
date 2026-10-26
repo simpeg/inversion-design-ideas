@@ -20,9 +20,9 @@ class DataMisfit(Objective):
 
     Parameters
     ----------
-    data : (n_data) array
+    data : (n_data,) array
         Array with observed data values.
-    uncertainty : (n_data) array
+    uncertainty : (n_data,) array
         Array with data uncertainty.
     simulation : base.Simulation
         Instance of Simulation.
@@ -386,7 +386,7 @@ class DataMisfit(Objective):
 
         Returns
         -------
-        (n_data) array
+        (n_data,) array
             Array with residual vector.
 
         Notes

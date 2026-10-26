@@ -126,7 +126,7 @@ class WrappedSimulation(Simulation):
 
         Returns
         -------
-        (n_data) array
+        (n_data,) array
             Array with predicted data for the given model.
         """
         fields = self._get_fields(model)

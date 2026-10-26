@@ -28,7 +28,7 @@ def conjugate_gradient(
 
     Parameters
     ----------
-    objective : Objective
+    objective : base.Objective
         Objective function to be minimized.
     initial_model : (n_params) array
         Initial model used to start the minimization.

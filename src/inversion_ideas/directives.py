@@ -38,7 +38,7 @@ class Irls(Directive):
 
     Parameters
     ----------
-    *args : Objective
+    *args : base.Objective
         Sparse regularizations that will get IRLS updated.
         It can be a single regularization object
         (e.g. :class:`inversion_ideas.SmallnessSparse`), a

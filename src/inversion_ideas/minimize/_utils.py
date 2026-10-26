@@ -28,7 +28,7 @@ def backtracking_line_search(
 
     Parameters
     ----------
-    phi : Objective
+    phi : base.Objective
         Objective function to which the line search will be applied.
     model : (n_params) array
         Current model.

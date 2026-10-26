@@ -32,18 +32,18 @@ class Inversion:
 
     Parameters
     ----------
-    objective_function : Objective
+    objective_function : base.Objective
         Objective function to minimize.
-    initial_model : (n_params) array
+    initial_model : (n_params,) array
         Starting model for the inversion.
-    minimizer : Minimizer or callable
-        Instance of :class:`Minimizer` or callable used to minimize the objective
-        function during the inversion. It must take the objective function and a model
-        as arguments.
-    directives : list of Directive or callable
+    minimizer : base.Minimizer or callable
+        Instance of :class:`~inversion_ideas.base.Minimizer` or callable used to
+        minimize the objective function during the inversion. It must take the objective
+        function and a model as arguments.
+    directives : list of base.Directive or callable
         List of ``Directive`` used to modify the objective function after each
         iteration.
-    stopping_criterion : Condition or callable
+    stopping_criterion : base.Condition or callable
         Boolean function that takes the model as argument. If this function returns
         ``True``, then the inversion will stop.
     max_iterations : int, optional
@@ -52,11 +52,11 @@ class Inversion:
     cache_models : bool, optional
         Whether to cache each model after each iteration.
     log : Log or bool, optional
-        Instance of :class:`InversionLog` to store information about the inversion,
+        Instance of ``InversionLog`` to store information about the inversion,
         or any object that follows the :class:`inversion_ideas.typing.Log` protocol.
-        If ``True``, a default :class:`InversionLog` is going to be used.
+        If ``True``, a default ``InversionLog`` is going to be used.
         If ``False``, no log will be assigned to the inversion, and
-        :attr:`Inversion.log` will be ``None``.
+        :attr:`Inversion.log <inversion_ideas.Inversion.log>` will be ``None``.
     log_minimizers : bool, optional
         Whether to log the minimizers or not. Logging minimizers is only possible when
         the ``minimizer`` is an instance of :class:`inversion_ideas.base.Minimizer`.

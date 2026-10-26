@@ -116,7 +116,7 @@ def extract_from_combo(
 
     Parameters
     ----------
-    objective : Objective
+    objective : base.Objective
         Objective function to explore.
     condition : Callable
         Condition that each objective function must satisfy to be included in the

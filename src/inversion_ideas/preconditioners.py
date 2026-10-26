@@ -24,7 +24,7 @@ class JacobiPreconditioner(LinearOperator):
 
     Parameters
     ----------
-    objective_function : Objective
+    objective_function : base.Objective
         Objective function for which the Jacobi preconditioner will be built.
     dtype : dtype, optional
         Data type of the matrix.
@@ -68,7 +68,7 @@ def get_jacobi_preconditioner(objective_function: Objective, model: Model) -> di
 
     Parameters
     ----------
-    objective_function : Objective
+    objective_function : base.Objective
         Objective function from which the preconditioner will be built.
     model : (n_params) array
         Model used to build the preconditioner.
@@ -111,7 +111,7 @@ class BFGSPreconditioner(LinearOperator):
 
     Parameters
     ----------
-    objective_function : Objective
+    objective_function : base.Objective
         Objective function for which the Jacobi preconditioner will be built.
     initial_matrix : array or sparray or LinearOperator or None, optional
         Square matrix that will be used as the initial estimate of the inverse of the

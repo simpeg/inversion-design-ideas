@@ -32,7 +32,7 @@ def _get_info_title(condition: ConditionLike, status: bool) -> str:
 
     Parameters
     ----------
-    condition : Condition or callable
+    condition : base.Condition or callable
         Condition or collable object we want to get a title for.
     status : bool
         Status of the condition, whether it's True or False.

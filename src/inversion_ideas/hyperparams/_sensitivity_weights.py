@@ -20,7 +20,7 @@ class SensitivityWeights(WrappedArray):
 
     Parameters
     ----------
-    simulation : Simulation
+    simulation : base.Simulation
         Simulation used to get the jacobian matrix that will be used while updating the
         sensitivity weights.
     initial_model : (n_params) array

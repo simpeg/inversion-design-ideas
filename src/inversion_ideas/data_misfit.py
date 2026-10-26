@@ -24,7 +24,7 @@ class DataMisfit(Objective):
         Array with observed data values.
     uncertainty : (n_data) array
         Array with data uncertainty.
-    simulation : Simulation
+    simulation : base.Simulation
         Instance of Simulation.
     build_hessian : bool, optional
         If True, the :meth:`~inversion_ideas.DataMisfit.hessian` method will build the

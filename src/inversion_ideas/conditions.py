@@ -194,7 +194,7 @@ class ObjectiveChanged(Condition):
 
     Parameters
     ----------
-    objective_function : Objective
+    objective_function : base.Objective
         Objective function that will be evaluated.
     rtol : float, optional
         Relative tolerance below which the model will be considered of not changing

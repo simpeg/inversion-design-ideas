@@ -205,7 +205,7 @@ class Smallness(_MeshBasedRegularization):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
             Array with model values.
         """
         vector = (
@@ -373,7 +373,7 @@ class Flatness(_MeshBasedRegularization):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
             Array with model values.
         """
         vector = (
@@ -499,7 +499,7 @@ class SparseSmallness(_MeshBasedRegularization):
         Fournier and Oldenburg (2019).
     cooling_factor : float, optional
         Factor used to cool down the ``threshold`` when updating the IRLS.
-    model_previous : (n_params) array or None, optional
+    model_previous : (n_params,) array or None, optional
         Array with previous model in the iterations. This model is used to build the
         ``R`` matrix. If None, an array full of zeros will be assigned.
     irls : bool, optional
@@ -555,7 +555,7 @@ class SparseSmallness(_MeshBasedRegularization):
 
         Parameters
         ----------
-        model_previous : (n_params) array
+        model_previous : (n_params,) array
             Inverted model obtained after the first stage (l2 inversion).
 
         Notes

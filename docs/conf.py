@@ -56,11 +56,14 @@ numpydoc_show_inherited_class_members = True  # Show inherited methods in docs
 numpydoc_xref_param_type = True
 numpydoc_xref_aliases = {
     "base.Condition": "inversion_ideas.base.Condition",
+    "base.Directive": "inversion_ideas.base.Directive",
     "base.Objective": "inversion_ideas.base.Objective",
+    "base.Minimizer": "inversion_ideas.base.Minimizer",
+    "base.Simulation": "inversion_ideas.base.Simulation",
     "LinearOperator": "scipy.sparse.linalg.LinearOperator",
     "sparray": "scipy.sparse.sparray",
 }
-numpydoc_xref_ignore = {"type", "optional", "default", "or"}
+numpydoc_xref_ignore = {"type", "optional", "default", "or", "n_data", "n_params"}
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

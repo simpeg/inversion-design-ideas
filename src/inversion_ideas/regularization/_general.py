@@ -27,12 +27,12 @@ class SimpleSmallness(Objective):
     ----------
     n_params : int
         Number of elements in the ``model`` array.
-    weights : (n_params) array or dict of (n_params) arrays or None, optional
+    weights : (n_params,) array or dict of (n_params,) arrays or None, optional
         Array with regularization weights.
         For multiple weights, pass a dictionary where keys are strings and values are
         the different weights arrays.
         If None, no weights are going to be used.
-    reference_model : (n_params) array or None, optional
+    reference_model : (n_params,) array or None, optional
         Array with values for the reference model.
 
     Notes
@@ -190,7 +190,7 @@ class SimpleFlatness(Objective):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
             Array with model values.
 
         Returns
@@ -206,12 +206,12 @@ class SimpleFlatness(Objective):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
             Array with model values.
 
         Returns
         -------
-        (n_params) array
+        (n_params,) array
         """
         r_matrix = self.finite_differences_matrix
         return 2 * r_matrix.T @ r_matrix @ model
@@ -222,7 +222,7 @@ class SimpleFlatness(Objective):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
             Array with model values.
 
         Returns

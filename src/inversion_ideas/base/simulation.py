@@ -37,12 +37,12 @@ class Simulation(ABC):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
             Array with model values.
 
         Returns
         -------
-        (n_data)
+        (n_data,)
             Array with predicted data values for the given model.
         """
 
@@ -55,7 +55,7 @@ class Simulation(ABC):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
             Array with model values.
 
         Returns

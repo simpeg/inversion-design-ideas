@@ -32,7 +32,7 @@ def _get_info_title(condition: ConditionLike, status: bool) -> str:
 
     Parameters
     ----------
-    condition : Condition or callable
+    condition : base.Condition or callable
         Condition or collable object we want to get a title for.
     status : bool
         Status of the condition, whether it's True or False.
@@ -76,7 +76,7 @@ class Condition(ABC):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
             Array with model values.
 
         Returns
@@ -91,7 +91,7 @@ class Condition(ABC):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
             Array with model values.
         """
         # This is not an abstract method. Children classes can choose to override it if
@@ -112,7 +112,7 @@ class Condition(ABC):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
             Array with model values.
 
         Returns

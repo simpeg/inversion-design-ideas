@@ -20,11 +20,11 @@ class DataMisfit(Objective):
 
     Parameters
     ----------
-    data : (n_data) array
+    data : (n_data,) array
         Array with observed data values.
-    uncertainty : (n_data) array
+    uncertainty : (n_data,) array
         Array with data uncertainty.
-    simulation : Simulation
+    simulation : base.Simulation
         Instance of Simulation.
     build_hessian : bool, optional
         If True, the :meth:`~inversion_ideas.DataMisfit.hessian` method will build the
@@ -181,7 +181,7 @@ class DataMisfit(Objective):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
             Array with model values.
 
         Returns
@@ -217,7 +217,7 @@ class DataMisfit(Objective):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
             Array with model values.
 
         Returns
@@ -265,7 +265,7 @@ class DataMisfit(Objective):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
             Array with model values.
 
         Returns
@@ -317,7 +317,7 @@ class DataMisfit(Objective):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
             Array with model values.
 
         Returns
@@ -381,12 +381,12 @@ class DataMisfit(Objective):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
             Array with model values.
 
         Returns
         -------
-        (n_data) array
+        (n_data,) array
             Array with residual vector.
 
         Notes

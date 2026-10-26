@@ -46,17 +46,18 @@ def create_l2_inversion(
 
     Parameters
     ----------
-    data_misfit : Objective
+    data_misfit : base.Objective
         Data misfit term :math:`\phi_d`.
-    model_norm : Objective
+    model_norm : base.Objective
         Model norm :math:`\phi_m`.
     starting_beta : float
         Starting value for the trade-off parameter :math:`\beta`.
-    initial_model : (n_params) array
+    initial_model : (n_params,) array
         Initial model to use in the inversion.
-    minimizer : Minimizer
-        Instance of :class:`Minimizer` used to minimize the objective function during
-        the inversion.
+    minimizer : base.Minimizer or callable
+        Instance of :class:`Minimizer` or callable used to minimize the objective
+        function during the inversion. It must take the objective function and a model
+        as arguments.
     beta_cooling_factor : float, optional
         Cooling factor for the trade-off parameter :math:`\beta`. Every
         ``beta_cooling_rate`` iterations, the :math:`\beta` will be *cooled down* by
@@ -163,19 +164,20 @@ def create_sparse_inversion(
 
     Parameters
     ----------
-    data_misfit : Objective
+    data_misfit : base.Objective
         Data misfit term :math:`\phi_d`.
-    model_norm : Objective
+    model_norm : base.Objective
         Model norm :math:`\phi_m`. It can be a single objective function term or a combo
         containing multiple ones. At least one of them should be a sparse regularization
         term.
     starting_beta : float
         Starting value for the trade-off parameter :math:`\beta`.
-    initial_model : (n_params) array
+    initial_model : (n_params,) array
         Initial model to use in the inversion.
-    minimizer : Minimizer
-        Instance of :class:`Minimizer` used to minimize the objective function during
-        the inversion.
+    minimizer : base.Minimizer or callable
+        Instance of :class:`~inversion_ideas.base.Minimizer` or callable used to
+        minimize the objective function during the inversion. It must take the objective
+        function and a model as arguments.
     beta_cooling_factor : float, optional
         Cooling factor for the trade-off parameter :math:`\beta`. Every
         ``beta_cooling_rate`` iterations, the :math:`\beta` will be *cooled down* by
@@ -306,12 +308,12 @@ def create_tikhonov_regularization(
     active_cells : (n_cells) array or None, optional
         Array full of bools that indicate the active cells in the mesh. It must have the
         same amount of elements as cells in the mesh.
-    cell_weights : (n_params) array or dict of (n_params) arrays or None, optional
+    cell_weights : (n_params,) array or dict of (n_params,) arrays or None, optional
         Array with cell weights.
         For multiple cell weights, pass a dictionary where keys are strings and values
         are the different weights arrays.
         If None, no cell weights are going to be used.
-    reference_model : (n_params) array or None, optional
+    reference_model : (n_params,) array or None, optional
         Array with values for the reference model.
     alpha_s : float or None, optional
         Multiplier for the smallness term.

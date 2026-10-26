@@ -121,12 +121,12 @@ class WrappedSimulation(Simulation):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
             Array with model parameters.
 
         Returns
         -------
-        (n_data) array
+        (n_data,) array
             Array with predicted data for the given model.
         """
         fields = self._get_fields(model)
@@ -139,7 +139,7 @@ class WrappedSimulation(Simulation):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
             Array with model parameters.
 
         Returns
@@ -178,7 +178,7 @@ class WrappedSimulation(Simulation):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
 
         Returns
         -------

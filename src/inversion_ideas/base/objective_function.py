@@ -40,7 +40,7 @@ class Objective(ABC):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
             Array with model values.
 
         Returns
@@ -56,7 +56,7 @@ class Objective(ABC):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
             Array with model values.
 
         Returns
@@ -74,7 +74,7 @@ class Objective(ABC):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
             Array with model values.
 
         Returns
@@ -91,7 +91,7 @@ class Objective(ABC):
 
         Parameters
         ----------
-        model : (n_params) array
+        model : (n_params,) array
             Array with model values.
 
         Returns

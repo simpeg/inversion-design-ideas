@@ -52,9 +52,9 @@ class Minimizer(ABC):
 
         Parameters
         ----------
-        objective : Objective
+        objective : base.Objective
             Objective function to be minimized.
-        initial_model : (n_params) array
+        initial_model : (n_params,) array
             Initial model used to start the minimization.
         callback : callable, optional
             Callable that gets called after each iteration.
@@ -72,9 +72,9 @@ class Minimizer(ABC):
 
         Parameters
         ----------
-        objective : Objective
+        objective : base.Objective
             Objective function to be minimized.
-        initial_model : (n_params) array
+        initial_model : (n_params,) array
             Initial model used to start the minimization.
         *args :
             Any extra positional argument will be passed to the ``__call__`` method.
@@ -83,7 +83,7 @@ class Minimizer(ABC):
 
         Returns
         -------
-        inverted_model : (n_params) array
+        inverted_model : (n_params,) array
             Final inverted model.
         """
         # Unpack the generator and keep only the last model

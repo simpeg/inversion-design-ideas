@@ -26,9 +26,14 @@ Type alias to represent models in the inversion framework as 1D arrays.
 
 Preconditioner: TypeAlias = npt.NDArray[np.float64] | SparseArray | LinearOperator
 """
-Type for preconditioners.
+Type alias for preconditioners.
 
 Preconditioners can either be a dense matrix, a sparse matrix or a ``LinearOperator``.
+"""
+
+DirectiveLike: TypeAlias = Callable[[Model, int], None]
+"""
+Type alias for callables that can be used as directives.
 """
 
 

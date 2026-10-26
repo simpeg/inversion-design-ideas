@@ -22,7 +22,7 @@ from ._utils import array_to_str
 from .base import Condition, Directive, Minimizer, Objective
 from .decorators import debug
 from .inversion_log import InversionLog, InversionLogRich, MinimizerLog
-from .typing import Log, Model
+from .typing import DirectiveLike, Log, Model
 from .utils import get_logger
 
 
@@ -40,7 +40,7 @@ class Inversion:
         Instance of :class:`Minimizer` or callable used to minimize the objective
         function during the inversion. It must take the objective function and a model
         as arguments.
-    directives : list of Directive
+    directives : list of Directive or callable
         List of ``Directive`` used to modify the objective function after each
         iteration.
     stopping_criterion : Condition or callable
@@ -70,7 +70,7 @@ class Inversion:
         initial_model: Model,
         minimizer: Minimizer | Callable[[Objective, Model], Model],
         *,
-        directives: typing.Sequence[Directive],
+        directives: typing.Sequence[Directive | DirectiveLike],
         stopping_criterion: Condition | Callable[[Model], bool],
         max_iterations: int | None = None,
         cache_models=True,

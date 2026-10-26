@@ -63,7 +63,7 @@ numpydoc_xref_aliases = {
     "LinearOperator": "scipy.sparse.linalg.LinearOperator",
     "sparray": "scipy.sparse.sparray",
 }
-numpydoc_xref_ignore = {"type", "optional", "default", "or"}
+numpydoc_xref_ignore = {"type", "optional", "default", "or", "n_data", "n_params"}
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

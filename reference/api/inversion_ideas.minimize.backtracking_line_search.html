@@ -491,11 +491,11 @@
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>phi</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Objective</span></code></span></dt><dd><p>Objective function to which the line search will be applied.</p>
+<dt><strong>phi</strong><span class="classifier"><a class="reference internal" href="inversion_ideas.base.Objective.html#inversion_ideas.base.Objective" title="inversion_ideas.base.Objective"><code class="xref py py-obj docutils literal notranslate"><span class="pre">base.Objective</span></code></a></span></dt><dd><p>Objective function to which the line search will be applied.</p>
 </dd>
-<dt><strong>model</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Current model.</p>
+<dt><strong>model</strong><span class="classifier">(n_params,) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Current model.</p>
 </dd>
-<dt><strong>search_direction: (n_params) array</strong></dt><dd><p>Vector used as a search direction.</p>
+<dt><strong>search_direction: (n_params,) array</strong></dt><dd><p>Vector used as a search direction.</p>
 </dd>
 <dt><strong>contraction_factor</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>Contraction factor for the step length. Must be greater than 0 and lower than 1.</p>
 </dd>
@@ -510,7 +510,7 @@ Must be greater than 0 and lower than 1.</p>
 Pass a value to avoid retriggering a call of <code class="docutils literal notranslate"><span class="pre">phi</span></code> in case you’ve already
 called it.</p>
 </dd>
-<dt><strong>phi_gradient</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Precomputed value of <code class="docutils literal notranslate"><span class="pre">phi.gradient(model)</span></code>. If None, it will be computed.
+<dt><strong>phi_gradient</strong><span class="classifier">(n_params,) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Precomputed value of <code class="docutils literal notranslate"><span class="pre">phi.gradient(model)</span></code>. If None, it will be computed.
 Pass a value to avoid retriggering a call of <code class="docutils literal notranslate"><span class="pre">phi.gradient</span></code> in case you’ve
 already called it.</p>
 </dd>

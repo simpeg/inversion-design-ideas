@@ -562,11 +562,11 @@ directly through the <code class="docutils literal notranslate"><span class="pre
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>objective</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Objective</span></code></span></dt><dd><p>Objective function to be minimized.</p>
+<dt><strong>objective</strong><span class="classifier"><a class="reference internal" href="inversion_ideas.base.Objective.html#inversion_ideas.base.Objective" title="inversion_ideas.base.Objective"><code class="xref py py-obj docutils literal notranslate"><span class="pre">base.Objective</span></code></a></span></dt><dd><p>Objective function to be minimized.</p>
 </dd>
-<dt><strong>initial_model</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Initial model used to start the minimization.</p>
+<dt><strong>initial_model</strong><span class="classifier">(n_params,) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Initial model used to start the minimization.</p>
 </dd>
-<dt><strong>preconditioner</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">sparse</span></code> <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LinearOperator</span></code></a>, optional</span></dt><dd><p>Matrix used as preconditioner in the conjugate gradient algorithm.
+<dt><strong>preconditioner</strong><span class="classifier">(n_params, n_params) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">sparse</span></code> <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a> or <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="(in SciPy v1.18.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LinearOperator</span></code></a>, optional</span></dt><dd><p>Matrix used as preconditioner in the conjugate gradient algorithm.
 If None, no preconditioner will be used.
 If the preconditioner implements an <code class="docutils literal notranslate"><span class="pre">update</span></code> method, the preconditioner
 will be updated <strong>before</strong> every conjugate gradient minimization.</p>
@@ -586,9 +586,9 @@ will be updated <strong>before</strong> every conjugate gradient minimization.</
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>objective</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Objective</span></code></span></dt><dd><p>Objective function to be minimized.</p>
+<dt><strong>objective</strong><span class="classifier"><a class="reference internal" href="inversion_ideas.base.Objective.html#inversion_ideas.base.Objective" title="inversion_ideas.base.Objective"><code class="xref py py-obj docutils literal notranslate"><span class="pre">base.Objective</span></code></a></span></dt><dd><p>Objective function to be minimized.</p>
 </dd>
-<dt><strong>initial_model</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Initial model used to start the minimization.</p>
+<dt><strong>initial_model</strong><span class="classifier">(n_params,) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Initial model used to start the minimization.</p>
 </dd>
 <dt><strong>*args</strong></dt><dd><p>Any extra positional argument will be passed to the <code class="docutils literal notranslate"><span class="pre">__call__</span></code> method.</p>
 </dd>
@@ -598,7 +598,7 @@ will be updated <strong>before</strong> every conjugate gradient minimization.</
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl>
-<dt><strong>inverted_model</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Final inverted model.</p>
+<dt><strong>inverted_model</strong><span class="classifier">(n_params,) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Final inverted model.</p>
 </dd>
 </dl>
 </dd>

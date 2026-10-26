@@ -511,9 +511,9 @@
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>objective</strong><span class="classifier"><a class="reference internal" href="inversion_ideas.base.Objective.html#inversion_ideas.base.Objective" title="inversion_ideas.base.Objective"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Objective</span></code></a></span></dt><dd><p>Objective function to be minimized.</p>
+<dt><strong>objective</strong><span class="classifier"><a class="reference internal" href="inversion_ideas.base.Objective.html#inversion_ideas.base.Objective" title="inversion_ideas.base.Objective"><code class="xref py py-obj docutils literal notranslate"><span class="pre">base.Objective</span></code></a></span></dt><dd><p>Objective function to be minimized.</p>
 </dd>
-<dt><strong>initial_model</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Initial model used to start the minimization.</p>
+<dt><strong>initial_model</strong><span class="classifier">(n_params,) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Initial model used to start the minimization.</p>
 </dd>
 <dt><strong>callback</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#callable" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">callable()</span></code></a>, optional</span></dt><dd><p>Callable that gets called after each iteration.
 Takes a <a class="reference internal" href="inversion_ideas.base.MinimizerResult.html#inversion_ideas.base.MinimizerResult" title="inversion_ideas.base.MinimizerResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">inversion_ideas.base.MinimizerResult</span></code></a> as argument.</p>
@@ -537,9 +537,9 @@ Takes a <a class="reference internal" href="inversion_ideas.base.MinimizerResult
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>objective</strong><span class="classifier"><a class="reference internal" href="inversion_ideas.base.Objective.html#inversion_ideas.base.Objective" title="inversion_ideas.base.Objective"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Objective</span></code></a></span></dt><dd><p>Objective function to be minimized.</p>
+<dt><strong>objective</strong><span class="classifier"><a class="reference internal" href="inversion_ideas.base.Objective.html#inversion_ideas.base.Objective" title="inversion_ideas.base.Objective"><code class="xref py py-obj docutils literal notranslate"><span class="pre">base.Objective</span></code></a></span></dt><dd><p>Objective function to be minimized.</p>
 </dd>
-<dt><strong>initial_model</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Initial model used to start the minimization.</p>
+<dt><strong>initial_model</strong><span class="classifier">(n_params,) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Initial model used to start the minimization.</p>
 </dd>
 <dt><strong>*args</strong></dt><dd><p>Any extra positional argument will be passed to the <code class="docutils literal notranslate"><span class="pre">__call__</span></code> method.</p>
 </dd>
@@ -549,7 +549,7 @@ Takes a <a class="reference internal" href="inversion_ideas.base.MinimizerResult
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl>
-<dt><strong>inverted_model</strong><span class="classifier">(<code class="xref py py-obj docutils literal notranslate"><span class="pre">n_params</span></code>) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Final inverted model.</p>
+<dt><strong>inverted_model</strong><span class="classifier">(n_params,) <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">array</span></code></a></span></dt><dd><p>Final inverted model.</p>
 </dd>
 </dl>
 </dd>
